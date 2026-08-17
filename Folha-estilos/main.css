@@ -1,0 +1,46 @@
+main {
+    display: grid;
+    grid-template-columns: auto 95% auto;
+    
+
+}
+#banner {
+    
+    grid-column: 2;
+    padding: 10px;
+}
+
+#banner h1 {
+    margin: 40px auto;
+    font-size: 1.5em;
+    line-height: 1.3em;
+}
+
+#banner ul {
+    list-style: none;
+    margin: 30px auto;
+}
+#banner ul li {
+    margin: 10px auto;
+}
+#banner ul li a {
+    display: block;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px auto;
+    
+
+    border: 1px solid #222222;
+    text-align: center;
+    
+    font-size: 14px;
+
+}
+.botao-p {
+    background-color: #222222;
+    color: #ffffff;
+}
+.botao-p span {
+    
+}
