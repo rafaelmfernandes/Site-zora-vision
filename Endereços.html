@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Endereços - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Endereços.css">
+</head>
+<body>
+
+  <header class="header">
+    <button type="button" onclick="history.back()" class="btn-voltar" title="Voltar">&#8592;</button>
+    <h1 class="header-titulo">Endereços de Entrega</h1>
+    <div class="header-espaco"></div>
+  </header>
+
+  <main class="container">
+
+    <section class="secao-enderecos">
+      <h2 class="secao-titulo">Seus Endereços Cadastrados</h2>
+
+      <div class="lista-enderecos">
+        
+        <label class="endereco-item ativo">
+          <input type="radio" name="endereco_selecionado" value="end_1" checked>
+          <div class="endereco-info">
+            <div class="endereco-topo-info">
+              <span class="tipo-tag">Casa</span>
+              <span class="badge-principal">Principal</span>
+            </div>
+            <p class="nome-destinatario">João Silva</p>
+            <p class="rua-numero">Rua T-63, Quadra 12, Lote 05, nº 1020</p>
+            <p class="bairro-cidade">Setor Bueno - Goiânia / GO</p>
+            <p class="cep">CEP: 74230-100</p>
+            <p class="referencia">Ponto de ref.: Próximo à praça principal</p>
+            
+            <div class="acoes-endereco">
+              <a href="cadastrar-endereco.html" class="btn-acao-link">Editar</a>
+              <button type="button" class="btn-acao-excluir">Excluir</button>
+            </div>
+          </div>
+        </label>
+
+        <label class="endereco-item">
+          <input type="radio" name="endereco_selecionado" value="end_2">
+          <div class="endereco-info">
+            <div class="endereco-topo-info">
+              <span class="tipo-tag">Trabalho</span>
+            </div>
+            <p class="nome-destinatario">João Silva (Restaurante)</p>
+            <p class="rua-numero">Av. Circular, nº 450, Sala 02</p>
+            <p class="bairro-cidade">Setor Pedro Ludovico - Goiânia / GO</p>
+            <p class="cep">CEP: 74820-130</p>
+            
+            <div class="acoes-endereco">
+              <a href="cadastrar-endereco.html" class="btn-acao-link">Editar</a>
+              <button type="button" class="btn-acao-excluir">Excluir</button>
+            </div>
+          </div>
+        </label>
+
+      </div>
+    </section>
+
+    <section class="secao-acoes">
+      <a href="Cadastrar-endereço.html" class="btn-add-endereco">
+        <span class="icon-plus">+</span>
+        <span>Adicionar novo endereço</span>
+      </a>
+    </section>
+
+    <div class="acao-fixa-container">
+      <button type="button" onclick="history.back()" class="btn-usar-selecionado">Usar Endereço Selecionado</button>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">2</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="perfil.html" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Perfil</span>
+    </a>
+  </nav>
+
+</body>
+</html>
