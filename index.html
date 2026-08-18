@@ -36,9 +36,10 @@
             <a href="#" class="secao-link">Ver todos</a>
         </div>
 
-        <div class="produtos-grid">
+        <!-- Grid dinâmico onde os produtos cadastrados no painel serão injetados -->
+        <div class="produtos-grid" id="grid-produtos-home">
             
-            <!-- Produto 1: Eletrônico -->
+            <!-- Produtos padrão (caso o localStorage esteja vazio) -->
             <div class="card-produto">
                 <div class="card-img-box">🎧</div>
                 <h3>Fone de Ouvido Bluetooth Premium</h3>
@@ -51,7 +52,6 @@
                 </button>
             </div>
 
-            <!-- Produto 2: Decoração -->
             <div class="card-produto">
                 <div class="card-img-box">💡</div>
                 <h3>Luminária de Mesa Minimalista</h3>
@@ -87,6 +87,49 @@
             <span>Entrar</span>
         </a>
     </nav>
+
+    <!-- Script de Carregamento Dinâmico dos Produtos Cadastrados -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const gridProdutos = document.getElementById('grid-produtos-home');
+        if (!gridProdutos) return;
+
+        // Recupera os produtos salvos no painel admin[cite: 8]
+        const produtosSalvos = JSON.parse(localStorage.getItem('produtos_loja')) || [];
+        const produtosAtivos = produtosSalvos.filter(p => p.ativo !== false);
+
+        // Se houver produtos cadastrados, substitui o conteúdo padrão pela vitrine dinâmica[cite: 8]
+        if (produtosAtivos.length > 0) {
+          gridProdutos.innerHTML = '';
+
+          produtosAtivos.forEach(produto => {
+            const precoFormatado = parseFloat(produto.preco || 0).toFixed(2).replace('.', ',');
+            const imagemSrc = produto.imagem;
+            const ehImagemUrl = typeof imagemSrc === 'string' && (imagemSrc.startsWith('data:image') || imagemSrc.startsWith('http'));
+
+            const card = document.createElement('div');
+            card.className = 'card-produto';
+            card.innerHTML = `
+              <a href="Produtos.html?id=${produto.id}" style="text-decoration: none; color: inherit; display: block;">
+                <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden;' : ''}">
+                  ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}
+                </div>
+                <h3>${produto.nome}</h3>
+                <span class="preco">R$ ${precoFormatado}</span>
+              </a>
+              <button class="btn-adicionar" 
+                      data-id="${produto.id}" 
+                      data-nome="${produto.nome}" 
+                      data-preco="${produto.preco}"
+                      data-imagem="${ehImagemUrl ? imagemSrc : ''}">
+                  Adicionar ao Carrinho
+              </button>
+            `;
+            gridProdutos.appendChild(card);
+          });
+        }
+      });
+    </script>
 
     <!-- Importação do JavaScript do Carrinho -->
     <script src="Scripts/Carrinho-checkout.js"></script>

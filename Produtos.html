@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Produto - SuaLoja.com</title>
-    <!-- Caminho atualizado para a pasta Folha-estilos -->
     <link rel="stylesheet" href="Folha-estilos/Produtos.css">
 </head>
 <body>
@@ -18,7 +17,7 @@
 
     <!-- Galeria -->
     <section class="galeria-box">
-        <div class="imagem-principal" id="prod-img">🎧</div>
+        <div class="imagem-principal" id="prod-img" style="display: flex; align-items: center; justify-content: center; overflow: hidden;">🎧</div>
     </section>
 
     <!-- Detalhes do Produto -->
@@ -33,11 +32,11 @@
 
         <div class="preco-estoque-box">
             <div class="preco-box">
-                <span class="preco-de">R$ 249,90</span>
+                <span class="preco-de" id="prod-preco-antigo" style="display: none; text-decoration: line-through; color: #94a3b8; font-size: 0.9rem;">R$ 0,00</span>
                 <span class="preco-por" id="prod-preco">R$ 0,00</span>
             </div>
-            <div class="estoque-tag">
-                <span class="dot"></span> Em estoque
+            <div class="estoque-tag" id="prod-estoque-tag">
+                <span class="dot"></span> Carregando estoque...
             </div>
         </div>
     </section>
@@ -46,9 +45,9 @@
     <section class="secao-quantidade">
         <span class="qtd-label">Quantidade</span>
         <div class="seletor-qtd">
-            <button class="btn-qtd" id="btn-diminuir">-</button>
-            <input type="number" class="input-qtd" id="input-qtd" value="1" min="1" readonly>
-            <button class="btn-qtd" id="btn-aumentar">+</button>
+            <button type="button" class="btn-qtd">-</button>
+            <input type="number" class="input-qtd" value="1" min="1" max="99" readonly>
+            <button type="button" class="btn-qtd">+</button>
         </div>
     </section>
 
@@ -67,7 +66,7 @@
             <a href="#" class="link-ver-todos">Ver todas</a>
         </div>
         <div class="comentarios-lista" id="prod-comentarios">
-            <!-- Injetado dinamicamente via JS (Exibe comentários ou aviso padrão) -->
+            <p style="color: #64748b; font-size: 0.9rem;">Nenhuma avaliação para este produto ainda.</p>
         </div>
     </section>
 
@@ -75,14 +74,14 @@
     <section class="secao-info">
         <h3 class="secao-titulo">Quem viu este, também comprou</h3>
         <div class="produtos-grid" id="prod-relacionados">
-            <!-- Injetado dinamicamente via JS -->
+            <!-- Relacionados estáticos ou vazios -->
         </div>
     </section>
 
     <!-- Barra Dupla de Compra Fixa -->
     <div class="barra-compra-fixa">
-        <button class="btn-carrinho" id="add-carrinho-detalhes">Adicionar ao Carrinho</button>
-        <button class="btn-comprar" id="comprar-agora">Comprar Agora</button>
+        <button type="button" class="btn-carrinho">Adicionar ao Carrinho</button>
+        <button type="button" class="btn-comprar">Comprar Agora</button>
     </div>
 
     <!-- Menu Inferior de Navegação -->
@@ -106,81 +105,8 @@
         </a>
     </nav>
 
-    <!-- Importação do Script da pasta Scripts -->
-    <script src="Scripts/carrinho-checkout.js"></script>
+    <!-- Importação do Script isolado dos produtos -->
+    <script src="Scripts/Produtos.js"></script>
 
-    <!-- Script Interno para Controles da Página de Detalhes -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const btnDiminuir = document.getElementById('btn-diminuir');
-            const btnAumentar = document.getElementById('btn-aumentar');
-            const inputQtd = document.getElementById('input-qtd');
-
-            if (btnDiminuir && btnAumentar && inputQtd) {
-                btnDiminuir.addEventListener('click', () => {
-                    let qtd = parseInt(inputQtd.value);
-                    if (qtd > 1) inputQtd.value = qtd - 1;
-                });
-
-                btnAumentar.addEventListener('click', () => {
-                    let qtd = parseInt(inputQtd.value);
-                    inputQtd.value = qtd + 1;
-                });
-            }
-
-            // Ação do Botão Adicionar ao Carrinho com a Quantidade Selecionada
-            const btnAddDetalhes = document.getElementById('add-carrinho-detalhes');
-            if (btnAddDetalhes) {
-                btnAddDetalhes.addEventListener('click', () => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const id = urlParams.get('id') || 'fone-01';
-                    const produto = PRODUTOS_BD[id];
-
-                    if (produto) {
-                        const qtd = parseInt(inputQtd.value);
-                        for (let i = 0; i < qtd; i++) {
-                            CarrinhoCheckoutModule.adicionarProduto({
-                                id: produto.id,
-                                nome: produto.nome,
-                                preco: parseFloat(produto.preco)
-                            });
-                        }
-
-                        btnAddDetalhes.textContent = 'Adicionado! ✓';
-                        btnAddDetalhes.style.backgroundColor = '#10b981';
-                        btnAddDetalhes.style.color = '#ffffff';
-
-                        setTimeout(() => {
-                            btnAddDetalhes.textContent = 'Adicionar ao Carrinho';
-                            btnAddDetalhes.style.backgroundColor = '';
-                            btnAddDetalhes.style.color = '';
-                        }, 1200);
-                    }
-                });
-            }
-
-            // Botão Comprar Agora (Adiciona e vai direto para o Carrinho)
-            const btnComprar = document.getElementById('comprar-agora');
-            if (btnComprar) {
-                btnComprar.addEventListener('click', () => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const id = urlParams.get('id') || 'fone-01';
-                    const produto = PRODUTOS_BD[id];
-
-                    if (produto) {
-                        const qtd = parseInt(inputQtd.value);
-                        for (let i = 0; i < qtd; i++) {
-                            CarrinhoCheckoutModule.adicionarProduto({
-                                id: produto.id,
-                                nome: produto.nome,
-                                preco: parseFloat(produto.preco)
-                            });
-                        }
-                        window.location.href = 'carrinho.html';
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>

@@ -1,14 +1,15 @@
 // ==========================================
-// 1. ESTADO GLOBAL DA APLICAÇÃO
+// 1. ESTADO GLOBAL DA APLICAÇÃO (Unificado com 'carrinho_db')
 // ==========================================
 const checkoutState = {
-    carrinho: JSON.parse(localStorage.getItem('carrinho_app')) || [],
+    carrinho: JSON.parse(localStorage.getItem('carrinho_db')) || 
+              JSON.parse(localStorage.getItem('carrinho')) || 
+              JSON.parse(localStorage.getItem('carrinho_app')) || [],
     cupomAtivo: null,
     descontoPorcentagem: 0,
     metodoPagamento: 'pix',
     taxaEntrega: 5.00
 };
-
 // ==========================================
 // 2. BANCO DE DADOS LOCAL DOS PRODUTOS
 // ==========================================
@@ -47,7 +48,23 @@ const CarrinhoCheckoutModule = {
     },
 
     salvarStorage() {
-        localStorage.setItem('carrinho_app', JSON.stringify(checkoutState.carrinho));
+        try {
+            // Remove imagens grandes caso estejam indo para o carrinho (ex: Base64)
+            const carrinhoLimpo = checkoutState.carrinho.map(item => {
+                const copia = { ...item };
+                // Se a imagem for uma string gigante em Base64, removemos para economizar espaço
+                if (copia.imagem && copia.imagem.startsWith('data:image')) {
+                    delete copia.imagem; 
+                }
+                return copia;
+            });
+
+            localStorage.setItem('carrinho_db', JSON.stringify(carrinhoLimpo));
+            localStorage.setItem('carrinho', JSON.stringify(carrinhoLimpo));
+        } catch (e) {
+            console.error("Erro ao salvar no localStorage: O armazenamento está cheio.", e);
+            alert("O armazenamento do navegador ficou cheio. Por favor, limpe os dados do site.");
+        }
     },
 
     adicionarProduto(produto) {

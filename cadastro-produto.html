@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -19,15 +18,15 @@
 
   <main class="container">
 
-    <form class="form-produto" action="admin.html" method="GET">
+    <form class="form-produto" id="form-cadastrar-produto">
 
       <section class="card-secao">
         <h2 class="secao-titulo">📸 Imagens do Produto</h2>
-        <div class="upload-box" onclick="document.getElementById('input-foto').click()">
-          <span class="upload-icone">🖼️</span>
-          <p class="upload-texto"><strong>Clique aqui</strong> ou arraste as fotos do produto</p>
+        <div class="upload-box" onclick="document.getElementById('input-foto').click()" style="cursor: pointer; text-align: center;">
+          <span class="upload-icone" id="preview-icone" style="font-size: 2.5rem;">🖼️</span>
+          <p class="upload-texto" id="preview-texto"><strong>Clique aqui</strong> ou arraste as fotos do produto</p>
           <span class="upload-subtexto">PNG, JPG ou WEBP (Recomendado: 800x800px)</span>
-          <input type="file" id="input-foto" accept="image/*" multiple style="display: none;">
+          <input type="file" id="input-foto" accept="image/*" style="display: none;">
         </div>
       </section>
 
@@ -86,25 +85,27 @@
       <section class="card-secao">
         <h2 class="secao-titulo">⚙️ Opções de Exibição</h2>
 
-        <label class="checkbox-opcao">
-          <input type="checkbox" name="produto_ativo" checked>
+        <label class="checkbox-opcao" style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; cursor: pointer;">
+          <input type="checkbox" id="produto-ativo" checked>
           <span><strong>Ativar Produto:</strong> Visível imediatamente na loja pública.</span>
         </label>
 
-        <label class="checkbox-opcao">
-          <input type="checkbox" name="produto_destaque">
-          <span><strong>Produto em Destaque:</strong> Exibir na seção "Mais Vendidos" na Home.</span>
+        <label class="checkbox-opcao" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <input type="checkbox" id="produto-destaque">
+          <span><strong>Produto em Destaque:</strong> Exibir na seção de destaque da Home.</span>
         </label>
       </section>
 
-      <div class="botoes-container">
-        <button type="button" onclick="history.back()" class="btn-cancelar">Cancelar</button>
-        <button type="submit" class="btn-salvar-produto">Salvar e Publicar Produto</button>
+      <div class="botoes-container" style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button type="button" onclick="history.back()" class="btn-cancelar" style="flex: 1; padding: 12px; cursor: pointer;">Cancelar</button>
+        <button type="submit" class="btn-salvar-produto" style="flex: 2; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Salvar e Publicar Produto</button>
       </div>
 
     </form>
 
   </main>
 
+  <!-- Script separado colocado antes do fechamento do body -->
+  <script src="Scripts/cadastro-produto.js"></script>
 </body>
 </html>
