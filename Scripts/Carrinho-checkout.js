@@ -984,17 +984,20 @@ function verificarPermissaoPerfil() {
     const boxAdmin = document.getElementById('opcao-admin-container');
     if (!boxAdmin) return;
 
-    // Busca os dados do usuário salvo na sessão ou localStorage
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado')) || {
-        email: 'rafaelmelo116@gmail.com' // E-mail padrão configurado para teste
-    };
+    // Garante que começa escondido por segurança
+    boxAdmin.style.display = 'none';
 
-    // Valida o e-mail (ignorando maiúsculas/minúsculas)
+    // Busca os dados do usuário salvo na sessão ou localStorage
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+
+    // Se não houver usuário logado, para por aqui (não mostra nada)
+    if (!usuarioLogado || !usuarioLogado.email) return;
+
+    // E-mail autorizado como Administrador
     const emailAdmin = 'rafaelmelo116@gmail.com';
 
-    if (usuarioLogado && usuarioLogado.email && usuarioLogado.email.toLowerCase() === emailAdmin.toLowerCase()) {
+    // Compara o e-mail do usuário logado com o do administrador
+    if (usuarioLogado.email.toLowerCase() === emailAdmin.toLowerCase()) {
         boxAdmin.style.display = 'block';
-    } else {
-        boxAdmin.style.display = 'none';
     }
 }
