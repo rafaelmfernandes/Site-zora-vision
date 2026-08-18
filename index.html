@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SuaLoja.com - E-commerce</title>
+    <!-- Importação do arquivo CSS separado -->
     <link rel="stylesheet" href="Folha-estilos/index2.css">
 </head>
 <body>
@@ -32,8 +33,8 @@
     <!-- Catálogo de Produtos em Destaque -->
     <main class="secao-container">
         <div class="secao-header">
-            <h2 class="secao-titulo">Produtos em Destaque</h2>
-            <a href="#" class="secao-link">Ver todos</a>
+            <h2 class="secao-titulo">🔥 Produtos em Destaque</h2>
+            <a href="Pagina-produtos.html" class="secao-link">Ver todos</a>
         </div>
 
         <!-- Grid dinâmico onde os produtos cadastrados no painel serão injetados -->
@@ -41,9 +42,23 @@
             
             <!-- Produtos padrão (caso o localStorage esteja vazio) -->
             <div class="card-produto">
+                <div class="badge-desconto">Destaque</div>
                 <div class="card-img-box">🎧</div>
-                <h3>Fone de Ouvido Bluetooth Premium</h3>
-                <span class="preco">R$ 189,90</span>
+                <div class="card-detalhes">
+                    <div>
+                        <div class="tags-container">
+                            <span class="tag-indicado">TOP</span>
+                            <span class="tag-categoria">Eletrônicos</span>
+                        </div>
+                        <h3>Fone de Ouvido Bluetooth Premium</h3>
+                    </div>
+                    <div class="card-rodape-info">
+                        <span class="preco">R$ 189,90 <span>à vista</span></span>
+                        <div class="card-meta-info">
+                            <span>🛍️ 51 vendidos</span>
+                        </div>
+                    </div>
+                </div>
                 <button class="btn-adicionar" 
                         data-id="fone-01" 
                         data-nome="Fone de Ouvido Bluetooth Premium" 
@@ -53,9 +68,23 @@
             </div>
 
             <div class="card-produto">
+                <div class="badge-desconto">Destaque</div>
                 <div class="card-img-box">💡</div>
-                <h3>Luminária de Mesa Minimalista</h3>
-                <span class="preco">R$ 120,00</span>
+                <div class="card-detalhes">
+                    <div>
+                        <div class="tags-container">
+                            <span class="tag-indicado">TOP</span>
+                            <span class="tag-categoria">Casa</span>
+                        </div>
+                        <h3>Luminária de Mesa Minimalista</h3>
+                    </div>
+                    <div class="card-rodape-info">
+                        <span class="preco">R$ 120,00 <span>à vista</span></span>
+                        <div class="card-meta-info">
+                            <span>🛍️ 32 vendidos</span>
+                        </div>
+                    </div>
+                </div>
                 <button class="btn-adicionar" 
                         data-id="deco-02" 
                         data-nome="Luminária de Mesa Minimalista" 
@@ -94,33 +123,49 @@
         const gridProdutos = document.getElementById('grid-produtos-home');
         if (!gridProdutos) return;
 
-        // Recupera os produtos salvos no painel admin[cite: 8]
-        const produtosSalvos = JSON.parse(localStorage.getItem('produtos_loja')) || [];
+        // Recupera os produtos salvos no painel admin
+        const produtosSalvos = JSON.parse(localStorage.getItem('produtos_loja')) || JSON.parse(localStorage.getItem('produtos')) || [];
         const produtosAtivos = produtosSalvos.filter(p => p.ativo !== false);
 
-        // Se houver produtos cadastrados, substitui o conteúdo padrão pela vitrine dinâmica[cite: 8]
+        // Se houver produtos cadastrados, substitui o conteúdo padrão pela vitrine dinâmica
         if (produtosAtivos.length > 0) {
           gridProdutos.innerHTML = '';
 
           produtosAtivos.forEach(produto => {
-            const precoFormatado = parseFloat(produto.preco || 0).toFixed(2).replace('.', ',');
-            const imagemSrc = produto.imagem;
+            const precoFormatado = parseFloat(produto.preco || produto.valor || 0).toFixed(2).replace('.', ',');
+            const imagemSrc = produto.imagem || produto.foto;
+            const categoria = produto.categoria || 'Geral';
+            const vendas = produto.vendas || Math.floor(Math.random() * 50) + 10;
             const ehImagemUrl = typeof imagemSrc === 'string' && (imagemSrc.startsWith('data:image') || imagemSrc.startsWith('http'));
 
             const card = document.createElement('div');
             card.className = 'card-produto';
             card.innerHTML = `
-              <a href="Produtos.html?id=${produto.id}" style="text-decoration: none; color: inherit; display: block;">
-                <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden;' : ''}">
-                  ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}
+              <div class="badge-desconto">Destaque</div>
+              <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden;' : ''}">
+                ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}
+              </div>
+              <div class="card-detalhes">
+                <div>
+                  <div class="tags-container">
+                    <span class="tag-indicado">TOP</span>
+                    <span class="tag-categoria">${categoria}</span>
+                  </div>
+                  <a href="Pagina-produtos.html?id=${produto.id}" style="text-decoration: none; color: inherit;">
+                    <h3>${produto.nome || produto.titulo}</h3>
+                  </a>
                 </div>
-                <h3>${produto.nome}</h3>
-                <span class="preco">R$ ${precoFormatado}</span>
-              </a>
+                <div class="card-rodape-info">
+                  <span class="preco">R$ ${precoFormatado} <span>à vista</span></span>
+                  <div class="card-meta-info">
+                    <span>🛍️ ${vendas} vendidos</span>
+                  </div>
+                </div>
+              </div>
               <button class="btn-adicionar" 
                       data-id="${produto.id}" 
-                      data-nome="${produto.nome}" 
-                      data-preco="${produto.preco}"
+                      data-nome="${produto.nome || produto.titulo}" 
+                      data-preco="${produto.preco || produto.valor}"
                       data-imagem="${ehImagemUrl ? imagemSrc : ''}">
                   Adicionar ao Carrinho
               </button>
@@ -131,10 +176,9 @@
       });
     </script>
 
-    <!-- Importação do JavaScript do Carrinho -->
+    <!-- Importação dos Scripts de Suporte -->
     <script src="Scripts/Carrinho-checkout.js"></script>
     <script src="Scripts/busca.js"></script>
-
 
 </body>
 </html>

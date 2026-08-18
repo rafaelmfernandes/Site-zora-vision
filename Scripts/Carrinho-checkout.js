@@ -10,6 +10,7 @@ const checkoutState = {
     metodoPagamento: 'pix',
     taxaEntrega: 5.00
 };
+
 // ==========================================
 // 2. BANCO DE DADOS LOCAL DOS PRODUTOS
 // ==========================================
@@ -49,10 +50,9 @@ const CarrinhoCheckoutModule = {
 
     salvarStorage() {
         try {
-            // Remove imagens grandes caso estejam indo para o carrinho (ex: Base64)
+            // Remove imagens grandes em Base64 para economizar espaço no localStorage
             const carrinhoLimpo = checkoutState.carrinho.map(item => {
                 const copia = { ...item };
-                // Se a imagem for uma string gigante em Base64, removemos para economizar espaço
                 if (copia.imagem && copia.imagem.startsWith('data:image')) {
                     delete copia.imagem; 
                 }
@@ -72,11 +72,17 @@ const CarrinhoCheckoutModule = {
 
         if (itemExistente) {
             itemExistente.quantidade += 1;
+            // Atualiza a imagem caso tenha vindo uma nova preenchida agora
+            if (produto.imagem) {
+                itemExistente.imagem = produto.imagem;
+            }
         } else {
             checkoutState.carrinho.push({
                 id: produto.id,
                 nome: produto.nome,
                 preco: parseFloat(produto.preco),
+                imagem: produto.imagem || produto.foto || '',
+                icone: produto.icone || '📦',
                 quantidade: 1
             });
         }
@@ -113,6 +119,7 @@ const CarrinhoCheckoutModule = {
 
         return { subtotal, valorDesconto, taxaEntrega, total };
     },
+    
 
     renderizarCarrinho() {
         const containerLista = document.getElementById('lista-carrinho');
@@ -127,19 +134,33 @@ const CarrinhoCheckoutModule = {
             return;
         }
 
-        containerLista.innerHTML = checkoutState.carrinho.map(item => `
-            <div class="carrinho-item" data-id="${item.id}" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6;">
-                <div class="info-item">
-                    <strong style="display: block; font-size: 0.9rem; color: #1f2937;">${item.nome}</strong>
-                    <span style="font-size: 0.85rem; color: #2563eb; font-weight: 600;">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
+        containerLista.innerHTML = checkoutState.carrinho.map(item => {
+            // Validação aprimorada para aceitar qualquer caminho/link de imagem válido
+            const temImagemReal = item.imagem && typeof item.imagem === 'string' && item.imagem.trim() !== '' && !item.imagem.startsWith('📦');
+
+            const conteudoVisual = temImagemReal 
+                ? `<img src="${item.imagem}" alt="${item.nome}" style="width: 100%; height: 100%; object-fit: cover;">`
+                : (item.icone || '📦');
+
+            return `
+                <div class="carrinho-item" data-id="${item.id}" style="display: flex; gap: 12px; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6;">
+                    <div class="item-img-box" style="width: 60px; height: 60px; background-color: #f1f5f9; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0;">
+                        ${conteudoVisual}
+                    </div>
+
+                    <div class="item-detalhes" style="flex-grow: 1;">
+                        <strong style="display: block; font-size: 0.9rem; color: #1f2937;">${item.nome}</strong>
+                        <span style="font-size: 0.85rem; color: #2563eb; font-weight: 600;">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
+                    </div>
+
+                    <div class="controles-quantidade" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <button class="btn-qtd" onclick="CarrinhoCheckoutModule.alterarQuantidade('${item.id}', -1)" style="padding: 2px 8px; cursor: pointer;">-</button>
+                        <span style="font-weight: 600; font-size: 0.9rem;">${item.quantidade}</span>
+                        <button class="btn-qtd" onclick="CarrinhoCheckoutModule.alterarQuantidade('${item.id}', 1)" style="padding: 2px 8px; cursor: pointer;">+</button>
+                    </div>
                 </div>
-                <div class="controles-quantidade" style="display: flex; align-items: center; gap: 0.5rem;">
-                    <button class="btn-qtd" onclick="CarrinhoCheckoutModule.alterarQuantidade('${item.id}', -1)" style="padding: 2px 8px; cursor: pointer;">-</button>
-                    <span style="font-weight: 600; font-size: 0.9rem;">${item.quantidade}</span>
-                    <button class="btn-qtd" onclick="CarrinhoCheckoutModule.alterarQuantidade('${item.id}', 1)" style="padding: 2px 8px; cursor: pointer;">+</button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     },
 
     atualizarResumoValores() {
@@ -236,7 +257,7 @@ function carregarDetalhesProduto() {
                     <div class="card-img-box">${rel.icone}</div>
                     <h3>${rel.nome}</h3>
                     <span class="preco">R$ ${parseFloat(rel.preco).toFixed(2).replace('.', ',')}</span>
-                    <button class="btn-adicionar" data-id="${rel.id}" data-nome="${rel.nome}" data-preco="${rel.preco}">
+                    <button class="btn-adicionar" data-id="${rel.id}" data-nome="${rel.nome}" data-preco="${rel.preco}" data-icone="${rel.icone}">
                         Adicionar ao Carrinho
                     </button>
                 </div>
@@ -358,49 +379,6 @@ function alternarFormularioEndereco(exibirFormulario) {
     }
 }
 
-function validarEConfirmarPedido() {
-    const boxCadastrado = document.getElementById('box-endereco-cadastrado');
-    let enderecoFinal = null;
-
-    if (boxCadastrado && boxCadastrado.style.display !== 'none' && boxCadastrado.style.display !== '') {
-        enderecoFinal = JSON.parse(localStorage.getItem('ultimo_endereco_cliente'));
-    } else {
-        const nome = document.getElementById('end-nome')?.value.trim();
-        const cep = document.getElementById('end-cep')?.value.trim();
-        const rua = document.getElementById('end-rua')?.value.trim();
-        const numero = document.getElementById('end-numero')?.value.trim();
-        const bairro = document.getElementById('end-bairro')?.value.trim();
-        const cidade = document.getElementById('end-cidade')?.value.trim();
-        const uf = document.getElementById('end-uf')?.value.trim();
-
-        if (!nome || !cep || !rua || !numero || !bairro || !cidade || !uf) {
-            alert('Por favor, preencha todos os campos obrigatórios do endereço.');
-            return;
-        }
-
-        enderecoFinal = {
-            nome: nome,
-            rua: rua,
-            numero: numero,
-            complemento: document.getElementById('end-complemento')?.value.trim() || '',
-            bairro: bairro,
-            cidade: cidade,
-            uf: uf,
-            cep: cep
-        };
-
-        localStorage.setItem('ultimo_endereco_cliente', JSON.stringify(enderecoFinal));
-    }
-
-    if (!enderecoFinal) {
-        alert('Erro ao processar o endereço. Preencha os dados e tente novamente.');
-        return;
-    }
-
-    localStorage.removeItem('ultimo_pedido_salvo');
-    window.location.href = 'Pedido-confirmado.html';
-}
-
 function carregarCheckoutDinamico() {
     configurarCamposAutocomplete();
     checarEnderecoSalvo();
@@ -448,18 +426,16 @@ function carregarPedidoConfirmadoDinamico() {
     const elTotalPago = document.getElementById('conf-total-pago');
     const containerEndereco = document.getElementById('conf-container-endereco');
 
-    // Recupera o histórico do cliente e a lista global de pedidos do Admin
     let historicoPedidos = JSON.parse(localStorage.getItem('historico_pedidos_cliente')) || [];
     let pedidosAdmin = JSON.parse(localStorage.getItem('pedidos_loja')) || [];
     const enderecoSalvo = JSON.parse(localStorage.getItem('ultimo_endereco_cliente'));
     const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado')) || {};
 
-    // Verifica se há um pedido recém-criado em andamento na sessão
     let pedidoAtual = JSON.parse(localStorage.getItem('ultimo_pedido_salvo'));
 
     if (!pedidoAtual && (checkoutState.carrinho.length > 0 || enderecoSalvo)) {
         const { total } = CarrinhoCheckoutModule.calcularValores();
-        const numPedido = Math.floor(10000 + Math.random() * 90000); // Apenas números para o ID do Admin
+        const numPedido = Math.floor(10000 + Math.random() * 90000);
         const numPedidoFormatado = '#' + numPedido;
         const dataAgora = new Date();
         const dataFormatada = dataAgora.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -472,7 +448,6 @@ function carregarPedidoConfirmadoDinamico() {
             'boleto': 'Boleto Bancário'
         };
 
-        // Objeto unificado contendo a estrutura esperada tanto pelo Cliente quanto pelo Admin
         pedidoAtual = {
             id: numPedido,
             numero: numPedidoFormatado,
@@ -490,18 +465,13 @@ function carregarPedidoConfirmadoDinamico() {
             endereco: enderecoSalvo
         };
 
-        // 1. Salva o último pedido na sessão
         localStorage.setItem('ultimo_pedido_salvo', JSON.stringify(pedidoAtual));
-        
-        // 2. Adiciona no Histórico do Cliente (para o Meus Pedidos)
         historicoPedidos.unshift(pedidoAtual);
         localStorage.setItem('historico_pedidos_cliente', JSON.stringify(historicoPedidos));
 
-        // 3. Adiciona na lista do ADMINISTRADOR (para o admin.html contabilizar e mostrar)
         pedidosAdmin.unshift(pedidoAtual);
         localStorage.setItem('pedidos_loja', JSON.stringify(pedidosAdmin));
 
-        // 4. Limpa o carrinho do cliente
         checkoutState.carrinho = [];
         CarrinhoCheckoutModule.salvarStorage();
     }
@@ -588,24 +558,8 @@ function excluirEnderecoSalvo() {
     }
 }
 
-function confirmarSelecaoEndereco() {
-    const enderecoSalvo = JSON.parse(localStorage.getItem('ultimo_endereco_cliente'));
-    
-    if (!enderecoSalvo) {
-        alert('Por favor, cadastre um endereço antes de prosseguir.');
-        window.location.href = 'Cadastrar-endereço.html';
-        return;
-    }
-
-    if (document.referrer && document.referrer.includes('Checkout.html')) {
-        window.location.href = 'Checkout.html';
-    } else {
-        window.history.back();
-    }
-}
-
 // ==========================================
-// 9. MÓDULO DE CADASTRO DE ENDEREÇO (CADASTRAR-ENDEREÇO.HTML)
+// 9. MÓDULO DE CADASTRO DE ENDEREÇO
 // ==========================================
 async function buscarCepCadastro() {
     const inputCEP = document.getElementById('cep');
@@ -622,41 +576,18 @@ async function buscarCepCadastro() {
         return;
     }
 
-    if (statusDiv) {
-        statusDiv.style.color = '#2563eb';
-        statusDiv.textContent = 'Buscando endereço...';
-    }
-
     try {
         const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
         const dados = await resposta.json();
 
-        if (dados.erro) {
-            if (statusDiv) {
-                statusDiv.style.color = '#ef4444';
-                statusDiv.textContent = 'CEP não encontrado.';
-            }
-            return;
-        }
+        if (dados.erro) return;
 
         if (dados.logradouro) document.getElementById('rua').value = dados.logradouro;
         if (dados.bairro) document.getElementById('bairro').value = dados.bairro;
         if (dados.localidade) document.getElementById('cidade').value = dados.localidade;
         if (dados.uf) document.getElementById('uf').value = dados.uf;
-
-        if (statusDiv) {
-            statusDiv.style.color = '#10b981';
-            statusDiv.textContent = 'Endereço encontrado!';
-        }
-
-        const inputNumero = document.getElementById('numero');
-        if (inputNumero) inputNumero.focus();
-
     } catch (erro) {
-        if (statusDiv) {
-            statusDiv.style.color = '#ef4444';
-            statusDiv.textContent = 'Erro ao buscar o CEP.';
-        }
+        console.error("Erro ao buscar CEP", erro);
     }
 }
 
@@ -664,76 +595,61 @@ function carregarDadosFormularioEndereco() {
     const form = document.getElementById('form-cadastrar-endereco');
     const inputCEP = document.getElementById('cep');
 
-    const enderecoSalvo = JSON.parse(localStorage.getItem('ultimo_endereco_cliente'));
-    if (enderecoSalvo && enderecoSalvo.rua) {
-        if (document.getElementById('nome-destinatario')) document.getElementById('nome-destinatario').value = enderecoSalvo.nome || '';
-        if (document.getElementById('cep')) document.getElementById('cep').value = enderecoSalvo.cep || '';
-        if (document.getElementById('rua')) document.getElementById('rua').value = enderecoSalvo.rua || '';
-        if (document.getElementById('numero')) document.getElementById('numero').value = enderecoSalvo.numero || '';
-        if (document.getElementById('complemento')) document.getElementById('complemento').value = enderecoSalvo.complemento || '';
-        if (document.getElementById('bairro')) document.getElementById('bairro').value = enderecoSalvo.bairro || '';
-        if (document.getElementById('cidade')) document.getElementById('cidade').value = enderecoSalvo.cidade || '';
-        if (document.getElementById('uf')) document.getElementById('uf').value = enderecoSalvo.uf || '';
-    }
-
     if (inputCEP) {
         inputCEP.addEventListener('input', (e) => {
             const cep = e.target.value.replace(/\D/g, '');
-            if (cep.length === 8) {
-                buscarCepCadastro();
-            }
+            if (cep.length === 8) buscarCepCadastro();
         });
     }
 
     if (form) {
         form.addEventListener('submit', (event) => {
             event.preventDefault();
-
-            const nome = document.getElementById('nome-destinatario').value.trim();
-            const cep = document.getElementById('cep').value.trim();
-            const rua = document.getElementById('rua').value.trim();
-            const numero = document.getElementById('numero').value.trim();
-            const complemento = document.getElementById('complemento').value.trim();
-            const bairro = document.getElementById('bairro').value.trim();
-            const cidade = document.getElementById('cidade').value.trim();
-            const uf = document.getElementById('uf').value.trim();
-
-            if (!nome || !cep || !rua || !numero || !bairro || !cidade || !uf) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-
             const novoEndereco = {
-                nome: nome,
-                cep: cep,
-                rua: rua,
-                numero: numero,
-                complemento: complemento,
-                bairro: bairro,
-                cidade: cidade,
-                uf: uf
+                nome: document.getElementById('nome-destinatario').value.trim(),
+                cep: document.getElementById('cep').value.trim(),
+                rua: document.getElementById('rua').value.trim(),
+                numero: document.getElementById('numero').value.trim(),
+                complemento: document.getElementById('complemento').value.trim(),
+                bairro: document.getElementById('bairro').value.trim(),
+                cidade: document.getElementById('cidade').value.trim(),
+                uf: document.getElementById('uf').value.trim()
             };
 
             localStorage.setItem('ultimo_endereco_cliente', JSON.stringify(novoEndereco));
-            localStorage.removeItem('ultimo_pedido_salvo');
-
             window.location.href = 'Endereços.html';
         });
     }
 }
 
 // ==========================================
-// 10. EVENTOS GLOBAIS DE INTERAÇÃO
+// 10. EVENTOS GLOBAIS DE INTERAÇÃO (Adicionar produto capturando imagem e ícone)
 // ==========================================
 document.addEventListener('click', (e) => {
     const btnAdicionar = e.target.closest('.btn-adicionar');
     if (btnAdicionar) {
         e.stopPropagation();
         
+        const cardProduto = btnAdicionar.closest('.card-produto, .card, article, div');
+        
+        let imgUrl = '';
+        if (cardProduto) {
+            const imgElement = cardProduto.querySelector('img');
+            if (imgElement && imgElement.src) {
+                imgUrl = imgElement.src;
+            }
+        }
+
+        if (!imgUrl && (btnAdicionar.dataset.imagem || btnAdicionar.dataset.foto)) {
+            imgUrl = btnAdicionar.dataset.imagem || btnAdicionar.dataset.foto;
+        }
+
         const produto = {
             id: btnAdicionar.dataset.id || 'fone-01',
             nome: btnAdicionar.dataset.nome || 'Produto',
-            preco: parseFloat(btnAdicionar.dataset.preco) || 0
+            preco: parseFloat(btnAdicionar.dataset.preco) || 0,
+            imagem: imgUrl,
+            icone: btnAdicionar.dataset.icone || '📦'
         };
 
         CarrinhoCheckoutModule.adicionarProduto(produto);
@@ -751,20 +667,10 @@ document.addEventListener('click', (e) => {
     }
 
     const cardProduto = e.target.closest('.card-produto, .card');
-    if (cardProduto) {
+    if (cardProduto && !e.target.closest('button')) {
         const btn = cardProduto.querySelector('.btn-adicionar');
         const idProduto = (btn && btn.dataset.id) ? btn.dataset.id : 'fone-01';
-
         window.location.href = `Produtos.html?id=${idProduto}`;
-    }
-});
-
-document.addEventListener('input', (e) => {
-    if (e.target && e.target.id === 'end-cep') {
-        const cep = e.target.value.replace(/\D/g, '');
-        if (cep.length === 8) {
-            buscarCEP();
-        }
     }
 });
 
@@ -774,7 +680,7 @@ document.addEventListener('input', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
     CarrinhoCheckoutModule.init();
 
-    const paginaAtual = decodeIRQHandler(window.location.pathname).toLowerCase();
+    const paginaAtual = decodeURIComponent(window.location.pathname).toLowerCase();
 
     if (paginaAtual.includes('produtos.html')) {
         carregarDetalhesProduto();
@@ -784,8 +690,6 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarPedidoConfirmadoDinamico();
     } else if (paginaAtual.includes('pedidos.html')) {
         carregarPaginaMeusPedidos();
-    } else if (paginaAtual.includes('meu-perfil.html') || paginaAtual.includes('perfil.html')) { // <-- Adicionado
-        verificarPermissaoPerfil();
     } else if (paginaAtual.includes('endere')) { 
         if (paginaAtual.includes('cadastrar')) {
             carregarDadosFormularioEndereco();
@@ -794,210 +698,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-
-// Função auxiliar para tratar caracteres especiais de URL no navegador
-function decodeIRQHandler(url) {
-    try {
-        return decodeURIComponent(url);
-    } catch (e) {
-        return url;
-    }
-}
-
-// ==========================================
-// CONFIRMAÇÃO DE PEDIDO (PEDIDO-CONFIRMADO.HTML)
-// ==========================================
-function carregarPedidoConfirmadoDinamico() {
-    const elNumero = document.getElementById('conf-numero-pedido');
-    const elData = document.getElementById('conf-data-pedido');
-    const elHoraAprovado = document.getElementById('conf-hora-aprovado');
-    const elPagamento = document.getElementById('conf-pagamento');
-    const elListaItens = document.getElementById('conf-lista-itens');
-    const elTotalPago = document.getElementById('conf-total-pago');
-    const containerEndereco = document.getElementById('conf-container-endereco');
-
-    // Recupera a lista completa de pedidos ou cria um array vazio
-    let historicoPedidos = JSON.parse(localStorage.getItem('historico_pedidos_cliente')) || [];
-    const enderecoSalvo = JSON.parse(localStorage.getItem('ultimo_endereco_cliente'));
-
-    // Verifica se há um pedido recém-criado em andamento na sessão
-    let pedidoAtual = JSON.parse(localStorage.getItem('ultimo_pedido_salvo'));
-
-    if (!pedidoAtual && (checkoutState.carrinho.length > 0 || enderecoSalvo)) {
-        const { total } = CarrinhoCheckoutModule.calcularValores();
-        const numPedido = '#' + Math.floor(10000 + Math.random() * 90000);
-        const dataAgora = new Date();
-        const dataFormatada = dataAgora.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-        const horaFormatada = dataAgora.toLocaleDateString('pt-BR') + ' - ' + dataAgora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-        const metodoSalvo = localStorage.getItem('ultimo_metodo_pagamento') || 'pix';
-        const nomesMetodos = {
-            'pix': 'PIX (Aprovação Instantânea)',
-            'cartao': 'Cartão de Crédito',
-            'boleto': 'Boleto Bancário'
-        };
-
-        pedidoAtual = {
-            numero: numPedido,
-            data: dataFormatada,
-            hora: horaFormatada,
-            pagamento: nomesMetodos[metodoSalvo] || 'PIX',
-            itens: [...checkoutState.carrinho],
-            total: total > 0 ? total : 314.90,
-            endereco: enderecoSalvo
-        };
-
-        // Salva tanto o último pedido quanto adiciona no HISTÓRICO COMPLETO
-        localStorage.setItem('ultimo_pedido_salvo', JSON.stringify(pedidoAtual));
-        historicoPedidos.unshift(pedidoAtual); // Adiciona no início da lista
-        localStorage.setItem('historico_pedidos_cliente', JSON.stringify(historicoPedidos));
-
-        // Limpa o carrinho
-        checkoutState.carrinho = [];
-        CarrinhoCheckoutModule.salvarStorage();
-    }
-
-    if (pedidoAtual) {
-        if (elNumero) elNumero.textContent = pedidoAtual.numero;
-        if (elData) elData.textContent = pedidoAtual.data;
-        if (elHoraAprovado) elHoraAprovado.textContent = pedidoAtual.hora;
-        if (elPagamento) elPagamento.textContent = pedidoAtual.pagamento;
-        if (elTotalPago) elTotalPago.textContent = `R$ ${pedidoAtual.total.toFixed(2).replace('.', ',')}`;
-
-        if (elListaItens && pedidoAtual.itens) {
-            elListaItens.innerHTML = pedidoAtual.itens.map(item => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:6px; color:#334155;">
-                    <span>${item.quantidade}x ${item.nome}</span>
-                    <span style="font-weight:600;">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
-                </div>
-            `).join('');
-        }
-
-        const end = pedidoAtual.endereco || enderecoSalvo;
-        if (containerEndereco) {
-            if (end && end.rua) {
-                containerEndereco.innerHTML = `
-                    <p style="margin: 0 0 4px 0;"><strong>Destinatário:</strong> ${end.nome}</p>
-                    <p style="margin: 0 0 4px 0;"><strong>Endereço:</strong> ${end.rua}, Nº ${end.numero} ${end.complemento ? '(' + end.complemento + ')' : ''}</p>
-                    <p style="margin: 0 0 4px 0;"><strong>Bairro:</strong> ${end.bairro}</p>
-                    <p style="margin: 0 0 4px 0;"><strong>Cidade/UF:</strong> ${end.cidade} / ${end.uf ? end.uf.toUpperCase() : ''}</p>
-                    <p style="margin: 0; color: #2563eb; font-weight: bold;"><strong>CEP:</strong> ${end.cep}</p>
-                `;
-            } else {
-                containerEndereco.innerHTML = `<p style="color:#ef4444; margin: 0;">Endereço de entrega não informado.</p>`;
-            }
-        }
-    }
-}
-
-// ==========================================
-// MÓDULO DE MEUS PEDIDOS (MEUS-PEDIDOS.HTML)
-// ==========================================
-function carregarPaginaMeusPedidos() {
-    const container = document.getElementById('container-meus-pedidos');
-    if (!container) return;
-
-    // Busca a lista com TODOS os pedidos salvos
-    const historicoPedidos = JSON.parse(localStorage.getItem('historico_pedidos_cliente')) || [];
-
-    if (historicoPedidos.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 2.5rem 1rem; color: #64748b; background: #fff; border-radius: 12px; border: 1px dashed #cbd5e1; margin-top: 1rem;">
-                <p style="font-size: 1rem; margin-bottom: 0.5rem; font-weight: 600;">Nenhum pedido encontrado 📦</p>
-                <small>Você ainda não realizou compras recentemente.</small>
-                <div style="margin-top: 1.5rem;">
-                    <a href="index.html" style="background: #2563eb; color: #fff; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500;">Ir para a Loja</a>
-                </div>
-            </div>
-        `;
-        return;
-    }
-
-    // Renderiza cada pedido do histórico em um card separado
-    container.innerHTML = `
-      <h2 class="secao-titulo">Meus Pedidos (${historicoPedidos.length})</h2>
-      
-      ${historicoPedidos.map((pedido, index) => {
-          const produtosHTML = (pedido.itens && pedido.itens.length > 0) 
-              ? pedido.itens.map(item => `
-                  <div class="produto-mini">
-                      <span class="img-mini">📦</span>
-                      <div class="mini-info">
-                          <span class="nome">${item.nome}</span>
-                          <span class="qtd">Qtd: ${item.quantidade} • R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
-                      </div>
-                  </div>
-              `).join('')
-              : `<p style="font-size:13px; color:#64748b;">Itens do pedido não detalhados.</p>`;
-
-          return `
-            <article class="pedido-card ${index === 0 ? 'ativo' : ''}" style="margin-bottom: 1.5rem;">
-              <div class="pedido-cabecalho">
-                <div>
-                  <span class="pedido-numero">Pedido ${pedido.numero}</span>
-                  <span class="pedido-data">Realizado em ${pedido.data}</span>
-                </div>
-                <span class="badge-status em-andamento">Em Andamento</span>
-              </div>
-
-              <div class="pedido-produtos">
-                ${produtosHTML}
-              </div>
-
-              <div class="rastreio-box">
-                <span class="rastreio-titulo">Status da Entrega</span>
-                <div class="barra-progresso">
-                  <div class="etapa concluida">
-                    <div class="ponto">✓</div>
-                    <span class="etapa-nome">Aprovado</span>
-                  </div>
-                  <div class="etapa atual">
-                    <div class="ponto">📦</div>
-                    <span class="etapa-nome">Em Separação</span>
-                  </div>
-                  <div class="etapa">
-                    <div class="ponto">🚚</div>
-                    <span class="etapa-nome">Em Trânsito</span>
-                  </div>
-                  <div class="etapa">
-                    <div class="ponto">🏠</div>
-                    <span class="etapa-nome">Entregue</span>
-                  </div>
-                </div>
-                <p class="previsao-texto">Pagamento via: <strong>${pedido.pagamento}</strong></p>
-              </div>
-
-              <div class="pedido-rodape" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 12px; margin-top: 12px;">
-                <span style="font-size: 13px; color: #64748b;">Total Pago:</span>
-                <strong style="font-size: 15px; color: #1e293b;">R$ ${pedido.total.toFixed(2).replace('.', ',')}</strong>
-              </div>
-            </article>
-          `;
-      }).join('')}
-    `;
-}
-
-// ==========================================
-// MÓDULO DE MEU PERFIL (MEU-PERFIL.HTML)
-// ==========================================
-function verificarPermissaoPerfil() {
-    const boxAdmin = document.getElementById('opcao-admin-container');
-    if (!boxAdmin) return;
-
-    // Garante que começa escondido por segurança
-    boxAdmin.style.display = 'none';
-
-    // Busca os dados do usuário salvo na sessão ou localStorage
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
-
-    // Se não houver usuário logado, para por aqui (não mostra nada)
-    if (!usuarioLogado || !usuarioLogado.email) return;
-
-    // E-mail autorizado como Administrador
-    const emailAdmin = 'rafaelmelo116@gmail.com';
-
-    // Compara o e-mail do usuário logado com o do administrador
-    if (usuarioLogado.email.toLowerCase() === emailAdmin.toLowerCase()) {
-        boxAdmin.style.display = 'block';
-    }
-}

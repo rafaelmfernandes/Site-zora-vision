@@ -130,7 +130,7 @@ body {
   text-decoration: none;
 }
 
-/* Grade de Produtos (Unificada) */
+/* Grade de Produtos (Estilo Marketplace Moderno) */
 .produtos-grid, 
 .vitrine-produtos {
   display: grid;
@@ -139,7 +139,21 @@ body {
   padding-bottom: 20px;
 }
 
-/* Card do Produto (Funciona para .card e .card-produto) */
+@media (min-width: 640px) {
+  .produtos-grid, 
+  .vitrine-produtos {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .produtos-grid, 
+  .vitrine-produtos {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Card do Produto Moderno */
 .card, 
 .card-produto {
   background-color: #ffffff;
@@ -149,18 +163,36 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 12px;
+  padding: 10px;
+  position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .card:hover, 
 .card-produto:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border-color: #cbd5e1;
+}
+
+/* Badge de Desconto / Destaque no Card */
+.badge-desconto {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 2;
 }
 
 .card-img-box {
-  height: 100px;
+  width: 100%;
+  height: 140px;
   background-color: #f1f5f9;
   border-radius: 8px;
   display: flex;
@@ -168,25 +200,85 @@ body {
   justify-content: center;
   font-size: 36px;
   margin-bottom: 8px;
+  overflow: hidden;
 }
 
-/* Títulos e Preços */
+/* Detalhes do Produto */
+.card-detalhes {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.tags-container {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.tag-indicado {
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.tag-categoria {
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
 .card-titulo, 
 .card-produto h3 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
-  color: #0f172a;
+  color: #1e293b;
   margin-bottom: 6px;
   line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 2.6em;
+}
+
+.card-rodape-info {
+  border-top: 1px solid #f8fafc;
+  padding-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .card-preco, 
 .card-produto .preco {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
-  color: #2563eb;
+  color: #059669;
   display: block;
-  margin-bottom: 10px;
+}
+
+.card-preco span,
+.card-produto .preco span {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: normal;
+}
+
+.card-meta-info {
+  font-size: 10px;
+  color: #64748b;
 }
 
 /* Botão Adicionar ao Carrinho */

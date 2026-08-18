@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Administrativo - E-commerce</title>
   <link rel="stylesheet" href="Folha-estilos/admin.css">
-  <script src="Scripts/admin.js"></script>
 </head>
 <body>
 
@@ -174,48 +173,9 @@
               <th class="text-right">Ações</th>
             </tr>
           </thead>
-          <tbody>
-            
-            <tr>
-              <td>
-                <div class="produto-item-celula">
-                  <span class="emoji-thumb">🎧</span>
-                  <div>
-                    <span class="prod-nome-tabela">Fone Bluetooth Sem Fio</span>
-                    <span class="prod-categoria">Eletrônicos</span>
-                  </div>
-                </div>
-              </td>
-              <td><strong>R$ 129,90</strong></td>
-              <td><span class="tag-estoque ok">18 un.</span></td>
-              <td><span class="tag-metrica views">👁️ 3.420</span></td>
-              <td><span class="tag-metrica vendas">🛍️ 142</span></td>
-              <td class="text-right">
-                <button type="button" class="btn-tb-acao btn-tb-editar" title="Editar">✏️ Editar</button>
-                <button type="button" class="btn-tb-acao btn-tb-excluir" title="Excluir" onclick="confirm('Tem certeza que deseja excluir?')">🗑️</button>
-              </td>
-            </tr>
-
-            <tr>
-              <td>
-                <div class="produto-item-celula">
-                  <span class="emoji-thumb">⌚</span>
-                  <div>
-                    <span class="prod-nome-tabela">Smartwatch Fit Pro</span>
-                    <span class="prod-categoria">Acessórios</span>
-                  </div>
-                </div>
-              </td>
-              <td><strong>R$ 199,90</strong></td>
-              <td><span class="tag-estoque alerta">3 un.</span></td>
-              <td><span class="tag-metrica views">👁️ 1.890</span></td>
-              <td><span class="tag-metrica vendas">🛍️ 64</span></td>
-              <td class="text-right">
-                <button type="button" class="btn-tb-acao btn-tb-editar" title="Editar">✏️ Editar</button>
-                <button type="button" class="btn-tb-acao btn-tb-excluir" title="Excluir" onclick="confirm('Tem certeza que deseja excluir?')">🗑️</button>
-              </td>
-            </tr>
-
+          <!-- ID adicionado para o script injetar os produtos dinamicamente -->
+          <tbody id="tabela-produtos-corpo">
+            <!-- Os produtos cadastrados serão carregados aqui automaticamente -->
           </tbody>
         </table>
       </div>
@@ -273,6 +233,6 @@
     </section>
 
   </main>
-
+  <script src="Scripts/admin.js"></script>
 </body>
-</html>[cite: 3]
+</html>
