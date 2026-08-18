@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Integrações - Painel Admin</title>
+  <link rel="stylesheet" href="Folha-estilos/integraçoes.css">
+</head>
+<body>
+
+  <!-- TOPO / HEADER ADMIN -->
+  <header class="admin-header">
+    <div class="header-conteudo">
+      <a href="admin.html" class="btn-voltar" title="Voltar ao Painel">&#8592; Voltar ao Painel</a>
+      <h1 class="admin-titulo">Gerenciar Integrações</h1>
+      <div class="header-espaco"></div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- RESUMO DO STATUS DE SINCRONIZAÇÃO -->
+    <section class="card-secao alerta-sincronizacao">
+      <div class="sinc-info">
+        <span class="sinc-icone">🔄</span>
+        <div>
+          <h3 class="sinc-titulo">Sincronização Automática Ativa</h3>
+          <p class="sinc-descricao">Última atualização geral realizada há 12 minutos. Estoque e preços estão sincronizados.</p>
+        </div>
+      </div>
+      <button type="button" class="btn-sincronizar-agora" onclick="alert('Sincronizando todas as contas conectadas...')">Sincronizar Agora ⚡</button>
+    </section>
+
+    <!-- CANAIS DE VENDA / MARKETPLACES -->
+    <section class="lista-integracoes">
+
+      <!-- MERCADO LIVRE -->
+      <article class="card-mkt mkt-conectado">
+        <div class="mkt-header">
+          <div class="mkt-brand">
+            <span class="mkt-badge-icon logo-ml">🟡</span>
+            <div>
+              <h2 class="mkt-nome">Mercado Livre</h2>
+              <span class="mkt-conta">Conta: <strong>LojaOficial_ML</strong></span>
+            </div>
+          </div>
+          <span class="status-pill status-ativo">● Conectado</span>
+        </div>
+
+        <div class="mkt-corpo">
+          <p class="mkt-resumo">42 produtos cadastrados e vinculados ao catálogo do Mercado Livre.</p>
+          
+          <div class="opcoes-sincronizacao">
+            <label class="switch-container">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+              <span class="switch-label">Sincronizar Estoque automaticamente</span>
+            </label>
+
+            <label class="switch-container">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+              <span class="switch-label">Importar Pedidos para o Painel</span>
+            </label>
+
+            <label class="switch-container">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+              <span class="switch-label">Atualizar Preços em tempo real</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="mkt-rodape">
+          <button type="button" class="btn-secundario" onclick="alert('Configurações avançadas do Mercado Livre')">Configurações Avançadas</button>
+          <button type="button" class="btn-desconectar" onclick="confirm('Deseja desconectar a conta do Mercado Livre?')">Desconectar Account</button>
+        </div>
+      </article>
+
+      <!-- SHOPEE -->
+      <article class="card-mkt mkt-conectado">
+        <div class="mkt-header">
+          <div class="mkt-brand">
+            <span class="mkt-badge-icon logo-shopee">🟠</span>
+            <div>
+              <h2 class="mkt-nome">Shopee</h2>
+              <span class="mkt-conta">Conta: <strong>Loja_Shopee_BR</strong></span>
+            </div>
+          </div>
+          <span class="status-pill status-ativo">● Conectado</span>
+        </div>
+
+        <div class="mkt-corpo">
+          <p class="mkt-resumo">38 produtos sincronizados com a API Oficial Shopee Seller Centre.</p>
+          
+          <div class="opcoes-sincronizacao">
+            <label class="switch-container">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+              <span class="switch-label">Sincronizar Estoque automaticamente</span>
+            </label>
+
+            <label class="switch-container">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+              <span class="switch-label">Importar Pedidos para o Painel</span>
+            </label>
+
+            <label class="switch-container">
+              <input type="checkbox">
+              <span class="switch-slider"></span>
+              <span class="switch-label">Atualizar Preços em tempo real</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="mkt-rodape">
+          <button type="button" class="btn-secundario" onclick="alert('Configurações avançadas da Shopee')">Configurações Avançadas</button>
+          <button type="button" class="btn-desconectar" onclick="confirm('Deseja desconectar a conta da Shopee?')">Desconectar Account</button>
+        </div>
+      </article>
+
+      <!-- TIKTOK SHOP -->
+      <article class="card-mkt mkt-desconectado">
+        <div class="mkt-header">
+          <div class="mkt-brand">
+            <span class="mkt-badge-icon logo-tiktok">🖤</span>
+            <div>
+              <h2 class="mkt-nome">TikTok Shop</h2>
+              <span class="mkt-conta">Integração para vendas em vídeos e Lives</span>
+            </div>
+          </div>
+          <span class="status-pill status-inativo">○ Não Conectado</span>
+        </div>
+
+        <div class="mkt-corpo">
+          <p class="mkt-resumo">Conecte sua conta do TikTok Seller Center para marcar seus produtos em vídeos curtos e transmissões ao vivo.</p>
+        </div>
+
+        <div class="mkt-rodape">
+          <!-- LINK ATUALIZADO ABAIXO -->
+          <a href="Conectar-integraçao.html" class="btn-conectar-mkt">Conectar TikTok Shop 🚀</a>
+        </div>
+      </article>
+    </section>
+
+    <!-- HISTÓRICO DE ATIVIDADES DE SINCRONIZAÇÃO -->
+    <section class="card-secao">
+      <h2 class="secao-titulo">📜 Histórico Recente de Sincronização</h2>
+      <div class="tabela-responsive">
+        <table class="tabela-historico">
+          <thead>
+            <tr>
+              <th>Canal</th>
+              <th>Ação</th>
+              <th>Horário</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🟡 Mercado Livre</td>
+              <td>Atualização de Estoque (Fone Bluetooth)</td>
+              <td>Hoje às 22:05</td>
+              <td><span class="tag-sucesso">Sucesso</span></td>
+            </tr>
+            <tr>
+              <td>🟠 Shopee</td>
+              <td>Importação de Novo Pedido (#SHP-9921)</td>
+              <td>Hoje às 21:40</td>
+              <td><span class="tag-sucesso">Sucesso</span></td>
+            </tr>
+            <tr>
+              <td>🟡 Mercado Livre</td>
+              <td>Ajuste de Preço</td>
+              <td>Hoje às 18:15</td>
+              <td><span class="tag-sucesso">Sucesso</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>

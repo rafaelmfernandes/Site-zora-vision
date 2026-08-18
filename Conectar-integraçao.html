@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conectar Integração - Painel Admin</title>
+  <link rel="stylesheet" href="Folha-estilos/Conectar-integraçao.css">
+</head>
+<body>
+
+  <!-- TOPO / HEADER ADMIN -->
+  <header class="admin-header">
+    <div class="header-conteudo">
+      <a href="javascript:history.back()" class="btn-voltar" title="Voltar para Integrações">&#8592; Voltar</a>
+      <h1 class="admin-titulo">Conectar Canal de Venda</h1>
+      <div class="header-espaco"></div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <form class="form-conexao" action="integracoes.html" method="GET">
+
+      <!-- PASSO 1: SELEÇÃO DO MARKETPLACE -->
+      <section class="card-secao">
+        <h2 class="secao-titulo">1. Selecione a Plataforma</h2>
+        <p class="secao-subtitulo">Escolha o marketplace que deseja vincular à sua loja:</p>
+
+        <div class="grid-plataformas">
+          
+          <label class="card-plataforma-option">
+            <input type="radio" name="plataforma" value="mercadolivre" checked>
+            <div class="plataforma-box">
+              <span class="mkt-icon logo-ml">🟡</span>
+              <span class="mkt-nome">Mercado Livre</span>
+              <span class="mkt-tag">OAuth 2.0</span>
+            </div>
+          </label>
+
+          <label class="card-plataforma-option">
+            <input type="radio" name="plataforma" value="shopee">
+            <div class="plataforma-box">
+              <span class="mkt-icon logo-shopee">🟠</span>
+              <span class="mkt-nome">Shopee</span>
+              <span class="mkt-tag">Open API</span>
+            </div>
+          </label>
+
+          <label class="card-plataforma-option">
+            <input type="radio" name="plataforma" value="tiktok">
+            <div class="plataforma-box">
+              <span class="mkt-icon logo-tiktok">🖤</span>
+              <span class="mkt-nome">TikTok Shop</span>
+              <span class="mkt-tag">Seller Center</span>
+            </div>
+          </label>
+
+          <label class="card-plataforma-option">
+            <input type="radio" name="plataforma" value="amazon">
+            <div class="plataforma-box">
+              <span class="mkt-icon logo-amazon">📦</span>
+              <span class="mkt-nome">Amazon</span>
+              <span class="mkt-tag">SP-API</span>
+            </div>
+          </label>
+
+          <label class="card-plataforma-option">
+            <input type="radio" name="plataforma" value="shein">
+            <div class="plataforma-box">
+              <span class="mkt-icon logo-shein">🛍️</span>
+              <span class="mkt-nome">Shein</span>
+              <span class="mkt-tag">Marketplace</span>
+            </div>
+          </label>
+
+        </div>
+      </section>
+
+      <!-- PASSO 2: AUTENTICAÇÃO E CREDENCIAIS -->
+      <section class="card-secao">
+        <h2 class="secao-titulo">2. Autenticação da Conta</h2>
+        <p class="secao-subtitulo">Escolha o método de conexão ou insira os dados do seu painel do vendedor:</p>
+
+        <div class="box-oauth">
+          <div class="oauth-info">
+            <span class="oauth-icone">🔐</span>
+            <div>
+              <strong class="oauth-titulo">Conexão Rápida via Login (Recomendado)</strong>
+              <p class="oauth-descricao">Você será redirecionado para autorizar o acesso seguro da aplicação.</p>
+            </div>
+          </div>
+          <button type="button" class="btn-oauth" onclick="alert('Redirecionando para tela de autorização oficial...')">
+            Autorizar no Mercado Livre ↗
+          </button>
+        </div>
+
+        <div class="divisor-ou"><span>ou configure manualmente com Chaves de API</span></div>
+
+        <div class="campo">
+          <label for="app-id">App ID / Client ID</label>
+          <input type="text" id="app-id" placeholder="Ex.: 849302194820">
+        </div>
+
+        <div class="campo">
+          <label for="secret-key">Client Secret / Token de Acesso</label>
+          <input type="password" id="secret-key" placeholder="••••••••••••••••••••••••••••">
+        </div>
+      </section>
+
+      <!-- PASSO 3: REGRAS DE REGRAS DE SINCRONIZAÇÃO -->
+      <section class="card-secao">
+        <h2 class="secao-titulo">3. Regras de Sincronização</h2>
+        <p class="secao-subtitulo">Defina como o estoque, pedidos e preços serão sincronizados:</p>
+
+        <div class="grupo-regras">
+          
+          <label class="checkbox-opcao">
+            <input type="checkbox" name="sync_estoque" checked>
+            <div>
+              <strong>Sincronização de Estoque</strong>
+              <p class="sub-regra">Ao vender neste marketplace, o estoque será baixado automaticamente na sua loja e vice-versa.</p>
+            </div>
+          </label>
+
+          <label class="checkbox-opcao">
+            <input type="checkbox" name="sync_pedidos" checked>
+            <div>
+              <strong>Importar Pedidos para o Painel Admin</strong>
+              <p class="sub-regra">Todos os pedidos gerados neste canal aparecerão na sua central de separação de pedidos.</p>
+            </div>
+          </label>
+
+          <div class="linha-regra-preco">
+            <label class="checkbox-opcao">
+              <input type="checkbox" name="margem_preco">
+              <div>
+                <strong>Acréscimo automático no preço de venda</strong>
+                <p class="sub-regra">Adicione uma porcentagem para cobrir as taxas de comissão da plataforma.</p>
+              </div>
+            </label>
+            <div class="input-porcentagem">
+              <input type="number" placeholder="12" min="0" max="100">
+              <span>%</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- BOTOES DE AÇÃO -->
+      <div class="botoes-container">
+        <a href="integracoes.html" class="btn-cancelar">Cancelar</a>
+        <button type="submit" class="btn-salvar-conexao">Conectar e Sincronizar Agora 🚀</button>
+      </div>
+
+    </form>
+
+  </main>
+
+</body>
+</html>

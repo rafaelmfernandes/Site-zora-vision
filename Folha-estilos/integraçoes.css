@@ -1,0 +1,334 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  padding-bottom: 60px;
+}
+
+/* Header Admin */
+.admin-header {
+  background-color: #0f172a;
+  color: #ffffff;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.header-conteudo {
+  max-width: 850px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-voltar {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.btn-voltar:hover {
+  color: #ffffff;
+}
+
+.admin-titulo {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.header-espaco {
+  width: 60px;
+}
+
+/* Container */
+.container {
+  padding: 24px 16px;
+  max-width: 850px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Alerta de Sincronização */
+.card-secao {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.alerta-sincronizacao {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.sinc-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sinc-icone {
+  font-size: 1.8rem;
+}
+
+.sinc-titulo {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #14532d;
+}
+
+.sinc-descricao {
+  font-size: 0.78rem;
+  color: #166534;
+}
+
+.btn-sincronizar-agora {
+  background-color: #16a34a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-sincronizar-agora:hover {
+  background-color: #15803d;
+}
+
+/* Lista de Marketplaces */
+.lista-integracoes {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.card-mkt {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.mkt-header {
+  padding: 16px 20px;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mkt-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mkt-badge-icon {
+  font-size: 1.4rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-ml { background-color: #fef08a; }
+.logo-shopee { background-color: #ffedd5; }
+.logo-tiktok { background-color: #f1f5f9; }
+
+.mkt-nome {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.mkt-conta {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.status-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.status-ativo {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-inativo {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+/* Corpo do Card */
+.mkt-corpo {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mkt-resumo {
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+/* Switch Toggles */
+.opcoes-sincronizacao {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.switch-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.switch-container input[type="checkbox"] {
+  accent-color: #2563eb;
+  width: 18px;
+  height: 18px;
+}
+
+.switch-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Rodapé do Card */
+.mkt-rodape {
+  padding: 14px 20px;
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-secundario {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-desconectar {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-conectar-mkt {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Tabela de Histórico */
+.secao-titulo {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.tabela-responsive {
+  overflow-x: auto;
+}
+
+.tabela-historico {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.tabela-historico th {
+  background-color: #f8fafc;
+  padding: 8px 10px;
+  text-align: left;
+  color: #64748b;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tabela-historico td {
+  padding: 10px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+.tag-sucesso {
+  background-color: #dcfce7;
+  color: #15803d;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.btn-conectar-mkt {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none; /* Remove o sublinhado */
+  display: inline-block;  /* Garante o formato de botão */
+  transition: background-color 0.2s;
+}
+
+.btn-conectar-mkt:hover {
+  background-color: #1e293b;
+}
