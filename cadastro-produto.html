@@ -1,66 +1,110 @@
+HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro de Produto</title>
-<link rel="stylesheet" href="Folha-estilos/Cadastro-produto.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastrar Produto - Painel Admin</title>
+  <link rel="stylesheet" href="Folha-estilos/Cadastro-produto.css">
 </head>
 <body>
 
-  <div class="tela">
-    <div class="topo">
-      <span class="voltar">&#8592;</span>
-      <h1>Novo produto</h1>
+  <header class="admin-header">
+    <div class="header-conteudo">
+      <button type="button" onclick="history.back()" class="btn-voltar" title="Voltar ao Painel">&#8592; Voltar</button>
+      <h1 class="admin-titulo">Cadastrar Novo Produto</h1>
+      <div class="header-espaco"></div>
     </div>
+  </header>
 
-    <div class="conteudo">
+  <main class="container">
 
-      <label class="upload-foto" for="foto">
-        <span style="font-size: 26px;">&#128247;</span>
-        <span>Adicionar fotos</span>
-        <input type="file" id="foto" accept="image/*" multiple style="display:none;">
-      </label>
+    <form class="form-produto" action="admin.html" method="GET">
 
-      <div class="campo">
-        <label for="nome">Nome do produto</label>
-        <input type="text" id="nome" placeholder="Ex.: Vaso decorativo cerâmica">
-      </div>
-
-      <div class="campo">
-        <label for="categoria">Categoria</label>
-        <select id="categoria">
-          <option>Decoração</option>
-          <option>Presentes</option>
-          <option>Casa e cozinha</option>
-        </select>
-      </div>
-
-      <div class="campo">
-        <label for="descricao">Descrição</label>
-        <textarea id="descricao" placeholder="Detalhes, materiais, dimensões..."></textarea>
-      </div>
-
-      <div class="linha-dupla">
-        <div class="campo">
-          <label for="preco">Preço</label>
-          <input type="text" id="preco" placeholder="R$ 0,00">
+      <section class="card-secao">
+        <h2 class="secao-titulo">📸 Imagens do Produto</h2>
+        <div class="upload-box" onclick="document.getElementById('input-foto').click()">
+          <span class="upload-icone">🖼️</span>
+          <p class="upload-texto"><strong>Clique aqui</strong> ou arraste as fotos do produto</p>
+          <span class="upload-subtexto">PNG, JPG ou WEBP (Recomendado: 800x800px)</span>
+          <input type="file" id="input-foto" accept="image/*" multiple style="display: none;">
         </div>
+      </section>
+
+      <section class="card-secao">
+        <h2 class="secao-titulo">📝 Informações Básicas</h2>
+        
         <div class="campo">
-          <label for="estoque">Estoque</label>
-          <input type="text" id="estoque" placeholder="0 un.">
+          <label for="nome-produto">Nome do Produto *</label>
+          <input type="text" id="nome-produto" placeholder="Ex.: Fone Bluetooth Sem Fio Premium" required>
         </div>
+
+        <div class="campo">
+          <label for="categoria">Categoria *</label>
+          <select id="categoria" required>
+            <option value="" disabled selected>Selecione uma categoria</option>
+            <option value="eletronicos">Eletrônicos</option>
+            <option value="acessorios">Acessórios</option>
+            <option value="bebidas">Bebidas</option>
+            <option value="comida">Alimentação</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="descricao">Descrição Detalhada</label>
+          <textarea id="descricao" rows="4" placeholder="Descreva os detalhes, especificações e benefícios do produto..."></textarea>
+        </div>
+      </section>
+
+      <section class="card-secao">
+        <h2 class="secao-titulo">💰 Preço e Estoque</h2>
+
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="preco-venda">Preço de Venda (R$) *</label>
+            <input type="number" id="preco-venda" step="0.01" placeholder="129.90" required>
+          </div>
+          <div class="campo">
+            <label for="preco-original">Preço Antigo (R$)</label>
+            <input type="number" id="preco-original" step="0.01" placeholder="159.90" title="Para mostrar desconto 'De R$ X por R$ Y'">
+          </div>
+        </div>
+
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="estoque">Estoque Inicial *</label>
+            <input type="number" id="estoque" placeholder="10" min="0" required>
+          </div>
+          <div class="campo">
+            <label for="sku">Código SKU / Referência</label>
+            <input type="text" id="sku" placeholder="EX-1020">
+          </div>
+        </div>
+      </section>
+
+      <section class="card-secao">
+        <h2 class="secao-titulo">⚙️ Opções de Exibição</h2>
+
+        <label class="checkbox-opcao">
+          <input type="checkbox" name="produto_ativo" checked>
+          <span><strong>Ativar Produto:</strong> Visível imediatamente na loja pública.</span>
+        </label>
+
+        <label class="checkbox-opcao">
+          <input type="checkbox" name="produto_destaque">
+          <span><strong>Produto em Destaque:</strong> Exibir na seção "Mais Vendidos" na Home.</span>
+        </label>
+      </section>
+
+      <div class="botoes-container">
+        <button type="button" onclick="history.back()" class="btn-cancelar">Cancelar</button>
+        <button type="submit" class="btn-salvar-produto">Salvar e Publicar Produto</button>
       </div>
 
-      <div class="campo">
-        <label for="sku">SKU</label>
-        <input type="text" id="sku" placeholder="Código do produto">
-      </div>
+    </form>
 
-      <button class="btn-salvar" type="button">Salvar produto</button>
-
-    </div>
-  </div>
+  </main>
 
 </body>
 </html>

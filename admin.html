@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/admin.css">
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="header-conteudo">
+      <div class="admin-brand">
+        <span class="admin-logo-icon">⚡</span>
+        <div>
+          <h1 class="admin-titulo">Painel Administrativo</h1>
+          <span class="admin-subtitulo">Visão Geral da Loja</span>
+        </div>
+      </div>
+      <a href="index.html" class="btn-loja-link" target="_blank">Ver Loja ↗</a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="grid-dashboard">
+      
+      <div class="card-kpi destaque-financeiro">
+        <div class="kpi-topo">
+          <span class="kpi-rotulo">Faturamento Hoje</span>
+          <span class="kpi-icone icon-green">💰</span>
+        </div>
+        <div class="kpi-corpo">
+          <span class="kpi-valor">R$ 1.450,80</span>
+          <span class="kpi-tendencia positiva">↑ +12.5% em relação a ontem</span>
+        </div>
+      </div>
+
+      <div class="card-kpi">
+        <div class="kpi-topo">
+          <span class="kpi-rotulo">Pedidos Pendentes</span>
+          <span class="kpi-icone icon-orange">📦</span>
+        </div>
+        <div class="kpi-corpo">
+          <span class="kpi-valor">5 Pedidos</span>
+          <span class="kpi-subtexto">3 aguardando separação</span>
+        </div>
+      </div>
+
+      <div class="card-kpi">
+        <div class="kpi-topo">
+          <span class="kpi-rotulo">Visualizações (Mês)</span>
+          <span class="kpi-icone icon-blue">👁️</span>
+        </div>
+        <div class="kpi-corpo">
+          <span class="kpi-valor">12.480</span>
+          <span class="kpi-tendencia positiva">↑ +8.2% este mês</span>
+        </div>
+      </div>
+
+      <div class="card-kpi">
+        <div class="kpi-topo">
+          <span class="kpi-rotulo">Ticket Médio</span>
+          <span class="kpi-icone icon-purple">📊</span>
+        </div>
+        <div class="kpi-corpo">
+          <span class="kpi-valor">R$ 164,20</span>
+          <span class="kpi-subtexto">Média por cliente</span>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="painel-card">
+      <div class="painel-cabecalho">
+        <div>
+          <h2 class="painel-titulo">📋 Pedidos Recentes para Separação</h2>
+          <p class="painel-descricao">Confira os detalhes de entrega e imprima a etiqueta de envio.</p>
+        </div>
+        <span class="contador-badge">5 para separar</span>
+      </div>
+
+      <div class="lista-pedidos">
+
+        <article class="pedido-card-admin">
+          <div class="pedido-header">
+            <div class="pedido-id-box">
+              <span class="pedido-numero">Pedido #84920</span>
+              <span class="pedido-data">17/08/2026 às 21:25</span>
+            </div>
+            <span class="status-pill status-separacao">Em Separação</span>
+          </div>
+
+          <div class="pedido-corpo-grid">
+            
+            <div class="bloco-info cliente-box">
+              <h3 class="bloco-titulo">👤 Cliente & Entrega</h3>
+              <p class="cliente-nome">João Silva</p>
+              <p class="cliente-contato">📱 (62) 99999-8888 • joao.silva@email.com</p>
+              <div class="endereco-entrega">
+                <strong>Endereço de Entrega:</strong><br>
+                Rua T-63, Quadra 12, Lote 05, nº 1020<br>
+                Setor Bueno - Goiânia / GO • CEP: 74230-100<br>
+                <em>Ref: Próximo à praça principal</em>
+              </div>
+            </div>
+
+            <div class="bloco-info produtos-box">
+              <h3 class="bloco-titulo">🛒 Itens do Pedido</h3>
+              <ul class="lista-itens-pedido">
+                <li>
+                  <span>1x Fone Bluetooth Sem Fio Premium</span>
+                  <strong>R$ 129,90</strong>
+                </li>
+                <li>
+                  <span>1x Capa Protetora Anti-impacto</span>
+                  <strong>R$ 39,90</strong>
+                </li>
+              </ul>
+              <div class="resumo-financeiro-pedido">
+                <span>Total Pago (com frete):</span>
+                <span class="valor-total-pedido">R$ 176,31</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pedido-rodape-acoes">
+            <button type="button" class="btn-acao btn-imprimir-etiqueta" onclick="alert('Gerando etiqueta de envio para impressão...')">
+              🖨️ Gerar Etiqueta de Envio
+            </button>
+            <div class="select-status-container">
+              <label for="status-select-1">Alterar Status:</label>
+              <select id="status-select-1" class="select-status">
+                <option value="separacao" selected>Em Separação</option>
+                <option value="transporte">Em Transporte</option>
+                <option value="concluido">Entregue / Concluído</option>
+                <option value="cancelado">Cancelar Pedido</option>
+              </select>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="painel-card">
+      <div class="painel-cabecalho flex-between">
+        <div>
+          <h2 class="painel-titulo">🏷️ Produtos Cadastrados</h2>
+          <p class="painel-descricao">Acompanhe visualizações, vendas e estoque de cada produto.</p>
+        </div>
+        <a href="cadastro-produto.html" class="btn-cadastrar-novo">+ Cadastrar Produto</a>
+      </div>
+
+      <div class="tabela-responsive">
+        <table class="tabela-admin">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Preço</th>
+              <th>Estoque</th>
+              <th>Visualizações</th>
+              <th>Vendas</th>
+              <th class="text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td>
+                <div class="produto-item-celula">
+                  <span class="emoji-thumb">🎧</span>
+                  <div>
+                    <span class="prod-nome-tabela">Fone Bluetooth Sem Fio</span>
+                    <span class="prod-categoria">Eletrônicos</span>
+                  </div>
+                </div>
+              </td>
+              <td><strong>R$ 129,90</strong></td>
+              <td><span class="tag-estoque ok">18 un.</span></td>
+              <td><span class="tag-metrica views">👁️ 3.420</span></td>
+              <td><span class="tag-metrica vendas">🛍️ 142</span></td>
+              <td class="text-right">
+                <button type="button" class="btn-tb-acao btn-tb-editar" title="Editar">✏️ Editar</button>
+                <button type="button" class="btn-tb-acao btn-tb-excluir" title="Excluir" onclick="confirm('Tem certeza que deseja excluir?')">🗑️</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="produto-item-celula">
+                  <span class="emoji-thumb">⌚</span>
+                  <div>
+                    <span class="prod-nome-tabela">Smartwatch Fit Pro</span>
+                    <span class="prod-categoria">Acessórios</span>
+                  </div>
+                </div>
+              </td>
+              <td><strong>R$ 199,90</strong></td>
+              <td><span class="tag-estoque alerta">3 un.</span></td>
+              <td><span class="tag-metrica views">👁️ 1.890</span></td>
+              <td><span class="tag-metrica vendas">🛍️ 64</span></td>
+              <td class="text-right">
+                <button type="button" class="btn-tb-acao btn-tb-editar" title="Editar">✏️ Editar</button>
+                <button type="button" class="btn-tb-acao btn-tb-excluir" title="Excluir" onclick="confirm('Tem certeza que deseja excluir?')">🗑️</button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
