@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Pedidos - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Meus-pedidos.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="perfil.html" class="btn-voltar" title="Voltar ao Perfil">&#8592;</a>
+    <h1 class="header-titulo">Meus Pedidos</h1>
+    <div class="header-espaco"></div>
+  </header>
+
+  <main class="container">
+
+    <section class="secao-pedidos">
+      <h2 class="secao-titulo">Pedido em Andamento</h2>
+
+      <article class="pedido-card ativo">
+        <div class="pedido-cabecalho">
+          <div>
+            <span class="pedido-numero">Pedido #84920</span>
+            <span class="pedido-data">Realizado em 17/08/2026</span>
+          </div>
+          <span class="badge-status em-andamento">Em Andamento</span>
+        </div>
+
+        <div class="pedido-produtos">
+          <div class="produto-mini">
+            <span class="img-mini">🎧</span>
+            <div class="mini-info">
+              <span class="nome">Fone Bluetooth Sem Fio Premium</span>
+              <span class="qtd">Qtd: 1 • R$ 129,90</span>
+            </div>
+          </div>
+          <div class="produto-mini">
+            <span class="img-mini">📱</span>
+            <div class="mini-info">
+              <span class="nome">Capa Protetora Anti-impacto</span>
+              <span class="qtd">Qtd: 1 • R$ 39,90</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rastreio-box">
+          <span class="rastreio-titulo">Status da Entrega</span>
+          <div class="barra-progresso">
+            <div class="etapa concluida">
+              <div class="ponto">✓</div>
+              <span class="etapa-nome">Aprovado</span>
+            </div>
+            <div class="etapa atual">
+              <div class="ponto">📦</div>
+              <span class="etapa-nome">Em Separação</span>
+            </div>
+            <div class="etapa">
+              <div class="ponto">🚚</div>
+              <span class="etapa-nome">Em Trânsito</span>
+            </div>
+            <div class="etapa">
+              <div class="ponto">🏠</div>
+              <span class="etapa-nome">Entregue</span>
+            </div>
+          </div>
+          <p class="previsao-texto">Previsão de entrega: <strong>19 a 21 de Agosto</strong></p>
+        </div>
+
+        <div class="pedido-rodape">
+          <span

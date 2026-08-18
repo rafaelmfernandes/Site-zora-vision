@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedido Confirmado - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Pedido-confirmado.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-espaco"></div>
+    <h1 class="header-titulo">Sucesso!</h1>
+    <a href="index.html" class="btn-fechar" title="Ir para home">✕</a>
+  </header>
+
+  <main class="container">
+
+    <section class="sucesso-box">
+      <div class="check-icone">✓</div>
+      <h2 class="sucesso-titulo">Pedido Realizado com Sucesso!</h2>
+      <p class="sucesso-subtexto">Obrigado pela sua compra. Enviamos o comprovante e os detalhes para o seu e-mail.</p>
+    </section>
+
+    <section class="info-card">
+      <div class="info-linha">
+        <span class="label">Número do Pedido:</span>
+        <span class="valor-destaque">#84920</span>
+      </div>
+      <div class="info-linha">
+        <span class="label">Data:</span>
+        <span>17 de Agosto de 2026</span>
+      </div>
+      <div class="info-linha">
+        <span class="label">Previsão de Entrega:</span>
+        <span class="previsao-tag">📦 2 a 4 dias úteis</span>
+      </div>
+      <div class="info-linha">
+        <span class="label">Forma de Pagamento:</span>
+        <span>Cartão de Crédito (Mastercard)</span>
+      </div>
+    </section>
+
+    <section class="status-card">
+      <h3 class="secao-titulo">Status do Pedido</h3>
+      <div class="linha-tempo">
+        <div class="status-passo concluido">
+          <div class="dot"></div>
+          <div class="passo-info">
+            <span class="passo-nome">Pagamento Aprovado</span>
+            <span class="passo-hora">17/08/2026 - 21:25</span>
+          </div>
+        </div>
+        <div class="status-passo ativo">
+          <div class="dot"></div>
+          <div class="passo-info">
+            <span class="passo-nome">Em Separação no Estoque</span>
+            <span class="passo-hora">Aguardando envio</span>
+          </div>
+        </div>
+        <div class="status-passo">
+          <div class="dot"></div>
+          <div class="passo-info">
+            <span class="passo-nome">Em Transporte</span>
+            <span class="passo-hora">Pendente</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao-card">
+      <h3 class="secao-titulo">Entrega em:</h3>
+      <p class="txt-endereco"><strong>João Silva</strong></p>
+      <p class="txt-endereco">Rua T-63, Quadra 12, Lote 05, nº 1020 - Setor Bueno</p>
+      <p class="txt-endereco">Goiânia - GO, CEP: 74230-100</p>
+    </section>
+
+    <div class="acoes-container">
+      <a href="perfil.html" class="btn-acompanhar">Acompanhar Meus Pedidos</a>
+      <a href="index.html" class="btn-home">Voltar para a Loja</a>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">0</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="perfil.html" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Perfil</span>
+    </a>
+  </nav>
+
+</body>
+</html>

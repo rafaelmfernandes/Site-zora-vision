@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formas de Pagamento - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Formas-pagamento.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="checkout.html" class="btn-voltar" title="Voltar ao Checkout">&#8592;</a>
+    <h1 class="header-titulo">Formas de Pagamento</h1>
+    <div class="header-espaco"></div>
+  </header>
+
+  <main class="container">
+
+    <section class="secao-pagamento">
+      <h2 class="secao-titulo">Seus Cartões Salvos</h2>
+
+      <div class="lista-cartoes">
+        
+        <label class="cartao-item ativo">
+          <input type="radio" name="cartao_selecionado" value="cartao_1" checked>
+          <div class="cartao-icone">💳</div>
+          <div class="cartao-info">
+            <div class="cartao-topo-info">
+              <span class="bandeira">Mastercard</span>
+              <span class="badge-principal">Principal</span>
+            </div>
+            <p class="cartao-numero">•••• •••• •••• 4589</p>
+            <span class="cartao-validade">Vence em 08/29</span>
+          </div>
+          <button type="button" class="btn-excluir" title="Remover cartão">🗑️</button>
+        </label>
+
+        <label class="cartao-item">
+          <input type="radio" name="cartao_selecionado" value="cartao_2">
+          <div class="cartao-icone">💳</div>
+          <div class="cartao-info">
+            <div class="cartao-topo-info">
+              <span class="bandeira">Visa</span>
+            </div>
+            <p class="cartao-numero">•••• •••• •••• 1234</p>
+            <span class="cartao-validade">Vence em 11/27</span>
+          </div>
+          <button type="button" class="btn-excluir" title="Remover cartão">🗑️</button>
+        </label>
+
+      </div>
+    </section>
+
+    <section class="secao-acoes">
+      <a href="cadastro-pagamento.html" class="btn-add-cartao">
+        <span class="icon-plus">+</span>
+        <span>Adicionar nova forma de pagamento</span>
+      </a>
+    </section>
+
+    <div class="acao-fixa-container">
+      <a href="checkout.html" class="btn-usar-selecionado">Usar Cartão Selecionado</a>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">2</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="perfil.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Perfil</span>
+    </a>
+  </nav>
+
+</body>
+</html>

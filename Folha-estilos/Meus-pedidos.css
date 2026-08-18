@@ -1,0 +1,329 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  padding-bottom: 80px;
+}
+
+/* Header */
+.header {
+  background-color: #ffffff;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.btn-voltar {
+  font-size: 1.3rem;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 600;
+  width: 30px;
+}
+
+.header-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.header-espaco {
+  width: 30px;
+}
+
+/* Container */
+.container {
+  padding: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.secao-titulo {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+/* Cards de Pedido */
+.pedido-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pedido-card.ativo {
+  border-color: #93c5fd;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+.pedido-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pedido-numero {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: block;
+}
+
+.pedido-data {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Badges de Status */
+.badge-status {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.badge-status.em-andamento {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.badge-status.entregue {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+/* Lista de Produtos dentro do Card */
+.pedido-produtos {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.produto-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #f8fafc;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.img-mini {
+  font-size: 1.4rem;
+  background-color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.mini-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mini-info .nome {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.mini-info .qtd {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+/* Rastreamento Visual */
+.rastreio-box {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.rastreio-titulo {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.barra-progresso {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+/* Linha conectora */
+.barra-progresso::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background-color: #e2e8f0;
+  z-index: 1;
+}
+
+.etapa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.ponto {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.etapa.concluida .ponto {
+  background-color: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.etapa.atual .ponto {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 0 0 3px #dbeafe;
+}
+
+.etapa-nome {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.etapa.concluida .etapa-nome,
+.etapa.atual .etapa-nome {
+  color: #0f172a;
+}
+
+.previsao-texto {
+  font-size: 0.78rem;
+  color: #475569;
+  text-align: center;
+}
+
+/* Rodapé do Card */
+.pedido-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 6px;
+}
+
+.total-label {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.btn-detalhes, .btn-comprar-novamente {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+/* Lista Histórico */
+.lista-historico {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  width: 25%;
+  height: 100%;
+  position: relative;
+}
+
+.nav-icon {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.nav-item.active {
+  color: #2563eb;
+}
+
+.carrinho-count {
+  position: absolute;
+  top: 6px;
+  right: 22%;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
