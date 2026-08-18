@@ -13,6 +13,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const imgEl = document.getElementById('prod-img');
   const estoqueTagEl = document.getElementById('prod-estoque-tag');
 
+  // 0. Função utilitária para verificar se o usuário está logado antes da ação
+  function verificarAutenticacaoAntesDeAcao(e) {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+
+    // Se não houver usuário logado ou e-mail válido cadastrado
+    if (!usuarioLogado || !usuarioLogado.email) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      alert('Por favor, faça login na sua conta para continuar.');
+      
+      // Redireciona corretamente para a página de Login
+      window.location.href = 'Login.html';
+      return false;
+    }
+
+    return true; // Usuário autenticado com sucesso
+  }
+
   // 1. Pega o ID passado na URL (ex: Produtos.html?id=prod_123456)
   const urlParams = new URLSearchParams(window.location.search);
   const produtoId = urlParams.get('id');
@@ -87,13 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 5. Função para salvar sincronizado em 'carrinho_db' e 'carrinho'
-  // 5. Função para salvar sincronizado em 'carrinho_db' e 'carrinho'
   function salvarNoCarrinho(quantidade) {
-    // Se a imagem for muito grande (Base64), removemos do carrinho para não estourar o limite de 5MB
     let imagemParaCarrinho = '📦';
     if (produtoAtual.imagem && typeof produtoAtual.imagem === 'string') {
       if (!produtoAtual.imagem.startsWith('data:image')) {
-        imagemParaCarrinho = produtoAtual.imagem; // Mantém se for emoji ou URL curta
+        imagemParaCarrinho = produtoAtual.imagem; 
       }
     }
 
@@ -105,7 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
       quantidade: quantidade
     };
 
-    // Salva nas chaves com tratamento de erro de cota
     const chaves = ['carrinho_db', 'carrinho'];
 
     chaves.forEach(chave => {
@@ -136,10 +154,14 @@ document.addEventListener('DOMContentLoaded', () => {
     contadorCarrinhoNav.textContent = totalItens;
   }
 
-  // 7. Evento do botão "Adicionar ao Carrinho"
+  // 7. Evento do botão "Adicionar ao Carrinho" (Com validação de login)
   if (btnAdicionar) {
     btnAdicionar.addEventListener('click', (e) => {
       e.preventDefault();
+
+      // 🔒 Valida se está logado antes de prosseguir
+      if (!verificarAutenticacaoAntesDeAcao(e)) return;
+
       const quantidade = parseInt(inputQtd ? inputQtd.value : 1);
       
       salvarNoCarrinho(quantidade);
@@ -157,10 +179,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 8. Evento do botão "Comprar Agora"
+  // 8. Evento do botão "Comprar Agora" (Com validação de login)
   if (btnComprar) {
     btnComprar.addEventListener('click', (e) => {
       e.preventDefault();
+
+      // 🔒 Valida se está logado antes de prosseguir
+      if (!verificarAutenticacaoAntesDeAcao(e)) return;
+
       const quantidade = parseInt(inputQtd ? inputQtd.value : 1);
       
       salvarNoCarrinho(quantidade);
