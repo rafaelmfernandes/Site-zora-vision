@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Compra - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Checkout.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="carrinho.html" class="btn-voltar" title="Voltar ao carrinho">&#8592;</a>
+    <h1 class="header-titulo">Finalizar Compra</h1>
+    <div class="header-espaco"></div>
+  </header>
+
+  <main class="checkout-container">
+
+    <section class="secao-card">
+      <div class="secao-topo">
+        <h2 class="secao-titulo">📍 Endereço de Entrega</h2>
+        <a href="#" class="link-acao">Alterar</a>
+      </div>
+      <div class="endereco-box">
+        <p class="endereco-nome">João Silva</p>
+        <p class="endereco-detalhes">Rua T-63, Quadra 12, Lote 05, nº 1020</p>
+        <p class="endereco-bairro">Setor Bueno - Goiânia / GO</p>
+        <p class="endereco-cep">CEP: 74230-100</p>
+      </div>
+    </section>
+
+    <section class="secao-card">
+      <h2 class="secao-titulo">💳 Forma de Pagamento</h2>
+
+      <div class="opcoes-pagamento">
+        
+        <label class="pagamento-item">
+          <input type="radio" name="pagamento" value="pix" checked>
+          <div class="pagamento-info">
+            <div class="pagamento-nome">
+              <span>PIX</span>
+              <span class="badge-desconto">5% OFF</span>
+            </div>
+            <span class="pagamento-subtexto">Aprovação instantânea</span>
+          </div>
+          <span class="pagamento-icone">⚡</span>
+        </label>
+
+        <label class="pagamento-item">
+          <input type="radio" name="pagamento" value="cartao">
+          <div class="pagamento-info">
+            <div class="pagamento-nome">Cartão de Crédito</div>
+            <span class="pagamento-subtexto">Em até 12x no cartão</span>
+          </div>
+          <span class="pagamento-icone">💳</span>
+        </label>
+
+        <label class="pagamento-item">
+          <input type="radio" name="pagamento" value="boleto">
+          <div class="pagamento-info">
+            <div class="pagamento-nome">Boleto Bancário</div>
+            <span class="pagamento-subtexto">Vencimento em 2 dias úteis</span>
+          </div>
+          <span class="pagamento-icone">📄</span>
+        </label>
+
+      </div>
+    </section>
+
+    <section class="secao-card">
+      <h2 class="secao-titulo">📦 Itens do Pedido (2)</h2>
+      <div class="itens-resumo">
+        <div class="item-linha">
+          <span class="item-qtd-nome">1x Fone Bluetooth Sem Fio Premium</span>
+          <span class="item-preco">R$ 129,90</span>
+        </div>
+        <div class="item-linha">
+          <span class="item-qtd-nome">1x Capa Protetora Anti-impacto</span>
+          <span class="item-preco">R$ 39,90</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao-card resumo-valores">
+      <div class="linha-valor">
+        <span>Subtotal</span>
+        <span>R$ 169,80</span>
+      </div>
+      <div class="linha-valor">
+        <span>Frete (Entrega Normal)</span>
+        <span class="frete-valor">R$ 15,00</span>
+      </div>
+      <div class="linha-valor desconto">
+        <span>Desconto PIX (5%)</span>
+        <span>- R$ 8,49</span>
+      </div>
+      <hr class="divisor-resumo">
+      <div class="linha-valor total">
+        <span>Total a Pagar</span>
+        <span class="valor-final">R$ 176,31</span>
+      </div>
+    </section>
+
+    <div class="checkout-acao">
+      <a href="pedido-confirmado.html" class="btn-finalizar">Confirmar e Pagar</a>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item active">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">2</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="perfil.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Perfil</span>
+    </a>
+  </nav>
+
+</body>
+</html>

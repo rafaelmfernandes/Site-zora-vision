@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastro de Produto</title>
+<link rel="stylesheet" href="Folha-estilos/Cadastro-produto.css">
+</head>
+<body>
+
+  <div class="tela">
+    <div class="topo">
+      <span class="voltar">&#8592;</span>
+      <h1>Novo produto</h1>
+    </div>
+
+    <div class="conteudo">
+
+      <label class="upload-foto" for="foto">
+        <span style="font-size: 26px;">&#128247;</span>
+        <span>Adicionar fotos</span>
+        <input type="file" id="foto" accept="image/*" multiple style="display:none;">
+      </label>
+
+      <div class="campo">
+        <label for="nome">Nome do produto</label>
+        <input type="text" id="nome" placeholder="Ex.: Vaso decorativo cerâmica">
+      </div>
+
+      <div class="campo">
+        <label for="categoria">Categoria</label>
+        <select id="categoria">
+          <option>Decoração</option>
+          <option>Presentes</option>
+          <option>Casa e cozinha</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" placeholder="Detalhes, materiais, dimensões..."></textarea>
+      </div>
+
+      <div class="linha-dupla">
+        <div class="campo">
+          <label for="preco">Preço</label>
+          <input type="text" id="preco" placeholder="R$ 0,00">
+        </div>
+        <div class="campo">
+          <label for="estoque">Estoque</label>
+          <input type="text" id="estoque" placeholder="0 un.">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="sku">SKU</label>
+        <input type="text" id="sku" placeholder="Código do produto">
+      </div>
+
+      <button class="btn-salvar" type="button">Salvar produto</button>
+
+    </div>
+  </div>
+
+</body>
+</html>

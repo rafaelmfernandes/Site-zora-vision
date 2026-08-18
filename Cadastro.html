@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Conta - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Cadastro.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="login.html" class="btn-voltar" title="Voltar">&#8592;</a>
+    <h1 class="header-titulo">Criar Conta</h1>
+    <div class="header-espaco"></div>
+  </header>
+
+  <main class="cadastro-container">
+
+    <div class="boas-vindas">
+      <h2>Crie sua conta 👋</h2>
+      <p>Cadastre-se para acompanhar seus pedidos e receber ofertas exclusivas.</p>
+    </div>
+
+    <div class="social-box">
+      <a href="#" class="btn-social google">
+        <span class="social-icon">🌐</span>
+        <span>Continuar com o Google</span>
+      </a>
+
+      <a href="#" class="btn-social apple">
+        <span class="social-icon">🍎</span>
+        <span>Continuar com a Apple</span>
+      </a>
+    </div>
+
+    <div class="divisor">
+      <span class="linha"></span>
+      <span class="divisor-texto">OU</span>
+      <span class="linha"></span>
+    </div>
+
+    <form class="form-cadastro">
+      <div class="campo">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo" required>
+      </div>
+
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="seuemail@exemplo.com" required>
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" placeholder="Crie uma senha segura" required>
+      </div>
+
+      <div class="campo">
+        <label for="confirmar-senha">Confirmar senha</label>
+        <input type="password" id="confirmar-senha" placeholder="Digite a senha novamente" required>
+      </div>
+
+      <button type="submit" class="btn-cadastrar">Criar minha conta</button>
+    </form>
+
+    <div class="link-login-box">
+      Já tem uma conta? <a href="login.html">Fazer login</a>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">2</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="login.html" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Entrar</span>
+    </a>
+  </nav>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  padding-bottom: 75px;
+}
+
+/* Header */
+.header {
+  background-color: #ffffff;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-logo {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.header-logo span {
+  color: #2563eb;
+}
+
+/* Ícone de Notificação do Topo */
+.notificacao-btn {
+  position: relative;
+  font-size: 20px;
+  text-decoration: none;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+}
+
+.notificacao-badge {
+  position: absolute;
+  top: 0px;
+  right: -1px;
+  width: 9px;
+  height: 9px;
+  background-color: #2563eb;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+}
+
+/* Busca */
+.search-container {
+  padding: 12px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #f1f5f9;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+}
+
+/* Banner */
+.banner {
+  margin: 20px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border-radius: 12px;
+  padding: 20px;
+  color: #ffffff;
+}
+
+.banner-badge {
+  display: inline-block;
+  background-color: rgba(255,255,255,0.2);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.banner-titulo {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.banner-subtitulo {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* Grade de Produtos */
+.secao-container {
+  padding: 0 20px;
+}
+
+.secao-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.secao-titulo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.secao-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-img-box {
+  height: 120px;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+}
+
+.card-body {
+  padding: 10px;
+}
+
+.card-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  display: block;
+}
+
+.card-titulo {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.card-preco {
+  font-size: 15px;
+  font-weight: 800;
+  color: #2563eb;
+}
+
+/* Menu Inferior (4 Ícones) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  width: 25%;
+  height: 100%;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.nav-icon {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.nav-item.active {
+  color: #2563eb;
+}
+
+/* Contador sobre o ícone do Carrinho */
+.carrinho-count {
+  position: absolute;
+  top: 6px;
+  right: 22%;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

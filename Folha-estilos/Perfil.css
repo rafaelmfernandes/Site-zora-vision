@@ -1,0 +1,252 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  padding-bottom: 85px;
+}
+
+/* Header */
+.header {
+  background-color: #ffffff;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.btn-voltar {
+  font-size: 1.3rem;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 600;
+  width: 30px;
+}
+
+.header-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.header-espaco {
+  width: 30px;
+}
+
+/* Card do Perfil */
+.perfil-card {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.avatar-container {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 12px auto;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  border: 3px solid #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+}
+
+.usuario-nome {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.usuario-email {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* Status dos Pedidos */
+.pedidos-resumo {
+  margin: 16px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 16px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.status-icon {
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+
+.status-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Menu de Opções */
+.menu-secao {
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.secao-titulo {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+.menu-lista {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  text-decoration: none;
+  color: #0f172a;
+  transition: background-color 0.2s;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item:active {
+  background-color: #f8fafc;
+}
+
+.item-icon {
+  font-size: 1.2rem;
+  margin-right: 12px;
+  width: 24px;
+  text-align: center;
+}
+
+.item-texto {
+  font-size: 0.9rem;
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+.item-seta {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+/* Botão Sair */
+.btn-sair-box {
+  padding: 0 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-sair {
+  display: block;
+  width: 100%;
+  background-color: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.btn-sair:hover {
+  background-color: #fee2e2;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  width: 25%;
+  height: 100%;
+  position: relative;
+}
+
+.nav-icon {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.nav-item.active {
+  color: #2563eb;
+}
+
+.carrinho-count {
+  position: absolute;
+  top: 6px;
+  right: 22%;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

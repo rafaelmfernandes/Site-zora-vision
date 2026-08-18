@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Carrinho - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Carrinho.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="btn-voltar" title="Voltar">&#8592;</a>
+    <h1 class="header-titulo">Meu Carrinho (2)</h1>
+    <div class="header-espaco"></div>
+  </header>
+
+  <div class="frete-alerta">
+    🎉 Parabéns! Você ganhou <strong>FRETE GRÁTIS</strong> nesta compra!
+  </div>
+
+  <main class="carrinho-lista">
+
+    <article class="carrinho-item">
+      <div class="item-img-box">🎧</div>
+      <div class="item-detalhes">
+        <h2 class="item-titulo">Fone Bluetooth Sem Fio Premium</h2>
+        <div class="item-preco">R$ 129,90</div>
+        
+        <div class="item-rodape">
+          <div class="qtd-controles">
+            <button type="button" class="btn-qtd">-</button>
+            <span class="qtd-num">1</span>
+            <button type="button" class="btn-qtd">+</button>
+          </div>
+          <button type="button" class="btn-remover" title="Remover do carrinho">🗑️</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="carrinho-item">
+      <div class="item-img-box">⌚</div>
+      <div class="item-detalhes">
+        <h2 class="item-titulo">Smartwatch Fit Pro Inteligente</h2>
+        <div class="item-preco">R$ 199,90</div>
+        
+        <div class="item-rodape">
+          <div class="qtd-controles">
+            <button type="button" class="btn-qtd">-</button>
+            <span class="qtd-num">1</span>
+            <button type="button" class="btn-qtd">+</button>
+          </div>
+          <button type="button" class="btn-remover" title="Remover do carrinho">🗑️</button>
+        </div>
+      </div>
+    </article>
+
+    <div class="cupom-container">
+      <div class="cupom-box">
+        <input type="text" class="cupom-input" placeholder="Possui cupom de desconto?" />
+        <button type="button" class="btn-cupom">Aplicar</button>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="resumo-fixo">
+    <div class="resumo-linha">
+      <span>Subtotal</span>
+      <span>R$ 329,80</span>
+    </div>
+    <div class="resumo-linha">
+      <span>Frete</span>
+      <span class="frete-gratis">GRÁTIS</span>
+    </div>
+    <div class="resumo-linha total">
+      <span>Total</span>
+      <span class="total-valor">R$ 329,80</span>
+    </div>
+    <a href="checkout.html" class="btn-finalizar">Finalizar Compra</a>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item active">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">2</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="login.html" class="nav-item">
+      <span class="nav-icon">👤</span>
+      <span>Entrar</span>
+    </a>
+  </nav>
+
+</body>
+</html>

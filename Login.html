@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acessar Conta - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Login.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="btn-voltar" title="Voltar">&#8592;</a>
+    <h1 class="header-titulo">Acessar Conta</h1>
+    <div class="header-espaco"></div>
+  </header>
+
+  <main class="login-container">
+
+    <div class="boas-vindas">
+      <h2>Bem-vindo de volta! 👋</h2>
+      <p>Acesse sua conta para continuar suas compras e acompanhar pedidos.</p>
+    </div>
+
+    <div class="social-box">
+      <a href="perfil.html" class="btn-social google">
+        <span class="social-icon">🌐</span>
+        <span>Entrar com o Google</span>
+      </a>
+
+      <a href="perfil.html" class="btn-social apple">
+        <span class="social-icon">🍎</span>
+        <span>Entrar com a Apple</span>
+      </a>
+    </div>
+
+    <div class="divisor">
+      <span class="linha"></span>
+      <span class="divisor-texto">OU</span>
+      <span class="linha"></span>
+    </div>
+
+    <form class="form-login" action="perfil.html" method="GET">
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="seuemail@exemplo.com" required>
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" placeholder="Digite sua senha" required>
+      </div>
+
+      <div class="esqueceu-senha">
+        <a href="#">Esqueceu a senha?</a>
+      </div>
+
+      <button type="submit" class="btn-entrar">Entrar na minha conta</button>
+    </form>
+
+    <div class="link-cadastro-box">
+      Ainda não tem conta? <a href="Cadastro.html">Cadastrar-se</a>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">2</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="login.html" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Entrar</span>
+    </a>
+  </nav>
+
+</body>
+</html>
