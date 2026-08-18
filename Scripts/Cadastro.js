@@ -42,6 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('usuarios_db', JSON.stringify(usuarios));
 
     alert('Conta criada com sucesso! 🎉');
-    window.location.href = 'login.html';
+    window.location.href = 'Login.html';
   });
 });
