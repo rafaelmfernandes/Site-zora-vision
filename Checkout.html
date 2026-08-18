@@ -4,18 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Finalizar Compra - E-commerce</title>
+
+  <!-- ESTILOS CSS -->
   <link rel="stylesheet" href="Folha-estilos/Checkout.css">
 </head>
 <body>
 
+  <!-- ========================================== -->
+  <!-- CABEÇALHO DA PÁGINA                       -->
+  <!-- ========================================== -->
   <header class="header">
     <a href="carrinho.html" class="btn-voltar" title="Voltar ao carrinho">&#8592;</a>
     <h1 class="header-titulo">Finalizar Compra</h1>
     <div class="header-espaco"></div>
   </header>
 
+  <!-- ========================================== -->
+  <!-- CONTEÚDO PRINCIPAL DO CHECKOUT             -->
+  <!-- ========================================== -->
   <main class="checkout-container">
 
+    <!-- SEÇÃO: ENDEREÇO DE ENTREGA -->
     <section class="secao-card">
       <div class="secao-topo">
         <h2 class="secao-titulo">📍 Endereço de Entrega</h2>
@@ -29,11 +38,13 @@
       </div>
     </section>
 
+    <!-- SEÇÃO: FORMAS DE PAGAMENTO -->
     <section class="secao-card">
       <h2 class="secao-titulo">💳 Forma de Pagamento</h2>
 
       <div class="opcoes-pagamento">
         
+        <!-- Opção PIX -->
         <label class="pagamento-item">
           <input type="radio" name="pagamento" value="pix" checked>
           <div class="pagamento-info">
@@ -46,6 +57,7 @@
           <span class="pagamento-icone">⚡</span>
         </label>
 
+        <!-- Opção Cartão -->
         <label class="pagamento-item">
           <input type="radio" name="pagamento" value="cartao">
           <div class="pagamento-info">
@@ -55,6 +67,7 @@
           <span class="pagamento-icone">💳</span>
         </label>
 
+        <!-- Opção Boleto -->
         <label class="pagamento-item">
           <input type="radio" name="pagamento" value="boleto">
           <div class="pagamento-info">
@@ -67,46 +80,45 @@
       </div>
     </section>
 
+    <!-- SEÇÃO: ITENS DO PEDIDO (INJETADOS VIA JAVASCRIPT) -->
     <section class="secao-card">
-      <h2 class="secao-titulo">📦 Itens do Pedido (2)</h2>
-      <div class="itens-resumo">
-        <div class="item-linha">
-          <span class="item-qtd-nome">1x Fone Bluetooth Sem Fio Premium</span>
-          <span class="item-preco">R$ 129,90</span>
-        </div>
-        <div class="item-linha">
-          <span class="item-qtd-nome">1x Capa Protetora Anti-impacto</span>
-          <span class="item-preco">R$ 39,90</span>
-        </div>
+      <h2 class="secao-titulo" id="chk-titulo-itens">📦 Itens do Pedido</h2>
+      <div class="itens-resumo" id="chk-lista-itens">
+        <!-- O JS inserirá os itens do carrinho aqui -->
       </div>
     </section>
 
+    <!-- SEÇÃO: RESUMO DE VALORES (CÁLCULO DINÂMICO VIA JS) -->
     <section class="secao-card resumo-valores">
       <div class="linha-valor">
         <span>Subtotal</span>
-        <span>R$ 169,80</span>
+        <span id="chk-subtotal">R$ 0,00</span>
       </div>
       <div class="linha-valor">
-        <span>Frete (Entrega Normal)</span>
-        <span class="frete-valor">R$ 15,00</span>
+        <span>Frete</span>
+        <span class="frete-valor" id="chk-frete">R$ 5,00</span>
       </div>
-      <div class="linha-valor desconto">
-        <span>Desconto PIX (5%)</span>
-        <span>- R$ 8,49</span>
+      <div class="linha-valor desconto" id="box-desconto" style="display: none;">
+        <span>Desconto</span>
+        <span id="chk-desconto">- R$ 0,00</span>
       </div>
       <hr class="divisor-resumo">
       <div class="linha-valor total">
         <span>Total a Pagar</span>
-        <span class="valor-final">R$ 176,31</span>
+        <span class="valor-final" id="chk-total">R$ 0,00</span>
       </div>
     </section>
 
+    <!-- BOTÃO FINALIZAR COMPRA -->
     <div class="checkout-acao">
       <a href="Pedido-confirmado.html" class="btn-finalizar">Confirmar e Pagar</a>
     </div>
 
   </main>
 
+  <!-- ========================================== -->
+  <!-- MENU INFERIOR DE NAVEGAÇÃO                 -->
+  <!-- ========================================== -->
   <nav class="bottom-nav">
     <a href="index.html" class="nav-item">
       <span class="nav-icon">🏠</span>
@@ -118,7 +130,7 @@
     </a>
     <a href="carrinho.html" class="nav-item active">
       <span class="nav-icon">🛒</span>
-      <span class="carrinho-count">2</span>
+      <span class="carrinho-count">0</span>
       <span>Carrinho</span>
     </a>
     <a href="Meu-perfil.html" class="nav-item">
@@ -127,5 +139,9 @@
     </a>
   </nav>
 
+  <!-- ========================================== -->
+  <!-- SCRIPT JS PRINCIPAL                        -->
+  <!-- ========================================== -->
+  <script src="Scripts/carrinho-checkout.js"></script>
 </body>
 </html>

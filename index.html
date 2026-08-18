@@ -1,81 +1,95 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minha Loja - E-commerce</title>
-  <link rel="stylesheet" href="Folha-estilos/index2.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuaLoja.com - E-commerce</title>
+    <link rel="stylesheet" href="Folha-estilos/index2.css">
 </head>
 <body>
 
-  <header class="header">
-    <a href="index.html" class="header-logo">SuaLoja<span>.com</span></a>
-    
-    <a href="notificacoes.html" class="notificacao-btn" title="Notificações">
-      🔔<span class="notificacao-badge"></span>
-    </a>
-  </header>
+    <!-- Header do Site -->
+    <header class="header">
+        <a href="index.html" class="header-logo">SuaLoja<span>.com</span></a>
+        <a href="#" class="notificacao-btn" aria-label="Notificações">
+            🔔
+            <span class="notificacao-badge"></span>
+        </a>
+    </header>
 
-  <div class="search-container">
-    <input type="text" class="search-input" placeholder="🔍 Buscar produtos, marcas..." />
-  </div>
+    <!-- Barra de Pesquisa -->
+    <section class="search-container">
+        <input type="text" class="search-input" placeholder="Buscar produtos, marcas...">
+    </section>
 
-  <section class="banner">
-    <span class="banner-badge">Ofertas da Semana</span>
-    <h2 class="banner-titulo">Até 40% OFF + Frete Grátis</h2>
-    <p class="banner-subtitulo">Aproveite as melhores novidades com entrega rápida.</p>
-  </section>
+    <!-- Banner Promocional -->
+    <section class="banner">
+        <span class="banner-badge">PROMOÇÃO</span>
+        <h2 class="banner-titulo">Até 40% OFF + Frete Grátis</h2>
+        <p class="banner-subtitulo">Aproveite as melhores novidades com entrega rápida.</p>
+    </section>
 
-  <main class="secao-container">
-    <div class="secao-header">
-      <h3 class="secao-titulo">Produtos em Destaque</h3>
-      <a href="#" class="secao-link">Ver todos</a>
-    </div>
-
-    <div class="produtos-grid">
-      <a href="Produtos.html" class="card-link">
-        <div class="card">
-          <div class="card-img-box">🎧</div>
-          <div class="card-body">
-            <span class="card-tag">Frete Grátis</span>
-            <h4 class="card-titulo">Fone Bluetooth Premium</h4>
-            <div class="card-preco">R$ 129,90</div>
-          </div>
+    <!-- Catálogo de Produtos em Destaque -->
+    <main class="secao-container">
+        <div class="secao-header">
+            <h2 class="secao-titulo">Produtos em Destaque</h2>
+            <a href="#" class="secao-link">Ver todos</a>
         </div>
-      </a>
 
-      <a href="produto.html" class="card-link">
-        <div class="card">
-          <div class="card-img-box">⌚</div>
-          <div class="card-body">
-            <span class="card-tag">Mais Vendido</span>
-            <h4 class="card-titulo">Smartwatch Fit Pro</h4>
-            <div class="card-preco">R$ 199,90</div>
-          </div>
+        <div class="produtos-grid">
+            
+            <!-- Produto 1: Eletrônico -->
+            <div class="card-produto">
+                <div class="card-img-box">🎧</div>
+                <h3>Fone de Ouvido Bluetooth Premium</h3>
+                <span class="preco">R$ 189,90</span>
+                <button class="btn-adicionar" 
+                        data-id="fone-01" 
+                        data-nome="Fone de Ouvido Bluetooth Premium" 
+                        data-preco="189.90">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+
+            <!-- Produto 2: Decoração -->
+            <div class="card-produto">
+                <div class="card-img-box">💡</div>
+                <h3>Luminária de Mesa Minimalista</h3>
+                <span class="preco">R$ 120,00</span>
+                <button class="btn-adicionar" 
+                        data-id="deco-02" 
+                        data-nome="Luminária de Mesa Minimalista" 
+                        data-preco="120.00">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+
         </div>
-      </a>
-    </div>
-  </main>
+    </main>
 
-  <nav class="bottom-nav">
-    <a href="index.html" onclick="location.reload();" class="nav-item active" class="nav-item active">
-      <span class="nav-icon">🏠</span>
-      <span>Home</span>
-    </a>
-    <a href="Notificaçoes.html" class="nav-item">
-      <span class="nav-icon">🔔</span>
-      <span>Avisos</span>
-    </a>
-    <a href="carrinho.html" class="nav-item">
-      <span class="nav-icon">🛒</span>
-      <span class="carrinho-count">2</span>
-      <span>Carrinho</span>
-    </a>
-    <a href="Meu-perfil.html" class="nav-item">
-      <span class="nav-icon">👤</span>
-      <span>Entrar</span>
-    </a>
-  </nav>
+    <!-- Menu Inferior de Navegação -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">🔔</span>
+            <span>Avisos</span>
+        </a>
+        <a href="carrinho.html" class="nav-item">
+            <span class="nav-icon">🛒</span>
+            <span class="carrinho-badge">0</span>
+            <span>Carrinho</span>
+        </a>
+        <a href="Meu-perfil.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Entrar</span>
+        </a>
+    </nav>
+
+    <!-- Importação do JavaScript do Carrinho -->
+    <script src="Scripts/Carrinho-checkout.js"></script>
 
 </body>
 </html>

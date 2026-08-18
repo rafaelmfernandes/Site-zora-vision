@@ -4,32 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pedido Confirmado - E-commerce</title>
+
+  <!-- ESTILOS CSS -->
   <link rel="stylesheet" href="Folha-estilos/Pedido-confirmado.css">
 </head>
 <body>
 
+  <!-- ========================================== -->
+  <!-- CABEÇALHO DA PÁGINA                       -->
+  <!-- ========================================== -->
   <header class="header">
     <div class="header-espaco"></div>
     <h1 class="header-titulo">Sucesso!</h1>
     <a href="index.html" class="btn-fechar" title="Ir para home">✕</a>
   </header>
 
+  <!-- ========================================== -->
+  <!-- CONTEÚDO PRINCIPAL DO COMPROVANTE          -->
+  <!-- ========================================== -->
   <main class="container">
 
+    <!-- CABEÇALHO DE SUCESSO -->
     <section class="sucesso-box">
       <div class="check-icone">✓</div>
       <h2 class="sucesso-titulo">Pedido Realizado com Sucesso!</h2>
       <p class="sucesso-subtexto">Obrigado pela sua compra. Enviamos o comprovante e os detalhes para o seu e-mail.</p>
     </section>
 
+    <!-- INFORMACÕES GERAIS DO PEDIDO (DINÂMICO VIA JS) -->
     <section class="info-card">
       <div class="info-linha">
         <span class="label">Número do Pedido:</span>
-        <span class="valor-destaque">#84920</span>
+        <span class="valor-destaque" id="conf-numero-pedido">#00000</span>
       </div>
       <div class="info-linha">
         <span class="label">Data:</span>
-        <span>17 de Agosto de 2026</span>
+        <span id="conf-data-pedido">--/--/----</span>
       </div>
       <div class="info-linha">
         <span class="label">Previsão de Entrega:</span>
@@ -37,10 +47,24 @@
       </div>
       <div class="info-linha">
         <span class="label">Forma de Pagamento:</span>
-        <span>Cartão de Crédito (Mastercard)</span>
+        <span id="conf-pagamento">PIX</span>
       </div>
     </section>
 
+    <!-- NOVO CARD: ITENS COMPRADOS E TOTAL (DINÂMICO VIA JS) -->
+    <section class="secao-card info-card">
+      <h3 class="secao-titulo">📦 Itens Comprados</h3>
+      <div id="conf-lista-itens" style="margin-top: 10px; font-size: 14px;">
+        <!-- Injetado via JS -->
+      </div>
+      <hr style="border: 0; border-top: 1px dashed #e2e8f0; margin: 12px 0;">
+      <div class="info-linha" style="font-weight: bold; font-size: 15px;">
+        <span class="label">Total Pago:</span>
+        <span class="valor-destaque" id="conf-total-pago">R$ 0,00</span>
+      </div>
+    </section>
+
+    <!-- ACOMPANHAMENTO DE STATUS -->
     <section class="status-card">
       <h3 class="secao-titulo">Status do Pedido</h3>
       <div class="linha-tempo">
@@ -48,7 +72,7 @@
           <div class="dot"></div>
           <div class="passo-info">
             <span class="passo-nome">Pagamento Aprovado</span>
-            <span class="passo-hora">17/08/2026 - 21:25</span>
+            <span class="passo-hora" id="conf-hora-aprovado">--/--/---- - --:--</span>
           </div>
         </div>
         <div class="status-passo ativo">
@@ -68,6 +92,7 @@
       </div>
     </section>
 
+    <!-- ENDEREÇO DE ENTREGA -->
     <section class="secao-card">
       <h3 class="secao-titulo">Entrega em:</h3>
       <p class="txt-endereco"><strong>João Silva</strong></p>
@@ -75,13 +100,17 @@
       <p class="txt-endereco">Goiânia - GO, CEP: 74230-100</p>
     </section>
 
+    <!-- BOTOES DE AÇÃO -->
     <div class="acoes-container">
-      <a href="perfil.html" class="btn-acompanhar">Acompanhar Meus Pedidos</a>
+      <a href="Meu-perfil.html" class="btn-acompanhar">Acompanhar Meus Pedidos</a>
       <a href="index.html" class="btn-home">Voltar para a Loja</a>
     </div>
 
   </main>
 
+  <!-- ========================================== -->
+  <!-- MENU INFERIOR DE NAVEGAÇÃO                 -->
+  <!-- ========================================== -->
   <nav class="bottom-nav">
     <a href="index.html" class="nav-item">
       <span class="nav-icon">🏠</span>
@@ -96,11 +125,15 @@
       <span class="carrinho-count">0</span>
       <span>Carrinho</span>
     </a>
-    <a href="perfil.html" class="nav-item active">
+    <a href="Meu-perfil.html" class="nav-item active">
       <span class="nav-icon">👤</span>
       <span>Perfil</span>
     </a>
   </nav>
 
+  <!-- ========================================== -->
+  <!-- SCRIPT JS PRINCIPAL                        -->
+  <!-- ========================================== -->
+  <script src="Scripts/carrinho-checkout.js"></script>
 </body>
 </html>

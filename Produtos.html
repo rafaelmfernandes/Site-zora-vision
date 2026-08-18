@@ -1,142 +1,186 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fone Bluetooth Premium - E-commerce</title>
-  <link rel="stylesheet" href="Folha-estilos/Produtos.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Produto - SuaLoja.com</title>
+    <!-- Caminho atualizado para a pasta Folha-estilos -->
+    <link rel="stylesheet" href="Folha-estilos/Produtos.css">
 </head>
 <body>
 
-  <header class="header">
-    <a href="index.html" class="btn-voltar" title="Voltar">&#8592;</a>
-    <h1 class="header-titulo">Detalhes do Produto</h1>
-    <button type="button" class="btn-favorito" title="Favoritar">❤️</button>
-  </header>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="btn-voltar">←</a>
+        <h1 class="header-titulo">Detalhes do Produto</h1>
+        <button class="btn-favorito" aria-label="Favoritar">🤍</button>
+    </header>
 
-  <main class="produto-container">
+    <!-- Galeria -->
+    <section class="galeria-box">
+        <div class="imagem-principal" id="prod-img">🎧</div>
+    </section>
 
-    <div class="galeria-box">
-      <div class="imagem-principal">🎧</div>
+    <!-- Detalhes do Produto -->
+    <section class="detalhes-header">
+        <h2 class="produto-titulo" id="prod-titulo">Carregando produto...</h2>
+        
+        <div class="avaliacao-resumo">
+            <span class="estrelas">★★★★★</span>
+            <span class="nota">4.8</span>
+            <span class="total-avaliacoes">(124 avaliações)</span>
+        </div>
+
+        <div class="preco-estoque-box">
+            <div class="preco-box">
+                <span class="preco-de">R$ 249,90</span>
+                <span class="preco-por" id="prod-preco">R$ 0,00</span>
+            </div>
+            <div class="estoque-tag">
+                <span class="dot"></span> Em estoque
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Quantidade -->
+    <section class="secao-quantidade">
+        <span class="qtd-label">Quantidade</span>
+        <div class="seletor-qtd">
+            <button class="btn-qtd" id="btn-diminuir">-</button>
+            <input type="number" class="input-qtd" id="input-qtd" value="1" min="1" readonly>
+            <button class="btn-qtd" id="btn-aumentar">+</button>
+        </div>
+    </section>
+
+    <!-- Descrição -->
+    <section class="secao-info">
+        <h3 class="secao-titulo">Descrição do Produto</h3>
+        <p class="descricao-texto" id="prod-descricao">
+            Carregando descrição do produto...
+        </p>
+    </section>
+
+    <!-- Avaliações / Comentários -->
+    <section class="secao-info">
+        <div class="secao-cabecalho">
+            <h3 class="secao-titulo">Avaliações de Clientes</h3>
+            <a href="#" class="link-ver-todos">Ver todas</a>
+        </div>
+        <div class="comentarios-lista" id="prod-comentarios">
+            <!-- Injetado dinamicamente via JS (Exibe comentários ou aviso padrão) -->
+        </div>
+    </section>
+
+    <!-- Produtos Relacionados -->
+    <section class="secao-info">
+        <h3 class="secao-titulo">Quem viu este, também comprou</h3>
+        <div class="produtos-grid" id="prod-relacionados">
+            <!-- Injetado dinamicamente via JS -->
+        </div>
+    </section>
+
+    <!-- Barra Dupla de Compra Fixa -->
+    <div class="barra-compra-fixa">
+        <button class="btn-carrinho" id="add-carrinho-detalhes">Adicionar ao Carrinho</button>
+        <button class="btn-comprar" id="comprar-agora">Comprar Agora</button>
     </div>
 
-    <section class="detalhes-header">
-      <h2 class="produto-titulo">Fone Bluetooth Sem Fio Premium</h2>
-      
-      <div class="avaliacao-resumo">
-        <span class="estrelas">★★★★★</span>
-        <span class="nota">4.8</span>
-        <span class="total-avaliacoes">(128 avaliações)</span>
-      </div>
-
-      <div class="preco-estoque-box">
-        <div class="preco-box">
-          <span class="preco-de">R$ 199,90</span>
-          <span class="preco-por">R$ 129,90</span>
-        </div>
-        <div class="estoque-tag">
-          <span class="dot"></span>
-          <span>Apenas 8 em estoque!</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="secao-quantidade">
-      <span class="qtd-label">Quantidade:</span>
-      <div class="seletor-qtd">
-        <button type="button" class="btn-qtd">-</button>
-        <input type="number" class="input-qtd" value="1" min="1" max="8" readonly>
-        <button type="button" class="btn-qtd">+</button>
-      </div>
-    </section>
-
-    <section class="secao-info">
-      <h3 class="secao-titulo">Descrição</h3>
-      <p class="descricao-texto">
-        Aproveite som de alta fidelidade com cancelamento de ruído ativo. Conexão Bluetooth 5.3 ultra-rápida e bateria de até 24 horas de duração. Design ergonômico e confortável para o dia a dia.
-      </p>
-    </section>
-
-    <section class="secao-info">
-      <div class="secao-cabecalho">
-        <h3 class="secao-titulo">Avaliações de Clientes</h3>
-        <a href="#" class="link-ver-todos">Escrever avaliação</a>
-      </div>
-
-      <div class="comentarios-lista">
-        <article class="comentario-card">
-          <div class="comentario-topo">
-            <span class="autor-nome">Carlos A.</span>
-            <span class="estrelas-comentario">★★★★★</span>
-          </div>
-          <p class="comentario-texto">
-            Excelente qualidade de som! A bateria dura o dia todo. Chegou super rápido.
-          </p>
-          <span class="comentario-data">12 de Agosto de 2026</span>
-        </article>
-
-        <article class="comentario-card">
-          <div class="comentario-topo">
-            <span class="autor-nome">Mariana S.</span>
-            <span class="estrelas-comentario">★★★★☆</span>
-          </div>
-          <p class="comentario-texto">
-            Muito confortável e o isolamento acústico funciona muito bem pelo preço.
-          </p>
-          <span class="comentario-data">05 de Agosto de 2026</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="secao-info">
-      <h3 class="secao-titulo">Produtos Relacionados</h3>
-      <div class="relacionados-grid">
-        
-        <a href="produto.html" class="relacionado-card">
-          <div class="relacionado-img">⌚</div>
-          <div class="relacionado-info">
-            <h4 class="relacionado-titulo">Smartwatch Fit Pro</h4>
-            <span class="relacionado-preco">R$ 199,90</span>
-          </div>
+    <!-- Menu Inferior de Navegação -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
         </a>
-
-        <a href="produto.html" class="relacionado-card">
-          <div class="relacionado-img">🔊</div>
-          <div class="relacionado-info">
-            <h4 class="relacionado-titulo">Caixa de Som Bluetooth</h4>
-            <span class="relacionado-preco">R$ 149,90</span>
-          </div>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">🔔</span>
+            <span>Avisos</span>
         </a>
+        <a href="carrinho.html" class="nav-item">
+            <span class="nav-icon">🛒</span>
+            <span class="carrinho-badge">0</span>
+            <span>Carrinho</span>
+        </a>
+        <a href="Meu-perfil.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Entrar</span>
+        </a>
+    </nav>
 
-      </div>
-    </section>
+    <!-- Importação do Script da pasta Scripts -->
+    <script src="Scripts/carrinho-checkout.js"></script>
 
-  </main>
+    <!-- Script Interno para Controles da Página de Detalhes -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnDiminuir = document.getElementById('btn-diminuir');
+            const btnAumentar = document.getElementById('btn-aumentar');
+            const inputQtd = document.getElementById('input-qtd');
 
-  <div class="barra-compra-fixa">
-    <a href="carrinho.html" class="btn-carrinho">Adicionar ao Carrinho</a>
-    <a href="carrinho.html" class="btn-comprar">Comprar Agora</a>
-  </div>
+            if (btnDiminuir && btnAumentar && inputQtd) {
+                btnDiminuir.addEventListener('click', () => {
+                    let qtd = parseInt(inputQtd.value);
+                    if (qtd > 1) inputQtd.value = qtd - 1;
+                });
 
-  <nav class="bottom-nav">
-    <a href="index.html" onclick="location.reload();" class="nav-item active" class="nav-item active">
-      <span class="nav-icon">🏠</span>
-      <span>Home</span>
-    </a>
-    <a href="Notificaçoes.html" class="nav-item">
-      <span class="nav-icon">🔔</span>
-      <span>Avisos</span>
-    </a>
-    <a href="carrinho.html" class="nav-item">
-      <span class="nav-icon">🛒</span>
-      <span class="carrinho-count">2</span>
-      <span>Carrinho</span>
-    </a>
-    <a href="Meu-perfil.html" class="nav-item">
-      <span class="nav-icon">👤</span>
-      <span>Entrar</span>
-    </a>
-  </nav>
+                btnAumentar.addEventListener('click', () => {
+                    let qtd = parseInt(inputQtd.value);
+                    inputQtd.value = qtd + 1;
+                });
+            }
 
+            // Ação do Botão Adicionar ao Carrinho com a Quantidade Selecionada
+            const btnAddDetalhes = document.getElementById('add-carrinho-detalhes');
+            if (btnAddDetalhes) {
+                btnAddDetalhes.addEventListener('click', () => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const id = urlParams.get('id') || 'fone-01';
+                    const produto = PRODUTOS_BD[id];
+
+                    if (produto) {
+                        const qtd = parseInt(inputQtd.value);
+                        for (let i = 0; i < qtd; i++) {
+                            CarrinhoCheckoutModule.adicionarProduto({
+                                id: produto.id,
+                                nome: produto.nome,
+                                preco: parseFloat(produto.preco)
+                            });
+                        }
+
+                        btnAddDetalhes.textContent = 'Adicionado! ✓';
+                        btnAddDetalhes.style.backgroundColor = '#10b981';
+                        btnAddDetalhes.style.color = '#ffffff';
+
+                        setTimeout(() => {
+                            btnAddDetalhes.textContent = 'Adicionar ao Carrinho';
+                            btnAddDetalhes.style.backgroundColor = '';
+                            btnAddDetalhes.style.color = '';
+                        }, 1200);
+                    }
+                });
+            }
+
+            // Botão Comprar Agora (Adiciona e vai direto para o Carrinho)
+            const btnComprar = document.getElementById('comprar-agora');
+            if (btnComprar) {
+                btnComprar.addEventListener('click', () => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const id = urlParams.get('id') || 'fone-01';
+                    const produto = PRODUTOS_BD[id];
+
+                    if (produto) {
+                        const qtd = parseInt(inputQtd.value);
+                        for (let i = 0; i < qtd; i++) {
+                            CarrinhoCheckoutModule.adicionarProduto({
+                                id: produto.id,
+                                nome: produto.nome,
+                                preco: parseFloat(produto.preco)
+                            });
+                        }
+                        window.location.href = 'carrinho.html';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

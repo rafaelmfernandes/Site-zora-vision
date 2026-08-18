@@ -105,7 +105,7 @@ body {
   opacity: 0.9;
 }
 
-/* Grade de Produtos */
+/* Seção do Catálogo */
 .secao-container {
   padding: 0 20px;
 }
@@ -130,59 +130,85 @@ body {
   text-decoration: none;
 }
 
-.produtos-grid {
+/* Grade de Produtos (Unificada) */
+.produtos-grid, 
+.vitrine-produtos {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  padding-bottom: 20px;
 }
 
-.card-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.card {
+/* Card do Produto (Funciona para .card e .card-produto) */
+.card, 
+.card-produto {
   background-color: #ffffff;
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover, 
+.card-produto:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .card-img-box {
-  height: 120px;
+  height: 100px;
   background-color: #f1f5f9;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 38px;
+  font-size: 36px;
+  margin-bottom: 8px;
 }
 
-.card-body {
-  padding: 10px;
-}
-
-.card-tag {
-  font-size: 10px;
-  font-weight: 700;
-  color: #2563eb;
-  text-transform: uppercase;
-  margin-bottom: 2px;
-  display: block;
-}
-
-.card-titulo {
-  font-size: 12px;
+/* Títulos e Preços */
+.card-titulo, 
+.card-produto h3 {
+  font-size: 13px;
   font-weight: 600;
   color: #0f172a;
   margin-bottom: 6px;
+  line-height: 1.3;
 }
 
-.card-preco {
+.card-preco, 
+.card-produto .preco {
   font-size: 15px;
   font-weight: 800;
   color: #2563eb;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* Botão Adicionar ao Carrinho */
+.btn-adicionar {
+  width: 100%;
+  padding: 8px 10px;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-adicionar:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-adicionar:active {
+  transform: scale(0.96);
 }
 
 /* Menu Inferior (4 Ícones) */
@@ -226,7 +252,8 @@ body {
 }
 
 /* Contador sobre o ícone do Carrinho */
-.carrinho-count {
+.carrinho-count, 
+.carrinho-badge {
   position: absolute;
   top: 6px;
   right: 22%;

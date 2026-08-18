@@ -3,101 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Carrinho - E-commerce</title>
+  <title>Seu Carrinho - Restaurante</title>
   <link rel="stylesheet" href="Folha-estilos/Carrinho.css">
 </head>
-<body>
+<body style="background-color: #f8fafc; font-family: sans-serif; padding: 20px;">
+  <a href="javascript:history.back()" class="btn-voltar" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #374151; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
+    ← Voltar
+  </a>
+  <main style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    
+    
+    <!-- CABEÇALHO DO CARRINHO -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;">
+      <h1 style="font-size: 1.4rem; color: #1e293b; margin: 0;">🛒 Meu Carrinho</h1>
+      <span class="badge-carrinho" style="background: #2563eb; color: white; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;">0</span>
+    </div>
 
-  <header class="header">
-    <a href="index.html" class="btn-voltar" title="Voltar">&#8592;</a>
-    <h1 class="header-titulo">Meu Carrinho (2)</h1>
-    <div class="header-espaco"></div>
-  </header>
+    <!-- LISTA DE ITENS (Preenchida dinamicamente pelo JavaScript) -->
+    <div id="lista-carrinho" style="display: flex; flex-direction: column; gap: 10px; min-height: 100px;">
+      <!-- O JS colocará os cards aqui -->
+    </div>
 
-  <div class="frete-alerta">
-    🎉 Parabéns! Você ganhou <strong>FRETE GRÁTIS</strong> nesta compra!
-  </div>
-
-  <main class="carrinho-lista">
-
-    <article class="carrinho-item">
-      <div class="item-img-box">🎧</div>
-      <div class="item-detalhes">
-        <h2 class="item-titulo">Fone Bluetooth Sem Fio Premium</h2>
-        <div class="item-preco">R$ 129,90</div>
-        
-        <div class="item-rodape">
-          <div class="qtd-controles">
-            <button type="button" class="btn-qtd">-</button>
-            <span class="qtd-num">1</span>
-            <button type="button" class="btn-qtd">+</button>
-          </div>
-          <button type="button" class="btn-remover" title="Remover do carrinho">🗑️</button>
-        </div>
+    <!-- RESUMO DE VALORES -->
+    <div style="margin-top: 24px; border-top: 2px solid #f1f5f9; padding-top: 16px;">
+      <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #0f172a; margin-bottom: 20px;">
+        <span>Total:</span>
+        <span id="valor-total">R$ 0,00</span>
       </div>
-    </article>
 
-    <article class="carrinho-item">
-      <div class="item-img-box">⌚</div>
-      <div class="item-detalhes">
-        <h2 class="item-titulo">Smartwatch Fit Pro Inteligente</h2>
-        <div class="item-preco">R$ 199,90</div>
-        
-        <div class="item-rodape">
-          <div class="qtd-controles">
-            <button type="button" class="btn-qtd">-</button>
-            <span class="qtd-num">1</span>
-            <button type="button" class="btn-qtd">+</button>
-          </div>
-          <button type="button" class="btn-remover" title="Remover do carrinho">🗑️</button>
-        </div>
-      </div>
-    </article>
-
-    <div class="cupom-container">
-      <div class="cupom-box">
-        <input type="text" class="cupom-input" placeholder="Possui cupom de desconto?" />
-        <button type="button" class="btn-cupom">Aplicar</button>
+      <!-- BOTÕES DE AÇÃO -->
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="integracoes.html" style="flex: 1; text-align: center; text-decoration: none; background: #f1f5f9; color: #334155; padding: 12px; border-radius: 6px; font-weight: bold;">Continuar Comprando</a>
+        <button id="btn-finalizar" onclick="finalizarPedido()" style="flex: 1; background: #16a34a; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer;">Finalizar Pedido 🚀</button>
       </div>
     </div>
 
   </main>
 
-  <div class="resumo-fixo">
-    <div class="resumo-linha">
-      <span>Subtotal</span>
-      <span>R$ 329,80</span>
-    </div>
-    <div class="resumo-linha">
-      <span>Frete</span>
-      <span class="frete-gratis">GRÁTIS</span>
-    </div>
-    <div class="resumo-linha total">
-      <span>Total</span>
-      <span class="total-valor">R$ 329,80</span>
-    </div>
-    <a href="Checkout.html" class="btn-finalizar">Finalizar Compra</a>
-  </div>
-
-  <nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <span class="nav-icon">🏠</span>
-      <span>Home</span>
-    </a>
-    <a href="notificacoes.html" class="nav-item">
-      <span class="nav-icon">🔔</span>
-      <span>Avisos</span>
-    </a>
-    <a href="carrinho.html" class="nav-item active">
-      <span class="nav-icon">🛒</span>
-      <span class="carrinho-count">2</span>
-      <span>Carrinho</span>
-    </a>
-    <a href="login.html" class="nav-item">
-      <span class="nav-icon">👤</span>
-      <span>Entrar</span>
-    </a>
-  </nav>
+  <!-- VINCULE O SCRIPT AQUI -->
+    <script src="Scripts/Carrinho-checkout.js"></script>
 
 </body>
 </html>

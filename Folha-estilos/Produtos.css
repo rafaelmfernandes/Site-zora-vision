@@ -412,3 +412,61 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+/* Ajuste da grade de produtos relacionados no Produtos.css */
+.produtos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 colunas de mesmo tamanho */
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.produtos-grid .card-produto {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify: space-between;
+    width: 100%; /* Adapta à coluna do grid */
+    box-sizing: border-box;
+}
+
+.produtos-grid .card-img-box {
+    font-size: 24px;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+}
+
+.produtos-grid h4, 
+.produtos-grid h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 6px 0 2px 0;
+    line-height: 1.2;
+}
+
+.produtos-grid .preco {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2563eb;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.produtos-grid .btn-adicionar {
+    margin-top: auto;
+    width: 100%;
+    padding: 8px 4px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 11px;
+    cursor: pointer;
+}
