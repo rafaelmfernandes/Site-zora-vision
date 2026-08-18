@@ -1,0 +1,253 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  padding-bottom: 60px;
+}
+
+/* Header */
+.admin-header {
+  background-color: #0f172a;
+  color: #ffffff;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.header-conteudo {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-voltar {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.btn-voltar:hover {
+  color: #ffffff;
+}
+
+.admin-titulo {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.badge-contador {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Container Principal */
+.container {
+  padding: 24px 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Barra de Ações */
+.barra-acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.busca-box input {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  min-width: 260px;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.busca-box input:focus {
+  border-color: #2563eb;
+}
+
+.btn-limpar {
+  background-color: transparent;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-limpar:hover {
+  background-color: #fef2f2;
+}
+
+/* Grid de Produtos */
+.grid-favoritos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+/* Card do Produto */
+.card-produto {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-produto:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+}
+
+.btn-remover-favorito {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+  z-index: 2;
+}
+
+.btn-remover-favorito:hover {
+  background-color: #fee2e2;
+}
+
+.produto-imagem {
+  background-color: #f8fafc;
+  border-radius: 10px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-preview {
+  font-size: 3.5rem;
+}
+
+.produto-detalhes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.produto-categoria {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.produto-nome {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.produto-preco-container {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.preco-atual {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+.preco-antigo {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.status-estoque {
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.em-estoque {
+  color: #16a34a;
+}
+
+.poucos-itens {
+  color: #d97706;
+}
+
+.sem-estoque {
+  color: #dc2626;
+}
+
+/* Botão Comprar */
+.produto-acoes {
+  margin-top: 4px;
+}
+
+.btn-comprar {
+  width: 100%;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-comprar:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.btn-comprar:disabled {
+  background-color: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+}

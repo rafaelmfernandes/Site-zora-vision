@@ -130,7 +130,7 @@ body {
 }
 
 /* Formulário */
-.form-cadastro {
+#form-cadastro {
   display: flex;
   flex-direction: column;
   gap: 14px;

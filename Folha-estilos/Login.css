@@ -157,7 +157,7 @@ body {
 }
 
 /* Formulário */
-.form-login {
+#form-login {
   display: flex;
   flex-direction: column;
   gap: 14px;

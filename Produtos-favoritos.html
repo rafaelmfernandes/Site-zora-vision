@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos Favoritos</title>
+  <link rel="stylesheet" href="Folha-estilos/Produtos-favoritos.css">
+</head>
+<body>
+
+  <!-- TOPO / HEADER -->
+  <header class="admin-header">
+    <div class="header-conteudo">
+      <a href="javascript:history.back()" class="btn-voltar" title="Voltar">&#8592; Início</a>
+      <h1 class="admin-titulo">Produtos Favoritos</h1>
+      <span class="badge-contador">4 Itens</span>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- BARRA DE AÇÕES E FILTRO -->
+    <section class="barra-acoes">
+      <div class="busca-box">
+        <input type="text" placeholder="Buscar nos favoritos...">
+      </div>
+      <button class="btn-limpar" onclick="confirm('Deseja remover todos os itens dos favoritos?')">Limpar Favoritos</button>
+    </section>
+
+    <!-- GRID DE PRODUTOS FAVORITOS -->
+    <section class="grid-favoritos">
+
+      <!-- CARD PRODUTO 1 -->
+      <article class="card-produto">
+        <button class="btn-remover-favorito" title="Remover dos favoritos">❤️</button>
+        <div class="produto-imagem">
+          <span class="emoji-preview">👟</span>
+        </div>
+        <div class="produto-detalhes">
+          <span class="produto-categoria">Calçados</span>
+          <h2 class="produto-nome">Tênis Esportivo Running Pro</h2>
+          <div class="produto-preco-container">
+            <span class="preco-atual">R$ 289,90</span>
+            <span class="preco-antigo">R$ 349,90</span>
+          </div>
+          <span class="status-estoque em-estoque">✓ Em estoque</span>
+        </div>
+        <div class="produto-acoes">
+          <button class="btn-comprar">Adicionar ao Carrinho 🛒</button>
+        </div>
+      </article>
+
+      <!-- CARD PRODUTO 2 -->
+      <article class="card-produto">
+        <button class="btn-remover-favorito" title="Remover dos favoritos">❤️</button>
+        <div class="produto-imagem">
+          <span class="emoji-preview">🎧</span>
+        </div>
+        <div class="produto-detalhes">
+          <span class="produto-categoria">Eletrônicos</span>
+          <h2 class="produto-nome">Fone de Ouvido Bluetooth Noise Cancelling</h2>
+          <div class="produto-preco-container">
+            <span class="preco-atual">R$ 199,00</span>
+          </div>
+          <span class="status-estoque em-estoque">✓ Em estoque</span>
+        </div>
+        <div class="produto-acoes">
+          <button class="btn-comprar">Adicionar ao Carrinho 🛒</button>
+        </div>
+      </article>
+
+      <!-- CARD PRODUTO 3 -->
+      <article class="card-produto">
+        <button class="btn-remover-favorito" title="Remover dos favoritos">❤️</button>
+        <div class="produto-imagem">
+          <span class="emoji-preview">🎒</span>
+        </div>
+        <div class="produto-detalhes">
+          <span class="produto-categoria">Acessórios</span>
+          <h2 class="produto-nome">Mochila Impermeável Urban Tech</h2>
+          <div class="produto-preco-container">
+            <span class="preco-atual">R$ 159,90</span>
+            <span class="preco-antigo">R$ 189,90</span>
+          </div>
+          <span class="status-estoque poucos-itens">⚠️ Poucas unidades</span>
+        </div>
+        <div class="produto-acoes">
+          <button class="btn-comprar">Adicionar ao Carrinho 🛒</button>
+        </div>
+      </article>
+
+      <!-- CARD PRODUTO 4 -->
+      <article class="card-produto">
+        <button class="btn-remover-favorito" title="Remover dos favoritos">❤️</button>
+        <div class="produto-imagem">
+          <span class="emoji-preview">⌚</span>
+        </div>
+        <div class="produto-detalhes">
+          <span class="produto-categoria">Gadgets</span>
+          <h2 class="produto-nome">Smartwatch Sport Monitor O2</h2>
+          <div class="produto-preco-container">
+            <span class="preco-atual">R$ 249,00</span>
+          </div>
+          <span class="status-estoque sem-estoque">✕ Esgotado</span>
+        </div>
+        <div class="produto-acoes">
+          <button class="btn-comprar" disabled>Indisponível</button>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <!-- VINCULAR O ARQUIVO JAVASCRIPT AQUI -->
+  <script src="Scripts/favoritos.js"></script>
+</body>
+</html>
