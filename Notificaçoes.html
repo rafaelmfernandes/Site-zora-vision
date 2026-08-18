@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notificações - E-commerce</title>
+  <link rel="stylesheet" href="Folha-estilos/Notificaçoes.css">
+</head>
+<body>
+
+  <header class="header">
+    <button type="button" onclick="history.back()" class="btn-voltar" title="Voltar">&#8592;</button>
+    <h1 class="header-titulo">Avisos e Notificações</h1>
+    <button type="button" class="btn-limpar" title="Marcar todas como lidas">Lidas</button>
+  </header>
+
+  <main class="container">
+
+    <div class="filtros-container">
+      <button class="btn-filtro ativo">Todas (4)</button>
+      <button class="btn-filtro">Não lidas (2)</button>
+      <button class="btn-filtro">Promoções</button>
+    </div>
+
+    <section class="lista-notificacoes">
+
+      <article class="notificacao-card nao-lida">
+        <div class="notificacao-icone pedido">📦</div>
+        <div class="notificacao-conteudo">
+          <div class="notificacao-topo">
+            <span class="notificacao-titulo">Pedido em Separação</span>
+            <span class="ponto-nao-lido"></span>
+          </div>
+          <p class="notificacao-texto">Seu pedido <strong>#84920</strong> já foi pago e está sendo preparado para envio.</p>
+          <span class="notificacao-tempo">Há 10 minutos</span>
+        </div>
+      </article>
+
+      <article class="notificacao-card nao-lida">
+        <div class="notificacao-icone promo">🏷️</div>
+        <div class="notificacao-conteudo">
+          <div class="notificacao-topo">
+            <span class="notificacao-titulo">Cupom de Desconto Exclusivo!</span>
+            <span class="ponto-nao-lido"></span>
+          </div>
+          <p class="notificacao-texto">Use o cupom <strong>SABOR10</strong> e ganhe 10% OFF na sua próxima compra no app.</p>
+          <span class="notificacao-tempo">Há 2 horas</span>
+        </div>
+      </article>
+
+      <article class="notificacao-card">
+        <div class="notificacao-icone sucesso">🚚</div>
+        <div class="notificacao-conteudo">
+          <div class="notificacao-topo">
+            <span class="notificacao-titulo">Pedido Entregue</span>
+          </div>
+          <p class="notificacao-texto">Seu pedido <strong>#72019</strong> foi entregue com sucesso. Avalie a sua compra!</p>
+          <span class="notificacao-tempo">Ontem às 16:30</span>
+        </div>
+      </article>
+
+      <article class="notificacao-card">
+        <div class="notificacao-icone sistema">🔒</div>
+        <div class="notificacao-conteudo">
+          <div class="notificacao-topo">
+            <span class="notificacao-titulo">Novo Login Detetado</span>
+          </div>
+          <p class="notificacao-texto">Um novo acesso foi realizado na sua conta a partir de um dispositivo móvel em Goiânia/GO.</p>
+          <span class="notificacao-tempo">15 de Ago às 09:12</span>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item active
