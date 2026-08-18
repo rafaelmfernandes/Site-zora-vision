@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const email = inputEmail.value.trim();
+    const email = inputEmail.value.trim().toLowerCase();
     const password = inputSenha.value.trim();
 
     // Busca a lista de usuários salvos no localStorage no momento do cadastro
@@ -25,16 +25,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Procura por um usuário com e-mail e senha correspondentes
     const usuarioValido = usuarios.find(
-      u => u.email === email && u.password === password
+      u => u.email.toLowerCase() === email && u.password === password
     );
 
     if (usuarioValido) {
-      // Salva a sessão ativa no navegador
-      localStorage.setItem('usuario_logado', JSON.stringify({ email: usuarioValido.email }));
-      alert('Login realizado com sucesso! 🎉');
+      // 1. Salva a sessão ativa no navegador
+      localStorage.setItem('usuario_logado', JSON.stringify({ 
+        nome: usuarioValido.nome || 'Usuário',
+        email: usuarioValido.email 
+      }));
       
-      // Redireciona para o painel principal
-      window.location.href = 'admin.html'; // ajuste para a página inicial pós-login do seu projeto
+      alert('Login realizado com sucesso! 🎉');
+
+      // 2. REGRA DE REDIRECIONAMENTO POR E-MAIL
+      const emailAdmin = 'rafaelmelo116@gmail.com';
+
+      if (usuarioValido.email.toLowerCase() === emailAdmin.toLowerCase()) {
+        // Administrador vai para o Perfil (onde aparecerá o botão do Painel)
+        window.location.href = 'Meu-perfil.html';
+      } else {
+        // Usuário comum vai para a Página Inicial
+        window.location.href = 'index.html';
+      }
+
     } else {
       alert('E-mail ou senha incorretos! Verifique os dados e tente novamente.');
     }

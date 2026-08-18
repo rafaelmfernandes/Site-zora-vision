@@ -92,12 +92,16 @@
       </div>
     </section>
 
-    <!-- ENDEREÇO DE ENTREGA -->
+    <!-- SEÇÃO: ENDEREÇO DE ENTREGA (DINÂMICO) -->
     <section class="secao-card">
-      <h3 class="secao-titulo">Entrega em:</h3>
-      <p class="txt-endereco"><strong>João Silva</strong></p>
-      <p class="txt-endereco">Rua T-63, Quadra 12, Lote 05, nº 1020 - Setor Bueno</p>
-      <p class="txt-endereco">Goiânia - GO, CEP: 74230-100</p>
+      <div class="secao-topo">
+        <h2 class="secao-titulo">📍 Endereço de Entrega</h2>
+      </div>
+      
+      <!-- Container onde o JavaScript vai injetar o endereço do cliente -->
+      <div id="conf-container-endereco" style="margin-top: 10px; font-size: 14px; color: #334155; line-height: 1.5;">
+        <p style="color: #64748b;">Carregando endereço...</p>
+      </div>
     </section>
 
     <!-- BOTOES DE AÇÃO -->

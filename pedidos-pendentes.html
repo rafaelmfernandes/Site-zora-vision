@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos Pendentes para Separação - Admin</title>
+</head>
+<body style="background: #f1f5f9; font-family: sans-serif; margin: 0; padding: 0;">
+
+<header style="background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1.25rem 2rem; margin-bottom: 2rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,0.02);">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    
+    <!-- Lado Esquerdo: Botão Voltar + Título e Subtítulo -->
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="javascript:history.back()" title="Voltar" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.1rem; transition: background 0.2s; flex-shrink: 0;">&#8592;</a>
+      
+      <div>
+        <h1 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <span>📋</span> Pedidos Pendentes para Separação
+        </h1>
+        <p style="font-size: 0.85rem; color: #64748b; margin: 2px 0 0 0;">Gerencie os pedidos que aguardam separação e despacho</p>
+      </div>
+    </div>
+
+    <!-- Lado Direito: Badge de Contador -->
+    <div style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+      <span>📦</span> <span id="contador-topo-pendentes">0</span> Pendentes
+    </div>
+
+  </div>
+</header>
+
+  <main style="max-width: 800px; margin: 0 auto; padding: 0 20px 40px 20px;" id="container-pedidos-pendentes">
+    <!-- Preenchido via JS -->
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      carregarPendentes();
+    });
+
+    function carregarPendentes() {
+      const container = document.getElementById('container-pedidos-pendentes');
+      const badgeTopo = document.getElementById('contador-topo-pendentes');
+
+      let pedidosLoja = JSON.parse(localStorage.getItem('pedidos_loja')) || [];
+      let historicoCliente = JSON.parse(localStorage.getItem('historico_pedidos_cliente')) || [];
+
+      // Filtra estritamente apenas os pendentes / em separação que não foram cancelados
+      const todosMap = new Map();
+      [...pedidosLoja, ...historicoCliente].forEach(p => {
+        const id = p.id || p.numero;
+        if (id) todosMap.set(String(id), p);
+      });
+
+      const pedidosPendentes = Array.from(todosMap.values()).filter(p => {
+        const st = p.status || 'Em Separação';
+        return st !== 'Cancelado' && (st === 'separacao' || st === 'Em Separação' || st === 'Pendente');
+      });
+
+      if (badgeTopo) {
+        badgeTopo.textContent = pedidosPendentes.length;
+      }
+
+      if (pedidosPendentes.length === 0) {
+        container.innerHTML = `
+          <div style="background: #fff; text-align: center; padding: 3rem; border-radius: 12px; color: #64748b; border: 1px solid #e2e8f0;">
+            <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">Nenhum pedido aguardando separação! 🎉</p>
+            <p style="font-size: 0.85rem;">Todos os pedidos foram despachados ou concluídos.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      pedidosPendentes.forEach((pedido, index) => {
+        const idPedido = pedido.id || pedido.numero || `849${index}`;
+        const nomeCliente = pedido.cliente?.nome || pedido.endereco?.nome || 'Cliente';
+        const total = parseFloat(pedido.total || 0).toFixed(2).replace('.', ',');
+        const statusAtual = pedido.status || 'Em Separação';
+
+        let itensHtml = '';
+        (pedido.itens || []).forEach(item => {
+          itensHtml += `<li style="font-size: 0.85rem; color: #334155;">${item.quantidade || 1}x ${item.nome || 'Produto'}</li>`;
+        });
+
+        const card = document.createElement('div');
+        card.style.cssText = "background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02);";
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 10px;">
+            <strong style="color: #0f172a; font-size: 1.05rem;">Pedido #${String(idPedido).replace('#', '')}</strong>
+            <span style="background: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">${statusAtual}</span>
+          </div>
+          <div style="font-size: 0.9rem; color: #334155; margin-bottom: 8px;">
+            👤 <strong>Cliente:</strong> ${nomeCliente}
+          </div>
+          <div style="background: #f8fafc; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px;">
+            <div style="font-size: 0.8rem; font-weight: bold; color: #64748b; margin-bottom: 4px;">Itens:</div>
+            <ul style="margin: 0; padding-left: 16px;">${itensHtml}</ul>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+            <strong style="color: #2563eb;">R$ ${total}</strong>
+            <div style="display: flex; gap: 8px;">
+              <button onclick="mudarStatus('${idPedido}', 'Em Transporte')" style="background: #0284c7; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">🚚 Enviar (Em Trânsito)</button>
+              <button onclick="mudarStatus('${idPedido}', 'Entregue')" style="background: #16a34a; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">✅ Concluir (Entregue)</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function mudarStatus(idPedido, novoStatus) {
+      let historico = JSON.parse(localStorage.getItem('historico_pedidos_cliente')) || [];
+      let pedidosLoja = JSON.parse(localStorage.getItem('pedidos_loja')) || [];
+      const idLimpo = String(idPedido).replace('#', '');
+
+      historico = historico.map(p => {
+        if (String(p.id || p.numero || '').replace('#', '') === idLimpo) p.status = novoStatus;
+        return p;
+      });
+
+      pedidosLoja = pedidosLoja.map(p => {
+        if (String(p.id || p.numero || '').replace('#', '') === idLimpo) p.status = novoStatus;
+        return p;
+      });
+
+      localStorage.setItem('historico_pedidos_cliente', JSON.stringify(historico));
+      localStorage.setItem('pedidos_loja', JSON.stringify(pedidosLoja));
+
+      // Atualiza a tela imediatamente tirando o pedido da lista de pendentes
+      carregarPendentes();
+    }
+  </script>
+</body>
+</html>

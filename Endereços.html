@@ -19,47 +19,11 @@
     <section class="secao-enderecos">
       <h2 class="secao-titulo">Seus Endereços Cadastrados</h2>
 
-      <div class="lista-enderecos">
-        
-        <label class="endereco-item ativo">
-          <input type="radio" name="endereco_selecionado" value="end_1" checked>
-          <div class="endereco-info">
-            <div class="endereco-topo-info">
-              <span class="tipo-tag">Casa</span>
-              <span class="badge-principal">Principal</span>
-            </div>
-            <p class="nome-destinatario">João Silva</p>
-            <p class="rua-numero">Rua T-63, Quadra 12, Lote 05, nº 1020</p>
-            <p class="bairro-cidade">Setor Bueno - Goiânia / GO</p>
-            <p class="cep">CEP: 74230-100</p>
-            <p class="referencia">Ponto de ref.: Próximo à praça principal</p>
-            
-            <div class="acoes-endereco">
-              <a href="cadastrar-endereco.html" class="btn-acao-link">Editar</a>
-              <button type="button" class="btn-acao-excluir">Excluir</button>
-            </div>
-          </div>
-        </label>
-
-        <label class="endereco-item">
-          <input type="radio" name="endereco_selecionado" value="end_2">
-          <div class="endereco-info">
-            <div class="endereco-topo-info">
-              <span class="tipo-tag">Trabalho</span>
-            </div>
-            <p class="nome-destinatario">João Silva (Restaurante)</p>
-            <p class="rua-numero">Av. Circular, nº 450, Sala 02</p>
-            <p class="bairro-cidade">Setor Pedro Ludovico - Goiânia / GO</p>
-            <p class="cep">CEP: 74820-130</p>
-            
-            <div class="acoes-endereco">
-              <a href="cadastrar-endereco.html" class="btn-acao-link">Editar</a>
-              <button type="button" class="btn-acao-excluir">Excluir</button>
-            </div>
-          </div>
-        </label>
-
+      <!-- Dentro da section.secao-enderecos do seu Endereços.html -->
+      <div class="lista-enderecos" id="lista-enderecos-container">
+        <!-- O JS vai inserir o endereço aqui -->
       </div>
+
     </section>
 
     <section class="secao-acoes">
@@ -70,7 +34,7 @@
     </section>
 
     <div class="acao-fixa-container">
-      <button type="button" onclick="history.back()" class="btn-usar-selecionado">Usar Endereço Selecionado</button>
+      <button type="button" onclick="confirmarSelecaoEndereco()" class="btn-usar-selecionado">Usar Endereço Selecionado</button>
     </div>
 
   </main>
@@ -89,11 +53,13 @@
       <span class="carrinho-count">2</span>
       <span>Carrinho</span>
     </a>
-    <a href="perfil.html" class="nav-item active">
+    <a href="Meu-perfil.html" class="nav-item active">
       <span class="nav-icon">👤</span>
       <span>Perfil</span>
     </a>
   </nav>
 
+  <!-- IMPORTA O SCRIPT DO PROJETO -->
+  <script src="Scripts/carrinho-checkout.js"></script>
 </body>
 </html>

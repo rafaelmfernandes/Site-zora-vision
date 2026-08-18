@@ -18,20 +18,31 @@
     <div class="avatar-container">
       <div class="avatar-img">👤</div>
     </div>
-    <h2 class="usuario-nome">Cliente Especial</h2>
-    <p class="usuario-email">cliente@email.com</p>
+    <h2 class="usuario-nome" id="perfil-nome-usuario">Cliente Especial</h2>
+    <p class="usuario-email" id="perfil-email-usuario">cliente@email.com</p>
+  </section>
+
+  <!-- BLOCO DO PAINEL ADMINISTRATIVO (EXIBIDO APENAS SE FOR O EMAIL DO ADMIN) -->
+  <section class="menu-secao" id="opcao-admin-container" style="display: none;">
+    <div class="menu-lista">
+      <a href="admin.html" class="menu-item admin-link" style="background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-weight: 600;">
+        <span class="item-icon">⚙️</span>
+        <span class="item-texto">Painel Administrativo</span>
+        <span class="item-seta">&#10095;</span>
+      </a>
+    </div>
   </section>
 
   <section class="pedidos-resumo">
-    <a href="#" class="status-item">
+    <a href="Meus-pedidos.html" class="status-item">
       <span class="status-icon">📦</span>
       <span class="status-label">Preparando</span>
     </a>
-    <a href="#" class="status-item">
+    <a href="Meus-pedidos.html" class="status-item">
       <span class="status-icon">🚚</span>
       <span class="status-label">A Caminho</span>
     </a>
-    <a href="#" class="status-item">
+    <a href="Meus-pedidos.html" class="status-item">
       <span class="status-icon">✅</span>
       <span class="status-label">Entregues</span>
     </a>
@@ -80,11 +91,11 @@
   </section>
 
   <div class="btn-sair-box">
-    <a href="Login.html" class="btn-sair">Sair da Conta</a>
+    <a href="Login.html" onclick="localStorage.removeItem('usuario_logado');" class="btn-sair">Sair da Conta</a>
   </div>
 
   <nav class="bottom-nav">
-    <a href="index.html" onclick="location.reload();" class="nav-item active" class="nav-item active">
+    <a href="index.html" class="nav-item">
       <span class="nav-icon">🏠</span>
       <span>Home</span>
     </a>
@@ -94,14 +105,40 @@
     </a>
     <a href="carrinho.html" class="nav-item">
       <span class="nav-icon">🛒</span>
-      <span class="carrinho-count">2</span>
+      <span class="carrinho-count">0</span>
       <span>Carrinho</span>
     </a>
-    <a href="Meu-perfil.html" class="nav-item">
+    <a href="Meu-perfil.html" class="nav-item active">
       <span class="nav-icon">👤</span>
-      <span>Entrar</span>
+      <span>Perfil</span>
     </a>
   </nav>
+
+  <!-- SCRIPTS DA APLICAÇÃO -->
+  <script src="Scripts/carrinho-checkout.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Recupera o usuário logado no localStorage
+      const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+      const emailAdmin = 'rafaelmelo116@gmail.com';
+
+      if (usuarioLogado && usuarioLogado.email) {
+        // Atualiza as informações visuais no cartão do perfil
+        const elNome = document.getElementById('perfil-nome-usuario');
+        const elEmail = document.getElementById('perfil-email-usuario');
+        
+        if (elNome) elNome.textContent = usuarioLogado.nome || 'Usuário';
+        if (elEmail) elEmail.textContent = usuarioLogado.email;
+
+        // 2. Exibe o botão do Painel se for o e-mail do Administrador
+        if (usuarioLogado.email.toLowerCase() === emailAdmin.toLowerCase()) {
+          const containerAdmin = document.getElementById('opcao-admin-container');
+          if (containerAdmin) containerAdmin.style.display = 'block';
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>

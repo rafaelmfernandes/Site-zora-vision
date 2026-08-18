@@ -16,7 +16,7 @@
 
   <main class="container">
 
-    <form class="form-endereco" action="enderecos.html" method="GET">
+    <form class="form-endereco" id="form-cadastrar-endereco">
 
       <div class="campo">
         <label>Tipo de Endereço</label>
@@ -38,46 +38,47 @@
 
       <div class="campo">
         <label for="nome-destinatario">Nome de quem vai receber</label>
-        <input type="text" id="nome-destinatario" placeholder="Ex.: João Silva" required>
+        <input type="text" id="nome-destinatario" name="name" autocomplete="name" placeholder="Ex.: João Silva" required>
       </div>
 
       <div class="campo">
         <label for="cep">CEP</label>
         <div class="input-cep-group">
-          <input type="text" id="cep" placeholder="00000-000" maxlength="9" required>
-          <button type="button" class="btn-buscar-cep">Buscar</button>
+          <input type="text" id="cep" name="postal-code" autocomplete="postal-code" placeholder="00000-000" maxlength="9" required>
+          <button type="button" class="btn-buscar-cep" onclick="buscarCepCadastro()">Buscar</button>
         </div>
+        <small id="cep-status" style="font-size: 12px; margin-top: 4px; display: block;"></small>
       </div>
 
       <div class="campo">
         <label for="rua">Rua / Avenida / Alameda</label>
-        <input type="text" id="rua" placeholder="Ex.: Rua T-63" required>
+        <input type="text" id="rua" name="address-line1" autocomplete="address-line1" placeholder="Ex.: Rua T-63" required>
       </div>
 
       <div class="linha-dupla">
         <div class="campo">
           <label for="numero">Número</label>
-          <input type="text" id="numero" placeholder="Ex.: 1020" required>
+          <input type="text" id="numero" name="address-line2" autocomplete="address-line2" placeholder="Ex.: 1020" required>
         </div>
         <div class="campo">
           <label for="complemento">Complemento</label>
-          <input type="text" id="complemento" placeholder="Apt, Qd, Lt">
+          <input type="text" id="complemento" name="address-line3" autocomplete="address-line3" placeholder="Apt, Qd, Lt">
         </div>
       </div>
 
       <div class="campo">
         <label for="bairro">Bairro</label>
-        <input type="text" id="bairro" placeholder="Ex.: Setor Bueno" required>
+        <input type="text" id="bairro" name="address-level3" autocomplete="address-level3" placeholder="Ex.: Setor Bueno" required>
       </div>
 
       <div class="linha-cidade-uf">
         <div class="campo campo-cidade">
           <label for="cidade">Cidade</label>
-          <input type="text" id="cidade" placeholder="Ex.: Goiânia" required>
+          <input type="text" id="cidade" name="address-level2" autocomplete="address-level2" placeholder="Ex.: Goiânia" required>
         </div>
         <div class="campo campo-uf">
           <label for="uf">UF</label>
-          <input type="text" id="uf" placeholder="GO" maxlength="2" required>
+          <input type="text" id="uf" name="address-level1" autocomplete="address-level1" placeholder="GO" maxlength="2" required>
         </div>
       </div>
 
@@ -87,7 +88,7 @@
       </div>
 
       <label class="checkbox-opcao">
-        <input type="checkbox" name="principal" checked>
+        <input type="checkbox" name="principal" id="chk-principal" checked>
         <span>Definir como meu endereço principal</span>
       </label>
 
@@ -116,6 +117,9 @@
       <span>Perfil</span>
     </a>
   </nav>
+
+  <!-- IMPORTA O SCRIPT GLOBAL DO SISTEMA -->
+  <script src="Scripts/carrinho-checkout.js"></script>
 
 </body>
 </html>

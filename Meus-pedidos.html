@@ -9,64 +9,48 @@
 <body>
 
   <header class="header">
-    <a href="javascript:history.back()" class="btn-voltar" title="Voltar ao Perfil">&#8592;</a>
+    <button type="button" onclick="history.back()" class="btn-voltar" title="Voltar ao Perfil">&#8592;</button>
     <h1 class="header-titulo">Meus Pedidos</h1>
     <div class="header-espaco"></div>
   </header>
 
   <main class="container">
 
-    <section class="secao-pedidos">
-      <h2 class="secao-titulo">Pedido em Andamento</h2>
+    <!-- O JavaScript vai injetar os pedidos salvos dentro deste container -->
+    <section class="secao-pedidos" id="container-meus-pedidos">
+      
+      <!-- Estado de carregamento inicial -->
+      <div style="text-align: center; padding: 2.5rem 1rem; color: #64748b;">
+        <p style="font-size: 0.95rem;">Carregando seus pedidos...</p>
+      </div>
 
-      <article class="pedido-card ativo">
-        <div class="pedido-cabecalho">
-          <div>
-            <span class="pedido-numero">Pedido #84920</span>
-            <span class="pedido-data">Realizado em 17/08/2026</span>
-          </div>
-          <span class="badge-status em-andamento">Em Andamento</span>
-        </div>
+    </section>
 
-        <div class="pedido-produtos">
-          <div class="produto-mini">
-            <span class="img-mini">🎧</span>
-            <div class="mini-info">
-              <span class="nome">Fone Bluetooth Sem Fio Premium</span>
-              <span class="qtd">Qtd: 1 • R$ 129,90</span>
-            </div>
-          </div>
-          <div class="produto-mini">
-            <span class="img-mini">📱</span>
-            <div class="mini-info">
-              <span class="nome">Capa Protetora Anti-impacto</span>
-              <span class="qtd">Qtd: 1 • R$ 39,90</span>
-            </div>
-          </div>
-        </div>
+  </main>
 
-        <div class="rastreio-box">
-          <span class="rastreio-titulo">Status da Entrega</span>
-          <div class="barra-progresso">
-            <div class="etapa concluida">
-              <div class="ponto">✓</div>
-              <span class="etapa-nome">Aprovado</span>
-            </div>
-            <div class="etapa atual">
-              <div class="ponto">📦</div>
-              <span class="etapa-nome">Em Separação</span>
-            </div>
-            <div class="etapa">
-              <div class="ponto">🚚</div>
-              <span class="etapa-nome">Em Trânsito</span>
-            </div>
-            <div class="etapa">
-              <div class="ponto">🏠</div>
-              <span class="etapa-nome">Entregue</span>
-            </div>
-          </div>
-          <p class="previsao-texto">Previsão de entrega: <strong>19 a 21 de Agosto</strong></p>
-        </div>
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="Notificaçoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">0</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="Meu-perfil.html" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Perfil</span>
+    </a>
+  </nav>
 
-        <div class="pedido-rodape">
-          <span
+  <!-- IMPORTAÇÃO DO SCRIPT GLOBAL -->
+  <script src="Scripts/carrinho-checkout.js"></script>
+  <script src="Scripts/Meus-pedidos.js"></script>
+
+</body>
+</html>

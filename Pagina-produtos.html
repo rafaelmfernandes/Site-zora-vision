@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciamento de Produtos - Admin</title>
+  <link rel="stylesheet" href="Folha-estilos/admin.css">
+</head>
+<body style="background: #f1f5f9; font-family: sans-serif; margin: 0; padding: 20px;">
+
+  <header style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a href="admin.html" style="background: #e2e8f0; padding: 8px 12px; border-radius: 8px; text-decoration: none; color: #334155; font-weight: bold;">← Voltar</a>
+      <h1 style="margin: 0; font-size: 1.25rem; color: #0f172a;">📦 Catálogo de Produtos</h1>
+    </div>
+    <div id="total-produtos-badge" style="background: #dbeafe; color: #1e40af; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;">
+      0 Cadastrados
+    </div>
+  </header>
+
+  <main style="max-width: 1000px; margin: 0 auto;">
+    <div id="container-lista-produtos" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+      <!-- Preenchido via JS -->
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('container-lista-produtos');
+      const badgeTotal = document.getElementById('total-produtos-badge');
+      
+      // Puxa do localStorage onde ficam salvos os produtos da loja
+      const produtos = JSON.parse(localStorage.getItem('produtos_loja')) || [];
+
+      badgeTotal.textContent = `${produtos.length} Cadastrados`;
+
+      if (produtos.length === 0) {
+        container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 3rem;">Nenhum produto cadastrado na base de dados.</p>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      produtos.forEach((prod, index) => {
+        const codigo = prod.id || prod.codigo || `PROD-${index + 1}`;
+        const nome = prod.nome || 'Produto sem nome';
+        const preco = parseFloat(prod.preco || 0).toFixed(2).replace('.', ',');
+        const categoria = prod.categoria || 'Geral';
+
+        const card = document.createElement('div');
+        card.style.cssText = "background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;";
+        card.innerHTML = `
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.75rem; background: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 4px; font-weight: bold;">Cód: ${codigo}</span>
+              <span style="font-size: 0.75rem; color: #059669; font-weight: bold; background: #ecfdf5; padding: 2px 8px; border-radius: 4px;">${categoria}</span>
+            </div>
+            <h3 style="margin: 8px 0; font-size: 1rem; color: #0f172a;">${nome}</h3>
+          </div>
+          <div style="border-top: 1px solid #f1f5f9; padding-top: 8px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.8rem; color: #64748b;">Preço de Venda:</span>
+            <strong style="color: #2563eb; font-size: 1.05rem;">R$ ${preco}</strong>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    });
+  </script>
+</body>
+</html>

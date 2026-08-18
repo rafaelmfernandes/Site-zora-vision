@@ -11,11 +11,16 @@
 
   <header class="admin-header">
     <div class="header-conteudo">
-      <div class="admin-brand">
-        <span class="admin-logo-icon">⚡</span>
-        <div>
-          <h1 class="admin-titulo">Painel Administrativo</h1>
-          <span class="admin-subtitulo">Visão Geral da Loja</span>
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <!-- BOTÃO DE VOLTAR -->
+        <a href="javascript:history.back()" title="Voltar" style="background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.2rem; transition: background 0.2s;">&#8592;</a>
+        
+        <div class="admin-brand">
+          <span class="admin-logo-icon">⚡</span>
+          <div>
+            <h1 class="admin-titulo">Painel Administrativo</h1>
+            <span class="admin-subtitulo">Visão Geral da Loja</span>
+          </div>
         </div>
       </div>
       <a href="index.html" class="btn-loja-link" target="_blank">Ver Loja ↗</a>
@@ -151,7 +156,10 @@
           <h2 class="painel-titulo">🏷️ Produtos Cadastrados</h2>
           <p class="painel-descricao">Acompanhe visualizações, vendas e estoque de cada produto.</p>
         </div>
-        <a href="cadastro-produto.html" class="btn-cadastrar-novo">+ Cadastrar Produto</a>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="Pagina-produtos.html" class="btn-cadastrar-novo" style="background: #2563eb;">Ver Todos os Produtos 📦</a>
+          <a href="cadastro-produto.html" class="btn-cadastrar-novo">+ Cadastrar Produto</a>
+        </div>
       </div>
 
       <div class="tabela-responsive">
@@ -212,14 +220,14 @@
         </table>
       </div>
     </section>
+
     <!-- SEÇÃO: INTEGRAÇÕES COM MARKETPLACES -->
     <section class="painel-card">
       <div class="painel-cabecalho flex-between">
         <div>
-          <h2 class="painel-titulo">🔗 Integrações & Canai$ de Venda</h2>
+          <h2 class="painel-titulo">🔗 Integrações & Canais de Venda</h2>
           <p class="painel-descricao">Sincronize seu estoque e vendas com os principais marketplaces.</p>
         </div>
-        <!-- Botão para a futura página de integrações -->
         <a href="Integraçoes.html" class="btn-gerenciar-integracoes">Gerenciar Integrações ⚙️</a>
       </div>
 
@@ -267,4 +275,4 @@
   </main>
 
 </body>
-</html>
+</html>[cite: 3]

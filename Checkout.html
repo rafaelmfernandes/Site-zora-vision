@@ -24,18 +24,87 @@
   <!-- ========================================== -->
   <main class="checkout-container">
 
-    <!-- SEÇÃO: ENDEREÇO DE ENTREGA -->
+    <!-- SEÇÃO: ENDEREÇO DE ENTREGA (DINÂMICO) -->
     <section class="secao-card">
       <div class="secao-topo">
         <h2 class="secao-titulo">📍 Endereço de Entrega</h2>
-        <a href="#" class="link-acao">Alterar</a>
       </div>
-      <div class="endereco-box">
-        <p class="endereco-nome">João Silva</p>
-        <p class="endereco-detalhes">Rua T-63, Quadra 12, Lote 05, nº 1020</p>
-        <p class="endereco-bairro">Setor Bueno - Goiânia / GO</p>
-        <p class="endereco-cep">CEP: 74230-100</p>
+
+      <!-- OPÇÃO A: CARD EXIBIDO QUANDO JÁ EXISTE ENDEREÇO SALVO -->
+      <div id="box-endereco-cadastrado" style="display: none; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; margin-top: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <strong id="card-end-nome" style="display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px;">-</strong>
+            <p id="card-end-rua-num" style="font-size: 14px; color: #334155; margin: 0;">-</p>
+            <p id="card-end-bairro-cidade" style="font-size: 13px; color: #64748b; margin: 2px 0 0 0;">-</p>
+            <p id="card-end-cep" style="font-size: 12px; color: #2563eb; margin-top: 4px; font-weight: bold;">-</p>
+          </div>
+          <button type="button" onclick="alternarFormularioEndereco(true)" style="background: none; border: none; color: #2563eb; font-weight: bold; font-size: 13px; cursor: pointer; text-decoration: underline;">
+            Alterar endereço
+          </button>
+        </div>
       </div>
+
+      <!-- OPÇÃO B: FORMULÁRIO EXIBIDO SE NÃO HOUVER ENDEREÇO OU SE O CLIENTE CLICAR EM ALTERAR -->
+      <form id="form-endereco" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <small style="color: #64748b;">Preencha os dados abaixo para entrega:</small>
+          <!-- Botão para cancelar a alteração caso o cliente já tenha um endereço salvo -->
+          <button type="button" id="btn-cancelar-alteracao" onclick="alternarFormularioEndereco(false)" style="display: none; background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer;">Cancelar</button>
+        </div>
+
+        <!-- NOME COMPLETO -->
+        <div>
+          <label style="font-size: 12px; color: #475569; font-weight: bold; display: block; margin-bottom: 4px;">Nome Completo:</label>
+          <input type="text" id="end-nome" placeholder="Ex: João Silva" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+        </div>
+
+        <!-- CEP COM BUSCA AUTOMÁTICA -->
+        <div>
+          <label style="font-size: 12px; color: #475569; font-weight: bold; display: block; margin-bottom: 4px;">CEP:</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="end-cep" maxlength="9" placeholder="74230-100" required style="flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+            <button type="button" onclick="buscarCEP()" style="background: #2563eb; color: white; border: none; padding: 10px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px;">Buscar CEP</button>
+          </div>
+          <span id="cep-status" style="font-size: 11px; margin-top: 4px; display: block;"></span>
+        </div>
+
+        <!-- RUA / LOGRADOURO -->
+        <div>
+          <label style="font-size: 12px; color: #475569; font-weight: bold; display: block; margin-bottom: 4px;">Rua / Endereço:</label>
+          <input type="text" id="end-rua" placeholder="Rua, Av., Quadra..." required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+        </div>
+
+        <!-- NÚMERO E COMPLEMENTO -->
+        <div style="display: flex; gap: 10px;">
+          <div style="flex: 1;">
+            <label style="font-size: 12px; color: #475569; font-weight: bold; display: block; margin-bottom: 4px;">Número:</label>
+            <input type="text" id="end-numero" placeholder="1020" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+          </div>
+          <div style="flex: 1;">
+            <label style="font-size: 12px; color: #475569; font-weight: bold; display: block; margin-bottom: 4px;">Complemento:</label>
+            <input type="text" id="end-complemento" placeholder="Apto 101, Q. 12" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+          </div>
+        </div>
+
+        <!-- BAIRRO, CIDADE E UF -->
+        <div style="display: flex; gap: 10px;">
+          <div style="flex: 2;">
+            <label style="font-size: 12px; color: #475569; font-weight: bold; display: block; margin-bottom: 4px;">Bairro:</label>
+            <input type="text" id="end-bairro" placeholder="Setor Bueno" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+          </div>
+          <div style="flex: 2;">
+            <label style="font-size: 12px; color: #475569; font-weight: bold; display: block; margin-bottom: 4px;">Cidade:</label>
+            <input type="text" id="end-cidade" placeholder="Goiânia" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+          </div>
+          <div style="flex: 1;">
+            <label style="font-size: 12px; color: #475569; font-weight: bold; display: block; margin-bottom: 4px;">UF:</label>
+            <input type="text" id="end-uf" placeholder="GO" maxlength="2" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; text-transform: uppercase; box-sizing: border-box;">
+          </div>
+        </div>
+
+      </form>
     </section>
 
     <!-- SEÇÃO: FORMAS DE PAGAMENTO -->
@@ -43,8 +112,6 @@
       <h2 class="secao-titulo">💳 Forma de Pagamento</h2>
 
       <div class="opcoes-pagamento">
-        
-        <!-- Opção PIX -->
         <label class="pagamento-item">
           <input type="radio" name="pagamento" value="pix" checked>
           <div class="pagamento-info">
@@ -57,7 +124,6 @@
           <span class="pagamento-icone">⚡</span>
         </label>
 
-        <!-- Opção Cartão -->
         <label class="pagamento-item">
           <input type="radio" name="pagamento" value="cartao">
           <div class="pagamento-info">
@@ -67,7 +133,6 @@
           <span class="pagamento-icone">💳</span>
         </label>
 
-        <!-- Opção Boleto -->
         <label class="pagamento-item">
           <input type="radio" name="pagamento" value="boleto">
           <div class="pagamento-info">
@@ -76,19 +141,16 @@
           </div>
           <span class="pagamento-icone">📄</span>
         </label>
-
       </div>
     </section>
 
     <!-- SEÇÃO: ITENS DO PEDIDO (INJETADOS VIA JAVASCRIPT) -->
     <section class="secao-card">
       <h2 class="secao-titulo" id="chk-titulo-itens">📦 Itens do Pedido</h2>
-      <div class="itens-resumo" id="chk-lista-itens">
-        <!-- O JS inserirá os itens do carrinho aqui -->
-      </div>
+      <div class="itens-resumo" id="chk-lista-itens"></div>
     </section>
 
-    <!-- SEÇÃO: RESUMO DE VALORES (CÁLCULO DINÂMICO VIA JS) -->
+    <!-- SEÇÃO: RESUMO DE VALORES -->
     <section class="secao-card resumo-valores">
       <div class="linha-valor">
         <span>Subtotal</span>
@@ -97,10 +159,6 @@
       <div class="linha-valor">
         <span>Frete</span>
         <span class="frete-valor" id="chk-frete">R$ 5,00</span>
-      </div>
-      <div class="linha-valor desconto" id="box-desconto" style="display: none;">
-        <span>Desconto</span>
-        <span id="chk-desconto">- R$ 0,00</span>
       </div>
       <hr class="divisor-resumo">
       <div class="linha-valor total">
@@ -111,33 +169,12 @@
 
     <!-- BOTÃO FINALIZAR COMPRA -->
     <div class="checkout-acao">
-      <a href="Pedido-confirmado.html" class="btn-finalizar">Confirmar e Pagar</a>
+      <button type="button" onclick="validarEConfirmarPedido()" class="btn-finalizar" style="width: 100%; background: #16a34a; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;">
+        Confirmar e Pagar 🚀
+      </button>
     </div>
 
   </main>
-
-  <!-- ========================================== -->
-  <!-- MENU INFERIOR DE NAVEGAÇÃO                 -->
-  <!-- ========================================== -->
-  <nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <span class="nav-icon">🏠</span>
-      <span>Home</span>
-    </a>
-    <a href="notificacoes.html" class="nav-item">
-      <span class="nav-icon">🔔</span>
-      <span>Avisos</span>
-    </a>
-    <a href="carrinho.html" class="nav-item active">
-      <span class="nav-icon">🛒</span>
-      <span class="carrinho-count">0</span>
-      <span>Carrinho</span>
-    </a>
-    <a href="Meu-perfil.html" class="nav-item">
-      <span class="nav-icon">👤</span>
-      <span>Perfil</span>
-    </a>
-  </nav>
 
   <!-- ========================================== -->
   <!-- SCRIPT JS PRINCIPAL                        -->
