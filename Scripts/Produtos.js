@@ -87,14 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 5. Função para salvar sincronizado em 'carrinho_db' e 'carrinho'
+  // 5. Função para salvar sincronizado em 'carrinho_db' e 'carrinho'
   function salvarNoCarrinho(quantidade) {
-    // Trata a imagem de forma leve para evitar estouro de cota, usando emoji ou mantendo URL/ícone seguro
+    // Se a imagem for muito grande (Base64), removemos do carrinho para não estourar o limite de 5MB
     let imagemParaCarrinho = '📦';
-    if (typeof produtoAtual.imagem === 'string') {
-      if (produtoAtual.imagem.startsWith('http') || produtoAtual.imagem.startsWith('data:image')) {
-        imagemParaCarrinho = produtoAtual.imagem;
-      } else {
-        imagemParaCarrinho = produtoAtual.imagem;
+    if (produtoAtual.imagem && typeof produtoAtual.imagem === 'string') {
+      if (!produtoAtual.imagem.startsWith('data:image')) {
+        imagemParaCarrinho = produtoAtual.imagem; // Mantém se for emoji ou URL curta
       }
     }
 
@@ -106,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       quantidade: quantidade
     };
 
-    // Salva nas duas chaves mais comuns para garantir que a página do carrinho leia
+    // Salva nas chaves com tratamento de erro de cota
     const chaves = ['carrinho_db', 'carrinho'];
 
     chaves.forEach(chave => {
@@ -122,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         localStorage.setItem(chave, JSON.stringify(carrinho));
       } catch (err) {
-        console.error(`Erro ao salvar na chave ${chave}:`, err);
+        console.warn(`Aviso: Não foi possível salvar na chave ${chave} por falta de espaço.`, err);
       }
     });
 
