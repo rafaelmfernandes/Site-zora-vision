@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastrar Endereço - E-commerce</title>
-  <link rel="stylesheet" href="Folha-estilos/Cadastrar-endereço.css">
+  <link rel="stylesheet" href="Folha-estilos/Cadastrar-endereco.css">
 </head>
 <body>
 
@@ -66,3 +66,56 @@
       </div>
 
       <div class="campo">
+        <label for="bairro">Bairro</label>
+        <input type="text" id="bairro" placeholder="Ex.: Setor Bueno" required>
+      </div>
+
+      <div class="linha-cidade-uf">
+        <div class="campo campo-cidade">
+          <label for="cidade">Cidade</label>
+          <input type="text" id="cidade" placeholder="Ex.: Goiânia" required>
+        </div>
+        <div class="campo campo-uf">
+          <label for="uf">UF</label>
+          <input type="text" id="uf" placeholder="GO" maxlength="2" required>
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="referencia">Ponto de Referência (Opcional)</label>
+        <input type="text" id="referencia" placeholder="Ex.: Próximo ao supermercado">
+      </div>
+
+      <label class="checkbox-opcao">
+        <input type="checkbox" name="principal" checked>
+        <span>Definir como meu endereço principal</span>
+      </label>
+
+      <button type="submit" class="btn-salvar">Salvar Endereço</button>
+
+    </form>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="notificacoes.html" class="nav-item">
+      <span class="nav-icon">🔔</span>
+      <span>Avisos</span>
+    </a>
+    <a href="carrinho.html" class="nav-item">
+      <span class="nav-icon">🛒</span>
+      <span class="carrinho-count">2</span>
+      <span>Carrinho</span>
+    </a>
+    <a href="perfil.html" class="nav-item active">
+      <span class="nav-icon">👤</span>
+      <span>Perfil</span>
+    </a>
+  </nav>
+
+</body>
+</html>
