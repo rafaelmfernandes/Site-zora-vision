@@ -1,0 +1,217 @@
+body {
+  background: #f1f5f9;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Topo */
+.pp-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1.25rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+}
+
+.pp-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pp-header-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pp-btn-voltar {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.pp-btn-voltar:hover {
+  background: #e2e8f0;
+}
+
+.pp-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pp-subtitulo {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 2px 0 0 0;
+}
+
+.pp-badge-topo {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Conteúdo */
+.pp-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px 40px 20px;
+}
+
+.pp-vazio {
+  background: #fff;
+  text-align: center;
+  padding: 3rem;
+  border-radius: 12px;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.pp-vazio p:first-child {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.pp-vazio p:last-child {
+  font-size: 0.85rem;
+}
+
+/* Card de pedido */
+.pp-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.pp-card-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.pp-pedido-numero {
+  color: #0f172a;
+  font-size: 1.05rem;
+}
+
+.pp-status-badge {
+  background: #fef3c7;
+  color: #b45309;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.pp-status-badge.em-transporte {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.pp-cliente {
+  font-size: 0.9rem;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.pp-itens-box {
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.pp-itens-titulo {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.pp-itens-lista {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.pp-itens-lista li {
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.pp-card-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 10px;
+}
+
+.pp-total {
+  color: #2563eb;
+}
+
+.pp-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.pp-btn-acao {
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.pp-btn-enviar {
+  background: #0284c7;
+}
+
+.pp-btn-enviar:hover {
+  background: #0369a1;
+}
+
+.pp-btn-concluir {
+  background: #16a34a;
+}
+
+.pp-btn-concluir:hover {
+  background: #15803d;
+}

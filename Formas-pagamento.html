@@ -9,7 +9,7 @@
 <body>
 
   <header class="header">
-    <a href="checkout.html" class="btn-voltar" title="Voltar ao Checkout">&#8592;</a>
+    <a href="Checkout.html" class="btn-voltar" title="Voltar ao Checkout">&#8592;</a>
     <h1 class="header-titulo">Formas de Pagamento</h1>
     <div class="header-espaco"></div>
   </header>
@@ -19,35 +19,8 @@
     <section class="secao-pagamento">
       <h2 class="secao-titulo">Seus Cartões Salvos</h2>
 
-      <div class="lista-cartoes">
-        
-        <label class="cartao-item ativo">
-          <input type="radio" name="cartao_selecionado" value="cartao_1" checked>
-          <div class="cartao-icone">💳</div>
-          <div class="cartao-info">
-            <div class="cartao-topo-info">
-              <span class="bandeira">Mastercard</span>
-              <span class="badge-principal">Principal</span>
-            </div>
-            <p class="cartao-numero">•••• •••• •••• 4589</p>
-            <span class="cartao-validade">Vence em 08/29</span>
-          </div>
-          <button type="button" class="btn-excluir" title="Remover cartão">🗑️</button>
-        </label>
-
-        <label class="cartao-item">
-          <input type="radio" name="cartao_selecionado" value="cartao_2">
-          <div class="cartao-icone">💳</div>
-          <div class="cartao-info">
-            <div class="cartao-topo-info">
-              <span class="bandeira">Visa</span>
-            </div>
-            <p class="cartao-numero">•••• •••• •••• 1234</p>
-            <span class="cartao-validade">Vence em 11/27</span>
-          </div>
-          <button type="button" class="btn-excluir" title="Remover cartão">🗑️</button>
-        </label>
-
+      <div class="lista-cartoes" id="lista-cartoes">
+        <!-- Os cartões salvos do usuário logado são renderizados aqui pelo Formas-pagamento.js -->
       </div>
     </section>
 
@@ -59,7 +32,7 @@
     </section>
 
     <div class="acao-fixa-container">
-      <a href="checkout.html" class="btn-usar-selecionado">Usar Cartão Selecionado</a>
+      <a href="Checkout.html" class="btn-usar-selecionado">Usar Cartão Selecionado</a>
     </div>
 
   </main>
@@ -69,7 +42,7 @@
       <span class="nav-icon">🏠</span>
       <span>Home</span>
     </a>
-    <a href="notificacoes.html" class="nav-item">
+    <a href="Notificaçoes.html" class="nav-item">
       <span class="nav-icon">🔔</span>
       <span>Avisos</span>
     </a>
@@ -78,11 +51,15 @@
       <span class="carrinho-count">2</span>
       <span>Carrinho</span>
     </a>
-    <a href="perfil.html" class="nav-item">
+    <a href="Meu-perfil.html" class="nav-item">
       <span class="nav-icon">👤</span>
       <span>Perfil</span>
     </a>
   </nav>
+
+  <!-- IMPORTA O SCRIPT GLOBAL DO SISTEMA -->
+  <script src="Scripts/Carrinho-checkout.js"></script>
+  <script src="Scripts/Formas-pagamento.js"></script>
 
 </body>
 </html>

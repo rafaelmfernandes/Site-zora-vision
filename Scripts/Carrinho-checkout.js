@@ -11,6 +11,17 @@ const checkoutState = {
     taxaEntrega: 5.00
 };
 
+// Gera a chave de armazenamento do endereço específica de cada usuário logado,
+// para o endereço de um cliente nunca aparecer para outro no mesmo navegador.
+function chaveEnderecoCliente() {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+    if (usuarioLogado && usuarioLogado.email) {
+        return 'ultimo_endereco_cliente_' + usuarioLogado.email.toLowerCase();
+    }
+    // Sem usuário logado, usa uma chave genérica (não deveria persistir de fato)
+    return 'ultimo_endereco_cliente';
+}
+
 // ==========================================
 // 2. BANCO DE DADOS LOCAL DOS PRODUTOS
 // ==========================================
@@ -348,7 +359,7 @@ function checarEnderecoSalvo() {
     const formEndereco = document.getElementById('form-endereco');
     if (!boxCadastrado || !formEndereco) return;
 
-    const enderecoSalvo = JSON.parse(localStorage.getItem('ultimo_endereco_cliente'));
+    const enderecoSalvo = JSON.parse(localStorage.getItem(chaveEnderecoCliente()));
 
     if (enderecoSalvo && enderecoSalvo.rua) {
         if(document.getElementById('card-end-nome')) document.getElementById('card-end-nome').textContent = enderecoSalvo.nome;
@@ -415,6 +426,71 @@ function carregarCheckoutDinamico() {
 }
 
 // ==========================================
+// VALIDAÇÃO E CONFIRMAÇÃO DO PEDIDO (botão "Confirmar e Pagar" do Checkout.html)
+// ==========================================
+function validarEConfirmarPedido() {
+    // 1. Não deixa confirmar com o carrinho vazio
+    if (!checkoutState.carrinho || checkoutState.carrinho.length === 0) {
+        alert('Seu carrinho está vazio! Volte e adicione algum produto antes de finalizar.');
+        return;
+    }
+
+    const boxCadastrado = document.getElementById('box-endereco-cadastrado');
+    const formEndereco = document.getElementById('form-endereco');
+    const formularioVisivel = formEndereco && formEndereco.style.display !== 'none';
+
+    // 2. Se o formulário de endereço está aberto (endereço novo ou alterando um existente),
+    // valida os campos obrigatórios e salva antes de prosseguir
+    if (formularioVisivel) {
+        const campoNome = document.getElementById('end-nome');
+        const campoCep = document.getElementById('end-cep');
+        const campoRua = document.getElementById('end-rua');
+        const campoNumero = document.getElementById('end-numero');
+        const campoBairro = document.getElementById('end-bairro');
+        const campoCidade = document.getElementById('end-cidade');
+        const campoUf = document.getElementById('end-uf');
+
+        const camposObrigatorios = [campoNome, campoCep, campoRua, campoNumero, campoBairro, campoCidade, campoUf];
+        const algumVazio = camposObrigatorios.some(campo => !campo || !campo.value.trim());
+
+        if (algumVazio) {
+            alert('Preencha todos os campos obrigatórios do endereço de entrega antes de continuar.');
+            return;
+        }
+
+        const novoEndereco = {
+            nome: campoNome.value.trim(),
+            cep: campoCep.value.trim(),
+            rua: campoRua.value.trim(),
+            numero: campoNumero.value.trim(),
+            complemento: (document.getElementById('end-complemento') || {}).value?.trim() || '',
+            bairro: campoBairro.value.trim(),
+            cidade: campoCidade.value.trim(),
+            uf: campoUf.value.trim()
+        };
+
+        localStorage.setItem(chaveEnderecoCliente(), JSON.stringify(novoEndereco));
+    } else {
+        // 3. Se não está com o formulário aberto, precisa já existir um endereço salvo
+        const enderecoSalvo = JSON.parse(localStorage.getItem(chaveEnderecoCliente()));
+        if (!enderecoSalvo || !enderecoSalvo.rua) {
+            alert('Informe um endereço de entrega antes de continuar.');
+            return;
+        }
+    }
+
+    // 4. Salva o método de pagamento escolhido
+    const metodoSelecionado = document.querySelector('input[name="pagamento"]:checked');
+    if (metodoSelecionado) {
+        checkoutState.metodoPagamento = metodoSelecionado.value;
+        localStorage.setItem('ultimo_metodo_pagamento', metodoSelecionado.value);
+    }
+
+    // 5. Segue para a tela de confirmação, que gera o pedido automaticamente
+    window.location.href = 'Pedido-confirmado.html';
+}
+
+// ==========================================
 // 7. CONFIRMAÇÃO DE PEDIDO (PEDIDO-CONFIRMADO.HTML)
 // ==========================================
 function carregarPedidoConfirmadoDinamico() {
@@ -428,7 +504,7 @@ function carregarPedidoConfirmadoDinamico() {
 
     let historicoPedidos = JSON.parse(localStorage.getItem('historico_pedidos_cliente')) || [];
     let pedidosAdmin = JSON.parse(localStorage.getItem('pedidos_loja')) || [];
-    const enderecoSalvo = JSON.parse(localStorage.getItem('ultimo_endereco_cliente'));
+    const enderecoSalvo = JSON.parse(localStorage.getItem(chaveEnderecoCliente()));
     const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado')) || {};
 
     let pedidoAtual = JSON.parse(localStorage.getItem('ultimo_pedido_salvo'));
@@ -516,7 +592,7 @@ function carregarPaginaEnderecos() {
     const containerLista = document.getElementById('lista-enderecos-container');
     if (!containerLista) return;
 
-    const enderecoSalvo = JSON.parse(localStorage.getItem('ultimo_endereco_cliente'));
+    const enderecoSalvo = JSON.parse(localStorage.getItem(chaveEnderecoCliente()));
 
     if (!enderecoSalvo || !enderecoSalvo.rua) {
         containerLista.innerHTML = `
@@ -552,10 +628,24 @@ function carregarPaginaEnderecos() {
 
 function excluirEnderecoSalvo() {
     if (confirm('Deseja realmente remover este endereço?')) {
-        localStorage.removeItem('ultimo_endereco_cliente');
+        localStorage.removeItem(chaveEnderecoCliente());
         localStorage.removeItem('ultimo_pedido_salvo');
         carregarPaginaEnderecos();
     }
+}
+
+// Botão "Usar Endereço Selecionado" do Endereços.html.
+// Hoje o sistema guarda apenas 1 endereço por cliente, então "selecionar"
+// é apenas confirmar que existe um endereço salvo e voltar para a tela anterior.
+function confirmarSelecaoEndereco() {
+    const enderecoSalvo = JSON.parse(localStorage.getItem(chaveEnderecoCliente()));
+
+    if (!enderecoSalvo || !enderecoSalvo.rua) {
+        alert('Cadastre um endereço antes de continuar.');
+        return;
+    }
+
+    window.history.back();
 }
 
 // ==========================================
@@ -616,7 +706,7 @@ function carregarDadosFormularioEndereco() {
                 uf: document.getElementById('uf').value.trim()
             };
 
-            localStorage.setItem('ultimo_endereco_cliente', JSON.stringify(novoEndereco));
+            localStorage.setItem(chaveEnderecoCliente(), JSON.stringify(novoEndereco));
             window.location.href = 'Endereços.html';
         });
     }
@@ -688,8 +778,6 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarCheckoutDinamico();
     } else if (paginaAtual.includes('pedido-confirmado.html')) {
         carregarPedidoConfirmadoDinamico();
-    } else if (paginaAtual.includes('pedidos.html')) {
-        carregarPaginaMeusPedidos();
     } else if (paginaAtual.includes('endere')) { 
         if (paginaAtual.includes('cadastrar')) {
             carregarDadosFormularioEndereco();

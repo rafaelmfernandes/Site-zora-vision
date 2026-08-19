@@ -19,22 +19,22 @@
     <div class="cartao-preview">
       <div class="cartao-topo">
         <span class="chip">📟</span>
-        <span class="bandeira">💳</span>
+        <span class="bandeira" id="preview-bandeira">💳</span>
       </div>
-      <div class="cartao-numero">•••• •••• •••• ••••</div>
+      <div class="cartao-numero" id="preview-numero">•••• •••• •••• ••••</div>
       <div class="cartao-rodape">
         <div class="cartao-titular">
           <span class="label">NOME DO TITULAR</span>
-          <span class="val">NOME COMO NO CARTÃO</span>
+          <span class="val" id="preview-titular">NOME COMO NO CARTÃO</span>
         </div>
         <div class="cartao-validade">
           <span class="label">VALIDADE</span>
-          <span class="val">MM/AA</span>
+          <span class="val" id="preview-validade">MM/AA</span>
         </div>
       </div>
     </div>
 
-    <form class="form-pagamento" action="checkout.html" method="GET">
+    <form class="form-pagamento">
 
       <div class="campo">
         <label for="numero-cartao">Número do cartão</label>
@@ -74,7 +74,7 @@
   </main>
 
   <nav class="bottom-nav">
-    <a href="index.html" onclick="location.reload();" class="nav-item active" class="nav-item active">
+    <a href="index.html" class="nav-item">
       <span class="nav-icon">🏠</span>
       <span>Home</span>
     </a>
@@ -89,9 +89,12 @@
     </a>
     <a href="Meu-perfil.html" class="nav-item">
       <span class="nav-icon">👤</span>
-      <span>Entrar</span>
+      <span>Perfil</span>
     </a>
   </nav>
+  <!-- IMPORTA O SCRIPT GLOBAL DO SISTEMA -->
+  <script src="Scripts/Carrinho-checkout.js"></script>
+  <script src="Scripts/Cadastro-pagamento.js"></script>
 
 </body>
 </html>

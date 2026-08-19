@@ -161,9 +161,15 @@ function carregarProdutosAdmin() {
 
 function excluirProduto(idOuIndex) {
   if (confirm('Tem certeza que deseja excluir este produto?')) {
-    let produtos = JSON.parse(localStorage.getItem('produtos_loja')) || JSON.parse(localStorage.getItem('produtos')) || [];
+    // Descobre em qual chave os produtos realmente estão salvos (mesma lógica de carregarProdutosAdmin)
+    const chaveComDados = ['produtos_loja', 'produtos', 'lista_produtos']
+      .find(chave => localStorage.getItem(chave));
+
+    if (!chaveComDados) return;
+
+    let produtos = JSON.parse(localStorage.getItem(chaveComDados)) || [];
     produtos = produtos.filter((p, index) => (p.id ? String(p.id) !== String(idOuIndex) : index != Number(idOuIndex)));
-    localStorage.setItem('produtos_loja', JSON.stringify(produtos));
+    localStorage.setItem(chaveComDados, JSON.stringify(produtos));
     carregarProdutosAdmin();
   }
 }

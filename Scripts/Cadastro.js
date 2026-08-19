@@ -10,19 +10,28 @@ document.addEventListener('DOMContentLoaded', () => {
     event.preventDefault(); // Impede a página de recarregar
 
     // Captura os elementos dos inputs
+    const inputNome = document.getElementById('nome');
     const inputEmail = document.getElementById('email-cadastro');
     const inputSenha = document.getElementById('senha-cadastro');
+    const inputConfirmarSenha = document.getElementById('confirmar-senha');
 
-    if (!inputEmail || !inputSenha) {
-      alert('Erro: Os campos de e-mail ou senha não foram encontrados no HTML.');
+    if (!inputNome || !inputEmail || !inputSenha || !inputConfirmarSenha) {
+      alert('Erro: Algum campo do formulário não foi encontrado no HTML.');
       return;
     }
 
+    const nome = inputNome.value.trim();
     const email = inputEmail.value.trim();
     const password = inputSenha.value.trim();
+    const confirmarPassword = inputConfirmarSenha.value.trim();
 
-    if (!email || !password) {
+    if (!nome || !email || !password || !confirmarPassword) {
       alert('Por favor, preencha todos os campos!');
+      return;
+    }
+
+    if (password !== confirmarPassword) {
+      alert('As senhas não coincidem. Verifique e tente novamente.');
       return;
     }
 
@@ -38,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Adiciona o novo usuário
-    usuarios.push({ email: email, password: password });
+    usuarios.push({ nome: nome, email: email, password: password });
     localStorage.setItem('usuarios_db', JSON.stringify(usuarios));
 
     alert('Conta criada com sucesso! 🎉');

@@ -32,18 +32,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const produtosFiltrados = termo === '' 
             ? produtosAtivos 
             : produtosAtivos.filter(p => 
-                p.nome.toLowerCase().includes(termo) || 
+                (p.nome || '').toLowerCase().includes(termo) || 
                 (p.descricao && p.descricao.toLowerCase().includes(termo))
               );
 
         // 5. Tratamento para quando nenhum produto for encontrado
         if (produtosFiltrados.length === 0) {
-            gridProdutos.innerHTML = `
-              <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #64748b;">
-                <p style="font-size: 1rem; margin-bottom: 0.5rem;">Nenhum produto encontrado para "<strong>${termo}</strong>" 🔍</p>
-                <small>Tente buscar por outro termo.</small>
-              </div>
-            `;
+            if (termo === '') {
+                gridProdutos.innerHTML = `
+                  <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #64748b;">
+                    <p style="font-size: 1rem;">Nenhum produto cadastrado ainda. 📦</p>
+                  </div>
+                `;
+            } else {
+                gridProdutos.innerHTML = `
+                  <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #64748b;">
+                    <p style="font-size: 1rem; margin-bottom: 0.5rem;">Nenhum produto encontrado para "<strong>${termo}</strong>" 🔍</p>
+                    <small>Tente buscar por outro termo.</small>
+                  </div>
+                `;
+            }
             return;
         }
 
@@ -61,7 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Cria o elemento HTML do card do produto
             const card = document.createElement('div');
             card.className = 'card-produto';
+            card.style.position = 'relative';
             card.innerHTML = `
+              ${typeof FavoritosModule !== 'undefined' ? FavoritosModule.botaoHtml(produto.id, 'position:absolute; top:8px; right:8px; z-index:2; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:14px;') : ''}
               <a href="Produtos.html?id=${produto.id}" style="text-decoration: none; color: inherit; display: block;">
                 <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden;' : ''}">
                   ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}

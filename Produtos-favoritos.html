@@ -13,7 +13,7 @@
     <div class="header-conteudo">
       <a href="javascript:history.back()" class="btn-voltar" title="Voltar">&#8592; Início</a>
       <h1 class="admin-titulo">Produtos Favoritos</h1>
-      <span class="badge-contador">4 Itens</span>
+      <span class="badge-contador" id="favoritos-contador">0 Itens</span>
     </div>
   </header>
 
@@ -22,97 +22,26 @@
     <!-- BARRA DE AÇÕES E FILTRO -->
     <section class="barra-acoes">
       <div class="busca-box">
-        <input type="text" placeholder="Buscar nos favoritos...">
+        <input type="text" id="busca-favoritos" placeholder="Buscar nos favoritos...">
       </div>
-      <button class="btn-limpar" onclick="confirm('Deseja remover todos os itens dos favoritos?')">Limpar Favoritos</button>
+      <button class="btn-limpar" id="btn-limpar-favoritos">Limpar Favoritos</button>
     </section>
 
-    <!-- GRID DE PRODUTOS FAVORITOS -->
-    <section class="grid-favoritos">
+    <!-- MENSAGEM EXIBIDA QUANDO NÃO HÁ FAVORITOS -->
+    <div id="favoritos-vazio" style="display: none; text-align: center; padding: 3rem 1rem; color: #64748b;">
+      <p style="font-size: 1.05rem; margin-bottom: 0.5rem;">Você ainda não tem favoritos 💔</p>
+      <p style="font-size: 0.85rem;">Toque no coração de um produto para adicioná-lo aqui.</p>
+    </div>
 
-      <!-- CARD PRODUTO 1 -->
-      <article class="card-produto">
-        <button class="btn-remover-favorito" title="Remover dos favoritos">❤️</button>
-        <div class="produto-imagem">
-          <span class="emoji-preview">👟</span>
-        </div>
-        <div class="produto-detalhes">
-          <span class="produto-categoria">Calçados</span>
-          <h2 class="produto-nome">Tênis Esportivo Running Pro</h2>
-          <div class="produto-preco-container">
-            <span class="preco-atual">R$ 289,90</span>
-            <span class="preco-antigo">R$ 349,90</span>
-          </div>
-          <span class="status-estoque em-estoque">✓ Em estoque</span>
-        </div>
-        <div class="produto-acoes">
-          <button class="btn-comprar">Adicionar ao Carrinho 🛒</button>
-        </div>
-      </article>
-
-      <!-- CARD PRODUTO 2 -->
-      <article class="card-produto">
-        <button class="btn-remover-favorito" title="Remover dos favoritos">❤️</button>
-        <div class="produto-imagem">
-          <span class="emoji-preview">🎧</span>
-        </div>
-        <div class="produto-detalhes">
-          <span class="produto-categoria">Eletrônicos</span>
-          <h2 class="produto-nome">Fone de Ouvido Bluetooth Noise Cancelling</h2>
-          <div class="produto-preco-container">
-            <span class="preco-atual">R$ 199,00</span>
-          </div>
-          <span class="status-estoque em-estoque">✓ Em estoque</span>
-        </div>
-        <div class="produto-acoes">
-          <button class="btn-comprar">Adicionar ao Carrinho 🛒</button>
-        </div>
-      </article>
-
-      <!-- CARD PRODUTO 3 -->
-      <article class="card-produto">
-        <button class="btn-remover-favorito" title="Remover dos favoritos">❤️</button>
-        <div class="produto-imagem">
-          <span class="emoji-preview">🎒</span>
-        </div>
-        <div class="produto-detalhes">
-          <span class="produto-categoria">Acessórios</span>
-          <h2 class="produto-nome">Mochila Impermeável Urban Tech</h2>
-          <div class="produto-preco-container">
-            <span class="preco-atual">R$ 159,90</span>
-            <span class="preco-antigo">R$ 189,90</span>
-          </div>
-          <span class="status-estoque poucos-itens">⚠️ Poucas unidades</span>
-        </div>
-        <div class="produto-acoes">
-          <button class="btn-comprar">Adicionar ao Carrinho 🛒</button>
-        </div>
-      </article>
-
-      <!-- CARD PRODUTO 4 -->
-      <article class="card-produto">
-        <button class="btn-remover-favorito" title="Remover dos favoritos">❤️</button>
-        <div class="produto-imagem">
-          <span class="emoji-preview">⌚</span>
-        </div>
-        <div class="produto-detalhes">
-          <span class="produto-categoria">Gadgets</span>
-          <h2 class="produto-nome">Smartwatch Sport Monitor O2</h2>
-          <div class="produto-preco-container">
-            <span class="preco-atual">R$ 249,00</span>
-          </div>
-          <span class="status-estoque sem-estoque">✕ Esgotado</span>
-        </div>
-        <div class="produto-acoes">
-          <button class="btn-comprar" disabled>Indisponível</button>
-        </div>
-      </article>
-
+    <!-- GRID DE PRODUTOS FAVORITOS (PREENCHIDO DINAMICAMENTE VIA JS) -->
+    <section class="grid-favoritos" id="grid-favoritos">
+      <!-- Os cards de produtos favoritados são injetados aqui pelo Favoritos.js -->
     </section>
 
   </main>
 
-  <!-- VINCULAR O ARQUIVO JAVASCRIPT AQUI -->
-  <script src="Scripts/favoritos.js"></script>
+  <!-- SCRIPTS DA APLICAÇÃO -->
+  <script src="Scripts/Carrinho-checkout.js"></script>
+  <script src="Scripts/Favoritos.js"></script>
 </body>
 </html>

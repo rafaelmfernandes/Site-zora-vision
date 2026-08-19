@@ -58,6 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. Preenche a interface com os dados do produto encontrado
   if (tituloEl) tituloEl.textContent = produtoAtual.nome;
   if (precoEl) precoEl.textContent = `R$ ${parseFloat(produtoAtual.preco || 0).toFixed(2).replace('.', ',')}`;
+
+  // Conecta o botão de favoritar (coração) com o produto atual desta página
+  const btnFavoritarProduto = document.getElementById('btn-favoritar-produto');
+  if (btnFavoritarProduto && typeof FavoritosModule !== 'undefined') {
+    btnFavoritarProduto.dataset.id = produtoAtual.id;
+    const jaFavoritado = FavoritosModule.estaFavoritado(produtoAtual.id);
+    btnFavoritarProduto.textContent = jaFavoritado ? '❤️' : '🤍';
+    btnFavoritarProduto.classList.toggle('favoritado', jaFavoritado);
+  }
   
   if (precoAntigoEl && produtoAtual.precoAntigo && produtoAtual.precoAntigo > 0) {
     precoAntigoEl.textContent = `R$ ${parseFloat(produtoAtual.precoAntigo).toFixed(2).replace('.', ',')}`;
@@ -82,6 +91,23 @@ document.addEventListener('DOMContentLoaded', () => {
       estoqueTagEl.innerHTML = `<span class="dot"></span> ${produtoAtual.estoque} em estoque`;
     } else {
       estoqueTagEl.innerHTML = `<span class="dot" style="background: red;"></span> Indisponível`;
+    }
+  }
+
+  // Impede a compra quando o produto está sem estoque
+  const semEstoque = !produtoAtual.estoque || produtoAtual.estoque <= 0;
+  if (semEstoque) {
+    if (btnAdicionar) {
+      btnAdicionar.disabled = true;
+      btnAdicionar.textContent = 'Indisponível';
+      btnAdicionar.style.opacity = '0.6';
+      btnAdicionar.style.cursor = 'not-allowed';
+    }
+    if (btnComprar) {
+      btnComprar.disabled = true;
+      btnComprar.textContent = 'Indisponível';
+      btnComprar.style.opacity = '0.6';
+      btnComprar.style.cursor = 'not-allowed';
     }
   }
 
@@ -159,6 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
     btnAdicionar.addEventListener('click', (e) => {
       e.preventDefault();
 
+      if (semEstoque) return;
+
       // 🔒 Valida se está logado antes de prosseguir
       if (!verificarAutenticacaoAntesDeAcao(e)) return;
 
@@ -183,6 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnComprar) {
     btnComprar.addEventListener('click', (e) => {
       e.preventDefault();
+
+      if (semEstoque) return;
 
       // 🔒 Valida se está logado antes de prosseguir
       if (!verificarAutenticacaoAntesDeAcao(e)) return;

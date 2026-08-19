@@ -7,7 +7,26 @@ function carregarMeusPedidos() {
   
   if (!containerPedidos) return;
 
-  const historicoCliente = JSON.parse(localStorage.getItem('historico_pedidos_cliente')) || [];
+  const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+
+  if (!usuarioLogado || !usuarioLogado.email) {
+    containerPedidos.innerHTML = `
+      <div style="text-align: center; padding: 3rem 1rem; color: #64748b;">
+        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">Faça login para ver seus pedidos. 🔒</p>
+        <a href="Login.html" style="color: #2563eb; font-weight: 600; text-decoration: none;">Entrar na minha conta</a>
+      </div>
+    `;
+    return;
+  }
+
+  const todoHistorico = JSON.parse(localStorage.getItem('historico_pedidos_cliente')) || [];
+
+  // Mostra apenas os pedidos que pertencem ao usuário logado no momento
+  const historicoCliente = todoHistorico.filter(pedido =>
+    pedido.cliente &&
+    pedido.cliente.email &&
+    pedido.cliente.email.toLowerCase() === usuarioLogado.email.toLowerCase()
+  );
 
   if (historicoCliente.length === 0) {
     containerPedidos.innerHTML = `

@@ -54,7 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
       listaProdutos.push(novoProduto);
 
       // Salva de volta no localStorage para sincronizar com o index.html
-      localStorage.setItem('produtos_loja', JSON.stringify(listaProdutos));
+      try {
+        localStorage.setItem('produtos_loja', JSON.stringify(listaProdutos));
+      } catch (erro) {
+        console.error('Erro ao salvar produto: armazenamento cheio.', erro);
+        alert('Não foi possível salvar o produto: o armazenamento do navegador está cheio (provavelmente por causa de imagens grandes já cadastradas). Tente usar uma imagem menor ou libere espaço.');
+        return;
+      }
 
       alert('Produto cadastrado e publicado com sucesso! 🚀');
 
