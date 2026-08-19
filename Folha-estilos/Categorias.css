@@ -1,0 +1,110 @@
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #f1efe8;
+      color: #2c2c2a;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #e0ded6;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 1000;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .conteudo {
+      margin-top: 60px;
+      padding: 20px 16px 84px;
+    }
+
+    .grade-categorias {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .categoria-card {
+      background-color: #ffffff;
+      border: 1px solid #e0ded6;
+      border-radius: 14px;
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #2c2c2a;
+    }
+
+    .categoria-icone {
+      font-size: 32px;
+    }
+
+    .categoria-nome {
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* Menu inferior */
+    .menu-inferior {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 64px;
+      background-color: #ffffff;
+      border-top: 1px solid #e0ded6;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      z-index: 1000;
+    }
+
+    .menu-inferior-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #888780;
+      font-family: inherit;
+      font-size: 11px;
+      text-decoration: none;
+      flex: 1;
+      height: 100%;
+    }
+
+    .menu-inferior-item svg {
+      width: 22px;
+      height: 22px;
+      stroke: #888780;
+    }
+
+    .menu-inferior-item.ativo {
+      color: #2c2c2a;
+    }
+
+    .menu-inferior-item.ativo svg {
+      stroke: #2c2c2a;
+    }

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categoria - SuaLoja.com</title>
+  <link rel="stylesheet" href="Folha-estilos/Categoria-produtos.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="Categorias.html" class="btn-voltar" title="Voltar às categorias">&#8592;</a>
+    <h1 id="titulo-categoria">Categoria</h1>
+  </header>
+
+  <main class="conteudo">
+    <div class="grade-produtos" id="grid-categoria"></div>
+  </main>
+
+  <nav class="menu-inferior">
+    <a class="menu-inferior-item" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 10.5 12 3l9 7.5"></path>
+        <path d="M5 9.5V21h14V9.5"></path>
+      </svg>
+      Home
+    </a>
+
+    <a class="menu-inferior-item ativo" href="Categorias.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+      </svg>
+      Categorias
+    </a>
+
+    <a class="menu-inferior-item" href="carrinho.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="20" r="1.5"></circle>
+        <circle cx="18" cy="20" r="1.5"></circle>
+        <path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"></path>
+      </svg>
+      Carrinho
+    </a>
+
+    <a class="menu-inferior-item" href="Meu-perfil.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"></circle>
+        <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
+      </svg>
+      Perfil
+    </a>
+  </nav>
+
+  <script src="Scripts/Carrinho-checkout.js"></script>
+  <script src="Scripts/Favoritos.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const NOMES_CATEGORIA = {
+        decoracao: 'Decoração',
+        casa: 'Casa',
+        cozinha: 'Cozinha',
+        sala: 'Sala',
+        quarto: 'Quarto',
+        escritorio: 'Escritório'
+      };
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const categoria = urlParams.get('categoria') || '';
+
+      const titulo = document.getElementById('titulo-categoria');
+      if (titulo) titulo.textContent = NOMES_CATEGORIA[categoria] || 'Categoria';
+
+      const grid = document.getElementById('grid-categoria');
+      if (!grid) return;
+
+      const produtos = JSON.parse(localStorage.getItem('produtos_loja')) ||
+                        JSON.parse(localStorage.getItem('produtos')) || [];
+
+      const produtosFiltrados = produtos.filter(p =>
+        p.ativo !== false && (p.categoria || '').toLowerCase() === categoria.toLowerCase()
+      );
+
+      if (produtosFiltrados.length === 0) {
+        grid.innerHTML = `
+          <div class="estado-vazio" style="grid-column: 1 / -1;">
+            <p>Nenhum produto encontrado nessa categoria ainda.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = produtosFiltrados.map(produto => {
+        const nome = produto.nome || produto.titulo || 'Produto';
+        const preco = parseFloat(produto.preco || produto.valor || 0);
+        const precoFormatado = preco.toFixed(2).replace('.', ',');
+        const imagemSrc = produto.imagem || produto.foto || '';
+        const ehImagemUrl = typeof imagemSrc === 'string' &&
+          (imagemSrc.startsWith('data:image') || imagemSrc.startsWith('http') || imagemSrc.startsWith('assets/'));
+
+        return `
+          <div class="produto-card">
+            ${typeof FavoritosModule !== 'undefined' ? FavoritosModule.botaoHtml(produto.id) : ''}
+            <a href="Produtos.html?id=${produto.id}" style="text-decoration:none; color:inherit;">
+              <div class="produto-imagem">
+                ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${nome}">` : (imagemSrc || '📦')}
+              </div>
+              <div class="produto-info">
+                <p class="produto-nome">${nome}</p>
+                <span class="produto-preco">R$ ${precoFormatado}</span>
+              </div>
+            </a>
+            <button class="btn-adicionar"
+                    data-id="${produto.id}"
+                    data-nome="${nome}"
+                    data-preco="${preco}"
+                    data-imagem="${ehImagemUrl ? imagemSrc : ''}">
+              Adicionar ao Carrinho
+            </button>
+          </div>
+        `;
+      }).join('');
+    });
+  </script>
+
+</body>
+</html>
