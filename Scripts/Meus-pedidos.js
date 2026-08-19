@@ -66,7 +66,7 @@ function carregarMeusPedidos() {
         const qtdItem = parseInt(item.quantidade || 1);
         const nomeItem = item.nome || 'Produto';
         const imgItem = item.imagem || item.img || '';
-        const ehImagemUrl = typeof imgItem === 'string' && imgItem.startsWith('http');
+        const ehImagemUrl = typeof imgItem === 'string' && (imgItem.startsWith('http') || imgItem.startsWith('data:image'));
 
         itensHtml += `
           <div style="display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px 12px; border-radius: 10px; margin-bottom: 8px;">

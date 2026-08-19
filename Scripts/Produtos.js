@@ -135,12 +135,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 5. Função para salvar sincronizado em 'carrinho_db' e 'carrinho'
   function salvarNoCarrinho(quantidade) {
-    let imagemParaCarrinho = '📦';
-    if (produtoAtual.imagem && typeof produtoAtual.imagem === 'string') {
-      if (!produtoAtual.imagem.startsWith('data:image')) {
-        imagemParaCarrinho = produtoAtual.imagem; 
-      }
-    }
+    // Mantém a imagem real do produto (inclusive fotos enviadas como base64),
+    // pra ela aparecer certinho depois no carrinho e no histórico de pedidos.
+    const imagemParaCarrinho = (produtoAtual.imagem && typeof produtoAtual.imagem === 'string')
+      ? produtoAtual.imagem
+      : '📦';
 
     const novoItem = {
       id: produtoAtual.id,

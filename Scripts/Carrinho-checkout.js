@@ -61,20 +61,13 @@ const CarrinhoCheckoutModule = {
 
     salvarStorage() {
         try {
-            // Remove imagens grandes em Base64 para economizar espaço no localStorage
-            const carrinhoLimpo = checkoutState.carrinho.map(item => {
-                const copia = { ...item };
-                if (copia.imagem && copia.imagem.startsWith('data:image')) {
-                    delete copia.imagem; 
-                }
-                return copia;
-            });
-
-            localStorage.setItem('carrinho_db', JSON.stringify(carrinhoLimpo));
-            localStorage.setItem('carrinho', JSON.stringify(carrinhoLimpo));
+            // Mantém a imagem real de cada produto (inclusive fotos em base64),
+            // pra ela continuar aparecendo certinho no carrinho e nos pedidos.
+            localStorage.setItem('carrinho_db', JSON.stringify(checkoutState.carrinho));
+            localStorage.setItem('carrinho', JSON.stringify(checkoutState.carrinho));
         } catch (e) {
             console.error("Erro ao salvar no localStorage: O armazenamento está cheio.", e);
-            alert("O armazenamento do navegador ficou cheio. Por favor, limpe os dados do site.");
+            alert("O armazenamento do navegador ficou cheio (provavelmente por causa de fotos de produtos). Algumas informações podem não ser salvas corretamente.");
         }
     },
 
@@ -507,9 +500,12 @@ function carregarPedidoConfirmadoDinamico() {
     const enderecoSalvo = JSON.parse(localStorage.getItem(chaveEnderecoCliente()));
     const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado')) || {};
 
-    let pedidoAtual = JSON.parse(localStorage.getItem('ultimo_pedido_salvo'));
+    let pedidoAtual = null;
 
-    if (!pedidoAtual && (checkoutState.carrinho.length > 0 || enderecoSalvo)) {
+    // Só cria um pedido NOVO quando o carrinho atual realmente tem itens
+    // (ou seja: o cliente acabou de finalizar uma compra de verdade).
+    // Isso evita reaproveitar por engano os dados de um pedido antigo.
+    if (checkoutState.carrinho.length > 0) {
         const { total } = CarrinhoCheckoutModule.calcularValores();
         const numPedido = Math.floor(10000 + Math.random() * 90000);
         const numPedidoFormatado = '#' + numPedido;
@@ -537,7 +533,7 @@ function carregarPedidoConfirmadoDinamico() {
                 telefone: usuarioLogado.telefone || '(62) 99999-9999'
             },
             itens: [...checkoutState.carrinho],
-            total: total > 0 ? total : 314.90,
+            total: total,
             endereco: enderecoSalvo
         };
 
@@ -550,6 +546,10 @@ function carregarPedidoConfirmadoDinamico() {
 
         checkoutState.carrinho = [];
         CarrinhoCheckoutModule.salvarStorage();
+    } else {
+        // Carrinho já vazio (ex: a pessoa recarregou a página de confirmação):
+        // reexibe o último pedido salvo só pra não deixar a tela em branco.
+        pedidoAtual = JSON.parse(localStorage.getItem('ultimo_pedido_salvo'));
     }
 
     if (pedidoAtual) {
@@ -560,12 +560,20 @@ function carregarPedidoConfirmadoDinamico() {
         if (elTotalPago) elTotalPago.textContent = `R$ ${pedidoAtual.total.toFixed(2).replace('.', ',')}`;
 
         if (elListaItens && pedidoAtual.itens) {
-            elListaItens.innerHTML = pedidoAtual.itens.map(item => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:6px; color:#334155;">
-                    <span>${item.quantidade}x ${item.nome}</span>
+            elListaItens.innerHTML = pedidoAtual.itens.map(item => {
+                const ehImagemUrl = typeof item.imagem === 'string' && (item.imagem.startsWith('http') || item.imagem.startsWith('data:image'));
+                return `
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; color:#334155;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="width:32px; height:32px; border-radius:6px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0;">
+                            ${ehImagemUrl ? `<img src="${item.imagem}" style="width:100%; height:100%; object-fit:cover;">` : '📦'}
+                        </div>
+                        <span>${item.quantidade}x ${item.nome}</span>
+                    </div>
                     <span style="font-weight:600;">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
                 </div>
-            `).join('');
+            `;
+            }).join('');
         }
 
         const end = pedidoAtual.endereco || enderecoSalvo;
