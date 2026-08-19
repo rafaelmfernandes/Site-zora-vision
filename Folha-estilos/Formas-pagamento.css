@@ -25,11 +25,19 @@ body {
 }
 
 .btn-voltar {
-  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  border: none;
+  font-size: 1.1rem;
   color: #0f172a;
+  cursor: pointer;
   text-decoration: none;
-  font-weight: 600;
-  width: 30px;
+  flex-shrink: 0;
 }
 
 .header-titulo {
@@ -39,7 +47,7 @@ body {
 }
 
 .header-espaco {
-  width: 30px;
+  width: 34px;
 }
 
 /* Container */

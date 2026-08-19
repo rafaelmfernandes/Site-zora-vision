@@ -2,6 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
   carregarMeusPedidos();
 });
 
+// Ícones SVG usados nos cards (mesmo padrão de linha usado no resto do site)
+function svgIcone(paths, tamanho = 18) {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:${tamanho}px; height:${tamanho}px;">${paths}</svg>`;
+}
+
+const ICONE_CHECK = svgIcone('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>');
+const ICONE_PACOTE = svgIcone('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>');
+const ICONE_CAMINHAO = svgIcone('<rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle>');
+const ICONE_CASA = svgIcone('<path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path>');
+const ICONE_FONE_OUVIDO = svgIcone('<path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>', 18);
+
 function carregarMeusPedidos() {
   const containerPedidos = document.getElementById('container-meus-pedidos');
   
@@ -47,25 +58,22 @@ function carregarMeusPedidos() {
     const statusAtual = pedido.status || 'Em Separação';
     const totalPedido = parseFloat(pedido.total || 0).toFixed(2).replace('.', ',');
 
-    // Monta a lista de itens do pedido dinamicamente
+    // Monta a lista de itens do pedido (uma linha por item: "1x Nome do produto")
     let itensHtml = '';
     const itens = pedido.itens || [];
     if (itens.length > 0) {
       itens.forEach(item => {
-        const precoItem = parseFloat(item.preco || 0);
         const qtdItem = parseInt(item.quantidade || 1);
         const nomeItem = item.nome || 'Produto';
-        const imgItem = item.imagem || item.img || '📦';
-        
+        const imgItem = item.imagem || item.img || '';
+        const ehImagemUrl = typeof imgItem === 'string' && imgItem.startsWith('http');
+
         itensHtml += `
-          <div style="display: flex; align-items: center; gap: 12px; background: #f8fafc; padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #f1f5f9;">
-            <div style="width: 36px; height: 36px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; border: 1px solid #e2e8f0; flex-shrink: 0;">
-              ${typeof imgItem === 'string' && imgItem.startsWith('http') ? `<img src="${imgItem}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">` : '📦'}
-            </div>
-            <div style="flex-grow: 1;">
-              <div style="font-weight: 600; font-size: 0.9rem; color: #1e293b;">${nomeItem}</div>
-              <div style="font-size: 0.8rem; color: #64748b;">Qtd: ${qtdItem} • R$ ${(precoItem * qtdItem).toFixed(2).replace('.', ',')}</div>
-            </div>
+          <div style="display: flex; align-items: center; gap: 10px; background: #f8fafc; padding: 10px 12px; border-radius: 10px; margin-bottom: 8px;">
+            <span style="color: #64748b; flex-shrink: 0;">
+              ${ehImagemUrl ? `<img src="${imgItem}" style="width:18px; height:18px; object-fit:cover; border-radius:4px;">` : ICONE_FONE_OUVIDO}
+            </span>
+            <span style="font-size: 0.88rem; color: #334155;"><strong style="color:#0f172a;">${qtdItem}x</strong> ${nomeItem}</span>
           </div>
         `;
       });
@@ -83,36 +91,37 @@ function carregarMeusPedidos() {
     const isEntregue = st.includes('entregue') || st.includes('concluido');
 
     // Textos e cores do badge geral do topo
-    let textoStatusGeral = 'Em Andamento';
-    let estiloBadgeGeral = "background: #eff6ff; color: #1d4ed8;";
+    let textoStatusGeral = 'EM SEPARAÇÃO';
+    let estiloBadgeGeral = "background: #ffedd5; color: #c2410c;";
 
     if (isCancelado) {
-      textoStatusGeral = 'Cancelado';
+      textoStatusGeral = 'CANCELADO';
       estiloBadgeGeral = "background: #fee2e2; color: #991b1b;";
     } else if (isEntregue) {
-      textoStatusGeral = 'Entregue';
+      textoStatusGeral = 'ENTREGUE';
       estiloBadgeGeral = "background: #dcfce7; color: #166534;";
     } else if (isTransporte) {
-      textoStatusGeral = 'A Caminho';
+      textoStatusGeral = 'EM TRÂNSITO';
       estiloBadgeGeral = "background: #e0f2fe; color: #0369a1;";
     }
 
-    // Estilos dinâmicos para os círculos da linha do tempo baseados no admin
-    const corAprovado = "#16a34a"; // Verde fixo pois todo pedido válido é aprovado
-    
-    const corSeparacao = (isSeparacao || isTransporte || isEntregue) ? "#2563eb" : "#cbd5e1";
-    const opacSeparacao = (isSeparacao || isTransporte || isEntregue) ? "1" : "0.4";
-    
-    const corTransporte = (isTransporte || isEntregue) ? "#2563eb" : "#cbd5e1";
-    const opacTransporte = (isTransporte || isEntregue) ? "1" : "0.4";
+    // Cores/ícones dos 4 passos da linha do tempo (azul = concluído/atual, cinza claro = pendente)
+    const passoConcluido = (fundo, iconeCor) => `background:${fundo}; color:${iconeCor};`;
 
-    const corEntregue = isEntregue ? "#16a34a" : "#cbd5e1";
-    const opacEntregue = isEntregue ? "1" : "0.4";
+    const estiloAprovado = passoConcluido('#2563eb', '#ffffff'); // todo pedido válido já foi aprovado
+    const estiloSeparacao = (isSeparacao || isTransporte || isEntregue) ? passoConcluido('#2563eb', '#ffffff') : passoConcluido('#f1f5f9', '#94a3b8');
+    const estiloTransporte = (isTransporte || isEntregue) ? passoConcluido('#2563eb', '#ffffff') : passoConcluido('#f1f5f9', '#94a3b8');
+    const estiloEntregue = isEntregue ? passoConcluido('#2563eb', '#ffffff') : passoConcluido('#f1f5f9', '#94a3b8');
+
+    const corTextoAprovado = '#2563eb';
+    const corTextoSeparacao = (isSeparacao || isTransporte || isEntregue) ? '#2563eb' : '#94a3b8';
+    const corTextoTransporte = (isTransporte || isEntregue) ? '#2563eb' : '#94a3b8';
+    const corTextoEntregue = isEntregue ? '#2563eb' : '#94a3b8';
 
     // Regra para habilitar o botão de cancelamento (somente se estiver em separação)
     const podeCancelar = !isCancelado && isSeparacao;
 
-    // Monta o card estruturado mantendo o design original
+    // Monta o card
     const card = document.createElement('div');
     card.className = 'pedido-card';
     card.style.cssText = "background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);";
@@ -120,59 +129,51 @@ function carregarMeusPedidos() {
     card.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
         <div>
-          <span style="font-weight: 700; color: #0f172a; font-size: 1.1rem; display: block;">Pedido #${String(idPedido).replace('#', '')}</span>
+          <span style="font-weight: 700; color: #0f172a; font-size: 1.1rem; display: block;">#${String(idPedido).replace('#', '')}</span>
           <span style="font-size: 0.8rem; color: #64748b;">Realizado em ${dataPedido}</span>
         </div>
-        <span style="${estiloBadgeGeral} padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">${textoStatusGeral}</span>
+        <span style="${estiloBadgeGeral} padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.3px;">${textoStatusGeral}</span>
       </div>
 
       <div style="margin-bottom: 1rem;">
         ${itensHtml}
       </div>
 
-      <div style="background: #f8fafc; border: 1px solid #f1f5f9; border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
-        <div style="font-weight: 600; font-size: 0.85rem; color: #334155; margin-bottom: 10px;">Status da Entrega</div>
-        
-        ${isCancelado ? `
-          <div style="text-align: center; color: #991b1b; font-size: 0.85rem; font-weight: 600; padding: 8px; background: #fee2e2; border-radius: 8px;">
-            ❌ Este pedido foi cancelado.
-          </div>
-        ` : `
-          <div style="display: flex; justify-content: space-between; align-items: center; position: relative; margin-bottom: 8px; text-align: center;">
-            <div style="display: flex; flex-direction: column; align-items: center; flex: 1; z-index: 1;">
-              <div style="width: 28px; height: 28px; background: ${corAprovado}; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-bottom: 4px;">✓</div>
-              <span style="font-size: 0.75rem; font-weight: 600; color: #1e293b;">Aprovado</span>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: center; flex: 1; z-index: 1; opacity: ${opacSeparacao};">
-              <div style="width: 28px; height: 28px; background: ${corSeparacao}; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-bottom: 4px;">📦</div>
-              <span style="font-size: 0.75rem; font-weight: 600; color: #1e293b;">Em Separação</span>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: center; flex: 1; z-index: 1; opacity: ${opacTransporte};">
-              <div style="width: 28px; height: 28px; background: ${corTransporte}; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-bottom: 4px;">🚚</div>
-              <span style="font-size: 0.75rem; font-weight: ${isTransporte ? '600' : '500'}; color: #64748b;">Em Trânsito</span>
-            </div>
-            <div style="display: flex; flex-direction: column; align-items: center; flex: 1; z-index: 1; opacity: ${opacEntregue};">
-              <div style="width: 28px; height: 28px; background: ${corEntregue}; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; margin-bottom: 4px;">🏠</div>
-              <span style="font-size: 0.75rem; font-weight: ${isEntregue ? '600' : '500'}; color: #64748b;">Entregue</span>
-            </div>
-          </div>
-        `}
-
-        <div style="text-align: center; font-size: 0.75rem; color: #64748b; margin-top: 8px; border-top: 1px dashed #e2e8f0; padding-top: 8px;">
-          Pagamento via: <strong>PIX (Aprovação Instantânea)</strong>
+      ${isCancelado ? `
+        <div style="text-align: center; color: #991b1b; font-size: 0.85rem; font-weight: 600; padding: 10px; background: #fee2e2; border-radius: 10px; margin-bottom: 1rem;">
+          Este pedido foi cancelado.
         </div>
-      </div>
+      ` : `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; text-align: center;">
+          <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+            <div style="width: 38px; height: 38px; ${estiloAprovado} border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">${ICONE_CHECK}</div>
+            <span style="font-size: 0.72rem; font-weight: 700; color: ${corTextoAprovado};">Aprovado</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+            <div style="width: 38px; height: 38px; ${estiloSeparacao} border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">${ICONE_PACOTE}</div>
+            <span style="font-size: 0.72rem; font-weight: 700; color: ${corTextoSeparacao};">Separação</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+            <div style="width: 38px; height: 38px; ${estiloTransporte} border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">${ICONE_CAMINHAO}</div>
+            <span style="font-size: 0.72rem; font-weight: 700; color: ${corTextoTransporte};">Trânsito</span>
+          </div>
+          <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+            <div style="width: 38px; height: 38px; ${estiloEntregue} border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">${ICONE_CASA}</div>
+            <span style="font-size: 0.72rem; font-weight: 700; color: ${corTextoEntregue};">Entregue</span>
+          </div>
+        </div>
+      `}
 
       <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 0.85rem;">
         <div>
-          <span style="font-size: 0.8rem; color: #64748b; display: block;">Total Pago:</span>
-          <strong style="color: #0f172a; font-size: 1.05rem;">R$ ${totalPedido}</strong>
+          <span style="font-size: 0.78rem; color: #64748b; display: block;">Total Pago</span>
+          <strong style="color: #0f172a; font-size: 1.1rem;">R$ ${totalPedido}</strong>
         </div>
 
         <div>
           ${podeCancelar ? `
-            <button type="button" onclick="cancelarMeuPedido('${idPedido}')" style="background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; padding: 7px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 4px;">
-              ❌ Cancelar Pedido
+            <button type="button" onclick="cancelarMeuPedido('${idPedido}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: 700;">
+              Cancelar Pedido
             </button>
           ` : isCancelado ? `
             <span style="font-size: 0.75rem; color: #991b1b; font-weight: 600;">Cancelado pelo cliente</span>

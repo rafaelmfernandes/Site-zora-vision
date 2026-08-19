@@ -12,6 +12,45 @@ body {
 }
 
 /* Header */
+/* Cabeçalho padrão do cliente (botão circular + título centralizado) */
+.header {
+  background-color: #ffffff;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.btn-voltar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  border: none;
+  font-size: 1.1rem;
+  color: #0f172a;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.header-titulo {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.header-espaco {
+  width: 34px;
+}
+
 .admin-header {
   background-color: #0f172a;
   color: #ffffff;
