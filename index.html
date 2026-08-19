@@ -102,10 +102,6 @@
             <span class="nav-icon">🏠</span>
             <span>Home</span>
         </a>
-        <a href="#" class="nav-item">
-            <span class="nav-icon">🔔</span>
-            <span>Avisos</span>
-        </a>
         <a href="carrinho.html" class="nav-item">
             <span class="nav-icon">🛒</span>
             <span class="carrinho-badge">0</span>
@@ -113,7 +109,7 @@
         </a>
         <a href="Meu-perfil.html" class="nav-item">
             <span class="nav-icon">👤</span>
-            <span>Entrar</span>
+            <span>Perfil</span>
         </a>
     </nav>
 
@@ -136,14 +132,14 @@
             const imagemSrc = produto.imagem || produto.foto;
             const categoria = produto.categoria || 'Geral';
             const vendas = produto.vendas || Math.floor(Math.random() * 50) + 10;
-            const ehImagemUrl = typeof imagemSrc === 'string' && (imagemSrc.startsWith('data:image') || imagemSrc.startsWith('http'));
+            const ehImagemUrl = typeof imagemSrc === 'string' && (imagemSrc.startsWith('data:image') || imagemSrc.startsWith('http') || imagemSrc.startsWith('assets/'));
 
             const card = document.createElement('div');
             card.className = 'card-produto';
             card.innerHTML = `
               <div class="badge-desconto">Destaque</div>
-              <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden;' : ''}">
-                ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}
+              <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center;' : ''}">
+                ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome || produto.titulo}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}
               </div>
               <div class="card-detalhes">
                 <div>
