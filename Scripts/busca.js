@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 5. Tratamento para quando nenhum produto for encontrado
         if (produtosFiltrados.length === 0) {
+            const contadorProdutos = document.getElementById('contador-produtos');
+            if (contadorProdutos) contadorProdutos.textContent = '0 itens';
+
             if (termo === '') {
                 gridProdutos.innerHTML = `
                   <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #64748b;">
@@ -60,35 +63,52 @@ document.addEventListener('DOMContentLoaded', () => {
         
         produtosFiltrados.forEach(produto => {
             // Formata o preço para o padrão brasileiro (R$ 00,00)
-            const precoFormatado = parseFloat(produto.preco || 0).toFixed(2).replace('.', ',');
-            
+            const preco = parseFloat(produto.preco || 0);
+            const precoAntigo = parseFloat(produto.precoAntigo || 0);
+            const temDesconto = precoAntigo > preco;
+            const precoFormatado = preco.toFixed(2).replace('.', ',');
+            const precoAntigoFormatado = precoAntigo.toFixed(2).replace('.', ',');
+            const percentualDesconto = temDesconto ? Math.round((1 - preco / precoAntigo) * 100) : 0;
+
             // Valida se a imagem cadastrada é uma URL válida ou Base64
             const imagemSrc = produto.imagem;
             const ehImagemUrl = typeof imagemSrc === 'string' && (imagemSrc.startsWith('data:image') || imagemSrc.startsWith('http'));
+            const categoria = produto.categoria || 'Geral';
 
             // Cria o elemento HTML do card do produto
             const card = document.createElement('div');
             card.className = 'card-produto';
             card.style.position = 'relative';
             card.innerHTML = `
+              ${temDesconto ? `<div class="badge-desconto">-${percentualDesconto}%</div>` : ''}
               ${typeof FavoritosModule !== 'undefined' ? FavoritosModule.botaoHtml(produto.id, 'position:absolute; top:8px; right:8px; z-index:2; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:14px;') : ''}
               <a href="Produtos.html?id=${produto.id}" style="text-decoration: none; color: inherit; display: block;">
                 <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden;' : ''}">
                   ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}
                 </div>
+                <span class="tag-categoria">${categoria}</span>
                 <h3>${produto.nome}</h3>
-                <span class="preco">R$ ${precoFormatado}</span>
+                <div class="preco-linha">
+                  ${temDesconto ? `<span class="preco-antigo">R$ ${precoAntigoFormatado}</span>` : ''}
+                  <span class="preco">R$ ${precoFormatado}</span>
+                </div>
               </a>
               <button class="btn-adicionar" 
                       data-id="${produto.id}" 
                       data-nome="${produto.nome}" 
                       data-preco="${produto.preco}">
-                  Adicionar ao Carrinho
+                  🛒 Adicionar
               </button>
             `;
             
             // Adiciona o card gerado dentro do grid na tela
             gridProdutos.appendChild(card);
         });
+
+        // Atualiza o contador de itens no cabeçalho da seção
+        const contadorProdutos = document.getElementById('contador-produtos');
+        if (contadorProdutos) {
+            contadorProdutos.textContent = `${produtosFiltrados.length} ${produtosFiltrados.length === 1 ? 'item' : 'itens'}`;
+        }
     });
 });

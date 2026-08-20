@@ -11,9 +11,9 @@
 
     <!-- Header do Site -->
     <header class="header">
-        <a href="index.html" class="header-logo">SuaLoja<span>.com</span></a>
-        <a href="#" class="notificacao-btn" aria-label="Notificações">
-            🔔
+        <a href="index.html" class="header-logo">Sua<span>Loja</span></a>
+        <a href="Notificaçoes.html" class="notificacao-btn" aria-label="Notificações">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             <span class="notificacao-badge"></span>
         </a>
     </header>
@@ -33,8 +33,8 @@
     <!-- Catálogo de Produtos em Destaque -->
     <main class="secao-container">
         <div class="secao-header">
-            <h2 class="secao-titulo">🔥 Produtos em Destaque</h2>
-            <a href="Pagina-produtos.html" class="secao-link">Ver todos</a>
+            <h2 class="secao-titulo">Produtos em destaque</h2>
+            <span class="contador-itens" id="contador-produtos">2 itens</span>
         </div>
 
         <!-- Grid dinâmico onde os produtos cadastrados no painel serão injetados -->
@@ -42,48 +42,46 @@
             
             <!-- Produtos padrão (caso o localStorage esteja vazio) -->
             <div class="card-produto" style="position: relative;">
-                <div class="badge-desconto">Destaque</div>
+                <div class="badge-desconto">-19%</div>
                 <button type="button" class="btn-favoritar" data-id="fone-01" aria-label="Favoritar" style="position:absolute; top:8px; right:8px; z-index:2; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:14px;">🤍</button>
                 <div class="card-img-box">🎧</div>
                 <div class="card-detalhes">
                     <div>
-                        <div class="tags-container">
-                            <span class="tag-indicado">TOP</span>
-                            <span class="tag-categoria">Eletrônicos</span>
-                        </div>
+                        <span class="tag-categoria">Eletrônicos</span>
                         <h3>Fone de Ouvido Bluetooth Premium</h3>
                     </div>
                     <div class="card-rodape-info">
-                        <span class="preco">R$ 189,90 <span>à vista</span></span>
+                        <div class="preco-linha">
+                            <span class="preco-antigo">R$ 159,90</span>
+                            <span class="preco">R$ 129,90</span>
+                        </div>
                         <div class="card-meta-info">
-                            <span>🛍️ 51 vendidos</span>
+                            <span>51 vendidos</span>
                         </div>
                     </div>
                 </div>
                 <button class="btn-adicionar" 
                         data-id="fone-01" 
                         data-nome="Fone de Ouvido Bluetooth Premium" 
-                        data-preco="189.90">
-                    Adicionar ao Carrinho
+                        data-preco="129.90">
+                    🛒 Adicionar
                 </button>
             </div>
 
             <div class="card-produto" style="position: relative;">
-                <div class="badge-desconto">Destaque</div>
                 <button type="button" class="btn-favoritar" data-id="deco-02" aria-label="Favoritar" style="position:absolute; top:8px; right:8px; z-index:2; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:14px;">🤍</button>
                 <div class="card-img-box">💡</div>
                 <div class="card-detalhes">
                     <div>
-                        <div class="tags-container">
-                            <span class="tag-indicado">TOP</span>
-                            <span class="tag-categoria">Casa</span>
-                        </div>
+                        <span class="tag-categoria">Casa</span>
                         <h3>Luminária de Mesa Minimalista</h3>
                     </div>
                     <div class="card-rodape-info">
-                        <span class="preco">R$ 120,00 <span>à vista</span></span>
+                        <div class="preco-linha">
+                            <span class="preco">R$ 120,00</span>
+                        </div>
                         <div class="card-meta-info">
-                            <span>🛍️ 32 vendidos</span>
+                            <span>32 vendidos</span>
                         </div>
                     </div>
                 </div>
@@ -139,7 +137,13 @@
           gridProdutos.innerHTML = '';
 
           produtosAtivos.forEach(produto => {
-            const precoFormatado = parseFloat(produto.preco || produto.valor || 0).toFixed(2).replace('.', ',');
+            const preco = parseFloat(produto.preco || produto.valor || 0);
+            const precoAntigo = parseFloat(produto.precoAntigo || 0);
+            const temDesconto = precoAntigo > preco;
+            const precoFormatado = preco.toFixed(2).replace('.', ',');
+            const precoAntigoFormatado = precoAntigo.toFixed(2).replace('.', ',');
+            const percentualDesconto = temDesconto ? Math.round((1 - preco / precoAntigo) * 100) : 0;
+
             const imagemSrc = produto.imagem || produto.foto;
             const categoria = produto.categoria || 'Geral';
             const vendas = produto.vendas || Math.floor(Math.random() * 50) + 10;
@@ -149,25 +153,25 @@
             card.className = 'card-produto';
             card.style.position = 'relative';
             card.innerHTML = `
-              <div class="badge-desconto">Destaque</div>
+              ${temDesconto ? `<div class="badge-desconto">-${percentualDesconto}%</div>` : ''}
               ${typeof FavoritosModule !== 'undefined' ? FavoritosModule.botaoHtml(produto.id, 'position:absolute; top:8px; right:8px; z-index:2; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:14px;') : ''}
               <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center;' : ''}">
                 ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome || produto.titulo}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}
               </div>
               <div class="card-detalhes">
                 <div>
-                  <div class="tags-container">
-                    <span class="tag-indicado">TOP</span>
-                    <span class="tag-categoria">${categoria}</span>
-                  </div>
-                  <a href="Pagina-produtos.html?id=${produto.id}" style="text-decoration: none; color: inherit;">
+                  <span class="tag-categoria">${categoria}</span>
+                  <a href="Produtos.html?id=${produto.id}" style="text-decoration: none; color: inherit;">
                     <h3>${produto.nome || produto.titulo}</h3>
                   </a>
                 </div>
                 <div class="card-rodape-info">
-                  <span class="preco">R$ ${precoFormatado} <span>à vista</span></span>
+                  <div class="preco-linha">
+                    ${temDesconto ? `<span class="preco-antigo">R$ ${precoAntigoFormatado}</span>` : ''}
+                    <span class="preco">R$ ${precoFormatado}</span>
+                  </div>
                   <div class="card-meta-info">
-                    <span>🛍️ ${vendas} vendidos</span>
+                    <span>${vendas} vendidos</span>
                   </div>
                 </div>
               </div>
@@ -176,11 +180,18 @@
                       data-nome="${produto.nome || produto.titulo}" 
                       data-preco="${produto.preco || produto.valor}"
                       data-imagem="${ehImagemUrl ? imagemSrc : ''}">
-                  Adicionar ao Carrinho
+                  🛒 Adicionar
               </button>
             `;
             gridProdutos.appendChild(card);
           });
+        }
+
+        // Atualiza o contador de itens no cabeçalho da seção
+        const contadorProdutos = document.getElementById('contador-produtos');
+        if (contadorProdutos) {
+          const total = produtosAtivos.length > 0 ? produtosAtivos.length : 2; // 2 = produtos de exemplo
+          contadorProdutos.textContent = `${total} ${total === 1 ? 'item' : 'itens'}`;
         }
       });
     </script>
