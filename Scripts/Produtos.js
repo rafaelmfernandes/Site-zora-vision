@@ -133,8 +133,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. Função para salvar sincronizado em 'carrinho_db' e 'carrinho'
+  // 5. Função para salvar no carrinho — usa uma chave própria por usuário logado,
+  // pra o carrinho de um cliente nunca aparecer pra outro no mesmo navegador
+  function chaveCarrinhoAtual() {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+    if (usuarioLogado && usuarioLogado.email) {
+      return 'carrinho_' + usuarioLogado.email.toLowerCase();
+    }
+    return null;
+  }
+
   function salvarNoCarrinho(quantidade) {
+    const chave = chaveCarrinhoAtual();
+    if (!chave) return; // sem usuário logado, não deveria chegar aqui (já é bloqueado antes)
+
     // Mantém a imagem real do produto (inclusive fotos enviadas como base64),
     // pra ela aparecer certinho depois no carrinho e no histórico de pedidos.
     const imagemParaCarrinho = (produtoAtual.imagem && typeof produtoAtual.imagem === 'string')
@@ -149,24 +161,20 @@ document.addEventListener('DOMContentLoaded', () => {
       quantidade: quantidade
     };
 
-    const chaves = ['carrinho_db', 'carrinho'];
+    try {
+      let carrinho = JSON.parse(localStorage.getItem(chave)) || [];
+      const itemExistente = carrinho.find(item => item.id === produtoAtual.id);
 
-    chaves.forEach(chave => {
-      try {
-        let carrinho = JSON.parse(localStorage.getItem(chave)) || [];
-        const itemExistente = carrinho.find(item => item.id === produtoAtual.id);
-
-        if (itemExistente) {
-          itemExistente.quantidade += quantidade;
-        } else {
-          carrinho.push({ ...novoItem });
-        }
-
-        localStorage.setItem(chave, JSON.stringify(carrinho));
-      } catch (err) {
-        console.warn(`Aviso: Não foi possível salvar na chave ${chave} por falta de espaço.`, err);
+      if (itemExistente) {
+        itemExistente.quantidade += quantidade;
+      } else {
+        carrinho.push({ ...novoItem });
       }
-    });
+
+      localStorage.setItem(chave, JSON.stringify(carrinho));
+    } catch (err) {
+      console.warn('Aviso: Não foi possível salvar no carrinho por falta de espaço.', err);
+    }
 
     atualizarContadorNav();
   }
@@ -174,7 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // 6. Atualizar o contador da barra de navegação inferior
   function atualizarContadorNav() {
     if (!contadorCarrinhoNav) return;
-    const carrinho = JSON.parse(localStorage.getItem('carrinho_db')) || JSON.parse(localStorage.getItem('carrinho')) || [];
+    const chave = chaveCarrinhoAtual();
+    const carrinho = chave ? (JSON.parse(localStorage.getItem(chave)) || []) : [];
     const totalItens = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
     contadorCarrinhoNav.textContent = totalItens;
   }

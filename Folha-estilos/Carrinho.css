@@ -177,7 +177,8 @@ body {
 
 /* Cupom */
 .cupom-container {
-  margin-top: 16px;
+  margin-top: 4px;
+  padding: 0 16px;
 }
 
 .cupom-box {

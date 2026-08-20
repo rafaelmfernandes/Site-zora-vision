@@ -1,10 +1,22 @@
+// Gera a chave de armazenamento do carrinho específica de cada usuário logado,
+// para o carrinho de um cliente nunca aparecer para outro no mesmo navegador
+// (ex: depois de deslogar e outra pessoa logar no mesmo aparelho).
+function chaveCarrinhoCliente() {
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+    if (usuarioLogado && usuarioLogado.email) {
+        return 'carrinho_' + usuarioLogado.email.toLowerCase();
+    }
+    return null; // sem usuário logado, não deveria existir carrinho salvo
+}
+
 // ==========================================
-// 1. ESTADO GLOBAL DA APLICAÇÃO (Unificado com 'carrinho_db')
+// 1. ESTADO GLOBAL DA APLICAÇÃO
 // ==========================================
 const checkoutState = {
-    carrinho: JSON.parse(localStorage.getItem('carrinho_db')) || 
-              JSON.parse(localStorage.getItem('carrinho')) || 
-              JSON.parse(localStorage.getItem('carrinho_app')) || [],
+    carrinho: (() => {
+        const chave = chaveCarrinhoCliente();
+        return chave ? (JSON.parse(localStorage.getItem(chave)) || []) : [];
+    })(),
     cupomAtivo: null,
     descontoPorcentagem: 0,
     metodoPagamento: 'pix',
@@ -61,10 +73,12 @@ const CarrinhoCheckoutModule = {
 
     salvarStorage() {
         try {
+            const chave = chaveCarrinhoCliente();
+            if (!chave) return; // sem usuário logado, não deveria estar salvando carrinho
+
             // Mantém a imagem real de cada produto (inclusive fotos em base64),
             // pra ela continuar aparecendo certinho no carrinho e nos pedidos.
-            localStorage.setItem('carrinho_db', JSON.stringify(checkoutState.carrinho));
-            localStorage.setItem('carrinho', JSON.stringify(checkoutState.carrinho));
+            localStorage.setItem(chave, JSON.stringify(checkoutState.carrinho));
         } catch (e) {
             console.error("Erro ao salvar no localStorage: O armazenamento está cheio.", e);
             alert("O armazenamento do navegador ficou cheio (provavelmente por causa de fotos de produtos). Algumas informações podem não ser salvas corretamente.");

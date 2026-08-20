@@ -123,19 +123,24 @@
       const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
       const emailAdmin = 'rafaelmelo116@gmail.com';
 
-      if (usuarioLogado && usuarioLogado.email) {
-        // Atualiza as informações visuais no cartão do perfil
-        const elNome = document.getElementById('perfil-nome-usuario');
-        const elEmail = document.getElementById('perfil-email-usuario');
-        
-        if (elNome) elNome.textContent = usuarioLogado.nome || 'Usuário';
-        if (elEmail) elEmail.textContent = usuarioLogado.email;
+      // Sem usuário logado: não faz sentido mostrar a página de perfil vazia,
+      // então redireciona direto pro login.
+      if (!usuarioLogado || !usuarioLogado.email) {
+        window.location.href = 'Login.html';
+        return;
+      }
 
-        // 2. Exibe o botão do Painel se for o e-mail do Administrador
-        if (usuarioLogado.email.toLowerCase() === emailAdmin.toLowerCase()) {
-          const containerAdmin = document.getElementById('opcao-admin-container');
-          if (containerAdmin) containerAdmin.style.display = 'block';
-        }
+      // Atualiza as informações visuais no cartão do perfil
+      const elNome = document.getElementById('perfil-nome-usuario');
+      const elEmail = document.getElementById('perfil-email-usuario');
+
+      if (elNome) elNome.textContent = usuarioLogado.nome || 'Usuário';
+      if (elEmail) elEmail.textContent = usuarioLogado.email;
+
+      // 2. Exibe o botão do Painel se for o e-mail do Administrador
+      if (usuarioLogado.email.toLowerCase() === emailAdmin.toLowerCase()) {
+        const containerAdmin = document.getElementById('opcao-admin-container');
+        if (containerAdmin) containerAdmin.style.display = 'block';
       }
     });
   </script>

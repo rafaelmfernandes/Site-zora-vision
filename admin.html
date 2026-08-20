@@ -2,6 +2,22 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+
+  <!-- ========================================== -->
+  <!-- PROTEÇÃO DE ACESSO: só o e-mail do admin passa daqui.  -->
+  <!-- Roda antes do resto da página, pra ninguém ver conteúdo -->
+  <!-- administrativo mesmo por uma fração de segundo.        -->
+  <!-- ========================================== -->
+  <script>
+    (function verificarAcessoAdmin() {
+      var EMAIL_ADMIN = 'rafaelmelo116@gmail.com';
+      var usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+
+      if (!usuarioLogado || !usuarioLogado.email || usuarioLogado.email.toLowerCase() !== EMAIL_ADMIN.toLowerCase()) {
+        window.location.href = 'Login.html';
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Administrativo - E-commerce</title>
   <link rel="stylesheet" href="Folha-estilos/admin.css">
@@ -12,7 +28,7 @@
     <div class="header-conteudo">
       <div style="display: flex; align-items: center; gap: 15px;">
         <!-- BOTÃO DE VOLTAR -->
-        <a href="javascript:history.back()" title="Voltar" style="background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.2rem; transition: background 0.2s;">&#8592;</a>
+        <a href="Meu-perfil.html" title="Voltar ao Perfil" style="background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.2rem; transition: background 0.2s;">&#8592;</a>
         
         <div class="admin-brand">
           <span class="admin-logo-icon">⚡</span>

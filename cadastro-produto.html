@@ -2,6 +2,22 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+
+  <!-- ========================================== -->
+  <!-- PROTEÇÃO DE ACESSO: só o e-mail do admin passa daqui.  -->
+  <!-- Roda antes do resto da página, pra ninguém ver conteúdo -->
+  <!-- administrativo mesmo por uma fração de segundo.        -->
+  <!-- ========================================== -->
+  <script>
+    (function verificarAcessoAdmin() {
+      var EMAIL_ADMIN = 'rafaelmelo116@gmail.com';
+      var usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+
+      if (!usuarioLogado || !usuarioLogado.email || usuarioLogado.email.toLowerCase() !== EMAIL_ADMIN.toLowerCase()) {
+        window.location.href = 'Login.html';
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastrar Produto - Painel Admin</title>
   <link rel="stylesheet" href="Folha-estilos/Cadastro-produto.css">
@@ -42,11 +58,12 @@
           <label for="categoria">Categoria *</label>
           <select id="categoria" required>
             <option value="" disabled selected>Selecione uma categoria</option>
-            <option value="eletronicos">Eletrônicos</option>
-            <option value="acessorios">Acessórios</option>
-            <option value="bebidas">Bebidas</option>
-            <option value="comida">Alimentação</option>
-            <option value="outros">Outros</option>
+            <option value="decoracao">Decoração</option>
+            <option value="casa">Casa</option>
+            <option value="cozinha">Cozinha</option>
+            <option value="sala">Sala</option>
+            <option value="quarto">Quarto</option>
+            <option value="escritorio">Escritório</option>
           </select>
         </div>
 
