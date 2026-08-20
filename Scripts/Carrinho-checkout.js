@@ -138,29 +138,37 @@ const CarrinhoCheckoutModule = {
             return;
         }
 
+        const iconeLixeira = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>';
+        const iconeFone = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:26px; height:26px;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>';
+
         containerLista.innerHTML = checkoutState.carrinho.map(item => {
-            // Validação aprimorada para aceitar qualquer caminho/link de imagem válido
             const temImagemReal = item.imagem && typeof item.imagem === 'string' && item.imagem.trim() !== '' && !item.imagem.startsWith('📦');
 
-            const conteudoVisual = temImagemReal 
+            const conteudoVisual = temImagemReal
                 ? `<img src="${item.imagem}" alt="${item.nome}" style="width: 100%; height: 100%; object-fit: cover;">`
-                : (item.icone || '📦');
+                : (item.icone && item.icone !== '📦' ? item.icone : iconeFone);
 
             return `
-                <div class="carrinho-item" data-id="${item.id}" style="display: flex; gap: 12px; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #f3f4f6;">
-                    <div class="item-img-box" style="width: 60px; height: 60px; background-color: #f1f5f9; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0;">
+                <div class="carrinho-item" data-id="${item.id}">
+                    <div class="item-img-box" style="color: #94a3b8;">
                         ${conteudoVisual}
                     </div>
 
-                    <div class="item-detalhes" style="flex-grow: 1;">
-                        <strong style="display: block; font-size: 0.9rem; color: #1f2937;">${item.nome}</strong>
-                        <span style="font-size: 0.85rem; color: #2563eb; font-weight: 600;">R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}</span>
-                    </div>
-
-                    <div class="controles-quantidade" style="display: flex; align-items: center; gap: 0.5rem;">
-                        <button class="btn-qtd" onclick="CarrinhoCheckoutModule.alterarQuantidade('${item.id}', -1)" style="padding: 2px 8px; cursor: pointer;">-</button>
-                        <span style="font-weight: 600; font-size: 0.9rem;">${item.quantidade}</span>
-                        <button class="btn-qtd" onclick="CarrinhoCheckoutModule.alterarQuantidade('${item.id}', 1)" style="padding: 2px 8px; cursor: pointer;">+</button>
+                    <div class="item-detalhes">
+                        <div>
+                            <p class="item-titulo">${item.nome}</p>
+                            <p class="item-preco">R$ ${item.preco.toFixed(2).replace('.', ',')}</p>
+                        </div>
+                        <div class="item-rodape">
+                            <div class="qtd-controles">
+                                <button class="btn-qtd" onclick="CarrinhoCheckoutModule.alterarQuantidade('${item.id}', -1)" aria-label="Diminuir quantidade">−</button>
+                                <span class="qtd-num">${item.quantidade}</span>
+                                <button class="btn-qtd" onclick="CarrinhoCheckoutModule.alterarQuantidade('${item.id}', 1)" aria-label="Aumentar quantidade">+</button>
+                            </div>
+                            <button class="btn-remover" onclick="CarrinhoCheckoutModule.removerProduto('${item.id}')" aria-label="Remover item">
+                                ${iconeLixeira}
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -168,10 +176,14 @@ const CarrinhoCheckoutModule = {
     },
 
     atualizarResumoValores() {
-        const { total } = this.calcularValores();
+        const { subtotal } = this.calcularValores();
+
+        // Na tela do carrinho, o frete aparece como grátis (a taxa real, se houver, só é calculada no Checkout)
+        const elSubtotal = document.getElementById('resumo-subtotal');
+        if (elSubtotal) elSubtotal.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
 
         const elTotal = document.querySelector('#valor-total, .resumo-total, .resumo-fixo .total, #total-carrinho');
-        if (elTotal) elTotal.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        if (elTotal) elTotal.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
 
         const totalItens = checkoutState.carrinho.reduce((acc, item) => acc + item.quantidade, 0);
         document.querySelectorAll('.badge-carrinho, .carrinho-badge, .carrinho-count, .badge').forEach(badge => {

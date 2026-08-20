@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SuaLoja.com - E-commerce</title>
+    <title>ZoraVision - E-commerce</title>
+    <!-- Fonte da logo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
     <!-- Importação do arquivo CSS separado -->
     <link rel="stylesheet" href="Folha-estilos/index2.css">
 </head>
@@ -11,7 +14,10 @@
 
     <!-- Header do Site -->
     <header class="header">
-        <a href="index.html" class="header-logo">Sua<span>Loja</span></a>
+        <a href="index.html" class="header-logo">
+            <span class="logo-marca"></span>
+            <span class="logo-texto">ZoraVision</span>
+        </a>
         <a href="Notificaçoes.html" class="notificacao-btn" aria-label="Notificações">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             <span class="notificacao-badge"></span>
@@ -23,11 +29,37 @@
         <input type="text" class="search-input" placeholder="Buscar produtos, marcas...">
     </section>
 
-    <!-- Banner Promocional -->
-    <section class="banner">
-        <span class="banner-badge">PROMOÇÃO</span>
-        <h2 class="banner-titulo">Até 40% OFF + Frete Grátis</h2>
-        <p class="banner-subtitulo">Aproveite as melhores novidades com entrega rápida.</p>
+    <!-- Banner Promocional em Carrossel (colado logo abaixo da busca) -->
+    <section class="carrossel" id="carrossel">
+        <div class="carrossel-trilho" id="trilho">
+
+            <div class="slide slide-1">
+                <span class="slide-badge">Decoração</span>
+                <h2 class="slide-titulo">Deixe sua casa com a sua cara</h2>
+                <p class="slide-subtitulo">Peças únicas pra transformar qualquer ambiente em um espaço acolhedor.</p>
+                <a href="Categoria-produtos.html?categoria=decoracao" class="slide-link">Explorar decoração</a>
+            </div>
+
+            <div class="slide slide-2">
+                <span class="slide-badge">Cozinha</span>
+                <h2 class="slide-titulo">Cozinha nova, casa renovada</h2>
+                <p class="slide-subtitulo">Utensílios e organizadores que deixam o dia a dia mais prático.</p>
+                <a href="Categoria-produtos.html?categoria=cozinha" class="slide-link">Explorar cozinha</a>
+            </div>
+
+            <div class="slide slide-3">
+                <span class="slide-badge">Promoção</span>
+                <h2 class="slide-titulo">Até 40% off em Sala e Quarto</h2>
+                <p class="slide-subtitulo">Aproveite ofertas selecionadas com frete grátis por tempo limitado.</p>
+                <a href="Categoria-produtos.html?categoria=sala" class="slide-link">Aproveitar agora</a>
+            </div>
+
+        </div>
+
+        <button type="button" class="carrossel-seta esquerda" id="btnAnterior" aria-label="Slide anterior">‹</button>
+        <button type="button" class="carrossel-seta direita" id="btnProximo" aria-label="Próximo slide">›</button>
+
+        <div class="carrossel-pontos" id="pontos"></div>
     </section>
 
     <!-- Catálogo de Produtos em Destaque -->
@@ -193,6 +225,100 @@
           const total = produtosAtivos.length > 0 ? produtosAtivos.length : 2; // 2 = produtos de exemplo
           contadorProdutos.textContent = `${total} ${total === 1 ? 'item' : 'itens'}`;
         }
+      });
+    </script>
+
+    <!-- Script do Carrossel do Banner -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const trilho = document.getElementById('trilho');
+        if (!trilho) return;
+
+        // Se houver banners cadastrados no painel admin, substitui os 3 slides de exemplo
+        const bannersSalvos = JSON.parse(localStorage.getItem('banners_loja')) || [];
+        const bannersAtivos = bannersSalvos
+          .filter(b => b.ativo !== false)
+          .sort((a, b) => (a.ordem || 1) - (b.ordem || 1));
+
+        const CORES_BANNER = {
+          azul: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+          laranja: 'linear-gradient(135deg, #d85a30, #b8451f)',
+          escuro: 'linear-gradient(135deg, #0f172a, #334155)'
+        };
+
+        if (bannersAtivos.length > 0) {
+          trilho.innerHTML = bannersAtivos.map(banner => {
+            const fundo = banner.imagem
+              ? `background-image: url(${banner.imagem}); background-size: cover; background-position: center;`
+              : `background: ${CORES_BANNER[banner.cor] || CORES_BANNER.azul};`;
+
+            return `
+              <div class="slide" style="${fundo}">
+                ${banner.badge ? `<span class="slide-badge">${banner.badge}</span>` : ''}
+                <h2 class="slide-titulo">${banner.titulo}</h2>
+                ${banner.subtitulo ? `<p class="slide-subtitulo">${banner.subtitulo}</p>` : ''}
+                ${banner.textoLink ? `<a href="${banner.linkDestino || '#'}" class="slide-link">${banner.textoLink}</a>` : ''}
+              </div>
+            `;
+          }).join('');
+        }
+
+        const pontosContainer = document.getElementById('pontos');
+        const totalSlides = document.querySelectorAll('#carrossel .slide').length;
+        let indiceAtual = 0;
+        let autoplayInterval;
+
+        for (let i = 0; i < totalSlides; i++) {
+          const ponto = document.createElement('button');
+          ponto.className = 'ponto' + (i === 0 ? ' ativo' : '');
+          ponto.setAttribute('aria-label', `Ir para o slide ${i + 1}`);
+          ponto.addEventListener('click', () => irParaSlide(i));
+          pontosContainer.appendChild(ponto);
+        }
+
+        function irParaSlide(indice) {
+          indiceAtual = (indice + totalSlides) % totalSlides;
+          trilho.style.transform = `translateX(-${indiceAtual * 100}%)`;
+
+          document.querySelectorAll('#pontos .ponto').forEach((p, i) => {
+            p.classList.toggle('ativo', i === indiceAtual);
+          });
+
+          reiniciarAutoplay();
+        }
+
+        document.getElementById('btnProximo').addEventListener('click', () => irParaSlide(indiceAtual + 1));
+        document.getElementById('btnAnterior').addEventListener('click', () => irParaSlide(indiceAtual - 1));
+
+        function iniciarAutoplay() {
+          autoplayInterval = setInterval(() => irParaSlide(indiceAtual + 1), 4000);
+        }
+
+        function reiniciarAutoplay() {
+          clearInterval(autoplayInterval);
+          iniciarAutoplay();
+        }
+
+        let posicaoInicial = null;
+
+        trilho.addEventListener('touchstart', (e) => {
+          posicaoInicial = e.touches[0].clientX;
+          clearInterval(autoplayInterval);
+        });
+
+        trilho.addEventListener('touchend', (e) => {
+          if (posicaoInicial === null) return;
+          const posicaoFinal = e.changedTouches[0].clientX;
+          const diferenca = posicaoInicial - posicaoFinal;
+
+          if (diferenca > 40) irParaSlide(indiceAtual + 1);
+          else if (diferenca < -40) irParaSlide(indiceAtual - 1);
+          else reiniciarAutoplay();
+
+          posicaoInicial = null;
+        });
+
+        iniciarAutoplay();
       });
     </script>
 

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seu Carrinho - E-commerce</title>
+  <title>Meu Carrinho - ZoraVision</title>
 
   <!-- ESTILOS CSS -->
   <link rel="stylesheet" href="Folha-estilos/Carrinho.css">
 </head>
-<body style="background-color: #f8fafc; font-family: sans-serif; padding: 20px;">
+<body>
 
   <!-- ========================================== -->
   <!-- CABEÇALHO PADRÃO (botão voltar circular + título centralizado) -->
@@ -22,44 +22,67 @@
   </header>
 
   <!-- ========================================== -->
-  <!-- CONTAINER PRINCIPAL DO CARRINHO            -->
+  <!-- LISTA DE ITENS (INJETADA DINAMICAMENTE VIA JS) -->
   <!-- ========================================== -->
-  <main style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-
-    <!-- LISTA DE ITENS (INJETADA DINAMICAMENTE VIA JS) -->
-    <div id="lista-carrinho" style="display: flex; flex-direction: column; gap: 10px; min-height: 100px;">
-      <!-- O JS preencherá os produtos aqui -->
-    </div>
-
-    <!-- RESUMO DE VALORES -->
-    <div style="margin-top: 24px; border-top: 2px solid #f1f5f9; padding-top: 16px;">
-      <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: bold; color: #0f172a; margin-bottom: 20px;">
-        <span>Total:</span>
-        <span id="valor-total">R$ 0,00</span>
-      </div>
-
-      <!-- ========================================== -->
-      <!-- BOTÕES DE AÇÃO                            -->
-      <!-- ========================================== -->
-      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <!-- Botão alterado para chamar a função de retorno à última página visitada -->
-        <button type="button" onclick="voltarPaginaAnterior()" style="flex: 1; text-align: center; background: #f1f5f9; color: #334155; padding: 12px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer;">
-          Continuar Comprando
-        </button>
-
-        <!-- Botão de redirecionamento para o Checkout -->
-        <button id="btn-finalizar" onclick="finalizarPedido()" style="flex: 1; background: #16a34a; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer;">
-          Finalizar Pedido 🚀
-        </button>
-      </div>
-    </div>
-
-  </main>
+  <div class="carrinho-lista" id="lista-carrinho">
+    <!-- O JS preencherá os produtos aqui -->
+  </div>
 
   <!-- ========================================== -->
-  <!-- SCRIPT JS PRINCIPAL (AJUSTADO)             -->
+  <!-- CUPOM DE DESCONTO                          -->
+  <!-- ========================================== -->
+  <div class="cupom-container">
+    <div class="cupom-box">
+      <input type="text" class="cupom-input" id="input-cupom" placeholder="Código do cupom">
+      <button type="button" class="btn-cupom" onclick="aplicarCupomCarrinho()">Aplicar</button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- RESUMO FIXO NO RODAPÉ                      -->
+  <!-- ========================================== -->
+  <div class="resumo-fixo">
+    <div class="resumo-linha">
+      <span>Subtotal</span>
+      <span id="resumo-subtotal">R$ 0,00</span>
+    </div>
+    <div class="resumo-linha">
+      <span>Frete</span>
+      <span class="frete-gratis">Grátis</span>
+    </div>
+    <div class="resumo-linha total">
+      <span>Total</span>
+      <span class="total-valor" id="valor-total">R$ 0,00</span>
+    </div>
+
+    <div class="resumo-botoes" style="display: flex; gap: 10px;">
+      <button type="button" onclick="voltarPaginaAnterior()" class="btn-continuar" style="flex: 1; background-color: #f1f5f9; color: #334155; border: none; padding: 14px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer;">
+        Continuar Comprando
+      </button>
+      <button type="button" id="btn-finalizar" onclick="finalizarPedido()" class="btn-finalizar" style="flex: 1; border: none; cursor: pointer;">
+        Finalizar Pedido
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- SCRIPT JS PRINCIPAL                        -->
   <!-- ========================================== -->
   <script src="Scripts/Carrinho-checkout.js"></script>
+
+  <script>
+    function aplicarCupomCarrinho() {
+      const campo = document.getElementById('input-cupom');
+      const codigo = campo ? campo.value.trim() : '';
+
+      if (!codigo) {
+        alert('Digite um código de cupom.');
+        return;
+      }
+
+      alert('Cupom "' + codigo + '" aplicado! (funcionalidade de desconto ainda em construção)');
+    }
+  </script>
 
 </body>
 </html>

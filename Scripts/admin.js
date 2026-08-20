@@ -3,7 +3,8 @@
  */
 document.addEventListener('DOMContentLoaded', () => {
   carregarDashboardAdmin();
-  carregarProdutosAdmin(); 
+  carregarProdutosAdmin();
+  carregarBannersAdmin();
 });
 
 /**
@@ -176,4 +177,65 @@ function excluirProduto(idOuIndex) {
 
 function editarProduto(idOuIndex) {
   window.location.href = `cadastro-produto.html?id=${idOuIndex}`;
+}
+
+/**
+ * 3. CARREGAMENTO DOS BANNERS DO CARROSSEL
+ */
+const CORES_BANNER_PREVIEW = {
+  azul: '#2563eb',
+  laranja: '#d85a30',
+  escuro: '#0f172a'
+};
+
+function carregarBannersAdmin() {
+  const container = document.getElementById('lista-banners-admin');
+  if (!container) return;
+
+  const banners = JSON.parse(localStorage.getItem('banners_loja')) || [];
+
+  if (banners.length === 0) {
+    container.innerHTML = `<p style="text-align: center; padding: 1.5rem; color: #64748b; font-size: 0.85rem;">Nenhum banner cadastrado ainda — o carrossel da loja está mostrando os 3 banners de exemplo. 📦</p>`;
+    return;
+  }
+
+  container.innerHTML = '';
+
+  banners
+    .slice()
+    .sort((a, b) => (a.ordem || 1) - (b.ordem || 1))
+    .forEach(banner => {
+      const corFundo = banner.imagem ? '#e2e8f0' : (CORES_BANNER_PREVIEW[banner.cor] || '#2563eb');
+
+      const linha = document.createElement('div');
+      linha.style.cssText = "display: flex; align-items: center; gap: 12px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 12px;";
+      linha.innerHTML = `
+        <div style="width: 56px; height: 40px; border-radius: 6px; background: ${corFundo}; background-size: cover; background-position: center; flex-shrink: 0;" ${banner.imagem ? `data-bg="${banner.imagem}"` : ''}></div>
+        <div style="flex-grow: 1; min-width: 0;">
+          <div style="font-weight: 700; color: #0f172a; font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${banner.titulo || 'Sem título'}</div>
+          <div style="font-size: 0.75rem; color: #94a3b8;">Ordem ${banner.ordem || 1} • ${banner.ativo !== false ? 'Ativo' : 'Inativo'}</div>
+        </div>
+        <button type="button" class="btn-tb-acao btn-tb-editar" onclick="editarBanner('${banner.id}')">✏️ Editar</button>
+        <button type="button" class="btn-tb-acao btn-tb-excluir" onclick="excluirBanner('${banner.id}')">🗑️</button>
+      `;
+      container.appendChild(linha);
+
+      // Aplica a imagem de fundo via JS (evita quebrar o innerHTML com aspas da base64)
+      if (banner.imagem) {
+        linha.querySelector('[data-bg]').style.backgroundImage = `url(${banner.imagem})`;
+      }
+    });
+}
+
+function excluirBanner(id) {
+  if (confirm('Tem certeza que deseja excluir este banner?')) {
+    let banners = JSON.parse(localStorage.getItem('banners_loja')) || [];
+    banners = banners.filter(b => String(b.id) !== String(id));
+    localStorage.setItem('banners_loja', JSON.stringify(banners));
+    carregarBannersAdmin();
+  }
+}
+
+function editarBanner(id) {
+  window.location.href = `Cadastrar-banner.html?id=${id}`;
 }

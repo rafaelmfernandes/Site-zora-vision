@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastrar Banner - Painel Admin</title>
+  <link rel="stylesheet" href="Folha-estilos/Cadastro-produto.css">
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="header-conteudo">
+      <button type="button" onclick="history.back()" class="btn-voltar" title="Voltar ao Painel">&#8592; Voltar</button>
+      <h1 class="admin-titulo">Cadastrar Banner</h1>
+      <div class="header-espaco"></div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <form class="form-produto" id="form-cadastrar-banner">
+
+      <section class="card-secao">
+        <h2 class="secao-titulo">📝 Conteúdo do Banner</h2>
+
+        <div class="campo">
+          <label for="banner-badge">Selo (texto pequeno no topo)</label>
+          <input type="text" id="banner-badge" placeholder="Ex.: Promoção">
+        </div>
+
+        <div class="campo">
+          <label for="banner-titulo">Título *</label>
+          <input type="text" id="banner-titulo" placeholder="Ex.: Até 40% off em Sala e Quarto" required>
+        </div>
+
+        <div class="campo">
+          <label for="banner-subtitulo">Subtítulo</label>
+          <textarea id="banner-subtitulo" rows="2" placeholder="Ex.: Aproveite ofertas selecionadas com frete grátis por tempo limitado."></textarea>
+        </div>
+
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="banner-texto-link">Texto do botão</label>
+            <input type="text" id="banner-texto-link" placeholder="Ex.: Aproveitar agora">
+          </div>
+          <div class="campo">
+            <label for="banner-link-destino">Link de destino</label>
+            <input type="text" id="banner-link-destino" placeholder="Ex.: Categoria-produtos.html?categoria=sala">
+          </div>
+        </div>
+      </section>
+
+      <section class="card-secao">
+        <h2 class="secao-titulo">🎨 Aparência</h2>
+
+        <div class="upload-box" onclick="document.getElementById('input-imagem-banner').click()" style="cursor: pointer; text-align: center;">
+          <span class="upload-icone" id="preview-icone-banner" style="font-size: 2.5rem;">🖼️</span>
+          <p class="upload-texto" id="preview-texto-banner"><strong>Clique aqui</strong> pra adicionar uma imagem de fundo (opcional)</p>
+          <span class="upload-subtexto">Se não enviar imagem, uma das cores abaixo será usada</span>
+          <input type="file" id="input-imagem-banner" accept="image/*" style="display: none;">
+        </div>
+
+        <div class="campo" style="margin-top: 16px;">
+          <label for="banner-cor">Cor de fundo (usada se não houver imagem)</label>
+          <select id="banner-cor">
+            <option value="azul">Azul</option>
+            <option value="laranja">Laranja</option>
+            <option value="escuro">Escuro</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="card-secao">
+        <h2 class="secao-titulo">⚙️ Opções de Exibição</h2>
+
+        <div class="campo">
+          <label for="banner-ordem">Ordem de exibição</label>
+          <input type="number" id="banner-ordem" placeholder="1" min="1" value="1">
+        </div>
+
+        <label class="checkbox-opcao" style="display: flex; align-items: center; gap: 8px; margin-top: 10px; cursor: pointer;">
+          <input type="checkbox" id="banner-ativo" checked>
+          <span><strong>Ativar Banner:</strong> Visível imediatamente no carrossel da loja.</span>
+        </label>
+      </section>
+
+      <div class="botoes-container" style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <button type="button" onclick="history.back()" class="btn-cancelar" style="flex: 1; padding: 12px; cursor: pointer;">Cancelar</button>
+        <button type="submit" class="btn-salvar-produto" style="flex: 2; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Salvar Banner</button>
+      </div>
+
+    </form>
+
+  </main>
+
+  <script src="Scripts/Cadastrar-banner.js"></script>
+</body>
+</html>
