@@ -1,162 +1,762 @@
+// ============================================================
+// ZORAVISION - CADASTRO DE ENDEREÇO
+// Integração com Supabase
+// ============================================================
+
 document.addEventListener('DOMContentLoaded', () => {
-    const formCadEndereco = document.getElementById('form-cadastrar-endereco');
-    const btnSalvar = document.querySelector('.btn-salvar, button[type="submit"], #btn-salvar-endereco');
+
+    const formCadEndereco =
+        document.getElementById('form-cadastrar-endereco');
+
+    const btnSalvar =
+        document.querySelector(
+            '.btn-salvar, button[type="submit"], #btn-salvar-endereco'
+        );
+
+    // ========================================================
+    // FORMULÁRIO
+    // ========================================================
 
     if (formCadEndereco) {
-        formCadEndereco.addEventListener('submit', (e) => {
-            e.preventDefault();
-            salvarEnderecoNoSupabase();
-        });
+
+        formCadEndereco.addEventListener(
+            'submit',
+            async event => {
+
+                event.preventDefault();
+
+                await salvarEnderecoNoSupabase();
+            }
+        );
+
     } else if (btnSalvar) {
-        btnSalvar.addEventListener('click', (e) => {
-            e.preventDefault();
-            salvarEnderecoNoSupabase();
-        });
+
+        btnSalvar.addEventListener(
+            'click',
+            async event => {
+
+                event.preventDefault();
+
+                await salvarEnderecoNoSupabase();
+            }
+        );
     }
 
-    const inputCep = document.getElementById('cep');
+
+    // ========================================================
+    // CEP
+    // ========================================================
+
+    const inputCep =
+        document.getElementById('cep');
+
     if (inputCep) {
-        inputCep.addEventListener('blur', (e) => {
-            const cepLimpo = e.target.value.replace(/\D/g, '');
-            if (cepLimpo.length === 8) {
-                buscarCep(cepLimpo);
+
+        inputCep.addEventListener(
+            'blur',
+            async event => {
+
+                const cepLimpo =
+                    event.target.value.replace(
+                        /\D/g,
+                        ''
+                    );
+
+                if (cepLimpo.length === 8) {
+
+                    await buscarCep(
+                        cepLimpo
+                    );
+                }
             }
-        });
+        );
     }
 });
 
-function obterClienteSupabase() {
-    // Tenta encontrar a instância do Supabase de várias maneiras possíveis dependendo de como foi instanciado globalmente
-    let cliente = window.supabase || window._supabase || window.supabaseClient;
-    
-    // Se o cliente for uma função construtora ou o objeto createClient, ou se vier como window.supabase.createClient
-    if (cliente && typeof cliente.from !== 'function') {
-        if (typeof cliente.createClient === 'function') {
-            // Caso window.supabase seja o módulo principal
-            return cliente;
-        }
-    }
-    
-    return cliente;
-}
 
-async function buscarCepCadastro() {
-    const cepInput = document.getElementById('cep');
-    if (!cepInput) return;
-    const cepLimpo = cepInput.value.replace(/\D/g, '');
-    if (cepLimpo.length === 8) {
-        await buscarCep(cepLimpo);
-    } else {
-        alert('Digite um CEP válido com 8 dígitos.');
-    }
-}
+// ============================================================
+// OBTER USUÁRIO LOGADO
+// ============================================================
 
-async function salvarEnderecoNoSupabase() {
-    const getVal = (id) => document.getElementById(id)?.value?.trim() || '';
-
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
-    
-    const tipoSelecionado = document.querySelector('input[name="tipo_endereco"]:checked')?.value || getVal('identificacao') || 'CASA';
-    const nomeDestinatario = getVal('nome-destinatario') || (usuarioLogado ? usuarioLogado.nome : '');
-    const pontoReferencia = getVal('referencia');
-    const ehPrincipal = document.getElementById('chk-principal')?.checked || false;
-
-    const userId = usuarioLogado?.id || usuarioLogado?.email || 'convidado';
-
-    const novoEndereco = {
-        user_id: userId,
-        identificacao: tipoSelecionado.toUpperCase(),
-        destinatario: nomeDestinatario,
-        cep: getVal('cep'),
-        rua: getVal('rua'),
-        numero: getVal('numero'),
-        complemento: getVal('complemento'),
-        bairro: getVal('bairro'),
-        cidade: getVal('cidade'),
-        estado: (getVal('uf') || getVal('estado')).toUpperCase(),
-        referencia: pontoReferencia,
-        principal: ehPrincipal
-    };
-
-    if (!novoEndereco.cep || !novoEndereco.rua || !novoEndereco.numero || !novoEndereco.bairro || !novoEndereco.cidade || !novoEndereco.estado) {
-        alert('Por favor, preencha todos os campos obrigatórios do endereço (CEP, Rua, Número, Bairro, Cidade e Estado).');
-        return;
-    }
-
-    // Obtém o cliente de forma segura
-    let clienteSupabase = obterClienteSupabase();
-
-    // Se ainda assim não tiver o método 'from', tenta inicializar usando variáveis globais comuns de URL/Anon Key se existirem
-    if (!clienteSupabase || typeof clienteSupabase.from !== 'function') {
-        if (typeof window.SUPABASE_URL !== 'undefined' && typeof window.SUPABASE_ANON_KEY !== 'undefined' && typeof supabase !== 'undefined' && typeof supabase.createClient === 'function') {
-            clienteSupabase = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-        }
-    }
-
-    if (!clienteSupabase || typeof clienteSupabase.from !== 'function') {
-        alert('Erro crítico: O objeto Supabase não foi inicializado corretamente. Verifique se o script do Supabase foi carregado antes deste arquivo.');
-        return;
-    }
+function obterUsuarioLogadoEndereco() {
 
     try {
-        console.log("Enviando endereço para o Supabase:", novoEndereco);
 
-        if (ehPrincipal) {
-            await clienteSupabase
-                .from('enderecos')
-                .update({ principal: false })
-                .eq('user_id', userId);
+        const usuario =
+            JSON.parse(
+                localStorage.getItem(
+                    'usuario_logado'
+                )
+            );
+
+        if (
+            !usuario ||
+            !usuario.id ||
+            !usuario.email
+        ) {
+
+            return null;
         }
 
-        const { data, error } = await clienteSupabase
-            .from('enderecos')
-            .insert([novoEndereco])
-            .select();
+        return usuario;
 
-        if (error) {
-            console.error('Erro retornado pelo Supabase:', error);
-            alert('Erro ao salvar no Supabase: ' + (error.message || JSON.stringify(error)));
+    } catch (erro) {
+
+        console.error(
+            'Erro ao ler usuário logado:',
+            erro
+        );
+
+        return null;
+    }
+}
+
+
+// ============================================================
+// OBTER CLIENTE SUPABASE
+// ============================================================
+
+function obterClienteSupabaseEndereco() {
+
+    // Primeiro tenta o cliente global já criado
+    if (
+        window.supabaseClient &&
+        typeof window.supabaseClient.from === 'function'
+    ) {
+
+        return window.supabaseClient;
+    }
+
+
+    if (
+        window._supabase &&
+        typeof window._supabase.from === 'function'
+    ) {
+
+        return window._supabase;
+    }
+
+
+    // Fallback: tenta criar usando a biblioteca CDN
+    if (
+        window.supabase &&
+        typeof window.supabase.createClient === 'function'
+    ) {
+
+        const SUPABASE_URL =
+            'https://ratajxnxkjoiuknamacn.supabase.co';
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            'sb_publishable_SD8dQdB4WQ-k_MdTPxU-lw_1j4cDD1L';
+
+        try {
+
+            const cliente =
+                window.supabase.createClient(
+                    SUPABASE_URL,
+                    SUPABASE_PUBLISHABLE_KEY
+                );
+
+            window.supabaseClient =
+                cliente;
+
+            window._supabase =
+                cliente;
+
+            console.log(
+                '✅ Cliente Supabase inicializado pelo fallback.'
+            );
+
+            return cliente;
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao criar cliente Supabase:',
+                erro
+            );
+        }
+    }
+
+
+    return null;
+}
+
+
+// ============================================================
+// BUSCAR CEP PELO BOTÃO
+// ============================================================
+
+async function buscarCepCadastro() {
+
+    const cepInput =
+        document.getElementById('cep');
+
+    if (!cepInput) {
+        return;
+    }
+
+    const cepLimpo =
+        cepInput.value.replace(
+            /\D/g,
+            ''
+        );
+
+    if (cepLimpo.length !== 8) {
+
+        alert(
+            'Digite um CEP válido com 8 números.'
+        );
+
+        return;
+    }
+
+    await buscarCep(
+        cepLimpo
+    );
+}
+
+
+// ============================================================
+// BUSCAR CEP
+// ============================================================
+
+async function buscarCep(
+    cep
+) {
+
+    const statusEl =
+        document.getElementById(
+            'cep-status'
+        );
+
+    try {
+
+        if (statusEl) {
+
+            statusEl.style.color =
+                '#2563eb';
+
+            statusEl.textContent =
+                'Buscando CEP...';
+        }
+
+
+        const response =
+            await fetch(
+                `https://viacep.com.br/ws/${cep}/json/`
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                'Não foi possível consultar o CEP.'
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (data.erro) {
+
+            if (statusEl) {
+
+                statusEl.style.color =
+                    '#ef4444';
+
+                statusEl.textContent =
+                    'CEP não encontrado.';
+            }
+
             return;
         }
 
-        alert('Endereço cadastrado com sucesso no Supabase!');
-        window.location.href = 'Endereços.html';
 
-    } catch (err) {
-        console.error('Exceção capturada:', err);
-        alert('Exceção ao salvar: ' + (err.message || JSON.stringify(err)));
+        const setVal =
+            (
+                id,
+                valor
+            ) => {
+
+                const elemento =
+                    document.getElementById(id);
+
+                if (elemento) {
+
+                    elemento.value =
+                        valor || '';
+                }
+            };
+
+
+        setVal(
+            'rua',
+            data.logradouro
+        );
+
+        setVal(
+            'bairro',
+            data.bairro
+        );
+
+        setVal(
+            'cidade',
+            data.localidade
+        );
+
+        setVal(
+            'uf',
+            data.uf
+        );
+
+
+        if (statusEl) {
+
+            statusEl.style.color =
+                '#16a34a';
+
+            statusEl.textContent =
+                'CEP encontrado!';
+        }
+
+
+        setTimeout(
+            () => {
+
+                if (statusEl) {
+
+                    statusEl.textContent =
+                        '';
+                }
+
+            },
+            3000
+        );
+
+
+        const numero =
+            document.getElementById(
+                'numero'
+            );
+
+
+        if (numero) {
+
+            numero.focus();
+        }
+
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao buscar CEP:',
+            erro
+        );
+
+
+        if (statusEl) {
+
+            statusEl.style.color =
+                '#ef4444';
+
+            statusEl.textContent =
+                'Erro ao consultar CEP.';
+        }
     }
 }
 
-async function buscarCep(cep) {
-    const statusEl = document.getElementById('cep-status');
+
+// ============================================================
+// SALVAR ENDEREÇO NO SUPABASE
+// ============================================================
+
+async function salvarEnderecoNoSupabase() {
+
+    const usuario =
+        obterUsuarioLogadoEndereco();
+
+
+    // ========================================================
+    // VERIFICAR LOGIN
+    // ========================================================
+
+    if (!usuario) {
+
+        alert(
+            'Você precisa estar logado para cadastrar um endereço.'
+        );
+
+        window.location.href =
+            'Login.html';
+
+        return;
+    }
+
+
+    // ========================================================
+    // OBTER SUPABASE
+    // ========================================================
+
+    const clienteSupabase =
+        obterClienteSupabaseEndereco();
+
+
+    if (
+        !clienteSupabase ||
+        typeof clienteSupabase.from !== 'function'
+    ) {
+
+        console.error(
+            'Supabase não foi inicializado corretamente.'
+        );
+
+        alert(
+            'Erro de conexão com o banco de dados. Recarregue a página e tente novamente.'
+        );
+
+        return;
+    }
+
+
+    // ========================================================
+    // LER CAMPOS
+    // ========================================================
+
+    const getVal =
+        id => {
+
+            const elemento =
+                document.getElementById(id);
+
+            return elemento
+                ? elemento.value.trim()
+                : '';
+        };
+
+
+    const tipoSelecionado =
+        document.querySelector(
+            'input[name="tipo_endereco"]:checked'
+        )?.value ||
+        'casa';
+
+
+    const nomeDestinatario =
+        getVal(
+            'nome-destinatario'
+        ) ||
+        usuario.nome ||
+        'Cliente';
+
+
+    const cep =
+        getVal('cep');
+
+
+    const rua =
+        getVal('rua');
+
+
+    const numero =
+        getVal('numero');
+
+
+    const complemento =
+        getVal('complemento');
+
+
+    const bairro =
+        getVal('bairro');
+
+
+    const cidade =
+        getVal('cidade');
+
+
+    const estado =
+        getVal('uf').toUpperCase();
+
+
+    const referencia =
+        getVal('referencia');
+
+
+    const ehPrincipal =
+        document.getElementById(
+            'chk-principal'
+        )?.checked || false;
+
+
+    // ========================================================
+    // VALIDAR CAMPOS
+    // ========================================================
+
+    if (
+        !cep ||
+        !rua ||
+        !numero ||
+        !bairro ||
+        !cidade ||
+        !estado
+    ) {
+
+        alert(
+            'Preencha todos os campos obrigatórios do endereço.'
+        );
+
+        return;
+    }
+
+
+    // ========================================================
+    // VALIDAR UF
+    // ========================================================
+
+    if (
+        estado.length !== 2
+    ) {
+
+        alert(
+            'Informe uma UF válida com 2 letras.'
+        );
+
+        return;
+    }
+
+
+    // ========================================================
+    // PREPARAR DADOS DO SUPABASE
+    // ========================================================
+
+    const novoEndereco = {
+
+        cliente_id:
+            usuario.id,
+
+        nome_destinatario:
+            nomeDestinatario,
+
+        cep:
+            cep,
+
+        rua:
+            rua,
+
+        numero:
+            numero,
+
+        complemento:
+            complemento ||
+            null,
+
+        bairro:
+            bairro,
+
+        cidade:
+            cidade,
+
+        estado:
+            estado,
+
+        principal:
+            ehPrincipal
+    };
+
+
+    console.log(
+        '📍 Salvando endereço:',
+        novoEndereco
+    );
+
+
+    // ========================================================
+    // DESABILITAR BOTÃO
+    // ========================================================
+
+    const btnSalvar =
+        document.querySelector(
+            '.btn-salvar'
+        );
+
+
+    if (btnSalvar) {
+
+        btnSalvar.disabled =
+            true;
+
+        btnSalvar.textContent =
+            'Salvando...';
+
+        btnSalvar.style.opacity =
+            '0.7';
+    }
+
+
     try {
-        if (statusEl) statusEl.textContent = 'Buscando CEP...';
-        
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await response.json();
-        
-        if (!data.erro) {
-            const setVal = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.value = val || '';
-            };
 
-            setVal('rua', data.logradouro);
-            setVal('bairro', data.bairro);
-            setVal('cidade', data.localidade);
-            setVal('uf', data.uf);
-            setVal('estado', data.uf);
+        // ====================================================
+        // SE FOR PRINCIPAL, DESMARCAR OS OUTROS
+        // ====================================================
 
-            if (statusEl) statusEl.textContent = 'CEP encontrado!';
-            setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
+        if (ehPrincipal) {
 
-            document.getElementById('numero')?.focus();
-        } else {
-            if (statusEl) statusEl.textContent = 'CEP não encontrado.';
+            const {
+                error: erroAtualizacao
+            } =
+                await clienteSupabase
+                    .from('enderecos')
+                    .update({
+                        principal: false
+                    })
+                    .eq(
+                        'cliente_id',
+                        usuario.id
+                    );
+
+
+            if (erroAtualizacao) {
+
+                console.error(
+                    'Erro ao atualizar endereços anteriores:',
+                    erroAtualizacao
+                );
+
+                throw erroAtualizacao;
+            }
         }
-    } catch (error) {
-        console.error('Erro ao buscar CEP:', error);
-        if (statusEl) statusEl.textContent = 'Erro ao consultar CEP.';
+
+
+        // ====================================================
+        // INSERIR ENDEREÇO
+        // ====================================================
+
+        const {
+            data,
+            error
+        } =
+            await clienteSupabase
+                .from('enderecos')
+                .insert([
+                    novoEndereco
+                ])
+                .select()
+                .single();
+
+
+        if (error) {
+
+            console.error(
+                'Erro retornado pelo Supabase:',
+                error
+            );
+
+            throw error;
+        }
+
+
+        console.log(
+            '✅ Endereço salvo com sucesso:',
+            data
+        );
+
+
+        // ====================================================
+        // SALVAR LOCALMENTE
+        // ====================================================
+
+        const chaveLocal =
+            'ultimo_endereco_cliente_' +
+            usuario.email
+                .toLowerCase();
+
+
+        localStorage.setItem(
+            chaveLocal,
+            JSON.stringify({
+
+                nome:
+                    nomeDestinatario,
+
+                cep:
+                    cep,
+
+                rua:
+                    rua,
+
+                numero:
+                    numero,
+
+                complemento:
+                    complemento,
+
+                bairro:
+                    bairro,
+
+                cidade:
+                    cidade,
+
+                uf:
+                    estado,
+
+                principal:
+                    ehPrincipal,
+
+                tipo:
+                    tipoSelecionado,
+
+                referencia:
+                    referencia,
+
+                id:
+                    data.id
+
+            })
+        );
+
+
+        // ====================================================
+        // SUCESSO
+        // ====================================================
+
+        alert(
+            'Endereço cadastrado com sucesso!'
+        );
+
+
+        window.location.href =
+            'Endereços.html';
+
+
+    } catch (erro) {
+
+        console.error(
+            '❌ Erro ao salvar endereço:',
+            erro
+        );
+
+
+        alert(
+            'Não foi possível salvar o endereço.\n\n' +
+            (
+                erro?.message ||
+                'Verifique sua conexão com o banco de dados.'
+            )
+        );
+
+
+        if (btnSalvar) {
+
+            btnSalvar.disabled =
+                false;
+
+            btnSalvar.textContent =
+                'Salvar Endereço';
+
+            btnSalvar.style.opacity =
+                '1';
+        }
     }
 }
