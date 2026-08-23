@@ -1,136 +1,734 @@
-// cadastrar-endereco.js
+// ============================================================
+// ZORAVISION - GERENCIAMENTO DE ENDEREÇOS
+// Supabase + usuário logado
+// ============================================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Garante que o Supabase foi inicializado corretamente
-    if (typeof supabase === 'undefined' && typeof window.supabaseClient !== 'undefined') {
-        window.supabase = window.supabaseClient;
+document.addEventListener('DOMContentLoaded', async () => {
+
+    console.log('📍 Página de endereços iniciada.');
+
+    const usuario = obterUsuarioLogadoEndereco();
+
+    if (!usuario) {
+        alert('Faça login para acessar seus endereços.');
+        window.location.href = 'Login.html';
+        return;
     }
 
-    const formCadEndereco = document.getElementById('form-cadastrar-endereco');
-    const btnSalvar = document.querySelector('.btn-salvar, button[type="submit"], #btn-salvar-endereco');
+    const supabase = obterSupabaseEndereco();
 
-    if (formCadEndereco) {
-        formCadEndereco.addEventListener('submit', (e) => {
-            e.preventDefault();
-            salvarEnderecoNoSupabase();
-        });
-    } else if (btnSalvar) {
-        btnSalvar.addEventListener('click', (e) => {
-            e.preventDefault();
-            salvarEnderecoNoSupabase();
-        });
+    if (!supabase) {
+        console.error(
+            '❌ Supabase não foi inicializado corretamente.'
+        );
+
+        alert(
+            'Erro de conexão com o banco de dados. Recarregue a página e tente novamente.'
+        );
+
+        return;
     }
 
-    // Integração com ViaCEP no evento blur e no botão de busca
-    const inputCep = document.getElementById('cep');
-    if (inputCep) {
-        inputCep.addEventListener('blur', (e) => {
-            const cepLimpo = e.target.value.replace(/\D/g, '');
-            if (cepLimpo.length === 8) {
-                buscarCep(cepLimpo);
-            }
-        });
-    }
+    await carregarEnderecos();
 });
 
-// Função chamada pelo botão "Buscar" no HTML
-async function buscarCepCadastro() {
-    const cepInput = document.getElementById('cep');
-    if (!cepInput) return;
-    const cepLimpo = cepInput.value.replace(/\D/g, '');
-    if (cepLimpo.length === 8) {
-        await buscarCep(cepLimpo);
-    } else {
-        alert('Digite um CEP válido com 8 dígitos.');
+
+// ============================================================
+// OBTER USUÁRIO LOGADO
+// ============================================================
+
+function obterUsuarioLogadoEndereco() {
+
+    try {
+
+        const usuario = JSON.parse(
+            localStorage.getItem('usuario_logado')
+        );
+
+        if (
+            !usuario ||
+            !usuario.id ||
+            !usuario.email
+        ) {
+            return null;
+        }
+
+        return usuario;
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao ler usuário logado:',
+            erro
+        );
+
+        return null;
     }
 }
 
-async function salvarEnderecoNoSupabase() {
-    const getVal = (id) => document.getElementById(id)?.value?.trim() || '';
 
-    const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
-    
-    // Captura o tipo de endereço selecionado nos radio buttons
-    const tipoSelecionado = document.querySelector('input[name="tipo_endereco"]:checked')?.value || 'casa';
-    const nomeDestinatario = getVal('nome-destinatario');
-    const pontoReferencia = getVal('referencia');
-    const ehPrincipal = document.getElementById('chk-principal')?.checked || false;
+// ============================================================
+// OBTER SUPABASE
+// ============================================================
 
-    const novoEndereco = {
-        user_id: usuarioLogado?.id || usuarioLogado?.email || 'convidado',
-        identificacao: tipoSelecionado.toUpperCase(),
-        destinatario: nomeDestinatario,
-        cep: getVal('cep'),
-        rua: getVal('rua'),
-        numero: getVal('numero'),
-        complemento: getVal('complemento'),
-        bairro: getVal('bairro'),
-        cidade: getVal('cidade'),
-        estado: getVal('uf').toUpperCase(),
-        referencia: pontoReferencia,
-        principal: ehPrincipal
-    };
+function obterSupabaseEndereco() {
 
-    if (!novoEndereco.cep || !novoEndereco.rua || !novoEndereco.numero || !novoEndereco.bairro || !novoEndereco.cidade || !novoEndereco.estado) {
-        alert('Por favor, preencha todos os campos obrigatórios do endereço.');
+    if (
+        window.supabaseClient &&
+        typeof window.supabaseClient.from === 'function'
+    ) {
+        return window.supabaseClient;
+    }
+
+    if (
+        window._supabase &&
+        typeof window._supabase.from === 'function'
+    ) {
+        return window._supabase;
+    }
+
+    if (
+        window.supabase &&
+        typeof window.supabase.createClient === 'function'
+    ) {
+
+        try {
+
+            const cliente =
+                window.supabase.createClient(
+                    'https://ratajxnxkjoiuknamacn.supabase.co',
+                    'sb_publishable_SD8dQdB4WQ-k_MdTPxU-lw_1j4cDD1L'
+                );
+
+            window.supabaseClient = cliente;
+            window._supabase = cliente;
+
+            return cliente;
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao inicializar Supabase:',
+                erro
+            );
+        }
+    }
+
+    return null;
+}
+
+
+// ============================================================
+// CARREGAR ENDEREÇOS
+// ============================================================
+
+async function carregarEnderecos() {
+
+    const container =
+        document.getElementById(
+            'lista-enderecos-container'
+        );
+
+    if (!container) {
+        console.error(
+            'Container de endereços não encontrado.'
+        );
         return;
     }
 
-    // Checagem robusta da instância do Supabase
-    const clienteSupabase = window.supabase || window.supabaseClient;
-    if (typeof clienteSupabase === 'undefined') {
-        alert('Erro crítico: O script de conexão com o Supabase não foi carregado nesta página ou antes deste script.');
+    const usuario =
+        obterUsuarioLogadoEndereco();
+
+    if (!usuario) {
+        window.location.href = 'Login.html';
         return;
     }
+
+    const supabase =
+        obterSupabaseEndereco();
+
+    if (!supabase) {
+        return;
+    }
+
+    container.innerHTML = `
+        <div style="
+            text-align:center;
+            padding:30px;
+            color:#64748b;
+        ">
+            Carregando seus endereços...
+        </div>
+    `;
 
     try {
-        const resposta = await clienteSupabase
-            .from('enderecos')
-            .insert([novoEndereco]);
 
-        if (resposta.error) {
-            console.error('Erro retornado pelo Supabase:', resposta.error);
-            alert('Erro ao salvar no Supabase: ' + (resposta.error.message || JSON.stringify(resposta.error)));
+        const {
+            data: enderecos,
+            error
+        } = await supabase
+            .from('enderecos')
+            .select(`
+                id,
+                cliente_id,
+                nome_destinatario,
+                cep,
+                rua,
+                numero,
+                complemento,
+                bairro,
+                cidade,
+                estado,
+                principal,
+                created_at
+            `)
+            .eq(
+                'cliente_id',
+                usuario.id
+            )
+            .order(
+                'principal',
+                {
+                    ascending: false
+                }
+            )
+            .order(
+                'created_at',
+                {
+                    ascending: false
+                }
+            );
+
+        if (error) {
+
+            console.error(
+                '❌ Erro ao buscar endereços:',
+                error
+            );
+
+            container.innerHTML = `
+                <div style="
+                    text-align:center;
+                    padding:30px;
+                    color:#ef4444;
+                ">
+                    Não foi possível carregar seus endereços.
+                </div>
+            `;
+
             return;
         }
 
-        alert('Endereço cadastrado com sucesso no Supabase!');
-        window.location.href = 'Endereços_2.html';
+        if (
+            !enderecos ||
+            enderecos.length === 0
+        ) {
 
-    } catch (err) {
-        console.error('Exceção capturada:', err);
-        alert('Exceção ao salvar: ' + (err.message || JSON.stringify(err)));
+            container.innerHTML = `
+                <div style="
+                    text-align:center;
+                    padding:30px 20px;
+                    color:#64748b;
+                    background:#fff;
+                    border:1px dashed #cbd5e1;
+                    border-radius:12px;
+                ">
+                    <div style="
+                        font-size:36px;
+                        margin-bottom:10px;
+                    ">
+                        📍
+                    </div>
+
+                    <p style="
+                        margin:0 0 6px;
+                        font-weight:600;
+                        color:#334155;
+                    ">
+                        Nenhum endereço cadastrado
+                    </p>
+
+                    <small>
+                        Adicione um endereço para realizar suas compras.
+                    </small>
+                </div>
+            `;
+
+            return;
+        }
+
+        container.innerHTML =
+            enderecos.map(
+                endereco => {
+
+                    const principal =
+                        endereco.principal === true;
+
+                    return `
+                        <label
+                            class="endereco-item ${principal ? 'ativo' : ''}"
+                            style="
+                                display:flex;
+                                gap:12px;
+                                cursor:pointer;
+                                padding:14px;
+                                margin-bottom:12px;
+                                border:1px solid ${
+                                    principal
+                                        ? '#93c5fd'
+                                        : '#e2e8f0'
+                                };
+                                border-radius:12px;
+                                background:${
+                                    principal
+                                        ? '#eff6ff'
+                                        : '#ffffff'
+                                };
+                            "
+                        >
+
+                            <input
+                                type="radio"
+                                name="endereco_selecionado"
+                                value="${endereco.id}"
+                                ${principal ? 'checked' : ''}
+                                data-endereco-id="${endereco.id}"
+                                style="margin-top:4px;"
+                            >
+
+                            <div
+                                class="endereco-info"
+                                style="width:100%;"
+                            >
+
+                                <div
+                                    style="
+                                        display:flex;
+                                        gap:8px;
+                                        align-items:center;
+                                        margin-bottom:7px;
+                                        flex-wrap:wrap;
+                                    "
+                                >
+
+                                    <span
+                                        style="
+                                            background:#dbeafe;
+                                            color:#1d4ed8;
+                                            padding:3px 8px;
+                                            border-radius:5px;
+                                            font-size:11px;
+                                            font-weight:700;
+                                        "
+                                    >
+                                        Entrega
+                                    </span>
+
+                                    ${
+                                        principal
+                                            ? `
+                                                <span
+                                                    style="
+                                                        background:#dcfce7;
+                                                        color:#166534;
+                                                        padding:3px 8px;
+                                                        border-radius:5px;
+                                                        font-size:11px;
+                                                        font-weight:700;
+                                                    "
+                                                >
+                                                    Principal
+                                                </span>
+                                            `
+                                            : ''
+                                    }
+
+                                </div>
+
+                                <p
+                                    style="
+                                        margin:0 0 5px;
+                                        font-weight:700;
+                                        color:#1e293b;
+                                    "
+                                >
+                                    ${escapeHtml(
+                                        endereco.nome_destinatario ||
+                                        usuario.nome ||
+                                        ''
+                                    )}
+                                </p>
+
+                                <p
+                                    style="
+                                        margin:0 0 3px;
+                                        color:#475569;
+                                        font-size:13px;
+                                    "
+                                >
+                                    ${escapeHtml(
+                                        endereco.rua || ''
+                                    )},
+                                    nº
+                                    ${escapeHtml(
+                                        endereco.numero || ''
+                                    )}
+
+                                    ${
+                                        endereco.complemento
+                                            ? ` - ${escapeHtml(
+                                                endereco.complemento
+                                            )}`
+                                            : ''
+                                    }
+                                </p>
+
+                                <p
+                                    style="
+                                        margin:0 0 3px;
+                                        color:#475569;
+                                        font-size:13px;
+                                    "
+                                >
+                                    ${escapeHtml(
+                                        endereco.bairro || ''
+                                    )}
+                                    -
+                                    ${escapeHtml(
+                                        endereco.cidade || ''
+                                    )}/${escapeHtml(
+                                        endereco.estado || ''
+                                    )}
+                                </p>
+
+                                <p
+                                    style="
+                                        margin:0 0 10px;
+                                        color:#2563eb;
+                                        font-size:13px;
+                                        font-weight:700;
+                                    "
+                                >
+                                    CEP:
+                                    ${escapeHtml(
+                                        endereco.cep || ''
+                                    )}
+                                </p>
+
+                                <div
+                                    style="
+                                        display:flex;
+                                        gap:15px;
+                                        border-top:1px solid #e2e8f0;
+                                        padding-top:9px;
+                                    "
+                                >
+
+                                    <button
+                                        type="button"
+                                        onclick="editarEndereco('${endereco.id}')"
+                                        style="
+                                            border:0;
+                                            background:none;
+                                            color:#2563eb;
+                                            cursor:pointer;
+                                            padding:0;
+                                            font-weight:600;
+                                            font-size:13px;
+                                        "
+                                    >
+                                        Editar
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onclick="excluirEndereco('${endereco.id}')"
+                                        style="
+                                            border:0;
+                                            background:none;
+                                            color:#dc2626;
+                                            cursor:pointer;
+                                            padding:0;
+                                            font-weight:600;
+                                            font-size:13px;
+                                        "
+                                    >
+                                        Excluir
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </label>
+                    `;
+
+                }
+            ).join('');
+
+        console.log(
+            `✅ ${enderecos.length} endereço(s) carregado(s).`
+        );
+
+    } catch (erro) {
+
+        console.error(
+            '❌ Erro inesperado ao carregar endereços:',
+            erro
+        );
+
+        container.innerHTML = `
+            <div style="
+                text-align:center;
+                padding:30px;
+                color:#ef4444;
+            ">
+                Ocorreu um erro ao carregar seus endereços.
+            </div>
+        `;
     }
 }
 
-async function buscarCep(cep) {
-    const statusEl = document.getElementById('cep-status');
-    try {
-        if (statusEl) statusEl.textContent = 'Buscando CEP...';
-        
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await response.json();
-        
-        if (!data.erro) {
-            const setVal = (id, val) => {
-                const el = document.getElementById(id);
-                if (el) el.value = val || '';
-            };
 
-            setVal('rua', data.logradouro);
-            setVal('bairro', data.bairro);
-            setVal('cidade', data.localidade);
-            setVal('uf', data.uf);
+// ============================================================
+// ESCOLHER ENDEREÇO
+// ============================================================
 
-            if (statusEl) statusEl.textContent = 'CEP encontrado!';
-            setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
+async function confirmarSelecaoEndereco() {
 
-            document.getElementById('numero')?.focus();
-        } else {
-            if (statusEl) statusEl.textContent = 'CEP não encontrado.';
-        }
-    } catch (error) {
-        console.error('Erro ao buscar CEP:', error);
-        if (statusEl) statusEl.textContent = 'Erro ao consultar CEP.';
+    const usuario =
+        obterUsuarioLogadoEndereco();
+
+    if (!usuario) {
+
+        alert(
+            'Faça login para continuar.'
+        );
+
+        window.location.href =
+            'Login.html';
+
+        return;
     }
+
+    const selecionado =
+        document.querySelector(
+            'input[name="endereco_selecionado"]:checked'
+        );
+
+    if (!selecionado) {
+
+        alert(
+            'Selecione um endereço antes de continuar.'
+        );
+
+        return;
+    }
+
+    const supabase =
+        obterSupabaseEndereco();
+
+    if (!supabase) {
+        return;
+    }
+
+    const enderecoId =
+        selecionado.value;
+
+    try {
+
+        const {
+            data: endereco,
+            error
+        } = await supabase
+            .from('enderecos')
+            .select('*')
+            .eq(
+                'id',
+                enderecoId
+            )
+            .eq(
+                'cliente_id',
+                usuario.id
+            )
+            .single();
+
+        if (error) {
+            throw error;
+        }
+
+        localStorage.setItem(
+            'ultimo_endereco_cliente_' +
+            usuario.email.toLowerCase(),
+            JSON.stringify({
+
+                id:
+                    endereco.id,
+
+                nome:
+                    endereco.nome_destinatario,
+
+                cep:
+                    endereco.cep,
+
+                rua:
+                    endereco.rua,
+
+                numero:
+                    endereco.numero,
+
+                complemento:
+                    endereco.complemento || '',
+
+                bairro:
+                    endereco.bairro,
+
+                cidade:
+                    endereco.cidade,
+
+                uf:
+                    endereco.estado,
+
+                principal:
+                    endereco.principal
+
+            })
+        );
+
+        window.history.back();
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao selecionar endereço:',
+            erro
+        );
+
+        alert(
+            'Não foi possível selecionar o endereço.'
+        );
+    }
+}
+
+
+// ============================================================
+// EDITAR ENDEREÇO
+// ============================================================
+
+function editarEndereco(id) {
+
+    localStorage.setItem(
+        'endereco_edicao_id',
+        id
+    );
+
+    window.location.href =
+        'Cadastrar-endereço.html?editar=' +
+        encodeURIComponent(id);
+}
+
+
+// ============================================================
+// EXCLUIR ENDEREÇO
+// ============================================================
+
+async function excluirEndereco(id) {
+
+    if (
+        !confirm(
+            'Deseja realmente excluir este endereço?'
+        )
+    ) {
+        return;
+    }
+
+    const usuario =
+        obterUsuarioLogadoEndereco();
+
+    const supabase =
+        obterSupabaseEndereco();
+
+    if (!usuario || !supabase) {
+        return;
+    }
+
+    try {
+
+        const {
+            error
+        } = await supabase
+            .from('enderecos')
+            .delete()
+            .eq(
+                'id',
+                id
+            )
+            .eq(
+                'cliente_id',
+                usuario.id
+            );
+
+        if (error) {
+            throw error;
+        }
+
+        localStorage.removeItem(
+            'ultimo_endereco_cliente_' +
+            usuario.email.toLowerCase()
+        );
+
+        await carregarEnderecos();
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao excluir endereço:',
+            erro
+        );
+
+        alert(
+            'Não foi possível excluir o endereço.'
+        );
+    }
+}
+
+
+// ============================================================
+// COMPATIBILIDADE COM CÓDIGO ANTIGO
+// ============================================================
+
+function excluirEnderecoSalvo() {
+
+    const selecionado =
+        document.querySelector(
+            'input[name="endereco_selecionado"]:checked'
+        );
+
+    if (!selecionado) {
+
+        alert(
+            'Selecione um endereço antes de excluir.'
+        );
+
+        return;
+    }
+
+    excluirEndereco(
+        selecionado.value
+    );
+}
+
+
+// ============================================================
+// ESCAPAR HTML
+// ============================================================
+
+function escapeHtml(valor) {
+
+    return String(valor ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
