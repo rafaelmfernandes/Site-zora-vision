@@ -23,7 +23,20 @@ function obterSupabase() {
 
 function obterUsuarioLogado() {
     try {
-        return JSON.parse(localStorage.getItem('usuario_logado')) || null;
+        const usuario = JSON.parse(
+            localStorage.getItem('usuario_logado')
+        );
+
+        if (
+            !usuario ||
+            !usuario.id ||
+            !usuario.email
+        ) {
+            return null;
+        }
+
+        return usuario;
+
     } catch (erro) {
         console.error('Erro ao ler usuário logado:', erro);
         return null;
@@ -36,6 +49,13 @@ function obterUsuarioLogado() {
 // ============================================================
 
 function chaveCarrinhoCliente() {
+
+    const usuario = obterUsuarioLogado();
+
+    if (usuario && usuario.email) {
+        return 'carrinho_' + usuario.email.toLowerCase();
+    }
+
     return 'carrinho';
 }
 
@@ -45,10 +65,12 @@ function chaveCarrinhoCliente() {
 // ============================================================
 
 function chaveEnderecoCliente() {
+
     const usuario = obterUsuarioLogado();
 
     if (usuario && usuario.email) {
-        return 'ultimo_endereco_cliente_' + usuario.email.toLowerCase();
+        return 'ultimo_endereco_cliente_' +
+            usuario.email.toLowerCase();
     }
 
     return 'ultimo_endereco_cliente';
@@ -60,12 +82,28 @@ function chaveEnderecoCliente() {
 // ============================================================
 
 function carregarCarrinhoStorage() {
+
+    const usuario = obterUsuarioLogado();
+
+    if (!usuario) {
+        return [];
+    }
+
     try {
+
         return JSON.parse(
-            localStorage.getItem(chaveCarrinhoCliente())
+            localStorage.getItem(
+                chaveCarrinhoCliente()
+            )
         ) || [];
+
     } catch (erro) {
-        console.error('Erro ao carregar carrinho:', erro);
+
+        console.error(
+            'Erro ao carregar carrinho:',
+            erro
+        );
+
         return [];
     }
 }
@@ -76,16 +114,23 @@ function carregarCarrinhoStorage() {
 // ============================================================
 
 const checkoutState = {
-    carrinho: carregarCarrinhoStorage(),
 
-    cupomAtivo: null,
+    carrinho:
+        carregarCarrinhoStorage(),
 
-    descontoPorcentagem: 0,
+    cupomAtivo:
+        null,
+
+    descontoPorcentagem:
+        0,
 
     metodoPagamento:
-        localStorage.getItem('ultimo_metodo_pagamento') || 'pix',
+        localStorage.getItem(
+            'ultimo_metodo_pagamento'
+        ) || 'pix',
 
-    taxaEntrega: 5.00
+    taxaEntrega:
+        5.00
 };
 
 
@@ -96,18 +141,34 @@ const checkoutState = {
 const CarrinhoCheckoutModule = {
 
     init() {
+
         this.bindEvents();
+
         this.atualizarTudo();
     },
 
 
     salvarStorage() {
 
+        const usuario =
+            obterUsuarioLogado();
+
+        if (!usuario) {
+
+            console.warn(
+                'Carrinho não salvo: usuário não está logado.'
+            );
+
+            return;
+        }
+
         try {
 
             localStorage.setItem(
                 chaveCarrinhoCliente(),
-                JSON.stringify(checkoutState.carrinho)
+                JSON.stringify(
+                    checkoutState.carrinho
+                )
             );
 
         } catch (erro) {
@@ -126,90 +187,73 @@ const CarrinhoCheckoutModule = {
 
     adicionarProduto(produto) {
 
-        if (!produto || !produto.id) {
+    const usuario = obterUsuarioLogado();
 
-            console.error(
-                'Produto inválido:',
-                produto
-            );
+    if (!usuario || !usuario.id) {
+        alert('Você precisa estar logado para adicionar produtos ao carrinho.');
+        window.location.href = 'Login.html';
+        return false;
+    }
 
-            return;
+    if (!produto || !produto.id) {
+        console.error('Produto inválido:', produto);
+        return false;
+    }
+
+    const itemExistente = checkoutState.carrinho.find(
+        item => String(item.id) === String(produto.id)
+    );
+
+    if (itemExistente) {
+
+        itemExistente.quantidade += 1;
+
+        if (produto.nome) {
+            itemExistente.nome = produto.nome;
         }
 
-        const itemExistente =
-            checkoutState.carrinho.find(
-                item =>
-                    String(item.id) === String(produto.id)
-            );
-
-
-        if (itemExistente) {
-
-            itemExistente.quantidade += 1;
-
-            if (produto.nome) {
-                itemExistente.nome = produto.nome;
-            }
-
-            if (
-                produto.preco !== undefined &&
-                produto.preco !== null
-            ) {
-
-                itemExistente.preco =
-                    parseFloat(produto.preco) || 0;
-            }
-
-            if (produto.imagem) {
-                itemExistente.imagem = produto.imagem;
-            }
-
-        } else {
-
-            checkoutState.carrinho.push({
-
-                id: produto.id,
-
-                nome: produto.nome || 'Produto',
-
-                preco:
-                    parseFloat(produto.preco) || 0,
-
-                imagem:
-                    produto.imagem ||
-                    produto.imagem_url ||
-                    produto.foto ||
-                    '',
-
-                quantidade: 1,
-
-                estoque:
-                    produto.estoque !== undefined
-                        ? produto.estoque
-                        : null,
-
-                sku:
-                    produto.sku || '',
-
-                categoria_id:
-                    produto.categoria_id || null
-
-            });
+        if (produto.preco !== undefined && produto.preco !== null) {
+            itemExistente.preco = parseFloat(produto.preco) || 0;
         }
 
+        if (produto.imagem) {
+            itemExistente.imagem = produto.imagem;
+        }
 
-        this.salvarStorage();
+    } else {
 
-        this.atualizarTudo();
+        checkoutState.carrinho.push({
+            id: produto.id,
+            nome: produto.nome || 'Produto',
+            preco: parseFloat(produto.preco) || 0,
+            imagem:
+                produto.imagem ||
+                produto.imagem_url ||
+                produto.foto ||
+                '',
+            quantidade: 1,
+            estoque:
+                produto.estoque !== undefined
+                    ? produto.estoque
+                    : null,
+            sku: produto.sku || '',
+            categoria_id: produto.categoria_id || null
+        });
+    }
+
+    this.salvarStorage();
+    this.atualizarTudo();
+
+    return true;
     },
-
 
     removerProduto(id) {
 
         checkoutState.carrinho =
             checkoutState.carrinho.filter(
                 item =>
-                    String(item.id) !== String(id)
+                    String(item.id) !==
+                    String(id)
             );
 
         this.salvarStorage();
@@ -220,10 +264,24 @@ const CarrinhoCheckoutModule = {
 
     alterarQuantidade(id, delta) {
 
+        const usuario =
+            obterUsuarioLogado();
+
+        if (!usuario) {
+
+            alert(
+                'Faça login para alterar o carrinho.'
+            );
+
+            return;
+        }
+
+
         const item =
             checkoutState.carrinho.find(
                 produto =>
-                    String(produto.id) === String(id)
+                    String(produto.id) ===
+                    String(id)
             );
 
 
@@ -242,14 +300,17 @@ const CarrinhoCheckoutModule = {
         ) {
 
             const estoque =
-                parseInt(item.estoque);
+                parseInt(
+                    item.estoque
+                );
 
             if (
                 !isNaN(estoque) &&
                 novaQuantidade > estoque
             ) {
 
-                novaQuantidade = estoque;
+                novaQuantidade =
+                    estoque;
 
                 alert(
                     'Quantidade máxima disponível em estoque: ' +
@@ -284,13 +345,20 @@ const CarrinhoCheckoutModule = {
                 (total, item) => {
 
                     const preco =
-                        parseFloat(item.preco) || 0;
+                        parseFloat(
+                            item.preco
+                        ) || 0;
 
                     const quantidade =
-                        parseInt(item.quantidade) || 0;
+                        parseInt(
+                            item.quantidade
+                        ) || 0;
 
                     return total +
-                        (preco * quantidade);
+                        (
+                            preco *
+                            quantidade
+                        );
 
                 },
                 0
@@ -300,7 +368,9 @@ const CarrinhoCheckoutModule = {
         const valorDesconto =
             subtotal *
             (
-                checkoutState.descontoPorcentagem / 100
+                checkoutState
+                    .descontoPorcentagem /
+                100
             );
 
 
@@ -320,9 +390,13 @@ const CarrinhoCheckoutModule = {
 
 
         return {
+
             subtotal,
+
             valorDesconto,
+
             taxaEntrega,
+
             total
         };
     },
@@ -400,166 +474,170 @@ const CarrinhoCheckoutModule = {
 
 
         container.innerHTML =
-            checkoutState.carrinho.map(item => {
+            checkoutState.carrinho.map(
+                item => {
 
-                const imagem =
-                    item.imagem &&
-                    typeof item.imagem === 'string'
-                        ? item.imagem.trim()
-                        : '';
-
-
-                const temImagem =
-                    imagem !== '' &&
-                    (
-                        imagem.startsWith('http') ||
-                        imagem.startsWith('data:image') ||
-                        imagem.startsWith('/')
-                    );
+                    const imagem =
+                        item.imagem &&
+                        typeof item.imagem === 'string'
+                            ? item.imagem.trim()
+                            : '';
 
 
-                const visual =
-                    temImagem
-                        ? `
-                            <img
-                                src="${imagem}"
-                                alt="${item.nome}"
-                                style="
+                    const temImagem =
+                        imagem !== '' &&
+                        (
+                            imagem.startsWith('http') ||
+                            imagem.startsWith('data:image') ||
+                            imagem.startsWith('/')
+                        );
+
+
+                    const visual =
+                        temImagem
+                            ? `
+                                <img
+                                    src="${imagem}"
+                                    alt="${item.nome}"
+                                    style="
+                                        width:100%;
+                                        height:100%;
+                                        object-fit:cover;
+                                    "
+                                    onerror="
+                                        this.style.display='none';
+                                        this.nextElementSibling.style.display='flex';
+                                    "
+                                >
+
+                                <span style="
+                                    display:none;
                                     width:100%;
                                     height:100%;
-                                    object-fit:cover;
-                                "
-                                onerror="
-                                    this.style.display='none';
-                                    this.nextElementSibling.style.display='flex';
+                                    align-items:center;
+                                    justify-content:center;
+                                    font-size:30px;
+                                ">
+                                    📦
+                                </span>
+                            `
+                            : `
+                                <span style="
+                                    display:flex;
+                                    width:100%;
+                                    height:100%;
+                                    align-items:center;
+                                    justify-content:center;
+                                    font-size:30px;
+                                ">
+                                    📦
+                                </span>
+                            `;
+
+
+                    const preco =
+                        parseFloat(
+                            item.preco
+                        ) || 0;
+
+
+                    return `
+                        <div
+                            class="carrinho-item"
+                            data-id="${item.id}"
+                        >
+
+                            <div
+                                class="item-img-box"
+                                style="
+                                    overflow:hidden;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
                                 "
                             >
-
-                            <span style="
-                                display:none;
-                                width:100%;
-                                height:100%;
-                                align-items:center;
-                                justify-content:center;
-                                font-size:30px;
-                            ">
-                                📦
-                            </span>
-                        `
-                        : `
-                            <span style="
-                                display:flex;
-                                width:100%;
-                                height:100%;
-                                align-items:center;
-                                justify-content:center;
-                                font-size:30px;
-                            ">
-                                📦
-                            </span>
-                        `;
-
-
-                const preco =
-                    parseFloat(item.preco) || 0;
-
-
-                return `
-                    <div
-                        class="carrinho-item"
-                        data-id="${item.id}"
-                    >
-
-                        <div
-                            class="item-img-box"
-                            style="
-                                overflow:hidden;
-                                display:flex;
-                                align-items:center;
-                                justify-content:center;
-                            "
-                        >
-                            ${visual}
-                        </div>
-
-
-                        <div class="item-detalhes">
-
-                            <div>
-
-                                <p class="item-titulo">
-                                    ${item.nome}
-                                </p>
-
-                                <p class="item-preco">
-                                    R$
-                                    ${preco
-                                        .toFixed(2)
-                                        .replace('.', ',')}
-                                </p>
-
+                                ${visual}
                             </div>
 
 
-                            <div class="item-rodape">
+                            <div class="item-detalhes">
 
-                                <div class="qtd-controles">
+                                <div>
 
-                                    <button
-                                        type="button"
-                                        class="btn-qtd"
-                                        onclick="
-                                            CarrinhoCheckoutModule.alterarQuantidade(
-                                                '${item.id}',
-                                                -1
-                                            )
-                                        "
-                                    >
-                                        −
-                                    </button>
+                                    <p class="item-titulo">
+                                        ${item.nome}
+                                    </p>
 
-
-                                    <span class="qtd-num">
-                                        ${item.quantidade}
-                                    </span>
-
-
-                                    <button
-                                        type="button"
-                                        class="btn-qtd"
-                                        onclick="
-                                            CarrinhoCheckoutModule.alterarQuantidade(
-                                                '${item.id}',
-                                                1
-                                            )
-                                        "
-                                    >
-                                        +
-                                    </button>
+                                    <p class="item-preco">
+                                        R$
+                                        ${preco
+                                            .toFixed(2)
+                                            .replace('.', ',')}
+                                    </p>
 
                                 </div>
 
 
-                                <button
-                                    type="button"
-                                    class="btn-remover"
-                                    onclick="
-                                        CarrinhoCheckoutModule.removerProduto(
-                                            '${item.id}'
-                                        )
-                                    "
-                                >
-                                    ${iconeLixeira}
-                                </button>
+                                <div class="item-rodape">
+
+                                    <div class="qtd-controles">
+
+                                        <button
+                                            type="button"
+                                            class="btn-qtd"
+                                            onclick="
+                                                CarrinhoCheckoutModule.alterarQuantidade(
+                                                    '${item.id}',
+                                                    -1
+                                                )
+                                            "
+                                        >
+                                            −
+                                        </button>
+
+
+                                        <span class="qtd-num">
+                                            ${item.quantidade}
+                                        </span>
+
+
+                                        <button
+                                            type="button"
+                                            class="btn-qtd"
+                                            onclick="
+                                                CarrinhoCheckoutModule.alterarQuantidade(
+                                                    '${item.id}',
+                                                    1
+                                                )
+                                            "
+                                        >
+                                            +
+                                        </button>
+
+                                    </div>
+
+
+                                    <button
+                                        type="button"
+                                        class="btn-remover"
+                                        onclick="
+                                            CarrinhoCheckoutModule.removerProduto(
+                                                '${item.id}'
+                                            )
+                                        "
+                                    >
+                                        ${iconeLixeira}
+                                    </button>
+
+                                </div>
 
                             </div>
 
                         </div>
+                    `;
 
-                    </div>
-                `;
-
-            }).join('');
+                }
+            ).join('');
     },
 
 
@@ -604,7 +682,11 @@ const CarrinhoCheckoutModule = {
             checkoutState.carrinho.reduce(
                 (total, item) =>
                     total +
-                    (parseInt(item.quantidade) || 0),
+                    (
+                        parseInt(
+                            item.quantidade
+                        ) || 0
+                    ),
                 0
             );
 
@@ -613,11 +695,13 @@ const CarrinhoCheckoutModule = {
             .querySelectorAll(
                 '.badge-carrinho, .carrinho-badge, .carrinho-count'
             )
-            .forEach(badge => {
+            .forEach(
+                badge => {
 
-                badge.textContent =
-                    totalItens;
-            });
+                    badge.textContent =
+                        totalItens;
+                }
+            );
     },
 
 
@@ -635,22 +719,24 @@ const CarrinhoCheckoutModule = {
             .querySelectorAll(
                 'input[name="pagamento"]'
             )
-            .forEach(radio => {
+            .forEach(
+                radio => {
 
-                radio.addEventListener(
-                    'change',
-                    event => {
+                    radio.addEventListener(
+                        'change',
+                        event => {
 
-                        checkoutState.metodoPagamento =
-                            event.target.value;
+                            checkoutState.metodoPagamento =
+                                event.target.value;
 
-                        localStorage.setItem(
-                            'ultimo_metodo_pagamento',
-                            event.target.value
-                        );
-                    }
-                );
-            });
+                            localStorage.setItem(
+                                'ultimo_metodo_pagamento',
+                                event.target.value
+                            );
+                        }
+                    );
+                }
+            );
     }
 };
 
@@ -667,8 +753,12 @@ function voltarPaginaAnterior() {
 
     if (
         anterior &&
-        !anterior.includes('carrinho.html') &&
-        !anterior.includes('Checkout.html')
+        !anterior.includes(
+            'carrinho.html'
+        ) &&
+        !anterior.includes(
+            'Checkout.html'
+        )
     ) {
 
         window.history.back();
@@ -686,6 +776,19 @@ function voltarPaginaAnterior() {
 // ============================================================
 
 function finalizarPedido() {
+
+    const usuario =
+        obterUsuarioLogado();
+
+    if (!usuario) {
+
+        alert(
+            'Faça login para finalizar seu pedido.'
+        );
+
+        return;
+    }
+
 
     if (
         !checkoutState.carrinho ||
@@ -763,27 +866,29 @@ function configurarCamposAutocomplete() {
     ];
 
 
-    campos.forEach(campo => {
+    campos.forEach(
+        campo => {
 
-        const input =
-            document.getElementById(
-                campo.id
-            );
+            const input =
+                document.getElementById(
+                    campo.id
+                );
 
 
-        if (input) {
+            if (input) {
 
-            input.setAttribute(
-                'autocomplete',
-                campo.autocomplete
-            );
+                input.setAttribute(
+                    'autocomplete',
+                    campo.autocomplete
+                );
 
-            input.setAttribute(
-                'name',
-                campo.name
-            );
+                input.setAttribute(
+                    'name',
+                    campo.name
+                );
+            }
         }
-    });
+    );
 }
 
 
@@ -794,10 +899,14 @@ function configurarCamposAutocomplete() {
 async function buscarCEP() {
 
     const input =
-        document.getElementById('end-cep');
+        document.getElementById(
+            'end-cep'
+        );
 
     const status =
-        document.getElementById('cep-status');
+        document.getElementById(
+            'cep-status'
+        );
 
 
     if (!input) {
@@ -806,14 +915,18 @@ async function buscarCEP() {
 
 
     const cep =
-        input.value.replace(/\D/g, '');
+        input.value.replace(
+            /\D/g,
+            ''
+        );
 
 
     if (cep.length !== 8) {
 
         if (status) {
 
-            status.style.color = '#ef4444';
+            status.style.color =
+                '#ef4444';
 
             status.textContent =
                 'Informe um CEP válido com 8 dígitos.';
@@ -825,7 +938,8 @@ async function buscarCEP() {
 
     if (status) {
 
-        status.style.color = '#2563eb';
+        status.style.color =
+            '#2563eb';
 
         status.textContent =
             'Buscando endereço...';
@@ -848,7 +962,8 @@ async function buscarCEP() {
 
             if (status) {
 
-                status.style.color = '#ef4444';
+                status.style.color =
+                    '#ef4444';
 
                 status.textContent =
                     'CEP não encontrado.';
@@ -859,16 +974,24 @@ async function buscarCEP() {
 
 
         const rua =
-            document.getElementById('end-rua');
+            document.getElementById(
+                'end-rua'
+            );
 
         const bairro =
-            document.getElementById('end-bairro');
+            document.getElementById(
+                'end-bairro'
+            );
 
         const cidade =
-            document.getElementById('end-cidade');
+            document.getElementById(
+                'end-cidade'
+            );
 
         const uf =
-            document.getElementById('end-uf');
+            document.getElementById(
+                'end-uf'
+            );
 
 
         if (rua)
@@ -893,7 +1016,8 @@ async function buscarCEP() {
 
         if (status) {
 
-            status.style.color = '#10b981';
+            status.style.color =
+                '#10b981';
 
             status.textContent =
                 'Endereço localizado!';
@@ -901,7 +1025,9 @@ async function buscarCEP() {
 
 
         const numero =
-            document.getElementById('end-numero');
+            document.getElementById(
+                'end-numero'
+            );
 
 
         if (numero)
@@ -918,7 +1044,8 @@ async function buscarCEP() {
 
         if (status) {
 
-            status.style.color = '#ef4444';
+            status.style.color =
+                '#ef4444';
 
             status.textContent =
                 'Erro ao consultar CEP.';
@@ -1002,7 +1129,9 @@ function checarEnderecoSalvo() {
             rua.textContent =
                 `${endereco.rua}, nº ${endereco.numero || ''}` +
                 `${endereco.complemento
-                    ? ' (' + endereco.complemento + ')'
+                    ? ' (' +
+                      endereco.complemento +
+                      ')'
                     : ''}`;
 
 
@@ -1020,16 +1149,20 @@ function checarEnderecoSalvo() {
                 `CEP: ${endereco.cep || ''}`;
 
 
-        box.style.display = 'block';
+        box.style.display =
+            'block';
 
-        formulario.style.display = 'none';
+        formulario.style.display =
+            'none';
 
 
     } else {
 
-        box.style.display = 'none';
+        box.style.display =
+            'none';
 
-        formulario.style.display = 'flex';
+        formulario.style.display =
+            'flex';
     }
 }
 
@@ -1065,19 +1198,25 @@ function alternarFormularioEndereco(
 
     if (exibirFormulario) {
 
-        box.style.display = 'none';
+        box.style.display =
+            'none';
 
-        formulario.style.display = 'flex';
+        formulario.style.display =
+            'flex';
 
         if (cancelar) {
-            cancelar.style.display = 'inline-block';
+
+            cancelar.style.display =
+                'inline-block';
         }
 
     } else {
 
-        box.style.display = 'block';
+        box.style.display =
+            'block';
 
-        formulario.style.display = 'none';
+        formulario.style.display =
+            'none';
     }
 }
 
@@ -1087,6 +1226,22 @@ function alternarFormularioEndereco(
 // ============================================================
 
 function carregarCheckoutDinamico() {
+
+    const usuario =
+        obterUsuarioLogado();
+
+    if (!usuario) {
+
+        alert(
+            'Você precisa estar logado para acessar o checkout.'
+        );
+
+        window.location.href =
+            'Login.html';
+
+        return;
+    }
+
 
     configurarCamposAutocomplete();
 
@@ -1141,7 +1296,11 @@ function carregarCheckoutDinamico() {
         carrinho.reduce(
             (total, item) =>
                 total +
-                (parseInt(item.quantidade) || 0),
+                (
+                    parseInt(
+                        item.quantidade
+                    ) || 0
+                ),
             0
         );
 
@@ -1154,48 +1313,55 @@ function carregarCheckoutDinamico() {
 
 
     lista.innerHTML =
-        carrinho.map(item => {
+        carrinho.map(
+            item => {
 
-            const preco =
-                parseFloat(item.preco) || 0;
+                const preco =
+                    parseFloat(
+                        item.preco
+                    ) || 0;
 
-            const quantidade =
-                parseInt(item.quantidade) || 0;
+                const quantidade =
+                    parseInt(
+                        item.quantidade
+                    ) || 0;
 
 
-            return `
-                <div
-                    class="item-linha"
-                    style="
-                        display:flex;
-                        justify-content:space-between;
-                        margin-bottom:8px;
-                        font-size:14px;
-                    "
-                >
-
-                    <span class="item-qtd-nome">
-                        ${quantidade}x ${item.nome}
-                    </span>
-
-                    <span
-                        class="item-preco"
-                        style="font-weight:600;"
+                return `
+                    <div
+                        class="item-linha"
+                        style="
+                            display:flex;
+                            justify-content:space-between;
+                            margin-bottom:8px;
+                            font-size:14px;
+                        "
                     >
-                        R$
-                        ${(preco * quantidade)
-                            .toFixed(2)
-                            .replace('.', ',')}
-                    </span>
 
-                </div>
-            `;
+                        <span class="item-qtd-nome">
+                            ${quantidade}x ${item.nome}
+                        </span>
 
-        }).join('');
+                        <span
+                            class="item-preco"
+                            style="font-weight:600;"
+                        >
+                            R$
+                            ${(preco * quantidade)
+                                .toFixed(2)
+                                .replace('.', ',')}
+                        </span>
+
+                    </div>
+                `;
+
+            }
+        ).join('');
 
 
     const valores =
-        CarrinhoCheckoutModule.calcularValores();
+        CarrinhoCheckoutModule
+            .calcularValores();
 
 
     if (subtotalEl) {
@@ -1232,16 +1398,21 @@ function carregarCheckoutDinamico() {
 
 async function buscarClienteNoSupabase(usuario) {
 
-    const supabase = obterSupabase();
+    const supabase =
+        obterSupabase();
 
     if (!supabase) {
+
         throw new Error(
             'Supabase não está disponível.'
         );
     }
 
 
-    if (!usuario || !usuario.email) {
+    if (
+        !usuario ||
+        !usuario.email
+    ) {
 
         throw new Error(
             'Usuário logado não possui e-mail.'
@@ -1250,17 +1421,25 @@ async function buscarClienteNoSupabase(usuario) {
 
 
     const email =
-        usuario.email.trim().toLowerCase();
+        usuario.email
+            .trim()
+            .toLowerCase();
 
 
     const {
         data,
         error
-    } = await supabase
-        .from('clientes')
-        .select('id,nome,email,telefone')
-        .eq('email', email)
-        .maybeSingle();
+    } =
+        await supabase
+            .from('clientes')
+            .select(
+                'id,nome,email,telefone'
+            )
+            .eq(
+                'email',
+                email
+            )
+            .maybeSingle();
 
 
     if (error) {
@@ -1306,16 +1485,21 @@ async function buscarEnderecoNoSupabase(
     enderecoLocal
 ) {
 
-    const supabase = obterSupabase();
+    const supabase =
+        obterSupabase();
 
     if (!supabase) {
+
         throw new Error(
             'Supabase não está disponível.'
         );
     }
 
 
-    if (!usuario || !usuario.email) {
+    if (
+        !usuario ||
+        !usuario.email
+    ) {
         return null;
     }
 
@@ -1328,7 +1512,10 @@ async function buscarEnderecoNoSupabase(
             );
 
 
-        if (!cliente || !cliente.id) {
+        if (
+            !cliente ||
+            !cliente.id
+        ) {
             return null;
         }
 
@@ -1336,10 +1523,14 @@ async function buscarEnderecoNoSupabase(
         const {
             data,
             error
-        } = await supabase
-            .from('enderecos')
-            .select('*')
-            .eq('cliente_id', cliente.id);
+        } =
+            await supabase
+                .from('enderecos')
+                .select('*')
+                .eq(
+                    'cliente_id',
+                    cliente.id
+                );
 
 
         if (error) {
@@ -1353,7 +1544,10 @@ async function buscarEnderecoNoSupabase(
         }
 
 
-        if (!data || data.length === 0) {
+        if (
+            !data ||
+            data.length === 0
+        ) {
 
             console.warn(
                 'Nenhum endereço encontrado para o cliente.'
@@ -1370,37 +1564,36 @@ async function buscarEnderecoNoSupabase(
 
             const cepLocal =
                 enderecoLocal.cep
-                    .replace(/\D/g, '');
+                    .replace(
+                        /\D/g,
+                        ''
+                    );
 
 
             const encontrado =
-                data.find(endereco => {
+                data.find(
+                    endereco => {
 
-                    const cepBanco =
-                        String(
-                            endereco.cep || ''
-                        ).replace(/\D/g, '');
+                        const cepBanco =
+                            String(
+                                endereco.cep ||
+                                ''
+                            ).replace(
+                                /\D/g,
+                                ''
+                            );
 
-                    return cepBanco === cepLocal;
-                });
+                        return cepBanco ===
+                            cepLocal;
+                    }
+                );
 
 
             if (encontrado) {
 
-                console.log(
-                    'ENDEREÇO ENCONTRADO:',
-                    encontrado
-                );
-
                 return encontrado;
             }
         }
-
-
-        console.log(
-            'USANDO PRIMEIRO ENDEREÇO:',
-            data[0]
-        );
 
 
         return data[0];
@@ -1422,29 +1615,58 @@ async function buscarEnderecoNoSupabase(
 // 17. CRIAR PEDIDO NO SUPABASE
 // ============================================================
 
-async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
+async function salvarPedidoNoSupabase(
+    pedidoAtual,
+    valores,
+    endereco,
+    usuario
+) {
+
     try {
 
-        const clienteId = usuario?.id || null;
+        const clienteId =
+            usuario?.id || null;
+
 
         if (!clienteId) {
-            console.error('ERRO: usuário não possui ID.');
+
+            console.error(
+                'ERRO: usuário não possui ID.'
+            );
+
             return null;
         }
 
-        // ====================================================
-        // LOCALIZAR ENDEREÇO DO CLIENTE
-        // ====================================================
 
         let enderecoId = null;
 
-        const { data: enderecosCliente, error: erroEndereco } =
+
+        const {
+            data: enderecosCliente,
+            error: erroEndereco
+        } =
             await window.supabaseClient
                 .from('enderecos')
-                .select('id, cliente_id, nome_destinatario, cep, rua, numero, complemento, bairro, cidade, estado, principal')
-                .eq('cliente_id', clienteId)
-                .order('principal', { ascending: false })
-                .order('created_at', { ascending: false });
+                .select(
+                    'id, cliente_id, nome_destinatario, cep, rua, numero, complemento, bairro, cidade, estado, principal'
+                )
+                .eq(
+                    'cliente_id',
+                    clienteId
+                )
+                .order(
+                    'principal',
+                    {
+                        ascending: false
+                    }
+                )
+                .order(
+                    'created_at',
+                    {
+                        ascending: false
+                    }
+                );
+
 
         if (erroEndereco) {
 
@@ -1453,13 +1675,17 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
                 erroEndereco
             );
 
-        } else if (enderecosCliente && enderecosCliente.length > 0) {
+        } else if (
+            enderecosCliente &&
+            enderecosCliente.length > 0
+        ) {
 
-            // Primeiro endereço principal
             const enderecoPrincipal =
                 enderecosCliente.find(
-                    item => item.principal === true
+                    item =>
+                        item.principal === true
                 );
+
 
             if (enderecoPrincipal) {
 
@@ -1468,36 +1694,12 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
 
             } else {
 
-                // Se não existir principal,
-                // utiliza o endereço mais recente
                 enderecoId =
                     enderecosCliente[0].id;
-
             }
-
-            console.log(
-                'ENDEREÇO ENCONTRADO:',
-                enderecosCliente
-            );
-
-            console.log(
-                'ENDEREÇO ID SELECIONADO:',
-                enderecoId
-            );
-
-        } else {
-
-            console.warn(
-                'Nenhum endereço encontrado para o cliente:',
-                clienteId
-            );
 
         }
 
-
-        // ====================================================
-        // CRIAR PEDIDO
-        // ====================================================
 
         const pedidoBanco = {
 
@@ -1514,7 +1716,8 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
                 'pendente',
 
             forma_pagamento:
-                pedidoAtual.pagamento || 'PIX',
+                pedidoAtual.pagamento ||
+                'PIX',
 
             subtotal:
                 valores.subtotal,
@@ -1530,17 +1733,13 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
 
             observacoes:
                 null
-
         };
 
 
-        console.log(
-            'ENVIANDO PEDIDO:',
-            pedidoBanco
-        );
-
-
-        const { data, error } =
+        const {
+            data,
+            error
+        } =
             await window.supabaseClient
                 .from('pedidos')
                 .insert([
@@ -1558,37 +1757,24 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
             );
 
             return null;
-
         }
 
-
-        console.log(
-            'PEDIDO CRIADO COM SUCESSO:',
-            data
-        );
-
-
-        // ====================================================
-        // ATUALIZAR NÚMERO DO PEDIDO
-        // ====================================================
 
         if (data.numero_pedido) {
 
             pedidoAtual.numero =
-                '#' + data.numero_pedido;
+                '#' +
+                data.numero_pedido;
 
             pedidoAtual.id =
                 data.id;
-
         }
 
 
-        // ====================================================
-        // CRIAR ITENS DO PEDIDO
-        // ====================================================
-
         if (
-            Array.isArray(pedidoAtual.itens) &&
+            Array.isArray(
+                pedidoAtual.itens
+            ) &&
             pedidoAtual.itens.length > 0
         ) {
 
@@ -1600,10 +1786,12 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
                             data.id,
 
                         produto_id:
-                            item.id || null,
+                            item.id ||
+                            null,
 
                         nome_produto:
-                            item.nome || 'Produto',
+                            item.nome ||
+                            'Produto',
 
                         quantidade:
                             parseInt(
@@ -1626,15 +1814,8 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
                                     item.quantidade
                                 ) || 1
                             )
-
                     })
                 );
-
-
-            console.log(
-                'ENVIANDO ITENS:',
-                itensBanco
-            );
 
 
             const {
@@ -1662,9 +1843,7 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
                     'ITENS CRIADOS COM SUCESSO:',
                     itensCriados
                 );
-
             }
-
         }
 
 
@@ -1679,7 +1858,6 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
         );
 
         return null;
-
     }
 }
 
@@ -1689,58 +1867,31 @@ async function salvarPedidoNoSupabase(pedidoAtual, valores, endereco, usuario) {
 // ============================================================
 
 async function validarEConfirmarPedido() {
+    const usuario = obterUsuarioLogado();
 
-    if (
-        !checkoutState.carrinho ||
-        checkoutState.carrinho.length === 0
-    ) {
-
-        alert(
-            'Seu carrinho está vazio! Volte e adicione algum produto antes de finalizar.'
-        );
-
+    if (!usuario) {
+        alert('Você precisa estar logado para continuar.');
+        window.location.href = 'Login.html';
         return;
     }
 
+    if (!checkoutState.carrinho || checkoutState.carrinho.length === 0) {
+        alert('Seu carrinho está vazio! Volte e adicione algum produto antes de finalizar.');
+        return;
+    }
 
-    const formulario =
-        document.getElementById(
-            'form-endereco'
-        );
-
-
-    const formularioVisivel =
-        formulario &&
-        formulario.style.display !== 'none';
-
-
-    // --------------------------------------------------------
-    // Endereço novo
-    // --------------------------------------------------------
+    const formulario = document.getElementById('form-endereco');
+    const formularioVisivel = formulario && formulario.style.display !== 'none';
 
     if (formularioVisivel) {
-
-        const nome =
-            document.getElementById('end-nome');
-
-        const cep =
-            document.getElementById('end-cep');
-
-        const rua =
-            document.getElementById('end-rua');
-
-        const numero =
-            document.getElementById('end-numero');
-
-        const bairro =
-            document.getElementById('end-bairro');
-
-        const cidade =
-            document.getElementById('end-cidade');
-
-        const uf =
-            document.getElementById('end-uf');
-
+        const nome = document.getElementById('end-nome');
+        const cep = document.getElementById('end-cep');
+        const rua = document.getElementById('end-rua');
+        const numero = document.getElementById('end-numero');
+        const bairro = document.getElementById('end-bairro');
+        const cidade = document.getElementById('end-cidade');
+        const uf = document.getElementById('end-uf');
+        const complemento = document.getElementById('end-complemento');
 
         const obrigatorios = [
             nome,
@@ -1752,60 +1903,25 @@ async function validarEConfirmarPedido() {
             uf
         ];
 
-
-        const vazio =
-            obrigatorios.some(
-                campo =>
-                    !campo ||
-                    !campo.value.trim()
-            );
-
+        const vazio = obrigatorios.some(
+            campo => !campo || !campo.value.trim()
+        );
 
         if (vazio) {
-
-            alert(
-                'Preencha todos os campos obrigatórios do endereço de entrega antes de continuar.'
-            );
-
+            alert('Preencha todos os campos obrigatórios do endereço de entrega antes de continuar.');
             return;
         }
 
-
-        const complemento =
-            document.getElementById(
-                'end-complemento'
-            );
-
-
         const endereco = {
-
-            nome:
-                nome.value.trim(),
-
-            cep:
-                cep.value.trim(),
-
-            rua:
-                rua.value.trim(),
-
-            numero:
-                numero.value.trim(),
-
-            complemento:
-                complemento
-                    ? complemento.value.trim()
-                    : '',
-
-            bairro:
-                bairro.value.trim(),
-
-            cidade:
-                cidade.value.trim(),
-
-            uf:
-                uf.value.trim()
+            nome: nome.value.trim(),
+            cep: cep.value.trim(),
+            rua: rua.value.trim(),
+            numero: numero.value.trim(),
+            complemento: complemento ? complemento.value.trim() : '',
+            bairro: bairro.value.trim(),
+            cidade: cidade.value.trim(),
+            uf: uf.value.trim()
         };
-
 
         localStorage.setItem(
             chaveEnderecoCliente(),
@@ -1813,75 +1929,67 @@ async function validarEConfirmarPedido() {
         );
 
     } else {
-
         let endereco = null;
 
-
         try {
-
-            endereco =
-                JSON.parse(
-                    localStorage.getItem(
-                        chaveEnderecoCliente()
-                    )
-                );
-
+            endereco = JSON.parse(
+                localStorage.getItem(chaveEnderecoCliente())
+            );
         } catch (erro) {
-
             endereco = null;
         }
 
-
-        if (
-            !endereco ||
-            !endereco.rua
-        ) {
-
-            alert(
-                'Informe um endereço de entrega antes de continuar.'
-            );
-
+        if (!endereco || !endereco.rua) {
+            alert('Informe um endereço de entrega antes de continuar.');
             return;
         }
     }
 
+    const pagamento = document.querySelector(
+        'input[name="pagamento"]:checked'
+    );
 
-    // --------------------------------------------------------
-    // Método de pagamento
-    // --------------------------------------------------------
-
-    const pagamento =
-        document.querySelector(
-            'input[name="pagamento"]:checked'
-        );
-
-
-    if (pagamento) {
-
-        checkoutState.metodoPagamento =
-            pagamento.value;
-
-        localStorage.setItem(
-            'ultimo_metodo_pagamento',
-            pagamento.value
-        );
+    if (!pagamento) {
+        alert('Selecione uma forma de pagamento.');
+        return;
     }
 
+    checkoutState.metodoPagamento = pagamento.value;
 
-    // --------------------------------------------------------
-    // Ir para confirmação
-    // --------------------------------------------------------
+    localStorage.setItem(
+        'ultimo_metodo_pagamento',
+        pagamento.value
+    );
 
-    window.location.href =
-        'Pedido-confirmado.html';
+    if (pagamento.value === 'pix') {
+        window.location.href = 'Pagamento-pix.html';
+        return;
+    }
+
+    alert('Neste momento, o pagamento disponível é PIX.');
 }
-
 
 // ============================================================
 // 19. PEDIDO CONFIRMADO
 // ============================================================
 
 async function carregarPedidoConfirmadoDinamico() {
+
+    const usuario =
+        obterUsuarioLogado();
+
+    if (!usuario) {
+
+        alert(
+            'Você precisa estar logado para acessar seus pedidos.'
+        );
+
+        window.location.href =
+            'Login.html';
+
+        return;
+    }
+
 
     const numeroEl =
         document.getElementById(
@@ -1972,16 +2080,8 @@ async function carregarPedidoConfirmadoDinamico() {
     }
 
 
-    const usuario =
-        obterUsuarioLogado() || {};
-
-
     let pedidoAtual = null;
 
-
-    // ========================================================
-    // CRIAR NOVO PEDIDO
-    // ========================================================
 
     if (
         checkoutState.carrinho &&
@@ -1989,13 +2089,15 @@ async function carregarPedidoConfirmadoDinamico() {
     ) {
 
         const valores =
-            CarrinhoCheckoutModule.calcularValores();
+            CarrinhoCheckoutModule
+                .calcularValores();
 
 
         const numeroRandom =
             Math.floor(
                 10000 +
-                Math.random() * 90000
+                Math.random() *
+                90000
             );
 
 
@@ -2053,7 +2155,8 @@ async function carregarPedidoConfirmadoDinamico() {
                 numeroRandom,
 
             numero:
-                '#' + numeroRandom,
+                '#' +
+                numeroRandom,
 
             data:
                 data,
@@ -2062,7 +2165,10 @@ async function carregarPedidoConfirmadoDinamico() {
                 hora,
 
             pagamento:
-                nomesMetodos[metodo] || 'PIX',
+                nomesMetodos[
+                    metodo
+                ] ||
+                'PIX',
 
             status:
                 'pendente',
@@ -2071,21 +2177,21 @@ async function carregarPedidoConfirmadoDinamico() {
 
                 nome:
                     usuario.nome ||
-                    (
-                        endereco
-                            ? endereco.nome
-                            : 'Cliente da Loja'
-                    ),
+                    'Cliente da Loja',
 
                 email:
-                    usuario.email || '',
+                    usuario.email ||
+                    '',
 
                 telefone:
-                    usuario.telefone || ''
+                    usuario.telefone ||
+                    ''
             },
 
             itens:
-                [...checkoutState.carrinho],
+                [
+                    ...checkoutState.carrinho
+                ],
 
             subtotal:
                 valores.subtotal,
@@ -2104,10 +2210,6 @@ async function carregarPedidoConfirmadoDinamico() {
         };
 
 
-        // ====================================================
-        // SALVAR NO SUPABASE
-        // ====================================================
-
         try {
 
             const resultado =
@@ -2125,20 +2227,19 @@ async function carregarPedidoConfirmadoDinamico() {
             );
 
 
-            // Guardar o UUID real do Supabase
             if (
                 resultado &&
-                resultado.pedido
+                resultado.id
             ) {
 
                 pedidoAtual.supabase_id =
-                    resultado.pedido.id;
+                    resultado.id;
 
                 pedidoAtual.cliente_id =
-                    resultado.pedido.cliente_id;
+                    resultado.cliente_id;
 
                 pedidoAtual.endereco_id =
-                    resultado.pedido.endereco_id;
+                    resultado.endereco_id;
             }
 
 
@@ -2151,21 +2252,18 @@ async function carregarPedidoConfirmadoDinamico() {
 
 
             alert(
-                'Não foi possível salvar o pedido no banco de dados. Verifique sua conexão e tente novamente.'
+                'Não foi possível salvar o pedido no banco de dados.'
             );
-
 
             return;
         }
 
 
-        // ====================================================
-        // SALVAR LOCALMENTE
-        // ====================================================
-
         localStorage.setItem(
             'ultimo_pedido_salvo',
-            JSON.stringify(pedidoAtual)
+            JSON.stringify(
+                pedidoAtual
+            )
         );
 
 
@@ -2176,7 +2274,9 @@ async function carregarPedidoConfirmadoDinamico() {
 
         localStorage.setItem(
             'historico_pedidos_cliente',
-            JSON.stringify(historico)
+            JSON.stringify(
+                historico
+            )
         );
 
 
@@ -2187,24 +2287,20 @@ async function carregarPedidoConfirmadoDinamico() {
 
         localStorage.setItem(
             'pedidos_loja',
-            JSON.stringify(pedidosAdmin)
+            JSON.stringify(
+                pedidosAdmin
+            )
         );
 
 
-        // ====================================================
-        // LIMPAR CARRINHO
-        // ====================================================
+        checkoutState.carrinho =
+            [];
 
-        checkoutState.carrinho = [];
-
-        CarrinhoCheckoutModule.salvarStorage();
+        CarrinhoCheckoutModule
+            .salvarStorage();
 
 
     } else {
-
-        // ====================================================
-        // RECARREGAMENTO DA CONFIRMAÇÃO
-        // ====================================================
 
         try {
 
@@ -2226,10 +2322,6 @@ async function carregarPedidoConfirmadoDinamico() {
         return;
     }
 
-
-    // ========================================================
-    // PREENCHER CONFIRMAÇÃO
-    // ========================================================
 
     if (numeroEl)
         numeroEl.textContent =
@@ -2253,14 +2345,12 @@ async function carregarPedidoConfirmadoDinamico() {
 
     if (totalEl)
         totalEl.textContent =
-            `R$ ${Number(pedidoAtual.total || 0)
+            `R$ ${Number(
+                pedidoAtual.total || 0
+            )
                 .toFixed(2)
                 .replace('.', ',')}`;
 
-
-    // ========================================================
-    // ITENS
-    // ========================================================
 
     if (
         listaEl &&
@@ -2269,93 +2359,105 @@ async function carregarPedidoConfirmadoDinamico() {
 
         listaEl.innerHTML =
             pedidoAtual.itens
-                .map(item => {
+                .map(
+                    item => {
 
-                    const imagem =
-                        typeof item.imagem === 'string'
-                            ? item.imagem
-                            : '';
-
-
-                    const temImagem =
-                        imagem.startsWith('http') ||
-                        imagem.startsWith('data:image') ||
-                        imagem.startsWith('/');
+                        const imagem =
+                            typeof item.imagem === 'string'
+                                ? item.imagem
+                                : '';
 
 
-                    return `
-                        <div style="
-                            display:flex;
-                            align-items:center;
-                            justify-content:space-between;
-                            margin-bottom:8px;
-                            color:#334155;
-                        ">
+                        const temImagem =
+                            imagem.startsWith(
+                                'http'
+                            ) ||
+                            imagem.startsWith(
+                                'data:image'
+                            ) ||
+                            imagem.startsWith(
+                                '/'
+                            );
 
+
+                        return `
                             <div style="
                                 display:flex;
                                 align-items:center;
-                                gap:10px;
+                                justify-content:space-between;
+                                margin-bottom:8px;
+                                color:#334155;
                             ">
 
                                 <div style="
-                                    width:32px;
-                                    height:32px;
-                                    border-radius:6px;
-                                    background:#f1f5f9;
                                     display:flex;
                                     align-items:center;
-                                    justify-content:center;
-                                    overflow:hidden;
-                                    flex-shrink:0;
+                                    gap:10px;
                                 ">
 
-                                    ${
-                                        temImagem
-                                            ? `
-                                                <img
-                                                    src="${imagem}"
-                                                    alt="${item.nome}"
-                                                    style="
-                                                        width:100%;
-                                                        height:100%;
-                                                        object-fit:cover;
-                                                    "
-                                                >
-                                            `
-                                            : '📦'
-                                    }
+                                    <div style="
+                                        width:32px;
+                                        height:32px;
+                                        border-radius:6px;
+                                        background:#f1f5f9;
+                                        display:flex;
+                                        align-items:center;
+                                        justify-content:center;
+                                        overflow:hidden;
+                                        flex-shrink:0;
+                                    ">
+
+                                        ${
+                                            temImagem
+                                                ? `
+                                                    <img
+                                                        src="${imagem}"
+                                                        alt="${item.nome}"
+                                                        style="
+                                                            width:100%;
+                                                            height:100%;
+                                                            object-fit:cover;
+                                                        "
+                                                    >
+                                                `
+                                                : '📦'
+                                        }
+
+                                    </div>
+
+                                    <span>
+                                        ${item.quantidade}x ${item.nome}
+                                    </span>
 
                                 </div>
 
-                                <span>
-                                    ${item.quantidade}x ${item.nome}
+
+                                <span style="font-weight:600;">
+                                    R$
+                                    ${(
+                                        (
+                                            Number(
+                                                item.preco
+                                            ) || 0
+                                        ) *
+                                        (
+                                            Number(
+                                                item.quantidade
+                                            ) || 0
+                                        )
+                                    )
+                                        .toFixed(2)
+                                        .replace('.', ',')}
                                 </span>
 
                             </div>
+                        `;
 
-
-                            <span style="font-weight:600;">
-                                R$
-                                ${(
-                                    (Number(item.preco) || 0) *
-                                    (Number(item.quantidade) || 0)
-                                )
-                                    .toFixed(2)
-                                    .replace('.', ',')}
-                            </span>
-
-                        </div>
-                    `;
-
-                })
+                    }
+                )
                 .join('');
     }
 
-
-    // ========================================================
-    // ENDEREÇO
-    // ========================================================
 
     const enderecoPedido =
         pedidoAtual.endereco ||
@@ -2432,6 +2534,22 @@ async function carregarPedidoConfirmadoDinamico() {
 // ============================================================
 
 function carregarPaginaEnderecos() {
+
+    const usuario =
+        obterUsuarioLogado();
+
+    if (!usuario) {
+
+        alert(
+            'Faça login para acessar seus endereços.'
+        );
+
+        window.location.href =
+            'Login.html';
+
+        return;
+    }
+
 
     const container =
         document.getElementById(
@@ -2713,6 +2831,19 @@ function excluirEnderecoSalvo() {
 
 function confirmarSelecaoEndereco() {
 
+    const usuario =
+        obterUsuarioLogado();
+
+    if (!usuario) {
+
+        alert(
+            'Faça login para continuar.'
+        );
+
+        return;
+    }
+
+
     let endereco = null;
 
 
@@ -2755,10 +2886,14 @@ function confirmarSelecaoEndereco() {
 async function buscarCepCadastro() {
 
     const input =
-        document.getElementById('cep');
+        document.getElementById(
+            'cep'
+        );
 
     const status =
-        document.getElementById('cep-status');
+        document.getElementById(
+            'cep-status'
+        );
 
 
     if (!input) {
@@ -2767,14 +2902,18 @@ async function buscarCepCadastro() {
 
 
     const cep =
-        input.value.replace(/\D/g, '');
+        input.value.replace(
+            /\D/g,
+            ''
+        );
 
 
     if (cep.length !== 8) {
 
         if (status) {
 
-            status.style.color = '#ef4444';
+            status.style.color =
+                '#ef4444';
 
             status.textContent =
                 'Digite um CEP válido com 8 números.';
@@ -2800,7 +2939,8 @@ async function buscarCepCadastro() {
 
             if (status) {
 
-                status.style.color = '#ef4444';
+                status.style.color =
+                    '#ef4444';
 
                 status.textContent =
                     'CEP não encontrado.';
@@ -2811,16 +2951,24 @@ async function buscarCepCadastro() {
 
 
         const rua =
-            document.getElementById('rua');
+            document.getElementById(
+                'rua'
+            );
 
         const bairro =
-            document.getElementById('bairro');
+            document.getElementById(
+                'bairro'
+            );
 
         const cidade =
-            document.getElementById('cidade');
+            document.getElementById(
+                'cidade'
+            );
 
         const uf =
-            document.getElementById('uf');
+            document.getElementById(
+                'uf'
+            );
 
 
         if (rua)
@@ -2845,7 +2993,8 @@ async function buscarCepCadastro() {
 
         if (status) {
 
-            status.style.color = '#10b981';
+            status.style.color =
+                '#10b981';
 
             status.textContent =
                 'Endereço localizado!';
@@ -2868,6 +3017,22 @@ async function buscarCepCadastro() {
 
 function carregarDadosFormularioEndereco() {
 
+    const usuario =
+        obterUsuarioLogado();
+
+    if (!usuario) {
+
+        alert(
+            'Você precisa estar logado para cadastrar um endereço.'
+        );
+
+        window.location.href =
+            'Login.html';
+
+        return;
+    }
+
+
     const form =
         document.getElementById(
             'form-cadastrar-endereco'
@@ -2878,6 +3043,7 @@ function carregarDadosFormularioEndereco() {
             'cep'
         );
 
+
     if (cep) {
 
         cep.addEventListener(
@@ -2886,20 +3052,26 @@ function carregarDadosFormularioEndereco() {
 
                 const valor =
                     event.target.value
-                        .replace(/\D/g, '');
+                        .replace(
+                            /\D/g,
+                            ''
+                        );
 
-                if (valor.length === 8) {
+                if (
+                    valor.length === 8
+                ) {
+
                     buscarCepCadastro();
                 }
-
             }
         );
-
     }
+
 
     if (!form) {
         return;
     }
+
 
     form.addEventListener(
         'submit',
@@ -2907,84 +3079,87 @@ function carregarDadosFormularioEndereco() {
 
             event.preventDefault();
 
+
             try {
 
                 const usuario =
                     obterUsuarioLogado();
 
-                if (!usuario || !usuario.id) {
+
+                if (
+                    !usuario ||
+                    !usuario.id
+                ) {
 
                     alert(
                         'Você precisa estar logado para cadastrar um endereço.'
                     );
 
                     return;
-
                 }
+
 
                 const endereco = {
 
                     nome:
                         document.getElementById(
                             'nome-destinatario'
-                        )?.value.trim() || '',
+                        )?.value.trim() ||
+                        '',
 
                     cep:
                         document.getElementById(
                             'cep'
-                        )?.value.trim() || '',
+                        )?.value.trim() ||
+                        '',
 
                     rua:
                         document.getElementById(
                             'rua'
-                        )?.value.trim() || '',
+                        )?.value.trim() ||
+                        '',
 
                     numero:
                         document.getElementById(
                             'numero'
-                        )?.value.trim() || '',
+                        )?.value.trim() ||
+                        '',
 
                     complemento:
                         document.getElementById(
                             'complemento'
-                        )?.value.trim() || '',
+                        )?.value.trim() ||
+                        '',
 
                     bairro:
                         document.getElementById(
                             'bairro'
-                        )?.value.trim() || '',
+                        )?.value.trim() ||
+                        '',
 
                     cidade:
                         document.getElementById(
                             'cidade'
-                        )?.value.trim() || '',
+                        )?.value.trim() ||
+                        '',
 
                     uf:
                         document.getElementById(
                             'uf'
-                        )?.value.trim() || ''
-
+                        )?.value.trim() ||
+                        ''
                 };
 
-
-                // ============================================
-                // SALVAR NO SUPABASE
-                // ============================================
 
                 if (
                     !window.supabaseClient
                 ) {
-
-                    console.error(
-                        'Supabase não está disponível.'
-                    );
 
                     alert(
                         'Erro de conexão com o banco de dados.'
                     );
 
                     return;
-
                 }
 
 
@@ -3006,7 +3181,8 @@ function carregarDadosFormularioEndereco() {
                         endereco.numero,
 
                     complemento:
-                        endereco.complemento || null,
+                        endereco.complemento ||
+                        null,
 
                     bairro:
                         endereco.bairro,
@@ -3019,14 +3195,7 @@ function carregarDadosFormularioEndereco() {
 
                     principal:
                         true
-
                 };
-
-
-                console.log(
-                    'SALVANDO ENDEREÇO NO SUPABASE:',
-                    dadosSupabase
-                );
 
 
                 const {
@@ -3054,23 +3223,14 @@ function carregarDadosFormularioEndereco() {
                     );
 
                     return;
-
                 }
 
 
-                console.log(
-                    'ENDEREÇO SALVO COM SUCESSO:',
-                    data
-                );
-
-
-                // ============================================
-                // SALVAR TAMBÉM NO LOCALSTORAGE
-                // ============================================
-
                 localStorage.setItem(
                     chaveEnderecoCliente(),
-                    JSON.stringify(endereco)
+                    JSON.stringify(
+                        endereco
+                    )
                 );
 
 
@@ -3078,10 +3238,6 @@ function carregarDadosFormularioEndereco() {
                     'Endereço salvo com sucesso!'
                 );
 
-
-                // ============================================
-                // VOLTAR PARA ENDEREÇOS
-                // ============================================
 
                 window.location.href =
                     'Endereços.html';
@@ -3097,129 +3253,73 @@ function carregarDadosFormularioEndereco() {
                 alert(
                     'Ocorreu um erro ao salvar o endereço.'
                 );
-
             }
-
         }
     );
-
 }
+
 
 // ============================================================
 // 25. ADICIONAR PRODUTO
 // ============================================================
 
-document.addEventListener(
-    'click',
-    event => {
+document.addEventListener('click', event => {
 
-        const botao =
-            event.target.closest(
-                '.btn-adicionar'
-            );
+    const botao = event.target.closest('.btn-adicionar');
 
+    if (!botao) {
+        return;
+    }
 
-        if (!botao) {
-            return;
-        }
+    event.stopPropagation();
 
+    const usuario = obterUsuarioLogado();
 
-        event.stopPropagation();
+    if (!usuario || !usuario.id) {
+        alert('Você precisa estar logado para adicionar produtos ao carrinho.');
+        window.location.href = 'Login.html';
+        return;
+    }
 
-
-        const id =
-            botao.dataset.id;
-
-
-        const nome =
-            botao.dataset.nome ||
-            'Produto';
-
-
-        const preco =
-            parseFloat(
-                botao.dataset.preco
-            ) || 0;
-
-
-        const imagem =
+    const produto = {
+        id: botao.dataset.id,
+        nome: botao.dataset.nome || 'Produto',
+        preco: parseFloat(botao.dataset.preco) || 0,
+        imagem:
             botao.dataset.imagem ||
             botao.dataset.imagemUrl ||
             botao.dataset.foto ||
-            '';
-
-
-        const estoque =
+            '',
+        estoque:
             botao.dataset.estoque !== undefined
-                ? parseInt(
-                    botao.dataset.estoque
-                )
-                : null;
+                ? parseInt(botao.dataset.estoque)
+                : null,
+        sku: botao.dataset.sku || '',
+        categoria_id: botao.dataset.categoriaId || null
+    };
 
-
-        const produto = {
-
-            id,
-
-            nome,
-
-            preco,
-
-            imagem,
-
-            estoque,
-
-            sku:
-                botao.dataset.sku || '',
-
-            categoria_id:
-                botao.dataset.categoriaId ||
-                null
-        };
-
-
-        if (!produto.id) {
-
-            console.error(
-                'O botão de adicionar não possui data-id.'
-            );
-
-            return;
-        }
-
-
-        CarrinhoCheckoutModule
-            .adicionarProduto(
-                produto
-            );
-
-
-        const textoOriginal =
-            botao.textContent;
-
-
-        botao.textContent =
-            'Adicionado! ✓';
-
-
-        botao.style.backgroundColor =
-            '#10b981';
-
-
-        setTimeout(
-            () => {
-
-                botao.textContent =
-                    textoOriginal;
-
-                botao.style.backgroundColor =
-                    '';
-
-            },
-            1200
-        );
+    if (!produto.id) {
+        console.error('O botão de adicionar não possui data-id.');
+        return;
     }
-);
+
+    const adicionado =
+        CarrinhoCheckoutModule.adicionarProduto(produto);
+
+    if (!adicionado) {
+        return;
+    }
+
+    const textoOriginal = botao.textContent;
+
+    botao.textContent = 'Adicionado! ✓';
+    botao.style.backgroundColor = '#10b981';
+
+    setTimeout(() => {
+        botao.textContent = textoOriginal;
+        botao.style.backgroundColor = '';
+    }, 1200);
+});
 
 
 // ============================================================
@@ -3238,7 +3338,9 @@ document.addEventListener(
 
         if (
             !card ||
-            event.target.closest('button')
+            event.target.closest(
+                'button'
+            )
         ) {
             return;
         }
@@ -3276,6 +3378,19 @@ document.addEventListener(
 
 function aplicarCupomCarrinho() {
 
+    const usuario =
+        obterUsuarioLogado();
+
+    if (!usuario) {
+
+        alert(
+            'Faça login para utilizar cupons.'
+        );
+
+        return;
+    }
+
+
     const campo =
         document.getElementById(
             'input-cupom'
@@ -3284,7 +3399,9 @@ function aplicarCupomCarrinho() {
 
     const codigo =
         campo
-            ? campo.value.trim().toUpperCase()
+            ? campo.value
+                .trim()
+                .toUpperCase()
             : '';
 
 
@@ -3366,3 +3483,315 @@ document.addEventListener(
         }
     }
 );
+
+async function iniciarPagamentoPix() {
+
+    const usuario =
+        obterUsuarioLogado();
+
+    if (!usuario || !usuario.id) {
+
+        alert(
+            'Você precisa estar logado para realizar o pagamento.'
+        );
+
+        window.location.href =
+            'Login.html';
+
+        return;
+    }
+
+    if (
+        !checkoutState.carrinho ||
+        checkoutState.carrinho.length === 0
+    ) {
+
+        alert(
+            'Seu carrinho está vazio.'
+        );
+
+        return;
+    }
+
+    let endereco = null;
+
+    const formulario =
+        document.getElementById(
+            'form-endereco'
+        );
+
+    const formularioVisivel =
+        formulario &&
+        formulario.style.display !== 'none';
+
+    if (formularioVisivel) {
+
+        const nome =
+            document.getElementById('end-nome');
+
+        const cep =
+            document.getElementById('end-cep');
+
+        const rua =
+            document.getElementById('end-rua');
+
+        const numero =
+            document.getElementById('end-numero');
+
+        const complemento =
+            document.getElementById('end-complemento');
+
+        const bairro =
+            document.getElementById('end-bairro');
+
+        const cidade =
+            document.getElementById('end-cidade');
+
+        const uf =
+            document.getElementById('end-uf');
+
+        const obrigatorios = [
+            nome,
+            cep,
+            rua,
+            numero,
+            bairro,
+            cidade,
+            uf
+        ];
+
+        const vazio =
+            obrigatorios.some(
+                campo =>
+                    !campo ||
+                    !campo.value.trim()
+            );
+
+        if (vazio) {
+
+            alert(
+                'Preencha todos os campos obrigatórios do endereço.'
+            );
+
+            return;
+        }
+
+        endereco = {
+
+            nome:
+                nome.value.trim(),
+
+            cep:
+                cep.value.trim(),
+
+            rua:
+                rua.value.trim(),
+
+            numero:
+                numero.value.trim(),
+
+            complemento:
+                complemento
+                    ? complemento.value.trim()
+                    : '',
+
+            bairro:
+                bairro.value.trim(),
+
+            cidade:
+                cidade.value.trim(),
+
+            uf:
+                uf.value.trim()
+                    .toUpperCase()
+        };
+
+        localStorage.setItem(
+            chaveEnderecoCliente(),
+            JSON.stringify(
+                endereco
+            )
+        );
+
+    } else {
+
+        try {
+
+            endereco =
+                JSON.parse(
+                    localStorage.getItem(
+                        chaveEnderecoCliente()
+                    )
+                );
+
+        } catch (erro) {
+
+            endereco = null;
+        }
+    }
+
+    if (
+        !endereco ||
+        !endereco.rua
+    ) {
+
+        alert(
+            'Informe um endereço de entrega antes de continuar.'
+        );
+
+        return;
+    }
+
+    const pagamento =
+        document.querySelector(
+            'input[name="pagamento"]:checked'
+        );
+
+    const metodo =
+        pagamento
+            ? pagamento.value
+            : 'pix';
+
+    if (metodo !== 'pix') {
+
+        alert(
+            'Nesta primeira etapa estamos configurando somente o PIX.'
+        );
+
+        return;
+    }
+
+    const botao =
+        document.querySelector(
+            '.btn-finalizar'
+        );
+
+    if (botao) {
+
+        botao.disabled =
+            true;
+
+        botao.textContent =
+            'Gerando PIX...';
+
+        botao.style.opacity =
+            '0.7';
+
+        botao.style.cursor =
+            'wait';
+    }
+
+    try {
+
+        const resposta =
+            await fetch(
+                `${window.supabaseClient.supabaseUrl}/functions/v1/mercado-pago-pix`,
+                {
+                    method: 'POST',
+
+                    headers: {
+
+                        'Content-Type':
+                            'application/json',
+
+                        'apikey':
+                            window.supabaseClient.supabaseKey
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            cliente_id:
+                                usuario.id,
+
+                            email:
+                                usuario.email,
+
+                            nome:
+                                usuario.nome ||
+                                'Cliente',
+
+                            itens:
+                                checkoutState.carrinho.map(
+                                    item => ({
+
+                                        id:
+                                            item.id,
+
+                                        quantidade:
+                                            Number(
+                                                item.quantidade
+                                            ) || 1
+                                    })
+                                ),
+
+                            endereco:
+                                endereco
+                        })
+                }
+            );
+
+        const dados =
+            await resposta.json();
+
+        console.log(
+            'RESPOSTA PAGAMENTO PIX:',
+            dados
+        );
+
+        if (
+            !resposta.ok ||
+            !dados.sucesso
+        ) {
+
+            throw new Error(
+                dados.erro ||
+                'Não foi possível gerar o pagamento PIX.'
+            );
+        }
+
+        localStorage.setItem(
+            'pagamento_pix_atual',
+            JSON.stringify(
+                dados
+            )
+        );
+
+        localStorage.setItem(
+            'endereco_pagamento_atual',
+            JSON.stringify(
+                endereco
+            )
+        );
+
+        window.location.href =
+            'Pagamento-pix.html';
+
+    } catch (erro) {
+
+        console.error(
+            'ERRO AO GERAR PIX:',
+            erro
+        );
+
+        alert(
+            erro.message ||
+            'Não foi possível gerar o PIX.'
+        );
+
+        if (botao) {
+
+            botao.disabled =
+                false;
+
+            botao.textContent =
+                'Confirmar e Pagar 🚀';
+
+            botao.style.opacity =
+                '1';
+
+            botao.style.cursor =
+                'pointer';
+        }
+    }
+}

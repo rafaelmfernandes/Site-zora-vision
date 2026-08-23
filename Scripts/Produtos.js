@@ -1,34 +1,12 @@
 // ============================================================
 // ZORAVISION - DETALHES DO PRODUTO
 // Busca o produto diretamente do Supabase
+// Compatível com UUID e SKU
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', async () => {
 
     console.log('📦 Página de produto iniciada.');
-
-    // ========================================================
-    // PEGAR ID DO PRODUTO NA URL
-    // ========================================================
-
-    const parametros = new URLSearchParams(window.location.search);
-
-    const produtoId = parametros.get('id');
-
-    console.log('🔎 ID do produto:', produtoId);
-
-
-    if (!produtoId) {
-
-        console.error('❌ Nenhum ID de produto foi informado.');
-
-        mostrarErroProduto(
-            'Produto não encontrado.'
-        );
-
-        return;
-    }
-
 
     // ========================================================
     // ELEMENTOS DA PÁGINA
@@ -72,8 +50,74 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     // ========================================================
+    // PEGAR ID / SKU DO PRODUTO NA URL
+    // ========================================================
+
+    const parametros =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const identificadorProduto =
+        parametros.get('id');
+
+    console.log(
+        '🔎 Identificador do produto:',
+        identificadorProduto
+    );
+
+
+    if (!identificadorProduto) {
+
+        console.error(
+            '❌ Nenhum ID ou SKU de produto foi informado.'
+        );
+
+        mostrarErroProduto(
+            'Produto não encontrado.'
+        );
+
+        return;
+    }
+
+
+    // ========================================================
+    // SUPABASE
+    // ========================================================
+
+    const supabase =
+        window.supabaseClient;
+
+    if (!supabase) {
+
+        console.error(
+            '❌ Supabase não está disponível.'
+        );
+
+        mostrarErroProduto(
+            'Erro de conexão com o banco de dados.'
+        );
+
+        return;
+    }
+
+
+    // ========================================================
+    // IDENTIFICAR SE É UUID OU SKU
+    // ========================================================
+
+    const uuidValido =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+            .test(
+                identificadorProduto
+            );
+
+
+    // ========================================================
     // BUSCAR PRODUTO
     // ========================================================
+
+    let produto = null;
 
     try {
 
@@ -82,11 +126,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
 
 
-        const { data: produto, error } =
-            await supabaseClient
-
+        let consulta =
+            supabase
                 .from('produtos')
-
                 .select(`
                     id,
                     nome,
@@ -104,12 +146,59 @@ document.addEventListener('DOMContentLoaded', async () => {
                         nome
                     )
                 `)
+                .eq(
+                    'ativo',
+                    true
+                );
 
-                .eq('id', produtoId)
 
-                .eq('ativo', true)
+        // ----------------------------------------------------
+        // SE FOR UUID
+        // ----------------------------------------------------
 
-                .single();
+        if (uuidValido) {
+
+            console.log(
+                '🔐 Identificador reconhecido como UUID.'
+            );
+
+            consulta =
+                consulta.eq(
+                    'id',
+                    identificadorProduto
+                );
+
+        }
+
+        // ----------------------------------------------------
+        // SE NÃO FOR UUID, TRATAR COMO SKU
+        // ----------------------------------------------------
+
+        else {
+
+            console.log(
+                '🏷️ Identificador reconhecido como SKU:',
+                identificadorProduto
+            );
+
+            consulta =
+                consulta.eq(
+                    'sku',
+                    identificadorProduto
+                );
+        }
+
+
+        const resultado =
+            await consulta.single();
+
+
+        produto =
+            resultado.data;
+
+
+        const error =
+            resultado.error;
 
 
         // ====================================================
@@ -156,18 +245,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         // ====================================================
-        // DADOS
+        // DADOS DO PRODUTO
         // ====================================================
 
         const preco =
-            Number(produto.preco) || 0;
+            Number(
+                produto.preco
+            ) || 0;
+
 
         const precoPromocional =
-            Number(produto.preco_promocional) || 0;
+            Number(
+                produto.preco_promocional
+            ) || 0;
+
 
         const temPromocao =
             precoPromocional > 0 &&
             precoPromocional < preco;
+
 
         const precoAtual =
             temPromocao
@@ -176,7 +272,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         const estoque =
-            Number(produto.estoque) || 0;
+            Number(
+                produto.estoque
+            ) || 0;
 
 
         const categoria =
@@ -188,8 +286,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // TÍTULO
         // ====================================================
 
-        tituloProduto.textContent =
-            produto.nome;
+        if (tituloProduto) {
+
+            tituloProduto.textContent =
+                produto.nome;
+        }
 
 
         // ====================================================
@@ -204,29 +305,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         // IMAGEM
         // ====================================================
 
-        if (produto.imagem_url) {
+        if (imagemProduto) {
 
-            imagemProduto.innerHTML = `
-                <img
-                    src="${produto.imagem_url}"
-                    alt="${produto.nome}"
-                    style="
-                        width:100%;
-                        height:100%;
-                        object-fit:contain;
-                    "
-                >
-            `;
+            if (produto.imagem_url) {
 
-        } else {
+                imagemProduto.innerHTML = `
+                    <img
+                        src="${produto.imagem_url}"
+                        alt="${produto.nome}"
+                        style="
+                            width:100%;
+                            height:100%;
+                            object-fit:contain;
+                        "
+                        onerror="
+                            this.style.display='none';
+                            this.parentElement.innerHTML='<span style=\\'font-size:5rem;\\'>📦</span>';
+                        "
+                    >
+                `;
 
-            imagemProduto.innerHTML = `
-                <span style="
-                    font-size:5rem;
-                ">
-                    📦
-                </span>
-            `;
+            } else {
+
+                imagemProduto.innerHTML = `
+                    <span style="
+                        font-size:5rem;
+                    ">
+                        📦
+                    </span>
+                `;
+            }
         }
 
 
@@ -234,22 +342,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         // PREÇO
         // ====================================================
 
-        precoProduto.textContent =
-            formatarPreco(precoAtual);
+        if (precoProduto) {
+
+            precoProduto.textContent =
+                formatarPreco(
+                    precoAtual
+                );
+        }
 
 
-        if (temPromocao) {
+        if (precoAntigo) {
 
-            precoAntigo.textContent =
-                formatarPreco(preco);
+            if (temPromocao) {
 
-            precoAntigo.style.display =
-                'block';
+                precoAntigo.textContent =
+                    formatarPreco(
+                        preco
+                    );
 
-        } else {
+                precoAntigo.style.display =
+                    'block';
 
-            precoAntigo.style.display =
-                'none';
+            } else {
+
+                precoAntigo.style.display =
+                    'none';
+            }
         }
 
 
@@ -269,13 +387,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (inputQuantidade) {
 
-            inputQuantidade.min = 1;
+            inputQuantidade.min =
+                estoque > 0
+                    ? 1
+                    : 0;
 
             inputQuantidade.max =
-                Math.max(estoque, 1);
+                Math.max(
+                    estoque,
+                    1
+                );
 
             inputQuantidade.value =
-                estoque > 0 ? 1 : 0;
+                estoque > 0
+                    ? 1
+                    : 0;
         }
 
 
@@ -283,9 +409,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         // DESCRIÇÃO
         // ====================================================
 
-        descricaoProduto.textContent =
-            produto.descricao ||
-            'Este produto ainda não possui uma descrição.';
+        if (descricaoProduto) {
+
+            descricaoProduto.textContent =
+                produto.descricao ||
+                'Este produto ainda não possui uma descrição.';
+        }
 
 
         // ====================================================
@@ -303,7 +432,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // ====================================================
 
         botoesQuantidade.forEach(
-            (botao, indice) => {
+            (
+                botao,
+                indice
+            ) => {
 
                 botao.addEventListener(
                     'click',
@@ -320,7 +452,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ) || 1;
 
 
-                        // BOTÃO MENOS
                         if (indice === 0) {
 
                             quantidade =
@@ -328,11 +459,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     1,
                                     quantidade - 1
                                 );
-                        }
 
-
-                        // BOTÃO MAIS
-                        else {
+                        } else {
 
                             quantidade =
                                 Math.min(
@@ -359,9 +487,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             btnFavorito.dataset.id =
                 produto.id;
 
-
-            // Se o módulo de favoritos existir,
-            // tenta inicializar o botão.
 
             if (
                 typeof FavoritosModule !==
@@ -402,6 +527,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'click',
                 () => {
 
+                    if (!usuarioEstaLogado()) {
+
+                        alert(
+                            'Você precisa estar logado para adicionar produtos ao carrinho.'
+                        );
+
+                        window.location.href =
+                            'Login.html';
+
+                        return;
+                    }
+
+
                     const quantidade =
                         Number(
                             inputQuantidade?.value
@@ -438,6 +576,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'click',
                 () => {
 
+                    if (!usuarioEstaLogado()) {
+
+                        alert(
+                            'Você precisa estar logado para comprar.'
+                        );
+
+                        window.location.href =
+                            'Login.html';
+
+                        return;
+                    }
+
+
                     const quantidade =
                         Number(
                             inputQuantidade?.value
@@ -454,15 +605,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
 
 
-                    adicionarAoCarrinho(
-                        produto,
-                        precoAtual,
-                        quantidade
-                    );
+                    const adicionado =
+                        adicionarAoCarrinho(
+                            produto,
+                            precoAtual,
+                            quantidade
+                        );
 
 
-                    window.location.href =
-                        'Checkout.html';
+                    if (adicionado) {
+
+                        window.location.href =
+                            'Checkout.html';
+                    }
                 }
             );
         }
@@ -474,8 +629,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         carregarProdutosRelacionados(
             produto,
-            produtosRelacionados
+            produtosRelacionados,
+            supabase
         );
+
+
+        // ====================================================
+        // ATUALIZAR BADGE
+        // ====================================================
+
+        atualizarBadgeCarrinho();
 
 
         console.log(
@@ -497,17 +660,69 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     // ========================================================
-    // FUNÇÕES
+    // VERIFICAR LOGIN
     // ========================================================
 
+    function usuarioEstaLogado() {
+
+        const usuarioLogado =
+            localStorage.getItem(
+                'usuario_logado'
+            );
+
+
+        if (
+            !usuarioLogado ||
+            usuarioLogado === 'null' ||
+            usuarioLogado === 'undefined' ||
+            usuarioLogado === ''
+        ) {
+
+            return false;
+        }
+
+
+        try {
+
+            const usuario =
+                JSON.parse(
+                    usuarioLogado
+                );
+
+
+            return !!(
+                usuario &&
+                usuario.id &&
+                usuario.email
+            );
+
+        } catch (erro) {
+
+            return false;
+        }
+    }
+
+
+    // ========================================================
+    // FORMATAR PREÇO
+    // ========================================================
 
     function formatarPreco(valor) {
 
-        return `R$ ${Number(valor)
+        return `R$ ${Number(
+            valor
+        )
             .toFixed(2)
-            .replace('.', ',')}`;
+            .replace(
+                '.',
+                ','
+            )}`;
     }
 
+
+    // ========================================================
+    // ATUALIZAR ESTOQUE
+    // ========================================================
 
     function atualizarEstoque(
         quantidade,
@@ -522,8 +737,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (quantidade <= 0) {
 
             elemento.innerHTML = `
-                <span class="dot"
-                    style="background:#ef4444;">
+                <span
+                    class="dot"
+                    style="background:#ef4444;"
+                >
                 </span>
                 Fora de estoque
             `;
@@ -535,8 +752,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (quantidade <= 5) {
 
             elemento.innerHTML = `
-                <span class="dot"
-                    style="background:#f59e0b;">
+                <span
+                    class="dot"
+                    style="background:#f59e0b;"
+                >
                 </span>
                 Últimas ${quantidade} unidades
             `;
@@ -552,33 +771,77 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
+    // ========================================================
+    // MOSTRAR ERRO
+    // ========================================================
+
     function mostrarErroProduto(
         mensagem
     ) {
 
-        if (tituloProduto) {
+        const titulo =
+            document.getElementById(
+                'prod-titulo'
+            );
 
-            tituloProduto.textContent =
+        const descricao =
+            document.getElementById(
+                'prod-descricao'
+            );
+
+        const imagem =
+            document.getElementById(
+                'prod-img'
+            );
+
+        const botaoCarrinho =
+            document.querySelector(
+                '.btn-carrinho'
+            );
+
+        const botaoComprar =
+            document.querySelector(
+                '.btn-comprar'
+            );
+
+
+        if (titulo) {
+
+            titulo.textContent =
                 mensagem;
         }
 
 
-        if (descricaoProduto) {
+        if (descricao) {
 
-            descricaoProduto.textContent =
+            descricao.textContent =
                 'Volte para a página inicial e tente novamente.';
         }
 
 
-        if (imagemProduto) {
+        if (imagem) {
 
-            imagemProduto.innerHTML = `
+            imagem.innerHTML = `
                 <span style="
                     font-size:4rem;
                 ">
                     😕
                 </span>
             `;
+        }
+
+
+        if (botaoCarrinho) {
+
+            botaoCarrinho.disabled =
+                true;
+        }
+
+
+        if (botaoComprar) {
+
+            botaoComprar.disabled =
+                true;
         }
     }
 
@@ -593,53 +856,125 @@ document.addEventListener('DOMContentLoaded', async () => {
         quantidade
     ) {
 
-        const item = {
+        if (!usuarioEstaLogado()) {
 
-            id: produto.id,
+            alert(
+                'Você precisa estar logado para adicionar produtos ao carrinho.'
+            );
 
-            nome: produto.nome,
+            window.location.href =
+                'Login.html';
 
-            preco: preco,
+            return false;
+        }
 
-            quantidade: quantidade,
 
-            imagem: produto.imagem_url || '',
+        if (
+            !produto ||
+            !produto.id
+        ) {
 
-            estoque: produto.estoque
-        };
+            console.error(
+                '❌ Produto inválido para o carrinho:',
+                produto
+            );
+
+            return false;
+        }
+
+
+        const quantidadeFinal =
+            Math.max(
+                1,
+                Math.min(
+                    Number(quantidade) || 1,
+                    Number(produto.estoque) || 1
+                )
+            );
 
 
         // ----------------------------------------------------
-        // Tentar utilizar o módulo existente
+        // USAR O MÓDULO REAL DO CHECKOUT
         // ----------------------------------------------------
 
         if (
-            typeof CarrinhoModule !==
-            'undefined'
+            typeof CarrinhoCheckoutModule !==
+            'undefined' &&
+            typeof CarrinhoCheckoutModule.adicionarProduto ===
+            'function'
         ) {
 
             try {
 
-                if (
-                    typeof CarrinhoModule.adicionar ===
-                    'function'
+                // Adiciona a primeira unidade.
+                const resultado =
+                    CarrinhoCheckoutModule.adicionarProduto({
+                        id:
+                            produto.id,
+
+                        nome:
+                            produto.nome,
+
+                        preco:
+                            preco,
+
+                        imagem:
+                            produto.imagem_url ||
+                            '',
+
+                        estoque:
+                            produto.estoque,
+
+                        sku:
+                            produto.sku ||
+                            '',
+
+                        categoria_id:
+                            produto.categoria_id ||
+                            null
+                    });
+
+
+                if (!resultado) {
+
+                    return false;
+                }
+
+
+                // ------------------------------------------------
+                // ADICIONAR UNIDADES EXTRAS
+                // ------------------------------------------------
+
+                for (
+                    let i = 1;
+                    i < quantidadeFinal;
+                    i++
                 ) {
 
-                    CarrinhoModule.adicionar(
-                        item
+                    CarrinhoCheckoutModule.alterarQuantidade(
+                        produto.id,
+                        1
                     );
-
-                    alert(
-                        'Produto adicionado ao carrinho! 🛒'
-                    );
-
-                    return;
                 }
+
+
+                atualizarBadgeCarrinho();
+
+
+                alert(
+                    quantidadeFinal > 1
+                        ? `${quantidadeFinal} unidades adicionadas ao carrinho! 🛒`
+                        : 'Produto adicionado ao carrinho! 🛒'
+                );
+
+
+                return true;
+
 
             } catch (erroCarrinho) {
 
-                console.warn(
-                    '⚠️ Erro no módulo do carrinho:',
+                console.error(
+                    '❌ Erro no CarrinhoCheckoutModule:',
                     erroCarrinho
                 );
             }
@@ -647,38 +982,111 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         // ----------------------------------------------------
-        // Fallback usando localStorage
+        // FALLBACK
         // ----------------------------------------------------
 
-        let carrinho =
+        const usuario =
             JSON.parse(
                 localStorage.getItem(
-                    'carrinho'
+                    'usuario_logado'
                 )
-            ) || [];
+            );
+
+
+        const chave =
+            usuario &&
+            usuario.email
+                ? 'carrinho_' +
+                  usuario.email
+                      .toLowerCase()
+                : 'carrinho';
+
+
+        let carrinho = [];
+
+
+        try {
+
+            carrinho =
+                JSON.parse(
+                    localStorage.getItem(
+                        chave
+                    )
+                ) || [];
+
+        } catch (erro) {
+
+            console.warn(
+                '⚠️ Carrinho inválido no localStorage.'
+            );
+
+            carrinho = [];
+        }
 
 
         const existente =
             carrinho.find(
-                itemCarrinho =>
-                    itemCarrinho.id === produto.id
+                item =>
+                    String(item.id) ===
+                    String(produto.id)
             );
 
 
         if (existente) {
 
-            existente.quantidade +=
-                quantidade;
+            existente.quantidade =
+                Math.min(
+                    (
+                        Number(
+                            existente.quantidade
+                        ) || 0
+                    ) +
+                    quantidadeFinal,
+
+                    Number(
+                        produto.estoque
+                    ) || quantidadeFinal
+                );
 
         } else {
 
-            carrinho.push(item);
+            carrinho.push({
+
+                id:
+                    produto.id,
+
+                nome:
+                    produto.nome,
+
+                preco:
+                    preco,
+
+                quantidade:
+                    quantidadeFinal,
+
+                imagem:
+                    produto.imagem_url ||
+                    '',
+
+                estoque:
+                    produto.estoque,
+
+                sku:
+                    produto.sku ||
+                    '',
+
+                categoria_id:
+                    produto.categoria_id ||
+                    null
+            });
         }
 
 
         localStorage.setItem(
-            'carrinho',
-            JSON.stringify(carrinho)
+            chave,
+            JSON.stringify(
+                carrinho
+            )
         );
 
 
@@ -686,8 +1094,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
         alert(
-            'Produto adicionado ao carrinho! 🛒'
+            quantidadeFinal > 1
+                ? `${quantidadeFinal} unidades adicionadas ao carrinho! 🛒`
+                : 'Produto adicionado ao carrinho! 🛒'
         );
+
+
+        return true;
     }
 
 
@@ -708,21 +1121,61 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
 
-        const carrinho =
+        if (!usuarioEstaLogado()) {
+
+            badge.textContent =
+                '0';
+
+            return;
+        }
+
+
+        const usuario =
             JSON.parse(
                 localStorage.getItem(
-                    'carrinho'
+                    'usuario_logado'
                 )
-            ) || [];
+            );
+
+
+        const chave =
+            usuario &&
+            usuario.email
+                ? 'carrinho_' +
+                  usuario.email
+                      .toLowerCase()
+                : 'carrinho';
+
+
+        let carrinho = [];
+
+
+        try {
+
+            carrinho =
+                JSON.parse(
+                    localStorage.getItem(
+                        chave
+                    )
+                ) || [];
+
+        } catch (erro) {
+
+            carrinho = [];
+        }
 
 
         const total =
             carrinho.reduce(
-                (soma, item) =>
+                (
+                    soma,
+                    item
+                ) =>
                     soma +
                     (
-                        Number(item.quantidade) ||
-                        0
+                        Number(
+                            item.quantidade
+                        ) || 0
                     ),
                 0
             );
@@ -739,7 +1192,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function carregarProdutosRelacionados(
         produtoAtual,
-        container
+        container,
+        supabase
     ) {
 
         if (!container) {
@@ -749,11 +1203,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
 
-            const { data, error } =
-                await supabaseClient
-
+            const {
+                data,
+                error
+            } =
+                await supabase
                     .from('produtos')
-
                     .select(`
                         id,
                         nome,
@@ -761,24 +1216,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                         preco_promocional,
                         imagem_url,
                         estoque,
-                        categoria_id
+                        categoria_id,
+                        categorias (
+                            id,
+                            nome
+                        )
                     `)
-
                     .eq(
                         'ativo',
                         true
                     )
-
                     .eq(
                         'categoria_id',
                         produtoAtual.categoria_id
                     )
-
                     .neq(
                         'id',
                         produtoAtual.id
                     )
-
                     .limit(4);
 
 
@@ -793,15 +1248,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
 
-            if (!data || data.length === 0) {
+            if (
+                !data ||
+                data.length === 0
+            ) {
 
-                container.innerHTML = '';
+                container.innerHTML =
+                    '';
 
                 return;
             }
 
 
-            container.innerHTML = '';
+            container.innerHTML =
+                '';
 
 
             data.forEach(
@@ -826,6 +1286,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                             : preco;
 
 
+                    const categoriaRelacionado =
+                        relacionado.categorias?.nome ||
+                        produtoAtual.categorias?.nome ||
+                        'Geral';
+
+
                     const card =
                         document.createElement(
                             'div'
@@ -839,7 +1305,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     card.innerHTML = `
 
                         <a
-                            href="Produtos.html?id=${relacionado.id}"
+                            href="Produtos.html?id=${encodeURIComponent(relacionado.id)}"
                             style="
                                 text-decoration:none;
                                 color:inherit;
@@ -866,7 +1332,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                                     object-fit:cover;
                                                 "
                                             >
-                                          `
+                                        `
                                         : `
                                             <span
                                                 style="
@@ -875,16 +1341,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                                             >
                                                 📦
                                             </span>
-                                          `
+                                        `
                                 }
 
                             </div>
 
-
                             <div class="card-detalhes">
 
                                 <span class="tag-categoria">
-                                    ${produtoAtual.categorias?.nome || 'Geral'}
+                                    ${categoriaRelacionado}
                                 </span>
 
                                 <h3>
