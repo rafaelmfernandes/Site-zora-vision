@@ -7,13 +7,14 @@ const SUPABASE_URL = "https://ratajxnxkjoiuknamacn.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_SD8dQdB4WQ-k_MdTPxU-lw_1j4cDD1L";
 
-
-// Cria a conexão com o Supabase
 const supabaseClient = supabase.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
 );
 
+// Disponibiliza globalmente para os outros arquivos
+window.supabaseClient = supabaseClient;
+window._supabase = supabaseClient;
 
 // ==========================================
 // TESTE DE CONEXÃO

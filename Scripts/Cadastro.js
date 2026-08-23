@@ -1,3 +1,7 @@
+// ============================================================
+// CADASTRO DE CLIENTES - INTEGRADO AO SUPABASE (TABELA CLIENTES)
+// ============================================================
+
 document.addEventListener('DOMContentLoaded', () => {
   const formCadastro = document.getElementById('form-cadastro');
 
@@ -6,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  formCadastro.addEventListener('submit', (event) => {
+  formCadastro.addEventListener('submit', async (event) => {
     event.preventDefault(); // Impede a página de recarregar
 
     // Captura os elementos dos inputs
@@ -35,22 +39,51 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Busca a lista de usuários no localStorage
-    const usuarios = JSON.parse(localStorage.getItem('usuarios_db')) || [];
+    // Valida se o cliente _supabase global carregou do arquivo supabase.js
+    const supabaseClient = typeof _supabase !== 'undefined' ? _supabase : window._supabase;
 
-    // Verifica se já existe um usuário cadastrado com esse e-mail
-    const usuarioExiste = usuarios.some(u => u.email === email);
-
-    if (usuarioExiste) {
-      alert('Este e-mail já está cadastrado!');
+    if (!supabaseClient) {
+      alert('Erro de conexão com o banco de dados. Cliente Supabase não encontrado.');
       return;
     }
 
-    // Adiciona o novo usuário
-    usuarios.push({ nome: nome, email: email, password: password });
-    localStorage.setItem('usuarios_db', JSON.stringify(usuarios));
+    try {
+      // 1. Insere o novo usuário diretamente na tabela 'clientes' do Supabase
+      const { data, error } = await supabaseClient
+        .from('clientes')
+        .insert([
+          {
+            nome: nome,
+            email: email,
+            senha_hash: password, // Salvando a senha na coluna correspondente
+            ativo: true
+          }
+        ])
+        .select();
 
-    alert('Conta criada com sucesso! 🎉');
-    window.location.href = 'Login.html';
+      if (error) {
+        console.error('Erro ao cadastrar no Supabase:', error);
+        if (error.code === '23505') {
+          alert('Este e-mail já está cadastrado!');
+        } else {
+          alert('Erro ao realizar cadastro: ' + error.message);
+        }
+        return;
+      }
+
+      alert('Conta criada com sucesso! 🎉');
+
+      // Opcional: já deixa o usuário logado salvando os dados na sessão local
+      if (data && data.length > 0) {
+        localStorage.setItem('usuario_logado', JSON.stringify(data[0]));
+      }
+
+      // Redireciona para a tela de login
+      window.location.href = 'Login.html';
+
+    } catch (erroExcecao) {
+        console.error('Exceção ao tentar cadastrar:', erroExcecao);
+        alert('Ocorreu um erro inesperado ao conectar com o banco de dados.');
+    }
   });
 });

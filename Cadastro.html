@@ -90,10 +90,16 @@
   </nav>
 
   
-  <!-- Script global do sistema (mantém o contador do carrinho atualizado) -->
+  <!-- 1. Primeiro carrega a biblioteca do Supabase (se já não estiver no head) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- 2. Depois carrega o seu arquivo de conexão que inicializa o _supabase -->
+  <script src="Supabase/supabase.js"></script>
+
+  <!-- Script global do sistema -->
   <script src="Scripts/Carrinho-checkout.js"></script>
 
-  <!-- 3. Lógica específica desta tela -->
+  <!-- 3. Por último, o script de cadastro que usa o _supabase -->
   <script src="Scripts/Cadastro.js"></script>
 </body>
 </html>

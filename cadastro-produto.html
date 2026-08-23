@@ -57,13 +57,9 @@
         <div class="campo">
           <label for="categoria">Categoria *</label>
           <select id="categoria" required>
-            <option value="" disabled selected>Selecione uma categoria</option>
-            <option value="decoracao">Decoração</option>
-            <option value="casa">Casa</option>
-            <option value="cozinha">Cozinha</option>
-            <option value="sala">Sala</option>
-            <option value="quarto">Quarto</option>
-            <option value="escritorio">Escritório</option>
+            <option value="" disabled selected>
+              Carregando categorias...
+            </option>
           </select>
         </div>
 
@@ -123,6 +119,10 @@
   </main>
 
   <!-- Script separado colocado antes do fechamento do body -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="Supabase/supabase.js"></script>
+
   <script src="Scripts/cadastro-produto.js"></script>
 </body>
 </html>

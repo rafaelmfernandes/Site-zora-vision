@@ -157,79 +157,9 @@
     <script src="Scripts/Carrinho-checkout.js"></script>
     <script src="Scripts/Favoritos.js"></script>
 
-    <!-- Script de Carregamento Dinâmico dos Produtos Cadastrados -->
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const gridProdutos = document.getElementById('grid-produtos-home');
-        if (!gridProdutos) return;
-
-        // Recupera os produtos salvos no painel admin
-        const produtosSalvos = JSON.parse(localStorage.getItem('produtos_loja')) || JSON.parse(localStorage.getItem('produtos')) || [];
-        const produtosAtivos = produtosSalvos.filter(p => p.ativo !== false);
-
-        // Se houver produtos cadastrados, substitui o conteúdo padrão pela vitrine dinâmica
-        if (produtosAtivos.length > 0) {
-          gridProdutos.innerHTML = '';
-
-          produtosAtivos.forEach(produto => {
-            const preco = parseFloat(produto.preco || produto.valor || 0);
-            const precoAntigo = parseFloat(produto.precoAntigo || 0);
-            const temDesconto = precoAntigo > preco;
-            const precoFormatado = preco.toFixed(2).replace('.', ',');
-            const precoAntigoFormatado = precoAntigo.toFixed(2).replace('.', ',');
-            const percentualDesconto = temDesconto ? Math.round((1 - preco / precoAntigo) * 100) : 0;
-
-            const imagemSrc = produto.imagem || produto.foto;
-            const categoria = produto.categoria || 'Geral';
-            const vendas = produto.vendas || Math.floor(Math.random() * 50) + 10;
-            const ehImagemUrl = typeof imagemSrc === 'string' && (imagemSrc.startsWith('data:image') || imagemSrc.startsWith('http') || imagemSrc.startsWith('assets/'));
-
-            const card = document.createElement('div');
-            card.className = 'card-produto';
-            card.style.position = 'relative';
-            card.innerHTML = `
-              ${temDesconto ? `<div class="badge-desconto">-${percentualDesconto}%</div>` : ''}
-              ${typeof FavoritosModule !== 'undefined' ? FavoritosModule.botaoHtml(produto.id, 'position:absolute; top:8px; right:8px; z-index:2; background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:28px; height:28px; cursor:pointer; font-size:14px;') : ''}
-              <div class="card-img-box" style="${ehImagemUrl ? 'padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center;' : ''}">
-                ${ehImagemUrl ? `<img src="${imagemSrc}" alt="${produto.nome || produto.titulo}" style="width: 100%; height: 100%; object-fit: cover;">` : (imagemSrc || '📦')}
-              </div>
-              <div class="card-detalhes">
-                <div>
-                  <span class="tag-categoria">${categoria}</span>
-                  <a href="Produtos.html?id=${produto.id}" style="text-decoration: none; color: inherit;">
-                    <h3>${produto.nome || produto.titulo}</h3>
-                  </a>
-                </div>
-                <div class="card-rodape-info">
-                  <div class="preco-linha">
-                    ${temDesconto ? `<span class="preco-antigo">R$ ${precoAntigoFormatado}</span>` : ''}
-                    <span class="preco">R$ ${precoFormatado}</span>
-                  </div>
-                  <div class="card-meta-info">
-                    <span>${vendas} vendidos</span>
-                  </div>
-                </div>
-              </div>
-              <button class="btn-adicionar" 
-                      data-id="${produto.id}" 
-                      data-nome="${produto.nome || produto.titulo}" 
-                      data-preco="${produto.preco || produto.valor}"
-                      data-imagem="${ehImagemUrl ? imagemSrc : ''}">
-                  🛒 Adicionar
-              </button>
-            `;
-            gridProdutos.appendChild(card);
-          });
-        }
-
-        // Atualiza o contador de itens no cabeçalho da seção
-        const contadorProdutos = document.getElementById('contador-produtos');
-        if (contadorProdutos) {
-          const total = produtosAtivos.length > 0 ? produtosAtivos.length : 2; // 2 = produtos de exemplo
-          contadorProdutos.textContent = `${total} ${total === 1 ? 'item' : 'itens'}`;
-        }
-      });
-    </script>
+    <!-- Script de Carregamento dos Produtos do Supabase -->
+    <script src="Scripts/home.js"></script>
+        
 
     <!-- Script do Carrossel do Banner -->
     <script>
