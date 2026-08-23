@@ -633,44 +633,74 @@ function editarEndereco(id) {
 // ============================================================
 
 async function excluirEndereco(id) {
-
-    if (
-        !confirm(
-            'Deseja realmente excluir este endereço?'
-        )
-    ) {
+    if (!id) {
+        alert('Endereço inválido.');
         return;
     }
 
-    const usuario =
-        obterUsuarioLogadoEndereco();
+    if (!confirm('Deseja realmente excluir este endereço?')) {
+        return;
+    }
 
-    const supabase =
-        obterSupabaseEndereco();
+    const usuario = obterUsuarioLogadoEndereco();
 
-    if (!usuario || !supabase) {
+    if (!usuario) {
+        alert('Faça login para continuar.');
+        window.location.href = 'Login.html';
+        return;
+    }
+
+    const supabase = obterSupabaseEndereco();
+
+    if (!supabase) {
+        alert('Erro de conexão com o banco de dados.');
         return;
     }
 
     try {
+        console.log('🗑️ Tentando excluir endereço:', id);
+        console.log('👤 Cliente:', usuario.id);
 
         const {
+            data,
             error
         } = await supabase
             .from('enderecos')
             .delete()
-            .eq(
-                'id',
-                id
-            )
-            .eq(
-                'cliente_id',
-                usuario.id
-            );
+            .eq('id', id)
+            .eq('cliente_id', usuario.id)
+            .select('id');
 
         if (error) {
-            throw error;
+            console.error(
+                '❌ Erro ao excluir endereço:',
+                error
+            );
+
+            alert(
+                'Não foi possível excluir o endereço.\n\n' +
+                error.message
+            );
+
+            return;
         }
+
+        if (!data || data.length === 0) {
+            console.warn(
+                '⚠️ Nenhum endereço foi excluído.'
+            );
+
+            alert(
+                'O endereço não pôde ser excluído. Verifique as permissões da tabela "enderecos" no Supabase.'
+            );
+
+            return;
+        }
+
+        console.log(
+            '✅ Endereço excluído:',
+            data
+        );
 
         localStorage.removeItem(
             'ultimo_endereco_cliente_' +
@@ -680,14 +710,14 @@ async function excluirEndereco(id) {
         await carregarEnderecos();
 
     } catch (erro) {
-
         console.error(
-            'Erro ao excluir endereço:',
+            '❌ Erro inesperado ao excluir:',
             erro
         );
 
         alert(
-            'Não foi possível excluir o endereço.'
+            'Erro ao excluir endereço: ' +
+            (erro.message || 'Erro desconhecido.')
         );
     }
 }
