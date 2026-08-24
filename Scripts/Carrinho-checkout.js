@@ -2027,280 +2027,78 @@ async function carregarPedidoConfirmadoDinamico() {
         );
 
 
-    let historico = [];
-
-    let pedidosAdmin = [];
-
-
-    try {
-
-        historico =
-            JSON.parse(
-                localStorage.getItem(
-                    'historico_pedidos_cliente'
-                )
-            ) || [];
-
-    } catch (erro) {
-
-        historico = [];
-    }
-
-
-    try {
-
-        pedidosAdmin =
-            JSON.parse(
-                localStorage.getItem(
-                    'pedidos_loja'
-                )
-            ) || [];
-
-    } catch (erro) {
-
-        pedidosAdmin = [];
-    }
-
-
-    let endereco = null;
-
-
-    try {
-
-        endereco =
-            JSON.parse(
-                localStorage.getItem(
-                    chaveEnderecoCliente()
-                )
-            );
-
-    } catch (erro) {
-
-        endereco = null;
-    }
-
-
     let pedidoAtual = null;
 
 
-    if (
-        checkoutState.carrinho &&
-        checkoutState.carrinho.length > 0
-    ) {
+    /*
+    ============================================================
+    1. PRIMEIRO: RECUPERA O PEDIDO GERADO PELO MERCADO PAGO
+    ============================================================
+    */
 
-        const valores =
-            CarrinhoCheckoutModule
-                .calcularValores();
+    try {
 
-
-        const numeroRandom =
-            Math.floor(
-                10000 +
-                Math.random() *
-                90000
+        const pagamentoPix =
+            JSON.parse(
+                localStorage.getItem(
+                    'pagamento_pix_atual'
+                )
             );
 
+        if (
+            pagamentoPix &&
+            pagamentoPix.pedido_id
+        ) {
 
-        const agora =
-            new Date();
+            pedidoAtual = {
 
+                supabase_id:
+                    pagamentoPix.pedido_id,
 
-        const data =
-            agora.toLocaleDateString(
-                'pt-BR',
-                {
-                    day: '2-digit',
-                    month: 'long',
-                    year: 'numeric'
-                }
-            );
+                id:
+                    pagamentoPix.pedido_id,
 
+                numero:
+                    pagamentoPix.numero_pedido
+                        ? `#${pagamentoPix.numero_pedido}`
+                        : `#${pagamentoPix.pedido_id}`,
 
-        const hora =
-            agora.toLocaleDateString(
-                'pt-BR'
-            ) +
-            ' às ' +
-            agora.toLocaleTimeString(
-                'pt-BR',
-                {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }
-            );
+                pagamento:
+                    'PIX (Aprovação Instantânea)',
 
+                status:
+                    pagamentoPix.status ||
+                    'pendente',
 
-        const metodo =
-            localStorage.getItem(
-                'ultimo_metodo_pagamento'
-            ) || 'pix';
+                pagamento_id:
+                    pagamentoPix.pagamento_id,
 
-
-        const nomesMetodos = {
-
-            pix:
-                'PIX (Aprovação Instantânea)',
-
-            cartao:
-                'Cartão de Crédito',
-
-            boleto:
-                'Boleto Bancário'
-        };
-
-
-        pedidoAtual = {
-
-            id:
-                numeroRandom,
-
-            numero:
-                '#' +
-                numeroRandom,
-
-            data:
-                data,
-
-            hora:
-                hora,
-
-            pagamento:
-                nomesMetodos[
-                    metodo
-                ] ||
-                'PIX',
-
-            status:
-                'pendente',
-
-            cliente: {
-
-                nome:
-                    usuario.nome ||
-                    'Cliente da Loja',
-
-                email:
-                    usuario.email ||
-                    '',
-
-                telefone:
-                    usuario.telefone ||
-                    ''
-            },
-
-            itens:
-                [
-                    ...checkoutState.carrinho
-                ],
-
-            subtotal:
-                valores.subtotal,
-
-            desconto:
-                valores.valorDesconto,
-
-            frete:
-                valores.taxaEntrega,
-
-            total:
-                valores.total,
-
-            endereco:
-                endereco
-        };
-
-
-        try {
-
-            const resultado =
-                await salvarPedidoNoSupabase(
-                    pedidoAtual,
-                    valores,
-                    endereco,
-                    usuario
-                );
-
-
-            console.log(
-                'PEDIDO SALVO NO SUPABASE:',
-                resultado
-            );
-
-
-            if (
-                resultado &&
-                resultado.id
-            ) {
-
-                pedidoAtual.supabase_id =
-                    resultado.id;
-
-                pedidoAtual.cliente_id =
-                    resultado.cliente_id;
-
-                pedidoAtual.endereco_id =
-                    resultado.endereco_id;
-            }
-
-
-        } catch (erroSupabase) {
-
-            console.error(
-                'ERRO AO SALVAR PEDIDO NO SUPABASE:',
-                erroSupabase
-            );
-
-
-            alert(
-                'Não foi possível salvar o pedido no banco de dados.'
-            );
-
-            return;
+                total:
+                    Number(
+                        pagamentoPix.valor ||
+                        pagamentoPix.total ||
+                        0
+                    )
+            };
         }
 
+    } catch (erro) {
 
-        localStorage.setItem(
-            'ultimo_pedido_salvo',
-            JSON.stringify(
-                pedidoAtual
-            )
+        console.error(
+            'ERRO AO RECUPERAR PAGAMENTO PIX:',
+            erro
         );
+    }
 
 
-        historico.unshift(
-            pedidoAtual
-        );
+    /*
+    ============================================================
+    2. SE NÃO ENCONTROU PELO PAGAMENTO PIX,
+       TENTA RECUPERAR O ÚLTIMO PEDIDO
+    ============================================================
+    */
 
-
-        localStorage.setItem(
-            'historico_pedidos_cliente',
-            JSON.stringify(
-                historico
-            )
-        );
-
-
-        pedidosAdmin.unshift(
-            pedidoAtual
-        );
-
-
-        localStorage.setItem(
-            'pedidos_loja',
-            JSON.stringify(
-                pedidosAdmin
-            )
-        );
-
-
-        checkoutState.carrinho =
-            [];
-
-        CarrinhoCheckoutModule
-            .salvarStorage();
-
-
-    } else {
+    if (!pedidoAtual) {
 
         try {
 
@@ -2318,53 +2116,241 @@ async function carregarPedidoConfirmadoDinamico() {
     }
 
 
+    /*
+    ============================================================
+    3. SE AINDA NÃO EXISTE PEDIDO
+    ============================================================
+    */
+
     if (!pedidoAtual) {
+
+        alert(
+            'Não foi possível localizar o pedido.'
+        );
+
         return;
     }
 
 
-    if (numeroEl)
-        numeroEl.textContent =
-            pedidoAtual.numero;
+    /*
+    ============================================================
+    4. BUSCAR O PEDIDO REAL NO SUPABASE
+    ============================================================
+    */
+
+    try {
+
+        const supabase =
+            window.supabaseClient;
 
 
-    if (dataEl)
-        dataEl.textContent =
-            pedidoAtual.data;
+        if (
+            supabase &&
+            pedidoAtual.supabase_id
+        ) {
+
+            const {
+                data: pedidoBanco,
+                error
+            } =
+                await supabase
+                    .from('pedidos')
+                    .select(`
+                        *,
+                        enderecos (
+                            id,
+                            nome,
+                            cep,
+                            rua,
+                            numero,
+                            complemento,
+                            bairro,
+                            cidade,
+                            uf
+                        ),
+                        itens_pedido (
+                            id,
+                            produto_id,
+                            quantidade,
+                            preco_unitario,
+                            produtos (
+                                id,
+                                nome,
+                                imagem,
+                                preco
+                            )
+                        )
+                    `)
+                    .eq(
+                        'id',
+                        pedidoAtual.supabase_id
+                    )
+                    .eq(
+                        'cliente_id',
+                        usuario.id
+                    )
+                    .maybeSingle();
 
 
-    if (horaEl)
-        horaEl.textContent =
-            pedidoAtual.hora;
+            if (error) {
+
+                console.error(
+                    'ERRO AO BUSCAR PEDIDO:',
+                    error
+                );
+
+            } else if (pedidoBanco) {
+
+                pedidoAtual =
+                    pedidoBanco;
+            }
+        }
+
+    } catch (erro) {
+
+        console.error(
+            'ERRO AO CONSULTAR PEDIDO:',
+            erro
+        );
+    }
 
 
-    if (pagamentoEl)
-        pagamentoEl.textContent =
-            pedidoAtual.pagamento;
+    /*
+    ============================================================
+    5. NÚMERO DO PEDIDO
+    ============================================================
+    */
+
+    const numeroPedido =
+        pedidoAtual.numero_pedido
+            ? `#${pedidoAtual.numero_pedido}`
+            : pedidoAtual.numero
+                ? pedidoAtual.numero
+                : `#${pedidoAtual.id}`;
 
 
-    if (totalEl)
-        totalEl.textContent =
-            `R$ ${Number(
-                pedidoAtual.total || 0
+    /*
+    ============================================================
+    6. DATA E HORA
+    ============================================================
+    */
+
+    const dataPedido =
+        pedidoAtual.created_at
+            ? new Date(
+                pedidoAtual.created_at
+            ).toLocaleDateString(
+                'pt-BR',
+                {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                }
             )
+            : new Date().toLocaleDateString(
+                'pt-BR',
+                {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                }
+            );
+
+
+    const horaPedido =
+        pedidoAtual.created_at
+            ? new Date(
+                pedidoAtual.created_at
+            ).toLocaleTimeString(
+                'pt-BR',
+                {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            )
+            : new Date().toLocaleTimeString(
+                'pt-BR',
+                {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }
+            );
+
+
+    /*
+    ============================================================
+    7. PREENCHER INFORMAÇÕES PRINCIPAIS
+    ============================================================
+    */
+
+    if (numeroEl) {
+
+        numeroEl.textContent =
+            numeroPedido;
+    }
+
+
+    if (dataEl) {
+
+        dataEl.textContent =
+            dataPedido;
+    }
+
+
+    if (horaEl) {
+
+        horaEl.textContent =
+            horaPedido;
+    }
+
+
+    if (pagamentoEl) {
+
+        pagamentoEl.textContent =
+            'PIX (Aprovação Instantânea)';
+    }
+
+
+    if (totalEl) {
+
+        const total =
+            Number(
+                pedidoAtual.total ||
+                pedidoAtual.valor ||
+                0
+            );
+
+        totalEl.textContent =
+            `R$ ${total
                 .toFixed(2)
                 .replace('.', ',')}`;
+    }
 
+
+    /*
+    ============================================================
+    8. MONTAR LISTA DE ITENS
+    ============================================================
+    */
 
     if (
         listaEl &&
-        pedidoAtual.itens
+        Array.isArray(
+            pedidoAtual.itens_pedido
+        )
     ) {
 
         listaEl.innerHTML =
-            pedidoAtual.itens
+            pedidoAtual.itens_pedido
                 .map(
                     item => {
 
+                        const produto =
+                            item.produtos || {};
+
                         const imagem =
-                            typeof item.imagem === 'string'
-                                ? item.imagem
+                            typeof produto.imagem === 'string'
+                                ? produto.imagem
                                 : '';
 
 
@@ -2377,6 +2363,20 @@ async function carregarPedidoConfirmadoDinamico() {
                             ) ||
                             imagem.startsWith(
                                 '/'
+                            );
+
+
+                        const quantidade =
+                            Number(
+                                item.quantidade
+                            ) || 1;
+
+
+                        const preco =
+                            Number(
+                                item.preco_unitario ||
+                                produto.preco ||
+                                0
                             );
 
 
@@ -2412,7 +2412,7 @@ async function carregarPedidoConfirmadoDinamico() {
                                                 ? `
                                                     <img
                                                         src="${imagem}"
-                                                        alt="${item.nome}"
+                                                        alt="${produto.nome || 'Produto'}"
                                                         style="
                                                             width:100%;
                                                             height:100%;
@@ -2426,42 +2426,61 @@ async function carregarPedidoConfirmadoDinamico() {
                                     </div>
 
                                     <span>
-                                        ${item.quantidade}x ${item.nome}
+                                        ${quantidade}x ${produto.nome || 'Produto'}
                                     </span>
 
                                 </div>
 
-
                                 <span style="font-weight:600;">
                                     R$
-                                    ${(
-                                        (
-                                            Number(
-                                                item.preco
-                                            ) || 0
-                                        ) *
-                                        (
-                                            Number(
-                                                item.quantidade
-                                            ) || 0
-                                        )
-                                    )
+                                    ${(preco * quantidade)
                                         .toFixed(2)
                                         .replace('.', ',')}
                                 </span>
 
                             </div>
                         `;
-
                     }
                 )
                 .join('');
+
+    } else if (listaEl) {
+
+        listaEl.innerHTML = `
+            <p style="color:#64748b;">
+                Itens do pedido não encontrados.
+            </p>
+        `;
     }
 
 
-    const enderecoPedido =
-        pedidoAtual.endereco ||
-        endereco;
+    /*
+    ============================================================
+    9. ENDEREÇO
+    ============================================================
+    */
+
+    let enderecoPedido =
+        pedidoAtual.enderecos ||
+        null;
+
+
+    if (!enderecoPedido) {
+
+        try {
+
+            enderecoPedido =
+                JSON.parse(
+                    localStorage.getItem(
+                        'endereco_pagamento_atual'
+                    )
+                );
+
+        } catch (erro) {
+
+            enderecoPedido = null;
+        }
+    }
 
 
     if (enderecoEl) {
@@ -2484,7 +2503,7 @@ async function carregarPedidoConfirmadoDinamico() {
                     Nº ${enderecoPedido.numero || ''}
                     ${
                         enderecoPedido.complemento
-                            ? '(' +
+                            ? ' (' +
                               enderecoPedido.complemento +
                               ')'
                             : ''
@@ -2520,12 +2539,27 @@ async function carregarPedidoConfirmadoDinamico() {
 
         } else {
 
-            enderecoEl.innerHTML =
-                `<p style="color:#ef4444;margin:0;">
+            enderecoEl.innerHTML = `
+                <p style="color:#ef4444;margin:0;">
                     Endereço de entrega não informado.
-                </p>`;
+                </p>
+            `;
         }
     }
+
+
+    /*
+    ============================================================
+    10. SALVAR COMO ÚLTIMO PEDIDO
+    ============================================================
+    */
+
+    localStorage.setItem(
+        'ultimo_pedido_salvo',
+        JSON.stringify(
+            pedidoAtual
+        )
+    );
 }
 
 
@@ -3602,15 +3636,12 @@ async function iniciarPagamentoPix() {
                 cidade.value.trim(),
 
             uf:
-                uf.value.trim()
-                    .toUpperCase()
+                uf.value.trim().toUpperCase()
         };
 
         localStorage.setItem(
             chaveEnderecoCliente(),
-            JSON.stringify(
-                endereco
-            )
+            JSON.stringify(endereco)
         );
 
     } else {
@@ -3683,9 +3714,50 @@ async function iniciarPagamentoPix() {
 
     try {
 
+        /*
+         * CALCULA OS VALORES DO PEDIDO
+         */
+
+        const valores =
+            CarrinhoCheckoutModule.calcularValores();
+
+        const valor =
+            Number(valores.total);
+
+        if (!valor || valor <= 0) {
+
+            throw new Error(
+                'O valor total do pedido é inválido.'
+            );
+        }
+
+        /*
+         * MONTA OS ITENS
+         */
+
+        const itens =
+            checkoutState.carrinho.map(
+                item => ({
+
+                    id:
+                        item.id,
+
+                    quantidade:
+                        Number(
+                            item.quantidade
+                        ) || 1
+                })
+            );
+
+        /*
+         * CHAMA A EDGE FUNCTION CORRETA:
+         *
+         * /functions/v1/criar-pix
+         */
+
         const resposta =
             await fetch(
-                `${window.supabaseClient.supabaseUrl}/functions/v1/mercado-pago-pix`,
+                'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/criar-pix',
                 {
                     method: 'POST',
 
@@ -3711,19 +3783,29 @@ async function iniciarPagamentoPix() {
                                 usuario.nome ||
                                 'Cliente',
 
+                            valor:
+                                valor,
+
+                            subtotal:
+                                Number(
+                                    valores.subtotal
+                                ) || valor,
+
+                            frete:
+                                Number(
+                                    valores.taxaEntrega
+                                ) || 0,
+
+                            desconto:
+                                Number(
+                                    valores.valorDesconto
+                                ) || 0,
+
+                            endereco_id:
+                                null,
+
                             itens:
-                                checkoutState.carrinho.map(
-                                    item => ({
-
-                                        id:
-                                            item.id,
-
-                                        quantidade:
-                                            Number(
-                                                item.quantidade
-                                            ) || 1
-                                    })
-                                ),
+                                itens,
 
                             endereco:
                                 endereco
@@ -3735,7 +3817,7 @@ async function iniciarPagamentoPix() {
             await resposta.json();
 
         console.log(
-            'RESPOSTA PAGAMENTO PIX:',
+            'RESPOSTA DA EDGE FUNCTION CRIAR-PIX:',
             dados
         );
 
@@ -3745,10 +3827,15 @@ async function iniciarPagamentoPix() {
         ) {
 
             throw new Error(
+                dados.error ||
                 dados.erro ||
                 'Não foi possível gerar o pagamento PIX.'
             );
         }
+
+        /*
+         * SALVA OS DADOS DO PAGAMENTO
+         */
 
         localStorage.setItem(
             'pagamento_pix_atual',
@@ -3763,6 +3850,40 @@ async function iniciarPagamentoPix() {
                 endereco
             )
         );
+
+        /*
+         * SALVA O PEDIDO GERADO PELO SUPABASE
+         */
+
+        localStorage.setItem(
+            'pedido_pix_atual',
+            JSON.stringify({
+
+                pedido_id:
+                    dados.pedido_id,
+
+                numero_pedido:
+                    dados.numero_pedido,
+
+                pagamento_id:
+                    dados.pagamento_id,
+
+                status:
+                    dados.status,
+
+                total:
+                    valor,
+
+                endereco:
+                    endereco
+            })
+        );
+
+        /*
+         * NÃO LIMPA O CARRINHO AQUI.
+         *
+         * O pagamento ainda está pendente.
+         */
 
         window.location.href =
             'Pagamento-pix.html';
