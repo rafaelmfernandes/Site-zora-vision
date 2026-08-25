@@ -1,15 +1,19 @@
 // ============================================================
-// ZORAVISION - LOGIN COM SUPABASE AUTH
+// ZORAVISION - LOGIN
+// SUPABASE AUTH + TABELA CLIENTES
 // ============================================================
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
 
-    const formLogin = document.getElementById('form-login');
+    const formLogin =
+        document.getElementById('form-login');
 
     if (!formLogin) {
+
         console.error(
             'Erro: Formulário com ID "form-login" não foi encontrado no HTML.'
         );
+
         return;
     }
 
@@ -17,13 +21,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     // CONEXÃO COM SUPABASE
     // ============================================================
 
-    const supabaseConn =
+    const supabaseClient =
         typeof _supabase !== 'undefined'
             ? _supabase
             : window._supabase;
 
-    if (!supabaseConn) {
-        console.error('Cliente Supabase não encontrado.');
+    if (!supabaseClient) {
+
+        console.error(
+            'Cliente Supabase não encontrado.'
+        );
 
         alert(
             'Erro de conexão com o banco de dados. Recarregue a página e tente novamente.'
@@ -32,48 +39,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // ============================================================
-    // VERIFICAR SE JÁ EXISTE UMA SESSÃO
-    // ============================================================
+    console.log(
+        '🔥 ZORAVISION - Login.js carregado'
+    );
 
-    try {
+    console.log(
+        '✅ Cliente Supabase disponível'
+    );
 
-        const {
-            data: {
-                session
-            },
-            error
-        } = await supabaseConn.auth.getSession();
-
-        if (error) {
-            console.error(
-                'Erro ao verificar sessão:',
-                error
-            );
-        }
-
-        if (session?.user) {
-
-            console.log(
-                'Sessão Auth encontrada:',
-                session.user.id
-            );
-
-            await carregarClienteEEntrar(
-                session.user.id
-            );
-        }
-
-    } catch (erro) {
-
-        console.error(
-            'Erro ao verificar sessão:',
-            erro
-        );
-    }
 
     // ============================================================
-    // SUBMIT DO LOGIN
+    // FORMULÁRIO
     // ============================================================
 
     formLogin.addEventListener('submit', async (event) => {
@@ -92,12 +68,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!inputEmail || !inputSenha) {
 
+            console.error(
+                'Campos de e-mail ou senha não encontrados.'
+            );
+
             alert(
-                'Erro: os campos de e-mail ou senha não foram encontrados no HTML.'
+                'Erro no formulário. Verifique os campos e tente novamente.'
             );
 
             return;
         }
+
+
+        // ========================================================
+        // VALORES
+        // ========================================================
 
         const email =
             inputEmail.value
@@ -106,6 +91,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const senha =
             inputSenha.value;
+
+
+        // ========================================================
+        // VALIDAÇÃO
+        // ========================================================
 
         if (!email || !senha) {
 
@@ -116,60 +106,88 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+
         // ========================================================
-        // DESABILITAR BOTÃO DURANTE LOGIN
+        // BOTÃO
         // ========================================================
 
-        const botaoSubmit =
+        const botaoEntrar =
             formLogin.querySelector(
-                'button[type="submit"], input[type="submit"]'
+                'button[type="submit"]'
             );
 
-        if (botaoSubmit) {
-            botaoSubmit.disabled = true;
+        if (botaoEntrar) {
+
+            botaoEntrar.disabled = true;
+
+            botaoEntrar.dataset.textoOriginal =
+                botaoEntrar.textContent;
+
+            botaoEntrar.textContent =
+                'Entrando...';
+
         }
+
 
         try {
 
             console.log(
-                '🔐 Realizando login pelo Supabase Auth:',
+                '🔐 Tentando fazer login:',
                 email
             );
 
+
             // ====================================================
-            // LOGIN PELO SUPABASE AUTH
+            // 1. LOGIN PELO SUPABASE AUTH
+            // ====================================================
+            //
+            // A senha é validada pelo Auth.
+            //
+            // NÃO consultamos senha_hash.
+            //
             // ====================================================
 
             const {
-                data,
-                error
-            } = await supabaseConn.auth.signInWithPassword({
+                data: authData,
+                error: authError
+            } = await supabaseClient.auth.signInWithPassword({
 
-                email: email,
+                email:
+                    email,
 
-                password: senha
+                password:
+                    senha
 
             });
 
-            if (error) {
+
+            // ====================================================
+            // ERRO NO AUTH
+            // ====================================================
+
+            if (authError) {
 
                 console.error(
-                    'Erro no Supabase Auth:',
-                    error
+                    '❌ Erro no login Auth:',
+                    authError
                 );
 
+                const mensagem =
+                    authError.message?.toLowerCase() || '';
+
+
                 if (
-                    error.message?.toLowerCase().includes(
+                    mensagem.includes(
                         'email not confirmed'
                     )
                 ) {
 
                     alert(
-                        'Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada.'
+                        'Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada e confirme sua conta.'
                     );
 
                 } else if (
-                    error.message?.toLowerCase().includes(
+                    mensagem.includes(
                         'invalid login credentials'
                     )
                 ) {
@@ -182,104 +200,102 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     alert(
                         'Não foi possível realizar o login: ' +
-                        error.message
+                        authError.message
                     );
                 }
 
                 return;
             }
 
+
             // ====================================================
-            // VERIFICAR USUÁRIO AUTH
+            // USUÁRIO AUTH
             // ====================================================
 
-            if (!data?.user) {
+            const usuarioAuth =
+                authData?.user;
+
+            if (!usuarioAuth) {
+
+                console.error(
+                    'Usuário Auth não retornado.'
+                );
 
                 alert(
-                    'Não foi possível identificar o usuário autenticado.'
+                    'Não foi possível identificar sua conta. Tente novamente.'
                 );
 
                 return;
             }
 
-            console.log(
-                '✅ Auth realizado com sucesso:',
-                data.user.id
-            );
-
-            // ====================================================
-            // BUSCAR CLIENTE NA TABELA CLIENTES
-            // ====================================================
-
-            await carregarClienteEEntrar(
-                data.user.id
-            );
-
-        } catch (erro) {
-
-            console.error(
-                '❌ Erro inesperado durante o login:',
-                erro
-            );
-
-            alert(
-                'Ocorreu um erro inesperado ao tentar fazer login. Tente novamente.'
-            );
-
-        } finally {
-
-            if (botaoSubmit) {
-                botaoSubmit.disabled = false;
-            }
-        }
-
-    });
-
-
-    // ============================================================
-    // FUNÇÃO PARA CARREGAR CLIENTE
-    // ============================================================
-
-    async function carregarClienteEEntrar(authUserId) {
-
-        try {
 
             console.log(
-                '🔎 Buscando cliente vinculado ao Auth:',
-                authUserId
+                '✅ Login Auth realizado'
             );
+
+            console.log(
+                'Auth User ID:',
+                usuarioAuth.id
+            );
+
+            console.log(
+                'E-mail:',
+                usuarioAuth.email
+            );
+
+            console.log(
+                'E-mail confirmado:',
+                usuarioAuth.email_confirmed_at
+            );
+
+
+            // ====================================================
+            // 2. BUSCAR CLIENTE
+            // ====================================================
+            //
+            // Agora usamos o relacionamento:
+            //
+            // clientes.auth_user_id = auth.users.id
+            //
+            // ====================================================
 
             const {
                 data: cliente,
-                error
-            } = await supabaseConn
+                error: clienteError
+            } = await supabaseClient
+
                 .from('clientes')
+
                 .select(
                     'id,nome,email,telefone,cpf,ativo,auth_user_id'
                 )
+
                 .eq(
                     'auth_user_id',
-                    authUserId
+                    usuarioAuth.id
                 )
+
                 .maybeSingle();
 
+
             // ====================================================
-            // ERRO
+            // ERRO AO BUSCAR CLIENTE
             // ====================================================
 
-            if (error) {
+            if (clienteError) {
 
                 console.error(
-                    'Erro ao consultar cliente:',
-                    error
+                    '❌ Erro ao consultar cliente:',
+                    clienteError
                 );
 
                 alert(
-                    'Não foi possível carregar os dados da sua conta.'
+                    'Login realizado, mas não foi possível carregar seu cadastro. Tente novamente.'
                 );
 
                 return;
             }
+
 
             // ====================================================
             // CLIENTE NÃO ENCONTRADO
@@ -288,36 +304,44 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!cliente) {
 
                 console.error(
-                    'Nenhum cliente vinculado ao Auth:',
-                    authUserId
+                    '❌ Nenhum cliente encontrado para Auth User:',
+                    usuarioAuth.id
                 );
 
                 alert(
-                    'Sua conta de autenticação existe, mas seu cadastro de cliente ainda não está vinculado. Entre em contato com a loja.'
+                    'Sua conta foi autenticada, mas o cadastro da loja não foi encontrado. Entre em contato com o suporte.'
                 );
-
-                await supabaseConn.auth.signOut();
 
                 return;
             }
 
+
+            console.log(
+                '✅ Cliente encontrado:',
+                cliente.id
+            );
+
+
             // ====================================================
-            // CONTA DESATIVADA
+            // 3. VERIFICAR CONTA ATIVA
             // ====================================================
 
             if (cliente.ativo === false) {
+
+                // Encerra a sessão porque a conta está desativada.
+
+                await supabaseClient.auth.signOut();
 
                 alert(
                     'Esta conta está desativada. Entre em contato com a loja.'
                 );
 
-                await supabaseConn.auth.signOut();
-
                 return;
             }
 
+
             // ====================================================
-            // CRIAR OBJETO DA SESSÃO LOCAL
+            // 4. CRIAR DADOS DO USUÁRIO LOCAL
             // ====================================================
 
             const usuarioLogado = {
@@ -332,7 +356,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     cliente.nome || '',
 
                 email:
-                    cliente.email || '',
+                    cliente.email || usuarioAuth.email || '',
 
                 telefone:
                     cliente.telefone || '',
@@ -342,8 +366,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             };
 
+
             // ====================================================
-            // SALVAR DADOS DO CLIENTE
+            // 5. SALVAR NO LOCALSTORAGE
             // ====================================================
 
             localStorage.setItem(
@@ -351,20 +376,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 JSON.stringify(usuarioLogado)
             );
 
-            // Mantemos essa chave temporariamente para
-            // compatibilidade com outras partes antigas do site.
 
             localStorage.setItem(
                 'cliente_supabase_id',
                 cliente.id
             );
 
+
             // ====================================================
-            // LOG
+            // 6. LOGS
             // ====================================================
 
             console.log(
-                '✅ CLIENTE CARREGADO COM SUCESSO'
+                '=========================================='
+            );
+
+            console.log(
+                '✅ LOGIN REALIZADO COM SUCESSO'
             );
 
             console.log(
@@ -387,8 +415,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 cliente.email
             );
 
+            console.log(
+                '=========================================='
+            );
+
+
             // ====================================================
-            // AVISO
+            // 7. REDIRECIONAMENTO
             // ====================================================
 
             alert(
@@ -397,24 +430,36 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ' 🎉'
             );
 
-            // ====================================================
-            // REDIRECIONAMENTO
-            // ====================================================
 
             window.location.href =
                 'Meu-perfil.html';
 
+
         } catch (erro) {
 
             console.error(
-                'Erro ao carregar cliente:',
+                '❌ Erro inesperado durante o login:',
                 erro
             );
 
             alert(
-                'Não foi possível carregar seu cadastro. Tente novamente.'
+                'Ocorreu um erro inesperado ao tentar fazer login. Tente novamente.'
             );
+
+        } finally {
+
+            if (botaoEntrar) {
+
+                botaoEntrar.disabled = false;
+
+                botaoEntrar.textContent =
+                    botaoEntrar.dataset.textoOriginal ||
+                    'Entrar na minha conta';
+
+            }
+
         }
-    }
+
+    });
 
 });

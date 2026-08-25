@@ -1,8 +1,7 @@
 // ============================================================
-// ZORAVISION - CADASTRO DE CLIENTES COM SUPABASE AUTH
+// ZORAVISION - CADASTRO DE CLIENTES
+// SUPABASE AUTH + TRIGGER AUTOMÁTICO
 // ============================================================
-
-console.log('🔥 CADASTRO NOVO - SUPABASE AUTH - VERSÃO 2');
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -17,6 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return;
     }
+
+    console.log(
+        '🔥 ZORAVISION - Cadastro.js carregado'
+    );
 
     // ============================================================
     // CONEXÃO COM SUPABASE
@@ -41,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================================================
-    // SUBMIT DO FORMULÁRIO
+    // FORMULÁRIO
     // ============================================================
 
     formCadastro.addEventListener('submit', async (event) => {
@@ -71,12 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
             !inputConfirmarSenha
         ) {
 
+            console.error(
+                'Um ou mais campos do formulário não foram encontrados.'
+            );
+
             alert(
-                'Erro: algum campo do formulário não foi encontrado no HTML.'
+                'Erro no formulário. Verifique os campos e tente novamente.'
             );
 
             return;
         }
+
+        // ========================================================
+        // VALORES
+        // ========================================================
 
         const nome =
             inputNome.value.trim();
@@ -104,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ) {
 
             alert(
-                'Por favor, preencha todos os campos!'
+                'Por favor, preencha todos os campos.'
             );
 
             return;
@@ -129,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // ========================================================
-        // DESABILITAR BOTÃO
+        // BOTÃO
         // ========================================================
 
         const botaoSubmit =
@@ -144,12 +155,16 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
 
             console.log(
-                '📝 Criando usuário no Supabase Auth:',
+                '📝 Criando usuário no Supabase Auth...'
+            );
+
+            console.log(
+                'E-mail:',
                 email
             );
 
             // ====================================================
-            // 1. CRIAR USUÁRIO NO SUPABASE AUTH
+            // CRIAR USUÁRIO NO SUPABASE AUTH
             // ====================================================
 
             const {
@@ -172,20 +187,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // ====================================================
-            // ERRO NO AUTH
+            // TRATAR ERRO DO AUTH
             // ====================================================
 
             if (authError) {
 
                 console.error(
-                    'Erro ao criar usuário no Auth:',
+                    '❌ Erro ao criar usuário no Auth:',
                     authError
                 );
 
+                const mensagem =
+                    authError.message?.toLowerCase() || '';
+
                 if (
-                    authError.message
-                        ?.toLowerCase()
-                        .includes('already registered')
+                    mensagem.includes(
+                        'already registered'
+                    )
                 ) {
 
                     alert(
@@ -193,13 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     );
 
                 } else if (
-                    authError.message
-                        ?.toLowerCase()
-                        .includes('rate limit')
+                    mensagem.includes(
+                        'rate limit'
+                    )
                 ) {
 
                     alert(
-                        'O limite de tentativas de cadastro foi atingido. Aguarde alguns minutos e tente novamente.'
+                        'Muitas tentativas de cadastro. Aguarde alguns minutos e tente novamente.'
                     );
 
                 } else {
@@ -214,20 +232,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // ====================================================
-            // VERIFICAR USUÁRIO AUTH
+            // VERIFICAR USUÁRIO
             // ====================================================
 
-            const authUser =
+            const usuarioAuth =
                 authData?.user;
 
-            if (!authUser) {
+            if (!usuarioAuth) {
 
                 console.error(
                     'Usuário Auth não foi retornado.'
                 );
 
                 alert(
-                    'A conta não pôde ser criada. Tente novamente.'
+                    'Não foi possível criar sua conta. Tente novamente.'
                 );
 
                 return;
@@ -235,131 +253,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log(
                 '✅ Usuário Auth criado:',
-                authUser.id
-            );
-
-            // ====================================================
-            // 2. CRIAR CLIENTE VINCULADO AO AUTH
-            // ====================================================
-
-            const {
-                data: cliente,
-                error: clienteError
-            } = await supabaseClient
-                .from('clientes')
-                .insert([
-                    {
-                        nome: nome,
-                        email: email,
-                        ativo: true,
-                        auth_user_id: authUser.id
-                    }
-                ])
-                .select(
-                    'id,nome,email,telefone,cpf,ativo,auth_user_id'
-                )
-                .single();
-
-            // ====================================================
-            // ERRO AO CRIAR CLIENTE
-            // ====================================================
-
-            if (clienteError) {
-
-                console.error(
-                    'Erro ao criar cliente:',
-                    clienteError
-                );
-
-                // ==================================================
-                // IMPORTANTE
-                // ==================================================
-                //
-                // O usuário Auth já foi criado.
-                //
-                // Não tentamos apagar o usuário Auth pelo navegador,
-                // pois isso exige privilégios administrativos.
-                //
-                // O erro será informado ao usuário.
-                //
-
-                if (clienteError.code === '23505') {
-
-                    alert(
-                        'Este e-mail já possui um cadastro de cliente.'
-                    );
-
-                } else {
-
-                    alert(
-                        'O usuário foi criado na autenticação, mas houve um problema ao criar o cadastro do cliente. Entre em contato com a loja.'
-                    );
-                }
-
-                return;
-            }
-
-            // ====================================================
-            // VERIFICAR CLIENTE
-            // ====================================================
-
-            if (!cliente) {
-
-                alert(
-                    'A conta foi criada, mas não foi possível finalizar seu cadastro.'
-                );
-
-                return;
-            }
-
-            console.log(
-                '✅ Cliente criado com sucesso:',
-                cliente.id
+                usuarioAuth.id
             );
 
             console.log(
-                'Auth User ID:',
-                cliente.auth_user_id
+                'E-mail:',
+                usuarioAuth.email
             );
 
             // ====================================================
-            // 3. SALVAR DADOS LOCAIS
+            // IMPORTANTE
+            // ====================================================
+            //
+            // NÃO fazemos INSERT em clientes aqui.
+            //
+            // O trigger:
+            //
+            // criar_cliente_apos_auth_trigger
+            //
+            // cria automaticamente o registro na tabela clientes.
+            //
             // ====================================================
 
-            const usuarioLogado = {
-
-                id:
-                    cliente.id,
-
-                auth_user_id:
-                    cliente.auth_user_id,
-
-                nome:
-                    cliente.nome || '',
-
-                email:
-                    cliente.email || '',
-
-                telefone:
-                    cliente.telefone || '',
-
-                cpf:
-                    cliente.cpf || ''
-
-            };
-
-            localStorage.setItem(
-                'usuario_logado',
-                JSON.stringify(usuarioLogado)
-            );
-
-            localStorage.setItem(
-                'cliente_supabase_id',
-                cliente.id
+            console.log(
+                '⏳ O trigger do banco criará o cliente automaticamente.'
             );
 
             // ====================================================
-            // 4. VERIFICAR SE EXISTE SESSÃO
+            // USUÁRIO COM SESSÃO
             // ====================================================
 
             if (authData.session) {
@@ -368,34 +289,121 @@ document.addEventListener('DOMContentLoaded', () => {
                     '✅ Sessão criada automaticamente.'
                 );
 
+                // ==================================================
+                // BUSCAR CLIENTE CRIADO PELO TRIGGER
+                // ==================================================
+
+                const {
+                    data: cliente,
+                    error: clienteError
+                } = await supabaseClient
+                    .from('clientes')
+                    .select(
+                        'id,nome,email,telefone,cpf,ativo,auth_user_id'
+                    )
+                    .eq(
+                        'auth_user_id',
+                        usuarioAuth.id
+                    )
+                    .maybeSingle();
+
+                if (clienteError) {
+
+                    console.error(
+                        'Erro ao consultar cliente:',
+                        clienteError
+                    );
+
+                    alert(
+                        'Sua conta foi criada, mas não foi possível carregar seu cadastro. Tente fazer login novamente.'
+                    );
+
+                    window.location.href =
+                        'Login.html';
+
+                    return;
+                }
+
+                if (cliente) {
+
+                    const usuarioLogado = {
+
+                        id:
+                            cliente.id,
+
+                        auth_user_id:
+                            cliente.auth_user_id,
+
+                        nome:
+                            cliente.nome || nome,
+
+                        email:
+                            cliente.email || email,
+
+                        telefone:
+                            cliente.telefone || '',
+
+                        cpf:
+                            cliente.cpf || ''
+
+                    };
+
+                    localStorage.setItem(
+                        'usuario_logado',
+                        JSON.stringify(usuarioLogado)
+                    );
+
+                    localStorage.setItem(
+                        'cliente_supabase_id',
+                        cliente.id
+                    );
+
+                    console.log(
+                        '✅ Cliente encontrado:',
+                        cliente.id
+                    );
+                }
+
                 alert(
-                    'Conta criada com sucesso! 🎉 Bem-vindo, ' +
-                    (cliente.nome || 'cliente') +
-                    '!'
+                    'Conta criada com sucesso! 🎉'
                 );
 
                 window.location.href =
                     'Meu-perfil.html';
 
-            } else {
-
-                console.log(
-                    '📧 Usuário criado, aguardando confirmação de e-mail.'
-                );
-
-                alert(
-                    'Conta criada com sucesso! 🎉 Verifique seu e-mail para confirmar sua conta antes de fazer login.'
-                );
-
-                window.location.href =
-                    'Login.html';
+                return;
             }
 
-        } catch (erroExcecao) {
+            // ====================================================
+            // SEM SESSÃO
+            // ====================================================
+            //
+            // Isso normalmente acontece quando a confirmação
+            // de e-mail está habilitada.
+            //
+            // ====================================================
+
+            console.log(
+                '📧 Confirmação de e-mail necessária.'
+            );
+
+            console.log(
+                'Auth User ID:',
+                usuarioAuth.id
+            );
+
+            alert(
+                'Conta criada com sucesso! 🎉\n\nVerifique seu e-mail para confirmar sua conta. Depois, volte à loja e faça login.'
+            );
+
+            window.location.href =
+                'Login.html';
+
+        } catch (erro) {
 
             console.error(
-                '❌ Exceção durante o cadastro:',
-                erroExcecao
+                '❌ Erro inesperado no cadastro:',
+                erro
             );
 
             alert(
@@ -407,6 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (botaoSubmit) {
                 botaoSubmit.disabled = false;
             }
+
         }
 
     });

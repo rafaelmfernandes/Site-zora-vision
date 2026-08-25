@@ -1,92 +1,395 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Acessar Conta - E-commerce</title>
+
   <link rel="stylesheet" href="Folha-estilos/Login.css">
 </head>
+
 <body>
 
+  <!-- ============================================================
+       CABEÇALHO
+       ============================================================ -->
+
   <header class="header">
-    <a href="index.html" class="btn-voltar" title="Voltar">&#8592;</a>
-    <h1 class="header-titulo">Acessar Conta</h1>
+
+    <a
+      href="index.html"
+      class="btn-voltar"
+      title="Voltar"
+    >
+      &#8592;
+    </a>
+
+    <h1 class="header-titulo">
+      Acessar Conta
+    </h1>
+
     <div class="header-espaco"></div>
+
   </header>
+
+
+  <!-- ============================================================
+       CONTEÚDO PRINCIPAL
+       ============================================================ -->
 
   <main class="login-container">
 
     <div class="boas-vindas">
-      <h2>Bem-vindo de volta! 👋</h2>
-      <p>Acesse sua conta para continuar suas compras e acompanhar pedidos.</p>
+
+      <h2>
+        Bem-vindo de volta! 👋
+      </h2>
+
+      <p>
+        Acesse sua conta para continuar suas compras e acompanhar pedidos.
+      </p>
+
     </div>
+
+
+    <!-- ============================================================
+         LOGIN SOCIAL
+         ============================================================ -->
 
     <div class="social-box">
-      <a href="Meu-perfil.html" class="btn-social google">
-        <span class="social-icon">🌐</span>
-        <span>Entrar com o Google</span>
+
+      <a
+        href="Meu-perfil.html"
+        class="btn-social google"
+      >
+        <span class="social-icon">
+          🌐
+        </span>
+
+        <span>
+          Entrar com o Google
+        </span>
       </a>
 
-      <a href="Meu-perfil.html" class="btn-social apple">
-        <span class="social-icon">🍎</span>
-        <span>Entrar com a Apple</span>
+
+      <a
+        href="Meu-perfil.html"
+        class="btn-social apple"
+      >
+        <span class="social-icon">
+          🍎
+        </span>
+
+        <span>
+          Entrar com a Apple
+        </span>
       </a>
+
     </div>
+
+
+    <!-- ============================================================
+         DIVISOR
+         ============================================================ -->
 
     <div class="divisor">
+
       <span class="linha"></span>
-      <span class="divisor-texto">OU</span>
+
+      <span class="divisor-texto">
+        OU
+      </span>
+
       <span class="linha"></span>
+
     </div>
 
-    <form id="form-login" action="Meu-perfil.html" method="GET">
-      <div class="campo">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" placeholder="seuemail@exemplo.com" required>
-      </div>
+
+    <!-- ============================================================
+         FORMULÁRIO DE LOGIN
+         ============================================================ -->
+
+    <form
+      id="form-login"
+      method="POST"
+    >
 
       <div class="campo">
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" placeholder="Digite sua senha" required>
+
+        <label for="email">
+          E-mail
+        </label>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="seuemail@exemplo.com"
+          autocomplete="email"
+          required
+        >
+
       </div>
+
+
+      <div class="campo">
+
+        <label for="senha">
+          Senha
+        </label>
+
+        <input
+          type="password"
+          id="senha"
+          placeholder="Digite sua senha"
+          autocomplete="current-password"
+          required
+        >
+
+      </div>
+
 
       <div class="esqueceu-senha">
-        <a href="#">Esqueceu a senha?</a>
+
+        <a href="#">
+          Esqueceu a senha?
+        </a>
+
       </div>
 
-      <button type="submit" class="btn-entrar">Entrar na minha conta</button>
+
+      <button
+        type="submit"
+        class="btn-entrar"
+      >
+        Entrar na minha conta
+      </button>
+
     </form>
 
+
+    <!-- ============================================================
+         CADASTRO
+         ============================================================ -->
+
     <div class="link-cadastro-box">
-      Ainda não tem conta? <a href="Cadastro.html">Cadastrar-se</a>
+
+      Ainda não tem conta?
+
+      <a href="Cadastro.html">
+        Cadastrar-se
+      </a>
+
     </div>
 
   </main>
 
+
+  <!-- ============================================================
+       NAVEGAÇÃO INFERIOR
+       ============================================================ -->
+
   <nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:middle;"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg></span>
-      <span>Home</span>
+
+    <a
+      href="index.html"
+      class="nav-item"
+    >
+
+      <span class="nav-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px; height:18px; vertical-align:middle;"
+        >
+
+          <path d="M3 10.5 12 3l9 7.5"></path>
+
+          <path d="M5 9.5V21h14V9.5"></path>
+
+        </svg>
+
+      </span>
+
+      <span>
+        Home
+      </span>
+
     </a>
-    <a href="Categorias.html" class="nav-item">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:middle;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg></span>
-      <span>Categorias</span>
+
+
+    <a
+      href="Categorias.html"
+      class="nav-item"
+    >
+
+      <span class="nav-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px; height:18px; vertical-align:middle;"
+        >
+
+          <rect
+            x="3"
+            y="3"
+            width="7"
+            height="7"
+          ></rect>
+
+          <rect
+            x="14"
+            y="3"
+            width="7"
+            height="7"
+          ></rect>
+
+          <rect
+            x="3"
+            y="14"
+            width="7"
+            height="7"
+          ></rect>
+
+          <rect
+            x="14"
+            y="14"
+            width="7"
+            height="7"
+          ></rect>
+
+        </svg>
+
+      </span>
+
+      <span>
+        Categorias
+      </span>
+
     </a>
-    <a href="carrinho.html" class="nav-item">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:middle;"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"></path></svg></span>
-      <span class="carrinho-count">0</span>
-      <span>Carrinho</span>
+
+
+    <a
+      href="carrinho.html"
+      class="nav-item"
+    >
+
+      <span class="nav-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px; height:18px; vertical-align:middle;"
+        >
+
+          <circle
+            cx="9"
+            cy="20"
+            r="1.5"
+          ></circle>
+
+          <circle
+            cx="18"
+            cy="20"
+            r="1.5"
+          ></circle>
+
+          <path
+            d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"
+          ></path>
+
+        </svg>
+
+      </span>
+
+      <span class="carrinho-count">
+        0
+      </span>
+
+      <span>
+        Carrinho
+      </span>
+
     </a>
-    <a href="Login.html" class="nav-item active">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:middle;"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path></svg></span>
-      <span>Entrar</span>
+
+
+    <a
+      href="Login.html"
+      class="nav-item active"
+    >
+
+      <span class="nav-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px; height:18px; vertical-align:middle;"
+        >
+
+          <circle
+            cx="12"
+            cy="8"
+            r="4"
+          ></circle>
+
+          <path
+            d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
+          ></path>
+
+        </svg>
+
+      </span>
+
+      <span>
+        Entrar
+      </span>
+
     </a>
+
   </nav>
 
-  <!-- VINCULAR O SCRIPT DE LOGIN AQUI -->
-   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="Supabase/supabase.js"></script>
+  <!-- ============================================================
+       SUPABASE
+       ============================================================ -->
 
-  <script src="Scripts/Login.js"></script>
+  <!-- Biblioteca oficial do Supabase -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+
+  <!-- Configuração do projeto -->
+  <script
+    src="Supabase/supabase.js"
+  ></script>
+
+
+  <!-- Sistema de login -->
+  <script
+    src="Scripts/Login.js"
+  ></script>
+
+
+</body>
+
 </html>
