@@ -224,147 +224,584 @@
 <script src="Supabase/supabase.js"></script>
 <script src="Scripts/Carrinho-checkout.js"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
 
-      const elNome = document.getElementById('perfil-nome-usuario');
-      const elEmail = document.getElementById('perfil-email-usuario');
-      const containerAdmin = document.getElementById('opcao-admin-container');
-      const btnSair = document.getElementById('btn-sair');
+  const elNome =
+    document.getElementById('perfil-nome-usuario');
 
-      const emailAdmin = 'rafaelmelo116@gmail.com';
+  const elEmail =
+    document.getElementById('perfil-email-usuario');
 
-      const clienteId = localStorage.getItem('cliente_supabase_id');
+  const containerAdmin =
+    document.getElementById('opcao-admin-container');
 
-      if (!clienteId) {
-        localStorage.removeItem('usuario_logado');
-        window.location.href = 'Login.html';
-        return;
+  const btnSair =
+    document.getElementById('btn-sair');
+
+  const emailAdmin =
+    'rafaelmelo116@gmail.com';
+
+
+  // ============================================================
+  // CONEXÃO COM SUPABASE
+  // ============================================================
+
+  const supabaseConn =
+    typeof _supabase !== 'undefined'
+      ? _supabase
+      : window._supabase;
+
+
+  if (!supabaseConn) {
+
+    console.error(
+      '❌ Cliente Supabase não encontrado.'
+    );
+
+    if (elNome) {
+      elNome.textContent =
+        'Erro ao carregar perfil';
+    }
+
+    if (elEmail) {
+      elEmail.textContent =
+        'Verifique sua conexão com o Supabase.';
+    }
+
+    return;
+  }
+
+
+  console.log(
+    '🔥 MEU-PERFIL - Supabase conectado.'
+  );
+
+
+  // ============================================================
+  // VERIFICAR SESSÃO AUTH
+  // ============================================================
+
+  try {
+
+    const {
+      data: sessionData,
+      error: sessionError
+    } = await supabaseConn.auth.getSession();
+
+
+    if (sessionError) {
+
+      console.error(
+        '❌ Erro ao verificar sessão:',
+        sessionError
+      );
+
+      localStorage.removeItem(
+        'usuario_logado'
+      );
+
+      localStorage.removeItem(
+        'cliente_supabase_id'
+      );
+
+      window.location.href =
+        'Login.html';
+
+      return;
+    }
+
+
+    const session =
+      sessionData?.session;
+
+
+    console.log(
+      '🔐 Sessão atual:',
+      session
+    );
+
+
+    // ==========================================================
+    // NÃO ESTÁ AUTENTICADO
+    // ==========================================================
+
+    if (!session) {
+
+      console.warn(
+        '⚠️ Nenhuma sessão Auth encontrada.'
+      );
+
+      localStorage.removeItem(
+        'usuario_logado'
+      );
+
+      localStorage.removeItem(
+        'cliente_supabase_id'
+      );
+
+      window.location.href =
+        'Login.html';
+
+      return;
+    }
+
+
+    // ==========================================================
+    // USUÁRIO AUTH
+    // ==========================================================
+
+    const usuarioAuth =
+      session.user;
+
+
+    if (!usuarioAuth) {
+
+      console.error(
+        '❌ Usuário Auth não encontrado.'
+      );
+
+      await supabaseConn.auth.signOut();
+
+      localStorage.removeItem(
+        'usuario_logado'
+      );
+
+      localStorage.removeItem(
+        'cliente_supabase_id'
+      );
+
+      window.location.href =
+        'Login.html';
+
+      return;
+    }
+
+
+    console.log(
+      '✅ Usuário Auth:',
+      usuarioAuth.id
+    );
+
+    console.log(
+      '📧 E-mail Auth:',
+      usuarioAuth.email
+    );
+
+
+    // ============================================================
+    // BUSCAR CLIENTE PELO AUTH_USER_ID
+    // ============================================================
+
+    const {
+      data: cliente,
+      error: clienteError
+    } = await supabaseConn
+      .from('clientes')
+      .select(
+        'id,nome,email,telefone,cpf,ativo,auth_user_id'
+      )
+      .eq(
+        'auth_user_id',
+        usuarioAuth.id
+      )
+      .maybeSingle();
+
+
+    // ============================================================
+    // ERRO AO BUSCAR CLIENTE
+    // ============================================================
+
+    if (clienteError) {
+
+      console.error(
+        '❌ Erro ao carregar cliente:',
+        clienteError
+      );
+
+      alert(
+        'Não foi possível carregar os dados da sua conta.'
+      );
+
+      return;
+    }
+
+
+    // ============================================================
+    // CLIENTE NÃO ENCONTRADO
+    // ============================================================
+
+    if (!cliente) {
+
+      console.error(
+        '❌ Cliente não encontrado para o Auth User:',
+        usuarioAuth.id
+      );
+
+      alert(
+        'Seu cadastro de cliente não foi encontrado.'
+      );
+
+      await supabaseConn.auth.signOut();
+
+      localStorage.removeItem(
+        'usuario_logado'
+      );
+
+      localStorage.removeItem(
+        'cliente_supabase_id'
+      );
+
+      window.location.href =
+        'Login.html';
+
+      return;
+    }
+
+
+    // ============================================================
+    // CONTA DESATIVADA
+    // ============================================================
+
+    if (cliente.ativo === false) {
+
+      alert(
+        'Sua conta está desativada. Entre em contato com a loja.'
+      );
+
+      await supabaseConn.auth.signOut();
+
+      localStorage.removeItem(
+        'usuario_logado'
+      );
+
+      localStorage.removeItem(
+        'cliente_supabase_id'
+      );
+
+      window.location.href =
+        'Login.html';
+
+      return;
+    }
+
+
+    // ============================================================
+    // PREENCHER PERFIL
+    // ============================================================
+
+    if (elNome) {
+
+      elNome.textContent =
+        cliente.nome || 'Usuário';
+
+    }
+
+
+    if (elEmail) {
+
+      elEmail.textContent =
+        cliente.email ||
+        usuarioAuth.email ||
+        '';
+
+    }
+
+
+    // ============================================================
+    // SALVAR DADOS LOCAIS
+    // ============================================================
+
+    const usuarioLogado = {
+
+      id:
+        cliente.id,
+
+      auth_user_id:
+        cliente.auth_user_id,
+
+      nome:
+        cliente.nome || '',
+
+      email:
+        cliente.email ||
+        usuarioAuth.email ||
+        '',
+
+      telefone:
+        cliente.telefone || '',
+
+      cpf:
+        cliente.cpf || ''
+
+    };
+
+
+    localStorage.setItem(
+      'usuario_logado',
+      JSON.stringify(usuarioLogado)
+    );
+
+
+    localStorage.setItem(
+      'cliente_supabase_id',
+      cliente.id
+    );
+
+
+    // ============================================================
+    // PAINEL ADMINISTRATIVO
+    // ============================================================
+
+    if (
+      cliente.email &&
+      cliente.email.toLowerCase() ===
+      emailAdmin.toLowerCase()
+    ) {
+
+      if (containerAdmin) {
+
+        containerAdmin.style.display =
+          'block';
+
       }
 
-      const supabaseConn =
-        typeof _supabase !== 'undefined'
-          ? _supabase
-          : window._supabase;
+    }
 
-      if (!supabaseConn) {
-        console.error('Cliente Supabase não encontrado.');
 
-        elNome.textContent = 'Erro ao carregar perfil';
-        elEmail.textContent = 'Verifique sua conexão.';
+    // ============================================================
+    // LOGS
+    // ============================================================
 
-        return;
-      }
+    console.log(
+      '=========================================='
+    );
 
-      try {
+    console.log(
+      '✅ PERFIL CARREGADO COM SUCESSO'
+    );
 
-        const {
-          data: cliente,
-          error
-        } = await supabaseConn
-          .from('clientes')
-          .select('id,nome,email,telefone,cpf,ativo')
-          .eq('id', clienteId)
-          .maybeSingle();
+    console.log(
+      'Cliente ID:',
+      cliente.id
+    );
 
-        if (error) {
-          console.error('Erro ao carregar cliente:', error);
+    console.log(
+      'Auth User ID:',
+      cliente.auth_user_id
+    );
 
-          localStorage.removeItem('usuario_logado');
-          localStorage.removeItem('cliente_supabase_id');
+    console.log(
+      'Cliente:',
+      cliente.nome
+    );
 
-          window.location.href = 'Login.html';
-          return;
-        }
+    console.log(
+      'E-mail:',
+      cliente.email
+    );
 
-        if (!cliente) {
-          console.warn('Cliente não encontrado.');
+    console.log(
+      '=========================================='
+    );
 
-          localStorage.removeItem('usuario_logado');
-          localStorage.removeItem('cliente_supabase_id');
 
-          window.location.href = 'Login.html';
-          return;
-        }
+  } catch (erro) {
 
-        if (cliente.ativo === false) {
-          alert('Sua conta está desativada.');
+    console.error(
+      '❌ Erro inesperado ao carregar perfil:',
+      erro
+    );
 
-          localStorage.removeItem('usuario_logado');
-          localStorage.removeItem('cliente_supabase_id');
+    localStorage.removeItem(
+      'usuario_logado'
+    );
 
-          window.location.href = 'Login.html';
-          return;
-        }
+    localStorage.removeItem(
+      'cliente_supabase_id'
+    );
 
-        elNome.textContent = cliente.nome || 'Usuário';
-        elEmail.textContent = cliente.email || '';
+    window.location.href =
+      'Login.html';
 
-        const usuarioLogado = {
-          id: cliente.id,
-          nome: cliente.nome || '',
-          email: cliente.email || '',
-          telefone: cliente.telefone || '',
-          cpf: cliente.cpf || ''
-        };
+    return;
 
-        localStorage.setItem(
-          'usuario_logado',
-          JSON.stringify(usuarioLogado)
+  }
+
+
+  // ============================================================
+  // LOGOUT
+  // ============================================================
+
+  if (btnSair) {
+
+    btnSair.addEventListener(
+      'click',
+      async (event) => {
+
+        event.preventDefault();
+
+
+        console.log(
+          '🚪 Iniciando logout...'
         );
 
-        localStorage.setItem(
-          'cliente_supabase_id',
-          cliente.id
-        );
 
-        if (
-          cliente.email &&
-          cliente.email.toLowerCase() === emailAdmin.toLowerCase()
-        ) {
-          if (containerAdmin) {
-            containerAdmin.style.display = 'block';
+        // Desabilita temporariamente o botão
+        btnSair.style.pointerEvents =
+          'none';
+
+        btnSair.style.opacity =
+          '0.6';
+
+
+        try {
+
+          // ======================================================
+          // 1. ENCERRAR SESSÃO NO SUPABASE AUTH
+          // ======================================================
+
+          const {
+            error: logoutError
+          } = await supabaseConn.auth.signOut();
+
+
+          if (logoutError) {
+
+            console.error(
+              '❌ Erro ao fazer logout no Supabase:',
+              logoutError
+            );
+
+            alert(
+              'Não foi possível sair da conta. Tente novamente.'
+            );
+
+            btnSair.style.pointerEvents =
+              'auto';
+
+            btnSair.style.opacity =
+              '1';
+
+            return;
           }
+
+
+          console.log(
+            '✅ Logout do Supabase realizado com sucesso.'
+          );
+
+
+          // ======================================================
+          // 2. REMOVER DADOS LOCAIS
+          // ======================================================
+
+          localStorage.removeItem(
+            'usuario_logado'
+          );
+
+          localStorage.removeItem(
+            'cliente_supabase_id'
+          );
+
+
+          console.log(
+            '🧹 Dados locais removidos.'
+          );
+
+
+          // ======================================================
+          // 3. VERIFICAR SE A SESSÃO REALMENTE ACABOU
+          // ======================================================
+
+          const {
+            data: sessaoDepoisLogout,
+            error: sessaoError
+          } = await supabaseConn.auth.getSession();
+
+
+          if (sessaoError) {
+
+            console.error(
+              '❌ Erro ao verificar sessão após logout:',
+              sessaoError
+            );
+
+          }
+
+
+          console.log(
+            '🔐 Sessão após logout:',
+            sessaoDepoisLogout?.session
+          );
+
+
+          // ======================================================
+          // 4. CONFIRMAÇÃO
+          // ======================================================
+
+          if (
+            sessaoDepoisLogout?.session
+          ) {
+
+            console.error(
+              '⚠️ A sessão ainda está ativa!'
+            );
+
+            alert(
+              'A sessão não foi encerrada completamente. Tente novamente.'
+            );
+
+            btnSair.style.pointerEvents =
+              'auto';
+
+            btnSair.style.opacity =
+              '1';
+
+            return;
+          }
+
+
+          console.log(
+            '✅ Sessão encerrada completamente.'
+          );
+
+
+          // ======================================================
+          // 5. REDIRECIONAR PARA LOGIN
+          // ======================================================
+
+          window.location.replace(
+            'Login.html'
+          );
+
+        } catch (erro) {
+
+          console.error(
+            '❌ Erro inesperado durante logout:',
+            erro
+          );
+
+          alert(
+            'Ocorreu um erro ao sair da conta. Tente novamente.'
+          );
+
+
+          btnSair.style.pointerEvents =
+            'auto';
+
+          btnSair.style.opacity =
+            '1';
+
         }
 
-        console.log('✅ Perfil carregado com sucesso.');
-        console.log('Cliente ID:', cliente.id);
-        console.log('Cliente:', cliente.nome);
-        console.log('E-mail:', cliente.email);
-
-      } catch (erro) {
-
-        console.error(
-          '❌ Erro inesperado ao carregar perfil:',
-          erro
-        );
-
-        localStorage.removeItem('usuario_logado');
-        localStorage.removeItem('cliente_supabase_id');
-
-        window.location.href = 'Login.html';
-        return;
       }
+    );
 
-      if (btnSair) {
+  }
 
-        btnSair.addEventListener('click', (event) => {
-
-          event.preventDefault();
-
-          localStorage.removeItem('usuario_logado');
-          localStorage.removeItem('cliente_supabase_id');
-
-          console.log('🚪 Usuário saiu da conta.');
-
-          window.location.href = 'Login.html';
-
-        });
-
-      }
-
-    });
-  </script>
+});
+</script>
 
 </body>
 </html>

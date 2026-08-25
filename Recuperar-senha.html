@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recuperar Senha - ZoraVision</title>
+
+    <link rel="stylesheet" href="Folha-estilos/Login.css">
+</head>
+
+<body>
+
+    <!-- ============================================================
+         CABEÇALHO
+         ============================================================ -->
+
+    <header class="header">
+
+        <a
+            href="Login.html"
+            class="btn-voltar"
+            title="Voltar"
+        >
+            &#8592;
+        </a>
+
+        <h1 class="header-titulo">
+            Recuperar Senha
+        </h1>
+
+        <div class="header-espaco"></div>
+
+    </header>
+
+
+    <!-- ============================================================
+         CONTEÚDO
+         ============================================================ -->
+
+    <main class="login-container">
+
+        <div class="boas-vindas">
+
+            <h2>
+                Esqueceu sua senha? 🔐
+            </h2>
+
+            <p>
+                Digite o e-mail cadastrado na sua conta.
+                Enviaremos um link para você criar uma nova senha.
+            </p>
+
+        </div>
+
+
+        <!-- ========================================================
+             FORMULÁRIO
+             ======================================================== -->
+
+        <form
+            id="form-recuperar-senha"
+            method="POST"
+        >
+
+            <div class="campo">
+
+                <label for="email-recuperacao">
+                    E-mail
+                </label>
+
+                <input
+                    type="email"
+                    id="email-recuperacao"
+                    placeholder="seuemail@exemplo.com"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn-entrar"
+            >
+                Enviar link de recuperação
+            </button>
+
+        </form>
+
+
+        <!-- ========================================================
+             LINK PARA LOGIN
+             ======================================================== -->
+
+        <div class="link-cadastro-box">
+
+            Lembrou sua senha?
+
+            <a href="Login.html">
+                Voltar para o login
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- ============================================================
+         NAVEGAÇÃO INFERIOR
+         ============================================================ -->
+
+    <nav class="bottom-nav">
+
+        <a
+            href="index.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                🏠
+            </span>
+
+            <span>
+                Home
+            </span>
+
+        </a>
+
+
+        <a
+            href="Categorias.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                📦
+            </span>
+
+            <span>
+                Categorias
+            </span>
+
+        </a>
+
+
+        <a
+            href="carrinho.html"
+            class="nav-item"
+        >
+
+            <span class="nav-icon">
+                🛒
+            </span>
+
+            <span class="carrinho-count">
+                0
+            </span>
+
+            <span>
+                Carrinho
+            </span>
+
+        </a>
+
+
+        <a
+            href="Login.html"
+            class="nav-item active"
+        >
+
+            <span class="nav-icon">
+                👤
+            </span>
+
+            <span>
+                Entrar
+            </span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- ============================================================
+         SUPABASE
+         ============================================================ -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <script
+        src="Supabase/supabase.js"
+    ></script>
+
+
+    <!-- ============================================================
+         SCRIPT DE RECUPERAÇÃO
+         ============================================================ -->
+
+    <script
+        src="Scripts/Recuperar-senha.js"
+    ></script>
+
+</body>
+
+</html>

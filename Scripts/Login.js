@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+
     // ============================================================
     // CONEXÃO COM SUPABASE
     // ============================================================
@@ -26,10 +27,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ? _supabase
             : window._supabase;
 
+
     if (!supabaseClient) {
 
         console.error(
-            'Cliente Supabase não encontrado.'
+            '❌ Cliente Supabase não encontrado.'
         );
 
         alert(
@@ -38,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return;
     }
+
 
     console.log(
         '🔥 ZORAVISION - Login.js carregado'
@@ -56,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         event.preventDefault();
 
+
         // ========================================================
         // CAMPOS
         // ========================================================
@@ -66,10 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const inputSenha =
             document.getElementById('senha');
 
+
         if (!inputEmail || !inputSenha) {
 
             console.error(
-                'Campos de e-mail ou senha não encontrados.'
+                '❌ Campos de e-mail ou senha não encontrados.'
             );
 
             alert(
@@ -116,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 'button[type="submit"]'
             );
 
+
         if (botaoEntrar) {
 
             botaoEntrar.disabled = true;
@@ -140,25 +146,20 @@ document.addEventListener('DOMContentLoaded', () => {
             // ====================================================
             // 1. LOGIN PELO SUPABASE AUTH
             // ====================================================
-            //
-            // A senha é validada pelo Auth.
-            //
-            // NÃO consultamos senha_hash.
-            //
-            // ====================================================
 
             const {
                 data: authData,
                 error: authError
-            } = await supabaseClient.auth.signInWithPassword({
+            } =
+                await supabaseClient.auth.signInWithPassword({
 
-                email:
-                    email,
+                    email:
+                        email,
 
-                password:
-                    senha
+                    password:
+                        senha
 
-            });
+                });
 
 
             // ====================================================
@@ -171,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     '❌ Erro no login Auth:',
                     authError
                 );
+
 
                 const mensagem =
                     authError.message?.toLowerCase() || '';
@@ -196,12 +198,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         'E-mail ou senha incorretos. Verifique seus dados e tente novamente.'
                     );
 
+                } else if (
+                    mensagem.includes(
+                        'too many requests'
+                    )
+                ) {
+
+                    alert(
+                        'Muitas tentativas foram realizadas. Aguarde alguns instantes e tente novamente.'
+                    );
+
                 } else {
 
                     alert(
                         'Não foi possível realizar o login: ' +
                         authError.message
                     );
+
                 }
 
                 return;
@@ -209,16 +222,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // ====================================================
-            // USUÁRIO AUTH
+            // 2. VERIFICAR USUÁRIO AUTH
             // ====================================================
 
             const usuarioAuth =
                 authData?.user;
 
+
             if (!usuarioAuth) {
 
                 console.error(
-                    'Usuário Auth não retornado.'
+                    '❌ Usuário Auth não retornado.'
                 );
 
                 alert(
@@ -230,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             console.log(
-                '✅ Login Auth realizado'
+                '✅ Login Auth realizado.'
             );
 
             console.log(
@@ -250,10 +264,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // ====================================================
-            // 2. BUSCAR CLIENTE
+            // 3. CONFIRMAR SESSÃO
+            // ====================================================
+
+            const {
+                data: sessionData,
+                error: sessionError
+            } =
+                await supabaseClient.auth.getSession();
+
+
+            if (sessionError) {
+
+                console.error(
+                    '❌ Erro ao verificar sessão:',
+                    sessionError
+                );
+
+                alert(
+                    'Sua autenticação foi realizada, mas não foi possível criar a sessão. Tente novamente.'
+                );
+
+                return;
+            }
+
+
+            if (!sessionData?.session) {
+
+                console.error(
+                    '❌ Login sem sessão ativa.'
+                );
+
+                alert(
+                    'Não foi possível criar sua sessão. Tente novamente.'
+                );
+
+                return;
+            }
+
+
+            console.log(
+                '✅ Sessão Supabase confirmada.'
+            );
+
+
+            // ====================================================
+            // 4. BUSCAR CLIENTE
             // ====================================================
             //
-            // Agora usamos o relacionamento:
+            // Relacionamento:
             //
             // clientes.auth_user_id = auth.users.id
             //
@@ -262,20 +321,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const {
                 data: cliente,
                 error: clienteError
-            } = await supabaseClient
+            } =
+                await supabaseClient
 
-                .from('clientes')
+                    .from('clientes')
 
-                .select(
-                    'id,nome,email,telefone,cpf,ativo,auth_user_id'
-                )
+                    .select(
+                        'id,nome,email,telefone,cpf,ativo,auth_user_id'
+                    )
 
-                .eq(
-                    'auth_user_id',
-                    usuarioAuth.id
-                )
+                    .eq(
+                        'auth_user_id',
+                        usuarioAuth.id
+                    )
 
-                .maybeSingle();
+                    .maybeSingle();
 
 
             // ====================================================
@@ -288,6 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     '❌ Erro ao consultar cliente:',
                     clienteError
                 );
+
+                await supabaseClient.auth.signOut();
 
                 alert(
                     'Login realizado, mas não foi possível carregar seu cadastro. Tente novamente.'
@@ -308,6 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     usuarioAuth.id
                 );
 
+                await supabaseClient.auth.signOut();
+
                 alert(
                     'Sua conta foi autenticada, mas o cadastro da loja não foi encontrado. Entre em contato com o suporte.'
                 );
@@ -323,12 +387,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // ====================================================
-            // 3. VERIFICAR CONTA ATIVA
+            // 5. VERIFICAR CONTA ATIVA
             // ====================================================
 
             if (cliente.ativo === false) {
 
-                // Encerra a sessão porque a conta está desativada.
+                console.warn(
+                    '⚠️ Cliente está desativado.'
+                );
 
                 await supabaseClient.auth.signOut();
 
@@ -341,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // ====================================================
-            // 4. CRIAR DADOS DO USUÁRIO LOCAL
+            // 6. CRIAR DADOS DO USUÁRIO LOCAL
             // ====================================================
 
             const usuarioLogado = {
@@ -356,7 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     cliente.nome || '',
 
                 email:
-                    cliente.email || usuarioAuth.email || '',
+                    cliente.email ||
+                    usuarioAuth.email ||
+                    '',
 
                 telefone:
                     cliente.telefone || '',
@@ -368,7 +436,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // ====================================================
-            // 5. SALVAR NO LOCALSTORAGE
+            // 7. SALVAR SESSÃO LOCAL
             // ====================================================
 
             localStorage.setItem(
@@ -384,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // ====================================================
-            // 6. LOGS
+            // 8. LOG DE SUCESSO
             // ====================================================
 
             console.log(
@@ -416,12 +484,17 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
             console.log(
+                'Sessão ativa:',
+                true
+            );
+
+            console.log(
                 '=========================================='
             );
 
 
             // ====================================================
-            // 7. REDIRECIONAMENTO
+            // 9. REDIRECIONAMENTO
             // ====================================================
 
             alert(
