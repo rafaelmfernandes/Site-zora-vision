@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pagamento PIX - Zora Vision</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+
+        .pagina {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 24px;
+        }
+
+        .descricao {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .status {
+            padding: 14px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .status.aprovado {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+
+        .status.erro {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .qr-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .qr-container img {
+            width: 260px;
+            height: 260px;
+            object-fit: contain;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px;
+            background: #ffffff;
+        }
+
+        .valor {
+            font-size: 25px;
+            font-weight: 800;
+            color: #16a34a;
+            margin: 20px 0;
+        }
+
+        .pedido {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .pix-label {
+            display: block;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .pix-codigo {
+            width: 100%;
+            min-height: 100px;
+            resize: none;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 12px;
+            color: #334155;
+            background: #f8fafc;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            border: 0;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-copiar {
+            background: #2563eb;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .btn-copiar:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-voltar {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .btn-confirmado {
+            background: #16a34a;
+            color: #ffffff;
+            margin-top: 12px;
+        }
+
+        .btn-confirmado:hover {
+            background: #15803d;
+        }
+
+        .erro-box {
+            display: none;
+            padding: 14px;
+            border-radius: 10px;
+            background: #fef2f2;
+            color: #dc2626;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 15px;
+        }
+
+        .loading {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #dbeafe;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: girar 0.8s linear infinite;
+            margin: 15px auto;
+        }
+
+        .loading-verificacao {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #dbeafe;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: girar 0.8s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes girar {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="pagina">
+
+        <section class="container">
+
+            <div class="logo">
+                Zora Vision
+            </div>
+
+            <h1 id="titulo-pagina">
+                Pagamento via PIX
+            </h1>
+
+            <p
+                id="descricao-pagina"
+                class="descricao"
+            >
+                Faça o pagamento utilizando o QR Code
+                ou copie o código PIX abaixo.
+            </p>
+
+            <div
+                id="status-pagamento"
+                class="status"
+            >
+                <div class="loading"></div>
+                Carregando pagamento...
+            </div>
+
+            <div
+                id="qr-container"
+                class="qr-container"
+            >
+
+                <div
+                    id="valor-pagamento"
+                    class="valor"
+                >
+                    R$ 0,00
+                </div>
+
+                <div
+                    id="numero-pedido"
+                    class="pedido"
+                >
+                    Pedido: -
+                </div>
+
+                <img
+                    id="qr-code"
+                    src=""
+                    alt="QR Code PIX"
+                >
+
+                <p
+                    style="
+                        font-size:14px;
+                        color:#475569;
+                        margin:15px 0 10px;
+                    "
+                >
+                    Escaneie o QR Code com o aplicativo
+                    do seu banco.
+                </p>
+
+                <label
+                    class="pix-label"
+                    for="codigo-pix"
+                >
+                    Ou copie o código PIX:
+                </label>
+
+                <textarea
+                    id="codigo-pix"
+                    class="pix-codigo"
+                    readonly
+                ></textarea>
+
+                <button
+                    type="button"
+                    class="btn-copiar"
+                    id="btn-copiar"
+                >
+                    Copiar código PIX
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-voltar"
+                    onclick="window.location.href='index.html'"
+                >
+                    Voltar para a loja
+                </button>
+
+            </div>
+
+            <div
+                id="erro-pagamento"
+                class="erro-box"
+            ></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="Scripts/supabase.js"></script>
+    <script src="Scripts/pedido.js"></script>
+    <script src="Scripts/pagamento-pix.js"></script>
+
+</body>
+
+</html>
