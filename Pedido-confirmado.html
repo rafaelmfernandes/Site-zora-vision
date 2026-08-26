@@ -1,145 +1,582 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pedido Confirmado - E-commerce</title>
 
-  <!-- ESTILOS CSS -->
+  <title>Pedido Confirmado - Zora Vision</title>
+
   <link rel="stylesheet" href="Folha-estilos/Pedido-confirmado.css">
 </head>
+
 <body>
 
   <!-- ========================================== -->
-  <!-- CABEÇALHO DA PÁGINA                       -->
+  <!-- CABEÇALHO -->
   <!-- ========================================== -->
+
   <header class="header">
+
     <div class="header-espaco"></div>
-    <h1 class="header-titulo">Sucesso!</h1>
-    <a href="index.html" class="btn-fechar" title="Ir para home">✕</a>
+
+    <h1 class="header-titulo">
+      Sucesso!
+    </h1>
+
+    <a
+      href="index.html"
+      class="btn-fechar"
+      title="Ir para home"
+    >
+      ✕
+    </a>
+
   </header>
 
+
   <!-- ========================================== -->
-  <!-- CONTEÚDO PRINCIPAL DO COMPROVANTE          -->
+  <!-- CONTEÚDO -->
   <!-- ========================================== -->
+
   <main class="container">
 
-    <!-- CABEÇALHO DE SUCESSO -->
+    <!-- ======================================== -->
+    <!-- SUCESSO -->
+    <!-- ======================================== -->
+
     <section class="sucesso-box">
-      <div class="check-icone">✓</div>
-      <h2 class="sucesso-titulo">Pedido Realizado com Sucesso!</h2>
-      <p class="sucesso-subtexto">Obrigado pela sua compra. Enviamos o comprovante e os detalhes para o seu e-mail.</p>
+
+      <div class="check-icone">
+        ✓
+      </div>
+
+      <h2 class="sucesso-titulo">
+        Pedido Realizado com Sucesso!
+      </h2>
+
+      <p class="sucesso-subtexto">
+        Obrigado pela sua compra. Seu pagamento foi confirmado e seu pedido já foi registrado.
+      </p>
+
     </section>
 
-    <!-- INFORMACÕES GERAIS DO PEDIDO (DINÂMICO VIA JS) -->
+
+    <!-- ======================================== -->
+    <!-- INFORMAÇÕES DO PEDIDO -->
+    <!-- ======================================== -->
+
     <section class="info-card">
+
       <div class="info-linha">
-        <span class="label">Número do Pedido:</span>
-        <span class="valor-destaque" id="conf-numero-pedido">#00000</span>
+
+        <span class="label">
+          Número do Pedido:
+        </span>
+
+        <span
+          class="valor-destaque"
+          id="conf-numero-pedido"
+        >
+          Carregando...
+        </span>
+
       </div>
+
+
       <div class="info-linha">
-        <span class="label">Data:</span>
-        <span id="conf-data-pedido">--/--/----</span>
+
+        <span class="label">
+          Data:
+        </span>
+
+        <span id="conf-data-pedido">
+          Carregando...
+        </span>
+
       </div>
+
+
       <div class="info-linha">
-        <span class="label">Previsão de Entrega:</span>
-        <span class="previsao-tag">📦 2 a 4 dias úteis</span>
+
+        <span class="label">
+          Previsão de Entrega:
+        </span>
+
+        <span class="previsao-tag">
+          📦 2 a 4 dias úteis
+        </span>
+
       </div>
+
+
       <div class="info-linha">
-        <span class="label">Forma de Pagamento:</span>
-        <span id="conf-pagamento">PIX</span>
+
+        <span class="label">
+          Forma de Pagamento:
+        </span>
+
+        <span id="conf-pagamento">
+          PIX
+        </span>
+
       </div>
+
     </section>
 
-    <!-- NOVO CARD: ITENS COMPRADOS E TOTAL (DINÂMICO VIA JS) -->
+
+    <!-- ======================================== -->
+    <!-- ITENS COMPRADOS -->
+    <!-- ======================================== -->
+
     <section class="secao-card info-card">
-      <h3 class="secao-titulo">📦 Itens Comprados</h3>
-      <div id="conf-lista-itens" style="margin-top: 10px; font-size: 14px;">
-        <!-- Injetado via JS -->
+
+      <h3 class="secao-titulo">
+        📦 Itens Comprados
+      </h3>
+
+
+      <div
+        id="conf-lista-itens"
+        style="
+          margin-top:10px;
+          font-size:14px;
+        "
+      >
+        Carregando itens...
       </div>
-      <hr style="border: 0; border-top: 1px dashed #e2e8f0; margin: 12px 0;">
-      <div class="info-linha" style="font-weight: bold; font-size: 15px;">
-        <span class="label">Total Pago:</span>
-        <span class="valor-destaque" id="conf-total-pago">R$ 0,00</span>
+
+
+      <hr
+        style="
+          border:0;
+          border-top:1px dashed #e2e8f0;
+          margin:12px 0;
+        "
+      >
+
+
+      <!-- SUBTOTAL -->
+
+      <div
+        class="info-linha"
+        style="font-size:14px;"
+      >
+
+        <span class="label">
+          Subtotal:
+        </span>
+
+        <span id="conf-subtotal">
+          R$ 0,00
+        </span>
+
       </div>
+
+
+      <!-- FRETE -->
+
+      <div
+        class="info-linha"
+        style="font-size:14px;"
+      >
+
+        <span class="label">
+          Frete:
+        </span>
+
+        <span id="conf-frete">
+          R$ 0,00
+        </span>
+
+      </div>
+
+
+      <!-- DESCONTO -->
+
+      <div
+        class="info-linha"
+        style="font-size:14px;"
+      >
+
+        <span class="label">
+          Desconto:
+        </span>
+
+        <span id="conf-desconto">
+          R$ 0,00
+        </span>
+
+      </div>
+
+
+      <hr
+        style="
+          border:0;
+          border-top:1px dashed #e2e8f0;
+          margin:12px 0;
+        "
+      >
+
+
+      <!-- TOTAL -->
+
+      <div
+        class="info-linha"
+        style="
+          font-weight:bold;
+          font-size:15px;
+        "
+      >
+
+        <span class="label">
+          Total Pago:
+        </span>
+
+        <span
+          class="valor-destaque"
+          id="conf-total-pago"
+        >
+          R$ 0,00
+        </span>
+
+      </div>
+
     </section>
 
-    <!-- ACOMPANHAMENTO DE STATUS -->
+
+    <!-- ======================================== -->
+    <!-- STATUS -->
+    <!-- ======================================== -->
+
     <section class="status-card">
-      <h3 class="secao-titulo">Status do Pedido</h3>
+
+      <h3 class="secao-titulo">
+        Status do Pedido
+      </h3>
+
+
       <div class="linha-tempo">
+
         <div class="status-passo concluido">
+
           <div class="dot"></div>
+
           <div class="passo-info">
-            <span class="passo-nome">Pagamento Aprovado</span>
-            <span class="passo-hora" id="conf-hora-aprovado">--/--/---- - --:--</span>
+
+            <span class="passo-nome">
+              Pagamento Aprovado
+            </span>
+
+            <span
+              class="passo-hora"
+              id="conf-hora-aprovado"
+            >
+              Carregando...
+            </span>
+
           </div>
+
         </div>
+
+
         <div class="status-passo ativo">
+
           <div class="dot"></div>
+
           <div class="passo-info">
-            <span class="passo-nome">Em Separação no Estoque</span>
-            <span class="passo-hora">Aguardando envio</span>
+
+            <span class="passo-nome">
+              Em Separação no Estoque
+            </span>
+
+            <span class="passo-hora">
+              Aguardando envio
+            </span>
+
           </div>
+
         </div>
+
+
         <div class="status-passo">
+
           <div class="dot"></div>
+
           <div class="passo-info">
-            <span class="passo-nome">Em Transporte</span>
-            <span class="passo-hora">Pendente</span>
+
+            <span class="passo-nome">
+              Em Transporte
+            </span>
+
+            <span class="passo-hora">
+              Pendente
+            </span>
+
           </div>
+
         </div>
+
       </div>
+
     </section>
 
-    <!-- SEÇÃO: ENDEREÇO DE ENTREGA (DINÂMICO) -->
+
+    <!-- ======================================== -->
+    <!-- ENDEREÇO -->
+    <!-- ======================================== -->
+
     <section class="secao-card">
+
       <div class="secao-topo">
-        <h2 class="secao-titulo">📍 Endereço de Entrega</h2>
+
+        <h2 class="secao-titulo">
+          📍 Endereço de Entrega
+        </h2>
+
       </div>
-      
-      <!-- Container onde o JavaScript vai injetar o endereço do cliente -->
-      <div id="conf-container-endereco" style="margin-top: 10px; font-size: 14px; color: #334155; line-height: 1.5;">
-        <p style="color: #64748b;">Carregando endereço...</p>
+
+
+      <div
+        id="conf-container-endereco"
+        style="
+          margin-top:10px;
+          font-size:14px;
+          color:#334155;
+          line-height:1.5;
+        "
+      >
+
+        <p style="color:#64748b;">
+          Carregando endereço...
+        </p>
+
       </div>
+
     </section>
 
-    <!-- BOTOES DE AÇÃO -->
+
+    <!-- ======================================== -->
+    <!-- AÇÕES -->
+    <!-- ======================================== -->
+
     <div class="acoes-container">
-      <a href="Meu-perfil.html" class="btn-acompanhar">Acompanhar Meus Pedidos</a>
-      <a href="index.html" class="btn-home">Voltar para a Loja</a>
+
+      <a
+        href="Meu-perfil.html"
+        class="btn-acompanhar"
+      >
+        Acompanhar Meus Pedidos
+      </a>
+
+
+      <a
+        href="index.html"
+        class="btn-home"
+      >
+        Voltar para a Loja
+      </a>
+
     </div>
 
   </main>
 
-  <!-- ========================================== -->
-  <!-- MENU INFERIOR DE NAVEGAÇÃO                 -->
-  <!-- ========================================== -->
-  <nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:middle;"><path d="M3 10.5 12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg></span>
-      <span>Home</span>
-    </a>
-    <a href="Categorias.html" class="nav-item">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:middle;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg></span>
-      <span>Categorias</span>
-    </a>
-    <a href="carrinho.html" class="nav-item">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:middle;"><circle cx="9" cy="20" r="1.5"></circle><circle cx="18" cy="20" r="1.5"></circle><path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"></path></svg></span>
-      <span class="carrinho-count">0</span>
-      <span>Carrinho</span>
-    </a>
-    <a href="Meu-perfil.html" class="nav-item active">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:middle;"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path></svg></span>
-      <span>Perfil</span>
-    </a>
-  </nav>
 
   <!-- ========================================== -->
-  <!-- SCRIPT JS PRINCIPAL                        -->
+  <!-- MENU INFERIOR -->
   <!-- ========================================== -->
+
+  <nav class="bottom-nav">
+
+    <a
+      href="index.html"
+      class="nav-item"
+    >
+
+      <span class="nav-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px;height:18px;vertical-align:middle;"
+        >
+
+          <path d="M3 10.5 12 3l9 7.5"></path>
+
+          <path d="M5 9.5V21h14V9.5"></path>
+
+        </svg>
+
+      </span>
+
+      <span>
+        Home
+      </span>
+
+    </a>
+
+
+    <a
+      href="Categorias.html"
+      class="nav-item"
+    >
+
+      <span class="nav-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px;height:18px;vertical-align:middle;"
+        >
+
+          <rect
+            x="3"
+            y="3"
+            width="7"
+            height="7"
+          ></rect>
+
+          <rect
+            x="14"
+            y="3"
+            width="7"
+            height="7"
+          ></rect>
+
+          <rect
+            x="3"
+            y="14"
+            width="7"
+            height="7"
+          ></rect>
+
+          <rect
+            x="14"
+            y="14"
+            width="7"
+            height="7"
+          ></rect>
+
+        </svg>
+
+      </span>
+
+      <span>
+        Categorias
+      </span>
+
+    </a>
+
+
+    <a
+      href="carrinho.html"
+      class="nav-item"
+    >
+
+      <span class="nav-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px;height:18px;vertical-align:middle;"
+        >
+
+          <circle
+            cx="9"
+            cy="20"
+            r="1.5"
+          ></circle>
+
+          <circle
+            cx="18"
+            cy="20"
+            r="1.5"
+          ></circle>
+
+          <path
+            d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"
+          ></path>
+
+        </svg>
+
+      </span>
+
+      <span class="carrinho-count">
+        0
+      </span>
+
+      <span>
+        Carrinho
+      </span>
+
+    </a>
+
+
+    <a
+      href="Meu-perfil.html"
+      class="nav-item active"
+    >
+
+      <span class="nav-icon">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px;height:18px;vertical-align:middle;"
+        >
+
+          <circle
+            cx="12"
+            cy="8"
+            r="4"
+          ></circle>
+
+          <path
+            d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
+          ></path>
+
+        </svg>
+
+      </span>
+
+      <span>
+        Perfil
+      </span>
+
+    </a>
+
+  </nav>
+
+
+  <!-- ========================================== -->
+  <!-- SCRIPTS -->
+  <!-- ========================================== -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="Supabase/supabase.js"></script>
+
   <script src="Scripts/Carrinho-checkout.js"></script>
+
+  <script src="Scripts/pedido-confirmado.js"></script>
 </body>
+
 </html>
+
