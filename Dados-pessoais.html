@@ -1,60 +1,157 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dados Pessoais e Senha - ZoraVision</title>
+
   <link rel="stylesheet" href="Folha-estilos/Dados-pessoais.css">
 </head>
+
 <body>
 
+  <!-- ============================================================
+       CABEÇALHO
+  ============================================================ -->
+
   <header class="header">
-    <button type="button" onclick="history.back()" class="btn-voltar" title="Voltar">&#8592;</button>
-    <h1 class="header-titulo">Meus Dados e Senha</h1>
+
+    <button
+      type="button"
+      onclick="history.back()"
+      class="btn-voltar"
+      title="Voltar"
+    >
+      &#8592;
+    </button>
+
+    <h1 class="header-titulo">
+      Meus Dados e Senha
+    </h1>
+
     <div class="header-espaco"></div>
+
   </header>
+
+
+  <!-- ============================================================
+       CONTEÚDO
+  ============================================================ -->
 
   <main class="container">
 
+    <!-- ==========================================================
+         DADOS PESSOAIS
+    =========================================================== -->
+
     <section class="card-secao">
-      <h2 class="secao-titulo">📍 Dados Pessoais</h2>
 
-      <form class="form-dados" id="form-dados">
+      <h2 class="secao-titulo">
+        📍 Dados Pessoais
+      </h2>
 
-        <div class="campo">
-          <label for="nome">Nome Completo</label>
-          <input type="text" id="nome" required>
-        </div>
-
-        <div class="campo">
-          <label for="email">E-mail</label>
-          <input type="email" id="email" required>
-        </div>
+      <form
+        class="form-dados"
+        id="form-dados"
+      >
 
         <div class="campo">
-          <label for="telefone">Telefone / WhatsApp</label>
-          <input type="tel" id="telefone">
+
+          <label for="nome">
+            Nome Completo
+          </label>
+
+          <input
+            type="text"
+            id="nome"
+            autocomplete="name"
+            required
+          >
+
         </div>
+
 
         <div class="campo">
-          <label for="cpf">CPF</label>
-          <input type="text" id="cpf" disabled class="input-disabled">
+
+          <label for="email">
+            E-mail
+          </label>
+
+          <input
+            type="email"
+            id="email"
+            autocomplete="email"
+            required
+          >
+
         </div>
 
-        <button type="submit" class="btn-salvar">
+
+        <div class="campo">
+
+          <label for="telefone">
+            Telefone / WhatsApp
+          </label>
+
+          <input
+            type="tel"
+            id="telefone"
+            autocomplete="tel"
+          >
+
+        </div>
+
+
+        <div class="campo">
+
+          <label for="cpf">
+            CPF
+          </label>
+
+          <input
+            type="text"
+            id="cpf"
+            disabled
+            class="input-disabled"
+          >
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="btn-salvar"
+        >
           Salvar Alterações
         </button>
 
       </form>
+
     </section>
 
-    <section class="card-secao">
-      <h2 class="secao-titulo">🔒 Alterar Senha</h2>
 
-      <form class="form-dados" id="form-senha">
+    <!-- ==========================================================
+         ALTERAR SENHA
+    =========================================================== -->
+
+    <section class="card-secao">
+
+      <h2 class="secao-titulo">
+        🔒 Alterar Senha
+      </h2>
+
+      <form
+        class="form-dados"
+        id="form-senha"
+      >
 
         <div class="campo">
-          <label for="senha-atual">Senha Atual</label>
+
+          <label for="senha-atual">
+            Senha Atual
+          </label>
+
           <input
             type="password"
             id="senha-atual"
@@ -62,10 +159,16 @@
             autocomplete="current-password"
             required
           >
+
         </div>
 
+
         <div class="campo">
-          <label for="nova-senha">Nova Senha</label>
+
+          <label for="nova-senha">
+            Nova Senha
+          </label>
+
           <input
             type="password"
             id="nova-senha"
@@ -74,10 +177,16 @@
             minlength="8"
             required
           >
+
         </div>
 
+
         <div class="campo">
-          <label for="confirmar-senha">Confirmar Nova Senha</label>
+
+          <label for="confirmar-senha">
+            Confirmar Nova Senha
+          </label>
+
           <input
             type="password"
             id="confirmar-senha"
@@ -86,328 +195,166 @@
             minlength="8"
             required
           >
+
         </div>
 
-        <button type="submit" class="btn-salvar btn-seguranca">
+
+        <button
+          type="submit"
+          class="btn-salvar btn-seguranca"
+        >
           Atualizar Senha
         </button>
 
       </form>
+
     </section>
 
   </main>
 
+
+  <!-- ============================================================
+       NAVEGAÇÃO INFERIOR
+  ============================================================ -->
+
   <nav class="bottom-nav">
 
-    <a href="index.html" class="nav-item">
+    <a
+      href="index.html"
+      class="nav-item"
+    >
+
       <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px;height:18px;vertical-align:middle;"
+        >
           <path d="M3 10.5 12 3l9 7.5"></path>
           <path d="M5 9.5V21h14V9.5"></path>
         </svg>
+
       </span>
-      <span>Home</span>
+
+      <span>
+        Home
+      </span>
+
     </a>
 
-    <a href="Categorias.html" class="nav-item">
+
+    <a
+      href="Categorias.html"
+      class="nav-item"
+    >
+
       <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px;height:18px;vertical-align:middle;"
+        >
           <rect x="3" y="3" width="7" height="7"></rect>
           <rect x="14" y="3" width="7" height="7"></rect>
           <rect x="3" y="14" width="7" height="7"></rect>
           <rect x="14" y="14" width="7" height="7"></rect>
         </svg>
+
       </span>
-      <span>Categorias</span>
+
+      <span>
+        Categorias
+      </span>
+
     </a>
 
-    <a href="carrinho.html" class="nav-item">
+
+    <a
+      href="carrinho.html"
+      class="nav-item"
+    >
+
       <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px;height:18px;vertical-align:middle;"
+        >
           <circle cx="9" cy="20" r="1.5"></circle>
           <circle cx="18" cy="20" r="1.5"></circle>
           <path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"></path>
         </svg>
+
       </span>
-      <span class="carrinho-count">0</span>
-      <span>Carrinho</span>
+
+      <span class="carrinho-count">
+        0
+      </span>
+
+      <span>
+        Carrinho
+      </span>
+
     </a>
 
-    <a href="Meu-perfil.html" class="nav-item">
+
+    <a
+      href="Meu-perfil.html"
+      class="nav-item"
+    >
+
       <span class="nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;vertical-align:middle;">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          style="width:18px;height:18px;vertical-align:middle;"
+        >
           <circle cx="12" cy="8" r="4"></circle>
           <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
         </svg>
+
       </span>
-      <span>Perfil</span>
+
+      <span>
+        Perfil
+      </span>
+
     </a>
 
   </nav>
 
+
+  <!-- ============================================================
+       SCRIPTS
+  ============================================================ -->
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="Supabase/supabase.js"></script>
+
   <script src="Scripts/Carrinho-checkout.js"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-
-      const formDados = document.getElementById('form-dados');
-      const formSenha = document.getElementById('form-senha');
-
-      const inputNome = document.getElementById('nome');
-      const inputEmail = document.getElementById('email');
-      const inputTelefone = document.getElementById('telefone');
-      const inputCpf = document.getElementById('cpf');
-
-      const inputSenhaAtual = document.getElementById('senha-atual');
-      const inputNovaSenha = document.getElementById('nova-senha');
-      const inputConfirmarSenha = document.getElementById('confirmar-senha');
-
-      const clienteId = localStorage.getItem('cliente_supabase_id');
-
-      if (!clienteId) {
-        alert('Sua sessão expirou. Faça login novamente.');
-        window.location.href = 'Login.html';
-        return;
-      }
-
-      const supabaseConn =
-        typeof _supabase !== 'undefined'
-          ? _supabase
-          : window._supabase;
-
-      if (!supabaseConn) {
-        console.error('Cliente Supabase não encontrado.');
-        alert('Erro de conexão com o banco de dados.');
-        return;
-      }
-
-      let clienteAtual = null;
-
-      try {
-
-        const {
-          data: cliente,
-          error
-        } = await supabaseConn
-          .from('clientes')
-          .select('id,nome,email,telefone,cpf,senha_hash,ativo')
-          .eq('id', clienteId)
-          .maybeSingle();
-
-        if (error) {
-          console.error('Erro ao buscar cliente:', error);
-          alert('Não foi possível carregar seus dados.');
-          return;
-        }
-
-        if (!cliente) {
-          localStorage.removeItem('usuario_logado');
-          localStorage.removeItem('cliente_supabase_id');
-
-          alert('Cliente não encontrado. Faça login novamente.');
-          window.location.href = 'Login.html';
-          return;
-        }
-
-        if (cliente.ativo === false) {
-          localStorage.removeItem('usuario_logado');
-          localStorage.removeItem('cliente_supabase_id');
-
-          alert('Sua conta está desativada.');
-          window.location.href = 'Login.html';
-          return;
-        }
-
-        clienteAtual = cliente;
-
-        inputNome.value = cliente.nome || '';
-        inputEmail.value = cliente.email || '';
-        inputTelefone.value = cliente.telefone || '';
-        inputCpf.value = cliente.cpf || '';
-
-        console.log('✅ Dados pessoais carregados.');
-        console.log('Cliente:', cliente.id);
-
-      } catch (erro) {
-
-        console.error('Erro inesperado:', erro);
-        alert('Ocorreu um erro ao carregar seus dados.');
-
-      }
-
-      formDados.addEventListener('submit', async (event) => {
-
-        event.preventDefault();
-
-        if (!clienteAtual) {
-          alert('Cliente não carregado.');
-          return;
-        }
-
-        const nome = inputNome.value.trim();
-        const email = inputEmail.value.trim().toLowerCase();
-        const telefone = inputTelefone.value.trim();
-
-        if (!nome || !email) {
-          alert('Preencha nome e e-mail.');
-          return;
-        }
-
-        try {
-
-          const {
-            data: emailExistente,
-            error: erroEmail
-          } = await supabaseConn
-            .from('clientes')
-            .select('id')
-            .eq('email', email)
-            .neq('id', clienteId)
-            .maybeSingle();
-
-          if (erroEmail) {
-            console.error('Erro ao verificar e-mail:', erroEmail);
-            alert('Não foi possível verificar o e-mail.');
-            return;
-          }
-
-          if (emailExistente) {
-            alert('Este e-mail já está cadastrado em outra conta.');
-            return;
-          }
-
-          const {
-            data: clienteAtualizado,
-            error
-          } = await supabaseConn
-            .from('clientes')
-            .update({
-              nome: nome,
-              email: email,
-              telefone: telefone,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', clienteId)
-            .select('id,nome,email,telefone,cpf')
-            .single();
-
-          if (error) {
-            console.error('Erro ao atualizar dados:', error);
-            alert('Não foi possível salvar suas alterações.');
-            return;
-          }
-
-          const usuarioLogado = {
-            id: clienteAtualizado.id,
-            nome: clienteAtualizado.nome || '',
-            email: clienteAtualizado.email || '',
-            telefone: clienteAtualizado.telefone || '',
-            cpf: clienteAtualizado.cpf || ''
-          };
-
-          localStorage.setItem(
-            'usuario_logado',
-            JSON.stringify(usuarioLogado)
-          );
-
-          localStorage.setItem(
-            'cliente_supabase_id',
-            clienteAtualizado.id
-          );
-
-          clienteAtual = {
-            ...clienteAtual,
-            ...clienteAtualizado
-          };
-
-          alert('Dados pessoais atualizados com sucesso!');
-
-        } catch (erro) {
-
-          console.error('Erro inesperado:', erro);
-          alert('Ocorreu um erro ao salvar seus dados.');
-
-        }
-
-      });
-
-      formSenha.addEventListener('submit', async (event) => {
-
-        event.preventDefault();
-
-        if (!clienteAtual) {
-          alert('Cliente não carregado.');
-          return;
-        }
-
-        const senhaAtual = inputSenhaAtual.value;
-        const novaSenha = inputNovaSenha.value;
-        const confirmarSenha = inputConfirmarSenha.value;
-
-        if (!senhaAtual || !novaSenha || !confirmarSenha) {
-          alert('Preencha todos os campos de senha.');
-          return;
-        }
-
-        if (novaSenha.length < 8) {
-          alert('A nova senha precisa ter no mínimo 8 caracteres.');
-          return;
-        }
-
-        if (novaSenha !== confirmarSenha) {
-          alert('A nova senha e a confirmação não são iguais.');
-          return;
-        }
-
-        if (senhaAtual !== clienteAtual.senha_hash) {
-          alert('A senha atual está incorreta.');
-          return;
-        }
-
-        if (senhaAtual === novaSenha) {
-          alert('A nova senha precisa ser diferente da senha atual.');
-          return;
-        }
-
-        try {
-
-          const {
-            error
-          } = await supabaseConn
-            .from('clientes')
-            .update({
-              senha_hash: novaSenha,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', clienteId);
-
-          if (error) {
-            console.error('Erro ao atualizar senha:', error);
-            alert('Não foi possível atualizar sua senha.');
-            return;
-          }
-
-          clienteAtual.senha_hash = novaSenha;
-
-          inputSenhaAtual.value = '';
-          inputNovaSenha.value = '';
-          inputConfirmarSenha.value = '';
-
-          alert('Senha atualizada com sucesso!');
-
-        } catch (erro) {
-
-          console.error('Erro inesperado:', erro);
-          alert('Ocorreu um erro ao atualizar sua senha.');
-
-        }
-
-      });
-
-    });
-  </script>
+  <script src="Scripts/Dados-pessoais.js"></script>
 
 </body>
 </html>

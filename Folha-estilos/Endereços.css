@@ -11,7 +11,10 @@ body {
   padding-bottom: 130px;
 }
 
-/* Header */
+/* ============================================================
+   HEADER
+============================================================ */
+
 .header {
   background-color: #ffffff;
   padding: 16px 20px;
@@ -40,17 +43,25 @@ body {
   flex-shrink: 0;
 }
 
+.btn-voltar:hover {
+  background-color: #e2e8f0;
+}
+
 .header-titulo {
   font-size: 1rem;
   font-weight: 700;
   color: #0f172a;
+  text-align: center;
 }
 
 .header-espaco {
   width: 34px;
 }
 
-/* Container */
+/* ============================================================
+   CONTAINER
+============================================================ */
+
 .container {
   padding: 20px 16px;
   max-width: 440px;
@@ -58,6 +69,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.secao-enderecos {
+  width: 100%;
 }
 
 .secao-titulo {
@@ -69,120 +84,244 @@ body {
   margin-bottom: 12px;
 }
 
-/* Lista de Endereços */
+/* ============================================================
+   LISTA DE ENDEREÇOS
+============================================================ */
+
 .lista-enderecos {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
-.endereco-item {
+/* ============================================================
+   CARD DO ENDEREÇO
+============================================================ */
+
+.endereco-card {
   display: flex;
   align-items: flex-start;
   gap: 12px;
+  width: 100%;
   background-color: #ffffff;
   border: 1px solid #cbd5e1;
   border-radius: 12px;
   padding: 16px;
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
 }
 
-.endereco-item:has(input:checked) {
+.endereco-card:hover {
+  border-color: #94a3b8;
+}
+
+/* Card principal */
+
+.endereco-card.endereco-principal {
+  border-color: #2563eb;
+  background-color: #f8fbff;
+}
+
+/* ============================================================
+   SELEÇÃO / RADIO
+============================================================ */
+
+.endereco-selecao {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.endereco-radio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.endereco-radio input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+/* Quando selecionado */
+
+.endereco-card:has(input[type="radio"]:checked) {
   border-color: #2563eb;
   background-color: #f0f6ff;
   box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
 }
 
-.endereco-item input[type="radio"] {
-  accent-color: #2563eb;
-  width: 18px;
-  height: 18px;
-  margin-top: 2px;
+/* ============================================================
+   CONTEÚDO
+============================================================ */
+
+.endereco-conteudo {
+  flex: 1;
+  min-width: 0;
 }
 
-.endereco-info {
-  flex-grow: 1;
-}
+/* ============================================================
+   TOPO DO CARD
+============================================================ */
 
-.endereco-topo-info {
+.endereco-topo {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
-.tipo-tag {
-  font-size: 0.75rem;
+.endereco-topo strong {
+  font-size: 0.9rem;
   font-weight: 700;
-  color: #475569;
-  background-color: #f1f5f9;
-  padding: 2px 8px;
-  border-radius: 4px;
+  color: #0f172a;
 }
+
+/* ============================================================
+   BADGE PRINCIPAL
+============================================================ */
 
 .badge-principal {
+  display: inline-flex;
+  align-items: center;
   background-color: #dcfce7;
   color: #166534;
   font-size: 0.65rem;
   font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 3px 7px;
+  border-radius: 5px;
   text-transform: uppercase;
+  letter-spacing: 0.2px;
 }
 
-.nome-destinatario {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 2px;
+/* ============================================================
+   TEXTO DO ENDEREÇO
+============================================================ */
+
+.endereco-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.rua-numero, .bairro-cidade {
+.endereco-texto p {
   font-size: 0.82rem;
   color: #334155;
-  line-height: 1.3;
+  line-height: 1.35;
+  word-break: break-word;
 }
 
-.cep {
-  font-size: 0.78rem;
-  color: #64748b;
-  margin-top: 2px;
+.endereco-texto p:first-child {
+  color: #0f172a;
+  font-weight: 600;
 }
 
-.referencia {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  font-style: italic;
-  margin-top: 4px;
-}
+/* ============================================================
+   AÇÕES
+============================================================ */
 
-/* Ações do Endereço (Editar / Excluir) */
-.acoes-endereco {
+.endereco-acoes {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 14px;
-  margin-top: 10px;
+  margin-top: 12px;
   padding-top: 10px;
   border-top: 1px dashed #cbd5e1;
 }
 
-.btn-acao-link {
+/* Botão editar */
+
+.btn-editar-endereco {
+  background: none;
+  border: none;
+  padding: 0;
   font-size: 0.78rem;
   font-weight: 700;
   color: #2563eb;
-  text-decoration: none;
+  cursor: pointer;
 }
 
-.btn-acao-excluir {
+.btn-editar-endereco:hover {
+  text-decoration: underline;
+}
+
+/* Botão excluir */
+
+.btn-excluir-endereco {
   background: none;
   border: none;
+  padding: 0;
   font-size: 0.78rem;
   font-weight: 700;
   color: #dc2626;
   cursor: pointer;
 }
 
-/* Botão Adicionar Novo Endereço */
+.btn-excluir-endereco:hover {
+  text-decoration: underline;
+}
+
+/* Tornar principal */
+
+.btn-principal-endereco {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+}
+
+.btn-principal-endereco:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   SEM ENDEREÇOS
+============================================================ */
+
+.sem-enderecos {
+  background-color: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.sem-enderecos p:first-child {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.sem-enderecos p:last-child {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* ============================================================
+   SEÇÃO DE AÇÕES
+============================================================ */
+
+.secao-acoes {
+  width: 100%;
+}
+
+/* ============================================================
+   BOTÃO ADICIONAR ENDEREÇO
+============================================================ */
+
 .btn-add-endereco {
   display: flex;
   align-items: center;
@@ -197,7 +336,9 @@ body {
   font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
-  transition: border-color 0.2s, background-color 0.2s;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .btn-add-endereco:hover {
@@ -210,7 +351,10 @@ body {
   line-height: 1;
 }
 
-/* Ação Fixa Rodapé */
+/* ============================================================
+   AÇÃO FIXA NO RODAPÉ
+============================================================ */
+
 .acao-fixa-container {
   position: fixed;
   bottom: 60px;
@@ -235,9 +379,21 @@ body {
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-/* Bottom Nav */
+.btn-usar-selecionado:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-usar-selecionado:active {
+  transform: translateY(1px);
+}
+
+/* ============================================================
+   BOTTOM NAV
+============================================================ */
+
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -275,6 +431,10 @@ body {
   color: #2563eb;
 }
 
+/* ============================================================
+   CONTADOR DO CARRINHO
+============================================================ */
+
 .carrinho-count {
   position: absolute;
   top: 6px;
@@ -289,4 +449,32 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ============================================================
+   RESPONSIVO
+============================================================ */
+
+@media (max-width: 380px) {
+
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .endereco-card {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .endereco-acoes {
+    gap: 10px;
+  }
+
+  .btn-editar-endereco,
+  .btn-excluir-endereco,
+  .btn-principal-endereco {
+    font-size: 0.74rem;
+  }
+
 }
