@@ -1047,7 +1047,7 @@ function finalizarPedido() {
 
 
     window.location.href =
-        'Checkout.html';
+        '04-Checkout.html';
 }
 
 
@@ -1064,10 +1064,10 @@ function voltarPaginaAnterior() {
     if (
         anterior &&
         !anterior.includes(
-            'carrinho.html'
+            '04-carrinho.html'
         ) &&
         !anterior.includes(
-            'checkout.html'
+            '04-Checkout.html'
         )
     ) {
 

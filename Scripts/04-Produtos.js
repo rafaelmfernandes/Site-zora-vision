@@ -616,7 +616,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (adicionado) {
 
                         window.location.href =
-                            'Checkout.html';
+                            '04-Checkout.html';
                     }
                 }
             );

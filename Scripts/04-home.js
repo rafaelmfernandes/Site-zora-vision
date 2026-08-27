@@ -1,11 +1,15 @@
 // ============================================================
 // ZORAVISION - HOME
-// Carregamento dos produtos diretamente do Supabase
+// Carregamento dos produtos e controle do carrossel
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', async () => {
 
     console.log('🏠 Home iniciada.');
+
+    // ========================================================
+    // ELEMENTOS DA HOME
+    // ========================================================
 
     const gridProdutos = document.getElementById('grid-produtos-home');
     const contadorProdutos = document.getElementById('contador-produtos');
@@ -14,6 +18,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('❌ Elemento #grid-produtos-home não encontrado.');
         return;
     }
+
+
+    // ========================================================
+    // CARROSSEL
+    // ========================================================
+
+    inicializarCarrossel();
+
 
     // ========================================================
     // BUSCAR PRODUTOS
@@ -154,17 +166,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             const precoPromocional =
                 Number(produto.preco_promocional) || 0;
 
-
             const temPromocao =
                 precoPromocional > 0 &&
                 precoPromocional < preco;
-
 
             const precoAtual =
                 temPromocao
                     ? precoPromocional
                     : preco;
-
 
             const percentualDesconto =
                 temPromocao
@@ -182,7 +191,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 precoAtual
                     .toFixed(2)
                     .replace('.', ',');
-
 
             const precoOriginalFormatado =
                 preco
@@ -223,7 +231,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             card.className =
                 'card-produto';
+            
+                card.style.cursor = 'pointer';
 
+                card.addEventListener('click', (evento) => {
+
+                    if (
+                        evento.target.closest('.btn-adicionar') ||
+                        evento.target.closest('.btn-favoritar')
+                    ) {
+                        return;
+                    }
+
+                    window.location.href =
+                        `01-produtos.html?id=${produto.id}`;
+                });
+                
             card.style.position =
                 'relative';
 
@@ -342,7 +365,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
                         <a
-                            href="Produtos.html?id=${produto.id}"
+                            href="01-produtos.html?id=${produto.id}"
                             style="
                                 text-decoration:none;
                                 color:inherit;
@@ -449,3 +472,375 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 });
+
+
+// ============================================================
+// FUNÇÃO DO CARROSSEL
+// ============================================================
+
+function inicializarCarrossel() {
+
+    const trilho =
+        document.getElementById('trilho');
+
+    if (!trilho) {
+        console.warn('⚠️ Trilho do carrossel não encontrado.');
+        return;
+    }
+
+
+    // ========================================================
+    // BANNERS DO LOCALSTORAGE
+    // ========================================================
+
+    const bannersSalvos =
+        JSON.parse(
+            localStorage.getItem('banners_loja')
+        ) || [];
+
+
+    const bannersAtivos =
+        bannersSalvos
+            .filter(b => b.ativo !== false)
+            .sort(
+                (a, b) =>
+                    (a.ordem || 1) -
+                    (b.ordem || 1)
+            );
+
+
+    const CORES_BANNER = {
+
+        azul:
+            'linear-gradient(135deg, #2563eb, #1d4ed8)',
+
+        laranja:
+            'linear-gradient(135deg, #d85a30, #b8451f)',
+
+        escuro:
+            'linear-gradient(135deg, #0f172a, #334155)'
+
+    };
+
+
+    // ========================================================
+    // SUBSTITUIR BANNERS PADRÃO
+    // ========================================================
+
+    if (bannersAtivos.length > 0) {
+
+        trilho.innerHTML =
+            bannersAtivos
+                .map(banner => {
+
+                    const fundo =
+                        banner.imagem
+
+                            ? `background-image: url(${banner.imagem}); background-size: cover; background-position: center;`
+
+                            : `background: ${
+                                CORES_BANNER[banner.cor]
+                                || CORES_BANNER.azul
+                              };`;
+
+
+                    return `
+
+                        <div
+                            class="slide"
+                            style="${fundo}">
+
+                            ${
+                                banner.badge
+                                    ? `
+                                        <span class="slide-badge">
+                                            ${banner.badge}
+                                        </span>
+                                      `
+                                    : ''
+                            }
+
+
+                            <h2 class="slide-titulo">
+                                ${banner.titulo}
+                            </h2>
+
+
+                            ${
+                                banner.subtitulo
+                                    ? `
+                                        <p class="slide-subtitulo">
+                                            ${banner.subtitulo}
+                                        </p>
+                                      `
+                                    : ''
+                            }
+
+
+                            ${
+                                banner.textoLink
+                                    ? `
+                                        <a
+                                            href="${banner.linkDestino || '#'}"
+                                            class="slide-link">
+
+                                            ${banner.textoLink}
+
+                                        </a>
+                                      `
+                                    : ''
+                            }
+
+                        </div>
+
+                    `;
+
+                })
+                .join('');
+
+    }
+
+
+    // ========================================================
+    // CONFIGURAÇÃO DO CARROSSEL
+    // ========================================================
+
+    const pontosContainer =
+        document.getElementById('pontos');
+
+
+    const totalSlides =
+        document.querySelectorAll(
+            '#carrossel .slide'
+        ).length;
+
+
+    if (!pontosContainer || totalSlides === 0) {
+        console.warn('⚠️ Nenhum slide encontrado.');
+        return;
+    }
+
+
+    let indiceAtual = 0;
+
+    let autoplayInterval;
+
+
+    // ========================================================
+    // CRIAR PONTOS
+    // ========================================================
+
+    pontosContainer.innerHTML = '';
+
+
+    for (
+        let i = 0;
+        i < totalSlides;
+        i++
+    ) {
+
+        const ponto =
+            document.createElement('button');
+
+
+        ponto.className =
+            'ponto' +
+            (i === 0 ? ' ativo' : '');
+
+
+        ponto.setAttribute(
+            'aria-label',
+            `Ir para o slide ${i + 1}`
+        );
+
+
+        ponto.addEventListener(
+            'click',
+            () => irParaSlide(i)
+        );
+
+
+        pontosContainer.appendChild(ponto);
+
+    }
+
+
+    // ========================================================
+    // IR PARA SLIDE
+    // ========================================================
+
+    function irParaSlide(indice) {
+
+        indiceAtual =
+            (indice + totalSlides) %
+            totalSlides;
+
+
+        trilho.style.transform =
+            `translateX(-${indiceAtual * 100}%)`;
+
+
+        document
+            .querySelectorAll('#pontos .ponto')
+            .forEach((p, i) => {
+
+                p.classList.toggle(
+                    'ativo',
+                    i === indiceAtual
+                );
+
+            });
+
+
+        reiniciarAutoplay();
+
+    }
+
+
+    // ========================================================
+    // BOTÃO PRÓXIMO
+    // ========================================================
+
+    const btnProximo =
+        document.getElementById('btnProximo');
+
+
+    if (btnProximo) {
+
+        btnProximo.addEventListener(
+            'click',
+            () => irParaSlide(indiceAtual + 1)
+        );
+
+    }
+
+
+    // ========================================================
+    // BOTÃO ANTERIOR
+    // ========================================================
+
+    const btnAnterior =
+        document.getElementById('btnAnterior');
+
+
+    if (btnAnterior) {
+
+        btnAnterior.addEventListener(
+            'click',
+            () => irParaSlide(indiceAtual - 1)
+        );
+
+    }
+
+
+    // ========================================================
+    // AUTOPLAY
+    // ========================================================
+
+    function iniciarAutoplay() {
+
+        if (totalSlides <= 1) {
+            return;
+        }
+
+
+        autoplayInterval =
+            setInterval(
+                () => irParaSlide(indiceAtual + 1),
+                4000
+            );
+
+    }
+
+
+    function reiniciarAutoplay() {
+
+        clearInterval(
+            autoplayInterval
+        );
+
+
+        iniciarAutoplay();
+
+    }
+
+
+    // ========================================================
+    // SWIPE NO CELULAR
+    // ========================================================
+
+    let posicaoInicial = null;
+
+
+    trilho.addEventListener(
+        'touchstart',
+        (e) => {
+
+            posicaoInicial =
+                e.touches[0].clientX;
+
+
+            clearInterval(
+                autoplayInterval
+            );
+
+        }
+    );
+
+
+    trilho.addEventListener(
+        'touchend',
+        (e) => {
+
+            if (posicaoInicial === null) {
+                return;
+            }
+
+
+            const posicaoFinal =
+                e.changedTouches[0].clientX;
+
+
+            const diferenca =
+                posicaoInicial -
+                posicaoFinal;
+
+
+            if (diferenca > 40) {
+
+                irParaSlide(
+                    indiceAtual + 1
+                );
+
+            }
+            else if (diferenca < -40) {
+
+                irParaSlide(
+                    indiceAtual - 1
+                );
+
+            }
+            else {
+
+                reiniciarAutoplay();
+
+            }
+
+
+            posicaoInicial = null;
+
+        }
+    );
+
+
+    // ========================================================
+    // INICIAR
+    // ========================================================
+
+    iniciarAutoplay();
+
+
+    console.log('🎠 Carrossel iniciado.');
+
+}
+

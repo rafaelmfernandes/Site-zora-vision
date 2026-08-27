@@ -1,88 +1,206 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Carrinho - ZoraVision</title>
 
-  <!-- ESTILOS CSS -->
-  <link rel="stylesheet" href="Folha-estilos/Carrinho.css">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Meu Carrinho - ZoraVision</title>
+
+
+    <!-- ========================================================= -->
+    <!-- CSS -->
+    <!-- ========================================================= -->
+
+    <link
+        rel="stylesheet"
+        href="Folha-estilos/Carrinho.css"
+    >
+
 </head>
+
+
 <body>
 
-  <!-- ========================================== -->
-  <!-- CABEÇALHO PADRÃO (botão voltar circular + título centralizado) -->
-  <!-- ========================================== -->
-  <header class="header">
-    <button type="button" onclick="voltarPaginaAnterior()" class="btn-voltar" title="Voltar">
-      ←
-    </button>
-    <h1 class="header-titulo">Meu Carrinho</h1>
-    <span class="badge-carrinho header-espaco">0</span>
-  </header>
 
-  <!-- ========================================== -->
-  <!-- LISTA DE ITENS (INJETADA DINAMICAMENTE VIA JS) -->
-  <!-- ========================================== -->
-  <div class="carrinho-lista" id="lista-carrinho">
-    <!-- O JS preencherá os produtos aqui -->
-  </div>
+    <!-- ========================================================= -->
+    <!-- CABEÇALHO -->
+    <!-- ========================================================= -->
 
-  <!-- ========================================== -->
-  <!-- CUPOM DE DESCONTO                          -->
-  <!-- ========================================== -->
-  <div class="cupom-container">
-    <div class="cupom-box">
-      <input type="text" class="cupom-input" id="input-cupom" placeholder="Código do cupom">
-      <button type="button" class="btn-cupom" onclick="aplicarCupomCarrinho()">Aplicar</button>
-    </div>
-  </div>
+    <header class="header">
 
-  <!-- ========================================== -->
-  <!-- RESUMO FIXO NO RODAPÉ                      -->
-  <!-- ========================================== -->
-  <div class="resumo-fixo">
-    <div class="resumo-linha">
-      <span>Subtotal</span>
-      <span id="resumo-subtotal">R$ 0,00</span>
-    </div>
-    <div class="resumo-linha">
-      <span>Frete</span>
-      <span class="frete-gratis">Grátis</span>
-    </div>
-    <div class="resumo-linha total">
-      <span>Total</span>
-      <span class="total-valor" id="valor-total">R$ 0,00</span>
+        <button
+            type="button"
+            onclick="voltarPaginaAnterior()"
+            class="btn-voltar"
+            title="Voltar"
+        >
+            ←
+        </button>
+
+
+        <h1 class="header-titulo">
+            Meu Carrinho
+        </h1>
+
+
+        <span
+            class="badge-carrinho header-espaco"
+        >
+            0
+        </span>
+
+    </header>
+
+
+    <!-- ========================================================= -->
+    <!-- LISTA DE PRODUTOS -->
+    <!-- ========================================================= -->
+
+    <div
+        class="carrinho-lista"
+        id="lista-carrinho"
+    >
+        <!-- Produtos carregados pelo 04-carrinho.js -->
     </div>
 
-    <div class="resumo-botoes" style="display: flex; gap: 10px;">
-      <button type="button" onclick="voltarPaginaAnterior()" class="btn-continuar" style="flex: 1; background-color: #f1f5f9; color: #334155; border: none; padding: 14px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer;">
-        Continuar Comprando
-      </button>
-      <button type="button" id="btn-finalizar" onclick="finalizarPedido()" class="btn-finalizar" style="flex: 1; border: none; cursor: pointer;">
-        Finalizar Pedido
-      </button>
+
+    <!-- ========================================================= -->
+    <!-- CUPOM -->
+    <!-- ========================================================= -->
+
+    <div class="cupom-container">
+
+        <div class="cupom-box">
+
+            <input
+                type="text"
+                class="cupom-input"
+                id="input-cupom"
+                placeholder="Código do cupom"
+            >
+
+            <button
+                type="button"
+                class="btn-cupom"
+                onclick="aplicarCupomCarrinho()"
+            >
+                Aplicar
+            </button>
+
+        </div>
+
     </div>
-  </div>
 
-  <!-- ========================================== -->
-  <!-- SCRIPT JS PRINCIPAL                        -->
-  <!-- ========================================== -->
-  <script src="Scripts/Carrinho-checkout.js"></script>
 
-  <script>
-    function aplicarCupomCarrinho() {
-      const campo = document.getElementById('input-cupom');
-      const codigo = campo ? campo.value.trim() : '';
+    <!-- ========================================================= -->
+    <!-- RESUMO -->
+    <!-- ========================================================= -->
 
-      if (!codigo) {
-        alert('Digite um código de cupom.');
-        return;
-      }
+    <div class="resumo-fixo">
 
-      alert('Cupom "' + codigo + '" aplicado! (funcionalidade de desconto ainda em construção)');
-    }
-  </script>
+        <div class="resumo-linha">
 
+            <span>
+                Subtotal
+            </span>
+
+            <span id="resumo-subtotal">
+                R$ 0,00
+            </span>
+
+        </div>
+
+
+        <div class="resumo-linha">
+
+            <span>
+                Frete
+            </span>
+
+            <span class="frete-gratis">
+                Grátis
+            </span>
+
+        </div>
+
+
+        <div class="resumo-linha total">
+
+            <span>
+                Total
+            </span>
+
+            <span
+                class="total-valor"
+                id="valor-total"
+            >
+                R$ 0,00
+            </span>
+
+        </div>
+
+
+        <div
+            class="resumo-botoes"
+            style="display:flex; gap:10px;"
+        >
+
+            <button
+                type="button"
+                onclick="voltarPaginaAnterior()"
+                class="btn-continuar"
+                style="
+                    flex:1;
+                    background-color:#f1f5f9;
+                    color:#334155;
+                    border:none;
+                    padding:14px;
+                    border-radius:8px;
+                    font-size:0.9rem;
+                    font-weight:700;
+                    cursor:pointer;
+                "
+            >
+                Continuar Comprando
+            </button>
+
+
+            <button
+                type="button"
+                id="btn-finalizar"
+                onclick="finalizarPedido()"
+                class="btn-finalizar"
+                style="
+                    flex:1;
+                    border:none;
+                    cursor:pointer;
+                "
+            >
+                Finalizar Pedido
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================================================= -->
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Conexão com Supabase -->
+    <script src="Supabase/supabase.js"></script>
+
+    <!-- JavaScript do Carrinho -->
+    <script src="Scripts/05-carrinho.js"></script>
 </body>
+
 </html>
