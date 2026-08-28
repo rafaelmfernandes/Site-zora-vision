@@ -37,6 +37,91 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     // ========================================================
+    // OBTER CLIENTE SUPABASE
+    // ========================================================
+
+    let clienteSupabase = null;
+
+    try {
+
+        // Primeiro tenta utilizar a função global
+        // criada pelo 01-supabaseClient.js
+
+        if (
+            typeof window.obterSupabase === 'function'
+        ) {
+
+            clienteSupabase =
+                window.obterSupabase();
+
+        }
+
+
+        // Caso a função não esteja disponível,
+        // tenta utilizar o cliente global diretamente.
+
+        if (
+            !clienteSupabase &&
+            window.supabaseClient
+        ) {
+
+            clienteSupabase =
+                window.supabaseClient;
+        }
+
+
+        // Compatibilidade adicional com window._supabase
+
+        if (
+            !clienteSupabase &&
+            window._supabase
+        ) {
+
+            clienteSupabase =
+                window._supabase;
+        }
+
+
+        // Se não encontrou o cliente, interrompe.
+
+        if (!clienteSupabase) {
+
+            throw new Error(
+                'Cliente Supabase não encontrado. Verifique o carregamento do 01-supabaseClient.js.'
+            );
+        }
+
+
+        console.log(
+            '✅ Cliente Supabase disponível na Home.'
+        );
+
+
+    } catch (erro) {
+
+        console.error(
+            '❌ Erro ao inicializar Supabase na Home:',
+            erro
+        );
+
+
+        gridProdutos.innerHTML = `
+            <div style="
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 40px 20px;
+            ">
+                <p>
+                    Não foi possível conectar ao servidor.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    // ========================================================
     // BUSCAR PRODUTOS
     // ========================================================
 
@@ -47,19 +132,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
 
 
-        const clienteSupabase =
-            typeof obterSupabase === 'function'
-                ? obterSupabase()
-                : window.supabaseClient || window._supabase;
-
-        if (!clienteSupabase) {
-
-            throw new Error(
-                'Cliente Supabase não encontrado. Verifique o carregamento de Supabase/supabase.js.'
-            );
-        }
-
-        const { data: produtos, error } =
+        const {
+            data: produtos,
+            error
+        } =
             await clienteSupabase
                 .from('produtos')
                 .select(`
@@ -317,11 +393,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     'click',
                     evento => {
 
-                        /*
-                         * Se o clique foi no botão de adicionar
-                         * ou no botão de favorito, não abrir o produto.
-                         */
-
                         if (
                             evento.target.closest(
                                 '.btn-adicionar'
@@ -334,11 +405,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             return;
                         }
 
-
-                        /*
-                         * Se o clique foi em qualquer elemento
-                         * dentro de um link, deixa o link funcionar.
-                         */
 
                         if (
                             evento.target.closest(
@@ -568,11 +634,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         'click',
                         evento => {
 
-                            /*
-                             * Impede o clique de subir para
-                             * o card.
-                             */
-
                             evento.preventDefault();
 
                             evento.stopPropagation();
@@ -592,7 +653,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
                                 window.location.href =
-                                    'Login.html';
+                                    '02-Login.html';
 
 
                                 return;
@@ -899,12 +960,22 @@ function adicionarProdutoHome(
     // FALLBACK LOCALSTORAGE
     // ========================================================
 
-    const usuario =
-        JSON.parse(
-            localStorage.getItem(
-                'usuario_logado'
-            )
-        );
+    let usuario = null;
+
+
+    try {
+
+        usuario =
+            JSON.parse(
+                localStorage.getItem(
+                    'usuario_logado'
+                )
+            );
+
+    } catch (erro) {
+
+        usuario = null;
+    }
 
 
     const chave =
@@ -1071,12 +1142,22 @@ function atualizarBadgeCarrinhoHome() {
     }
 
 
-    const usuario =
-        JSON.parse(
-            localStorage.getItem(
-                'usuario_logado'
-            )
-        );
+    let usuario = null;
+
+
+    try {
+
+        usuario =
+            JSON.parse(
+                localStorage.getItem(
+                    'usuario_logado'
+                )
+            );
+
+    } catch (erro) {
+
+        usuario = null;
+    }
 
 
     const chave =
@@ -1598,3 +1679,4 @@ function inicializarCarrossel() {
         '🎠 Carrossel iniciado.'
     );
 }
+
