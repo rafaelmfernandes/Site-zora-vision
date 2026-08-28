@@ -9,6 +9,7 @@
 // - Excluir endereço
 // - Selecionar endereço
 // - Definir endereço principal
+// - Integrar endereço ao checkout
 // ============================================================
 
 
@@ -152,7 +153,7 @@ async function buscarClienteEndereco() {
 
 
 // ============================================================
-// 5. BUSCAR CEP
+// 5. BUSCAR CEP - PÁGINA DE CADASTRO
 // ============================================================
 
 async function buscarCepCadastro() {
@@ -309,7 +310,207 @@ async function buscarCepCadastro() {
 
 
 // ============================================================
-// 6. SALVAR ENDEREÇO LOCALMENTE
+// 6. BUSCAR CEP - CHECKOUT
+// ============================================================
+
+async function buscarCEP() {
+
+    const input =
+        document.getElementById(
+            'end-cep'
+        );
+
+    const status =
+        document.getElementById(
+            'cep-status'
+        );
+
+    if (!input) {
+
+        console.error(
+            'Campo end-cep não encontrado no checkout.'
+        );
+
+        return;
+    }
+
+    const cep =
+        input.value
+            .replace(
+                /\D/g,
+                ''
+            );
+
+    if (cep.length !== 8) {
+
+        if (status) {
+
+            status.style.color =
+                '#ef4444';
+
+            status.textContent =
+                'Digite um CEP válido com 8 números.';
+        }
+
+        return;
+    }
+
+    try {
+
+        if (status) {
+
+            status.style.color =
+                '#2563eb';
+
+            status.textContent =
+                'Buscando endereço...';
+        }
+
+        const resposta =
+            await fetch(
+                `https://viacep.com.br/ws/${cep}/json/`
+            );
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                'Falha ao consultar o CEP.'
+            );
+        }
+
+        const dados =
+            await resposta.json();
+
+        if (dados.erro) {
+
+            if (status) {
+
+                status.style.color =
+                    '#ef4444';
+
+                status.textContent =
+                    'CEP não encontrado.';
+            }
+
+            return;
+        }
+
+
+        // ----------------------------------------------------
+        // PREENCHER RUA
+        // ----------------------------------------------------
+
+        const rua =
+            document.getElementById(
+                'end-rua'
+            );
+
+        if (rua) {
+
+            rua.value =
+                dados.logradouro || '';
+        }
+
+
+        // ----------------------------------------------------
+        // PREENCHER BAIRRO
+        // ----------------------------------------------------
+
+        const bairro =
+            document.getElementById(
+                'end-bairro'
+            );
+
+        if (bairro) {
+
+            bairro.value =
+                dados.bairro || '';
+        }
+
+
+        // ----------------------------------------------------
+        // PREENCHER CIDADE
+        // ----------------------------------------------------
+
+        const cidade =
+            document.getElementById(
+                'end-cidade'
+            );
+
+        if (cidade) {
+
+            cidade.value =
+                dados.localidade || '';
+        }
+
+
+        // ----------------------------------------------------
+        // PREENCHER UF
+        // ----------------------------------------------------
+
+        const uf =
+            document.getElementById(
+                'end-uf'
+            );
+
+        if (uf) {
+
+            uf.value =
+                (
+                    dados.uf || ''
+                ).toUpperCase();
+        }
+
+
+        // ----------------------------------------------------
+        // STATUS
+        // ----------------------------------------------------
+
+        if (status) {
+
+            status.style.color =
+                '#10b981';
+
+            status.textContent =
+                'Endereço localizado!';
+        }
+
+
+        // ----------------------------------------------------
+        // FOCO NO NÚMERO
+        // ----------------------------------------------------
+
+        const numero =
+            document.getElementById(
+                'end-numero'
+            );
+
+        if (numero) {
+
+            numero.focus();
+        }
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao buscar CEP no checkout:',
+            erro
+        );
+
+        if (status) {
+
+            status.style.color =
+                '#ef4444';
+
+            status.textContent =
+                'Erro ao consultar CEP.';
+        }
+    }
+}
+
+
+// ============================================================
+// 7. SALVAR ENDEREÇO LOCALMENTE
 // ============================================================
 
 function salvarEnderecoLocal(endereco) {
@@ -334,7 +535,7 @@ function salvarEnderecoLocal(endereco) {
 
 
 // ============================================================
-// 7. CARREGAR ENDEREÇO LOCAL
+// 8. CARREGAR ENDEREÇO LOCAL
 // ============================================================
 
 function carregarEnderecoLocal() {
@@ -370,7 +571,7 @@ function carregarEnderecoLocal() {
 
 
 // ============================================================
-// 8. CADASTRAR ENDEREÇO
+// 9. CADASTRAR ENDEREÇO
 // ============================================================
 
 function carregarDadosFormularioEndereco() {
@@ -562,11 +763,6 @@ function carregarDadosFormularioEndereco() {
                     return;
                 }
 
-                // ------------------------------------------------
-                // Remove o status de principal dos endereços
-                // anteriores.
-                // ------------------------------------------------
-
                 const {
                     error: erroPrincipal
                 } =
@@ -591,10 +787,6 @@ function carregarDadosFormularioEndereco() {
                         'Não foi possível atualizar o endereço principal.'
                     );
                 }
-
-                // ------------------------------------------------
-                // Insere o novo endereço.
-                // ------------------------------------------------
 
                 const dadosSupabase = {
 
@@ -688,7 +880,7 @@ function carregarDadosFormularioEndereco() {
 
 
 // ============================================================
-// 9. CARREGAR PÁGINA DE ENDEREÇOS
+// 10. CARREGAR PÁGINA DE ENDEREÇOS
 // ============================================================
 
 async function carregarPaginaEnderecos() {
@@ -781,7 +973,7 @@ async function carregarPaginaEnderecos() {
 
 
 // ============================================================
-// 10. RENDERIZAR ENDEREÇOS
+// 11. RENDERIZAR ENDEREÇOS
 // ============================================================
 
 function renderizarEnderecos(
@@ -919,7 +1111,7 @@ function renderizarEnderecos(
 
 
 // ============================================================
-// 11. DEFINIR ENDEREÇO PRINCIPAL
+// 12. DEFINIR ENDEREÇO PRINCIPAL
 // ============================================================
 
 async function definirEnderecoPrincipal(
@@ -992,6 +1184,7 @@ async function definirEnderecoPrincipal(
         if (data) {
 
             salvarEnderecoLocal({
+
                 nome:
                     data.nome_destinatario,
 
@@ -1035,7 +1228,7 @@ async function definirEnderecoPrincipal(
 
 
 // ============================================================
-// 12. SELECIONAR ENDEREÇO
+// 13. SELECIONAR ENDEREÇO
 // ============================================================
 
 async function selecionarEndereco(
@@ -1130,7 +1323,7 @@ async function selecionarEndereco(
 
 
 // ============================================================
-// 13. EXCLUIR ENDEREÇO
+// 14. EXCLUIR ENDEREÇO
 // ============================================================
 
 async function excluirEndereco(
@@ -1238,7 +1431,7 @@ async function excluirEndereco(
 
 
 // ============================================================
-// 14. COMPATIBILIDADE COM FUNÇÃO ANTIGA
+// 15. COMPATIBILIDADE COM FUNÇÃO ANTIGA
 // ============================================================
 
 async function excluirEnderecoSalvo() {
@@ -1310,7 +1503,7 @@ async function excluirEnderecoSalvo() {
 
 
 // ============================================================
-// 15. CONFIRMAR SELEÇÃO
+// 16. CONFIRMAR SELEÇÃO
 // ============================================================
 
 function confirmarSelecaoEndereco() {
@@ -1350,7 +1543,7 @@ function confirmarSelecaoEndereco() {
 
 
 // ============================================================
-// 16. INICIALIZAÇÃO
+// 17. INICIALIZAÇÃO
 // ============================================================
 
 document.addEventListener(
@@ -1391,11 +1584,14 @@ document.addEventListener(
 
 
 // ============================================================
-// 17. EXPORTAÇÕES GLOBAIS
+// 18. EXPORTAÇÕES GLOBAIS
 // ============================================================
 
 window.buscarCepCadastro =
     buscarCepCadastro;
+
+window.buscarCEP =
+    buscarCEP;
 
 window.carregarDadosFormularioEndereco =
     carregarDadosFormularioEndereco;
@@ -1417,3 +1613,4 @@ window.excluirEnderecoSalvo =
 
 window.confirmarSelecaoEndereco =
     confirmarSelecaoEndereco;
+

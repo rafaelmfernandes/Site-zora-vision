@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 );
 
                 window.location.href =
-                    'Endereços.html';
+                    '03-Enderecos.html';
 
                 return;
             }
@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 );
 
                 window.location.href =
-                    'Endereços.html';
+                    '03-Enderecos.html';
 
                 return;
             }
@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             );
 
             window.location.href =
-                'Endereços.html';
+                '03-Enderecos.html';
 
         }
 
@@ -1043,7 +1043,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
                 window.location.href =
-                    'Endereços.html';
+                    '03-Enderecos.html';
 
 
                 return;
@@ -1183,7 +1183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
             window.location.href =
-                'Endereços.html';
+                '03-Enderecos.html';
 
 
         } catch (erro) {

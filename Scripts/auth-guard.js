@@ -15,7 +15,7 @@ function verificarAutenticacaoAntesDeAcao(e) {
         alert('Por favor, faça login na sua conta para continuar.');
         
         // Redireciona para a página de perfil / login
-        window.location.href = 'Meu-perfil.html';
+        window.location.href = '03-Meus-pedidos.html';
         return false;
     }
 

@@ -745,7 +745,7 @@ function mostrarPagamentoPixAprovado(
     setTimeout(
         () => {
             window.location.href =
-                'pedido-confirmado.html';
+                '04-Pedido-confirmado.html';
         },
         2000
     );

@@ -1,32 +1,21 @@
+
 // ============================================================
-// ZORAVISION - PEDIDO-CONFIRMADO.JS
+// ZORAVISION - 05-PEDIDO-CONFIRMADO.JS
 //
-// RESPONSABILIDADES DESTE ARQUIVO:
-// - Carregar o pedido confirmado salvo no navegador.
-// - Buscar o pedido atualizado no Supabase quando possível.
-// - Exibir o número do pedido.
-// - Exibir o status do pedido.
-// - Exibir o status do pagamento.
-// - Exibir subtotal, frete, desconto e total.
-// - Exibir os produtos que fazem parte do pedido.
-// - Exibir quantidade e preço dos produtos.
-// - Formatar valores em Real brasileiro.
-// - Formatar os status do pedido e do pagamento.
-// - Permitir voltar para a loja.
-// - Permitir acessar a área de pedidos do cliente.
-// - Exibir mensagens de erro caso o pedido não seja encontrado.
+// Responsabilidades:
+// - Carregar o pedido confirmado
+// - Buscar o pedido atualizado no Supabase
+// - Exibir número do pedido
+// - Exibir data
+// - Exibir forma de pagamento
+// - Exibir itens comprados
+// - Exibir subtotal, frete, desconto e total
+// - Exibir hora da aprovação
+// - Exibir endereço de entrega
+// - Atualizar status visual
 //
-// NÃO É RESPONSABILIDADE DESTE ARQUIVO:
-// - Criar pedidos.
-// - Alterar o carrinho.
-// - Processar pagamentos PIX.
-// - Verificar pagamento PIX.
-// - Cadastrar ou alterar endereço.
-// - Fazer login ou cadastro de usuário.
-// - Aplicar cupons.
-//
-// ARQUIVO:
-// Scripts/pedido-confirmado.js
+// Compatível com:
+// 04-pedido-confirmado.html
 // ============================================================
 
 
@@ -56,16 +45,17 @@ function obterUsuarioPedidoConfirmado() {
 
     try {
 
-        const usuario =
-            JSON.parse(
-                localStorage.getItem('usuario_logado')
-            );
+        const dados =
+            localStorage.getItem('usuario_logado');
 
-        if (
-            !usuario ||
-            !usuario.id ||
-            !usuario.email
-        ) {
+        if (!dados) {
+            return null;
+        }
+
+        const usuario =
+            JSON.parse(dados);
+
+        if (!usuario) {
             return null;
         }
 
@@ -84,10 +74,10 @@ function obterUsuarioPedidoConfirmado() {
 
 
 // ============================================================
-// 3. ELEMENTOS DA PÁGINA
+// 3. ELEMENTO
 // ============================================================
 
-function obterElemento(id) {
+function obterElementoPedidoConfirmado(id) {
 
     return document.getElementById(id);
 }
@@ -97,105 +87,100 @@ function obterElemento(id) {
 // 4. FORMATAR VALOR
 // ============================================================
 
-function formatarValor(valor) {
+function formatarValorPedidoConfirmado(valor) {
 
     const numero =
         Number(valor) || 0;
 
-    return (
-        'R$ ' +
-        numero
-            .toFixed(2)
-            .replace('.', ',')
+    return numero.toLocaleString(
+        'pt-BR',
+        {
+            style: 'currency',
+            currency: 'BRL'
+        }
     );
 }
 
 
 // ============================================================
-// 5. FORMATAR STATUS DO PEDIDO
+// 5. FORMATAR DATA
 // ============================================================
 
-function formatarStatusPedidoConfirmado(status) {
+function formatarDataPedidoConfirmado(data) {
 
-    const statusMap = {
+    if (!data) {
+        return '-';
+    }
 
-        pendente:
-            'Pendente',
+    const dataFormatada =
+        new Date(data);
 
-        confirmado:
-            'Confirmado',
+    if (
+        Number.isNaN(
+            dataFormatada.getTime()
+        )
+    ) {
+        return '-';
+    }
 
-        processando:
-            'Processando',
-
-        enviado:
-            'Enviado',
-
-        entregue:
-            'Entregue',
-
-        cancelado:
-            'Cancelado',
-
-        concluido:
-            'Concluído'
-    };
-
-    return (
-        statusMap[status] ||
-        status ||
-        'Pendente'
+    return dataFormatada.toLocaleDateString(
+        'pt-BR'
     );
 }
 
 
 // ============================================================
-// 6. FORMATAR STATUS DO PAGAMENTO
+// 6. FORMATAR HORA
 // ============================================================
 
-function formatarStatusPagamentoConfirmado(status) {
+function formatarHoraPedidoConfirmado(data) {
 
-    const statusMap = {
+    if (!data) {
+        return '-';
+    }
 
-        pendente:
-            'Pendente',
+    const dataFormatada =
+        new Date(data);
 
-        aprovado:
-            'Aprovado',
+    if (
+        Number.isNaN(
+            dataFormatada.getTime()
+        )
+    ) {
+        return '-';
+    }
 
-        pago:
-            'Pago',
-
-        rejeitado:
-            'Rejeitado',
-
-        cancelado:
-            'Cancelado',
-
-        expirado:
-            'Expirado'
-    };
-
-    return (
-        statusMap[status] ||
-        status ||
-        'Pendente'
+    return dataFormatada.toLocaleTimeString(
+        'pt-BR',
+        {
+            hour: '2-digit',
+            minute: '2-digit'
+        }
     );
 }
 
 
 // ============================================================
-// 7. RECUPERAR PEDIDO DO LOCALSTORAGE
+// 7. OBTER PEDIDO SALVO LOCALMENTE
 // ============================================================
 
-function obterPedidoLocal() {
+function obterPedidoLocalConfirmado() {
 
     const chaves = [
+
         'pedido_pix_atual',
-        'pedido_atual'
+
+        'pedido_atual',
+
+        'pedido_confirmado'
+
     ];
 
-    for (const chave of chaves) {
+
+    for (
+        const chave
+        of chaves
+    ) {
 
         try {
 
@@ -209,14 +194,18 @@ function obterPedidoLocal() {
             const pedido =
                 JSON.parse(dados);
 
-            if (pedido && pedido.id) {
+            if (
+                pedido &&
+                pedido.id
+            ) {
+
                 return pedido;
             }
 
         } catch (erro) {
 
             console.warn(
-                `Não foi possível ler ${chave}:`,
+                `Erro ao ler ${chave}:`,
                 erro
             );
         }
@@ -227,60 +216,241 @@ function obterPedidoLocal() {
 
 
 // ============================================================
-// 8. BUSCAR PEDIDO NO SUPABASE
+// 8. OBTER ID DO PEDIDO
 // ============================================================
 
-async function buscarPedidoAtualizado(pedidoId) {
+function obterIdPedidoConfirmado() {
+
+    const pedidoLocal =
+        obterPedidoLocalConfirmado();
+
+
+    if (
+        pedidoLocal &&
+        pedidoLocal.id
+    ) {
+
+        return pedidoLocal.id;
+    }
+
+
+    const chaves = [
+
+        'pedido_id_pix_verificacao',
+
+        'pedido_id',
+
+        'pedido_confirmado_id'
+
+    ];
+
+
+    for (
+        const chave
+        of chaves
+    ) {
+
+        const valor =
+            localStorage.getItem(chave);
+
+        if (valor) {
+
+            return valor;
+        }
+    }
+
+
+    return null;
+}
+
+
+// ============================================================
+// 9. BUSCAR PEDIDO NO SUPABASE
+// ============================================================
+
+async function buscarPedidoConfirmadoNoSupabase(
+    pedidoId
+) {
 
     if (!pedidoId) {
+
+        console.warn(
+            'ID do pedido não informado.'
+        );
+
         return null;
     }
 
+
     const supabase =
         obterSupabasePedidoConfirmado();
+
 
     if (!supabase) {
         return null;
     }
 
+
     try {
 
+        console.log(
+            'Buscando pedido no Supabase:',
+            pedidoId
+        );
+
+
+        // ----------------------------------------------------
+        // BUSCA O PEDIDO
+        // ----------------------------------------------------
+
         const {
-            data,
-            error
+            data: pedido,
+            error: erroPedido
         } =
             await supabase
                 .from('pedidos')
-                .select(`
-                    *,
-                    itens_pedido (
-                        id,
-                        pedido_id,
-                        produto_id,
-                        nome_produto,
-                        quantidade,
-                        preco_unitario,
-                        subtotal,
-                        created_at
-                    )
-                `)
-                .eq(
-                    'id',
-                    pedidoId
-                )
+                .select('*')
+                .eq('id', pedidoId)
                 .maybeSingle();
 
-        if (error) {
+
+        if (erroPedido) {
 
             console.error(
-                'Erro ao buscar pedido confirmado:',
-                error
+                'Erro ao buscar pedido:',
+                erroPedido
             );
 
             return null;
         }
 
-        return data || null;
+
+        if (!pedido) {
+
+            console.warn(
+                'Pedido não encontrado:',
+                pedidoId
+            );
+
+            return null;
+        }
+
+
+        console.log(
+            'Pedido encontrado:',
+            pedido
+        );
+
+
+        // ----------------------------------------------------
+        // BUSCA OS ITENS
+        // ----------------------------------------------------
+
+        const {
+            data: itens,
+            error: erroItens
+        } =
+            await supabase
+                .from('itens_pedido')
+                .select(`
+                    id,
+                    pedido_id,
+                    produto_id,
+                    nome_produto,
+                    quantidade,
+                    preco_unitario,
+                    subtotal,
+                    created_at
+                `)
+                .eq(
+                    'pedido_id',
+                    pedido.id
+                )
+                .order(
+                    'id',
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (erroItens) {
+
+            console.error(
+                'Erro ao buscar itens do pedido:',
+                erroItens
+            );
+
+            pedido.itens_pedido = [];
+
+        } else {
+
+            pedido.itens_pedido =
+                itens || [];
+        }
+
+
+        // ----------------------------------------------------
+        // BUSCA O ENDEREÇO
+        // ----------------------------------------------------
+
+        pedido.enderecos = null;
+
+
+        if (
+            pedido.endereco_id
+        ) {
+
+            const {
+                data: endereco,
+                error: erroEndereco
+            } =
+                await supabase
+                    .from('enderecos')
+                    .select(`
+                        id,
+                        cliente_id,
+                        nome_destinatario,
+                        cep,
+                        rua,
+                        numero,
+                        complemento,
+                        bairro,
+                        cidade,
+                        estado,
+                        principal,
+                        created_at,
+                        updated_at
+                    `)
+                    .eq(
+                        'id',
+                        pedido.endereco_id
+                    )
+                    .maybeSingle();
+
+
+            if (erroEndereco) {
+
+                console.error(
+                    'Erro ao buscar endereço:',
+                    erroEndereco
+                );
+
+            } else {
+
+                pedido.enderecos =
+                    endereco || null;
+            }
+        }
+
+
+        console.log(
+            'Pedido completo:',
+            pedido
+        );
+
+
+        return pedido;
 
     } catch (erro) {
 
@@ -295,14 +465,17 @@ async function buscarPedidoAtualizado(pedidoId) {
 
 
 // ============================================================
-// 9. SALVAR PEDIDO ATUALIZADO
+// 10. SALVAR PEDIDO ATUALIZADO
 // ============================================================
 
-function salvarPedidoConfirmado(pedido) {
+function salvarPedidoConfirmadoLocal(
+    pedido
+) {
 
     if (!pedido) {
         return;
     }
+
 
     try {
 
@@ -311,15 +484,41 @@ function salvarPedidoConfirmado(pedido) {
             JSON.stringify(pedido)
         );
 
+
         localStorage.setItem(
             'pedido_pix_atual',
             JSON.stringify(pedido)
         );
 
+
+        localStorage.setItem(
+            'pedido_confirmado',
+            JSON.stringify(pedido)
+        );
+
+
+        if (pedido.id) {
+
+            localStorage.setItem(
+                'pedido_id_pix_verificacao',
+                String(pedido.id)
+            );
+
+            localStorage.setItem(
+                'pedido_id',
+                String(pedido.id)
+            );
+
+            localStorage.setItem(
+                'pedido_confirmado_id',
+                String(pedido.id)
+            );
+        }
+
     } catch (erro) {
 
         console.warn(
-            'Não foi possível salvar o pedido atualizado:',
+            'Não foi possível salvar o pedido:',
             erro
         );
     }
@@ -327,17 +526,23 @@ function salvarPedidoConfirmado(pedido) {
 
 
 // ============================================================
-// 10. EXIBIR NÚMERO DO PEDIDO
+// 11. NÚMERO DO PEDIDO
 // ============================================================
 
-function renderizarNumeroPedido(pedido) {
+function renderizarNumeroPedidoConfirmado(
+    pedido
+) {
 
     const elemento =
-        obterElemento('numero-pedido');
+        obterElementoPedidoConfirmado(
+            'conf-numero-pedido'
+        );
+
 
     if (!elemento) {
         return;
     }
+
 
     const numero =
         pedido.numero_pedido ||
@@ -345,169 +550,201 @@ function renderizarNumeroPedido(pedido) {
         pedido.id ||
         '-';
 
-    const textoNumero =
+
+    const texto =
         String(numero).startsWith('#')
             ? String(numero)
             : `#${numero}`;
 
+
     elemento.textContent =
-        textoNumero;
+        texto;
 }
 
 
 // ============================================================
-// 11. EXIBIR STATUS DO PEDIDO
+// 12. DATA
 // ============================================================
 
-function renderizarStatusPedido(pedido) {
+function renderizarDataPedidoConfirmado(
+    pedido
+) {
 
-    const elementos =
-        document.querySelectorAll(
-            '#status-pedido, .status-pedido'
+    const elemento =
+        obterElementoPedidoConfirmado(
+            'conf-data-pedido'
         );
 
-    if (!elementos.length) {
+
+    if (!elemento) {
         return;
     }
 
-    const status =
-        formatarStatusPedidoConfirmado(
-            pedido.status
+
+    elemento.textContent =
+        formatarDataPedidoConfirmado(
+            pedido.created_at
         );
-
-    elementos.forEach(
-        elemento => {
-
-            elemento.textContent =
-                status;
-
-            elemento.dataset.status =
-                pedido.status || 'pendente';
-        }
-    );
 }
 
 
 // ============================================================
-// 12. EXIBIR STATUS DO PAGAMENTO
+// 13. FORMA DE PAGAMENTO
 // ============================================================
 
-function renderizarStatusPagamento(pedido) {
+function renderizarPagamentoPedidoConfirmado(
+    pedido
+) {
 
-    const elementos =
-        document.querySelectorAll(
-            '#status-pagamento, .status-pagamento'
+    const elemento =
+        obterElementoPedidoConfirmado(
+            'conf-pagamento'
         );
 
-    if (!elementos.length) {
+
+    if (!elemento) {
         return;
     }
 
-    const status =
-        formatarStatusPagamentoConfirmado(
-            pedido.status_pagamento
-        );
 
-    elementos.forEach(
-        elemento => {
+    let pagamento =
+        pedido.forma_pagamento ||
+        'PIX';
 
-            elemento.textContent =
-                status;
 
-            elemento.dataset.status =
-                pedido.status_pagamento ||
-                'pendente';
-        }
-    );
+    pagamento =
+        String(pagamento)
+            .replaceAll('_', ' ')
+            .toUpperCase();
+
+
+    elemento.textContent =
+        pagamento;
 }
 
 
 // ============================================================
-// 13. EXIBIR VALORES DO PEDIDO
+// 14. SUBTOTAL
 // ============================================================
 
-function renderizarValores(pedido) {
+function renderizarSubtotalPedidoConfirmado(
+    pedido
+) {
 
-    const subtotal =
-        formatarValor(
+    const elemento =
+        obterElementoPedidoConfirmado(
+            'conf-subtotal'
+        );
+
+
+    if (!elemento) {
+        return;
+    }
+
+
+    elemento.textContent =
+        formatarValorPedidoConfirmado(
             pedido.subtotal
         );
+}
 
-    const frete =
-        formatarValor(
+
+// ============================================================
+// 15. FRETE
+// ============================================================
+
+function renderizarFretePedidoConfirmado(
+    pedido
+) {
+
+    const elemento =
+        obterElementoPedidoConfirmado(
+            'conf-frete'
+        );
+
+
+    if (!elemento) {
+        return;
+    }
+
+
+    elemento.textContent =
+        formatarValorPedidoConfirmado(
             pedido.frete
-        );
-
-    const desconto =
-        formatarValor(
-            pedido.desconto
-        );
-
-    const total =
-        formatarValor(
-            pedido.total
-        );
-
-
-    const campos = {
-
-        'pedido-subtotal':
-            subtotal,
-
-        'resumo-subtotal':
-            subtotal,
-
-        'pedido-frete':
-            frete,
-
-        'resumo-frete':
-            frete,
-
-        'pedido-desconto':
-            desconto,
-
-        'resumo-desconto':
-            desconto,
-
-        'pedido-total':
-            total,
-
-        'resumo-total':
-            total,
-
-        'valor-total':
-            total
-    };
-
-
-    Object.entries(campos)
-        .forEach(
-            ([id, valor]) => {
-
-                const elemento =
-                    obterElemento(id);
-
-                if (elemento) {
-                    elemento.textContent =
-                        valor;
-                }
-            }
         );
 }
 
 
 // ============================================================
-// 14. RENDERIZAR ITENS DO PEDIDO
+// 16. DESCONTO
 // ============================================================
 
-function renderizarItensPedido(pedido) {
+function renderizarDescontoPedidoConfirmado(
+    pedido
+) {
+
+    const elemento =
+        obterElementoPedidoConfirmado(
+            'conf-desconto'
+        );
+
+
+    if (!elemento) {
+        return;
+    }
+
+
+    elemento.textContent =
+        formatarValorPedidoConfirmado(
+            pedido.desconto
+        );
+}
+
+
+// ============================================================
+// 17. TOTAL
+// ============================================================
+
+function renderizarTotalPedidoConfirmado(
+    pedido
+) {
+
+    const elemento =
+        obterElementoPedidoConfirmado(
+            'conf-total-pago'
+        );
+
+
+    if (!elemento) {
+        return;
+    }
+
+
+    elemento.textContent =
+        formatarValorPedidoConfirmado(
+            pedido.total
+        );
+}
+
+
+// ============================================================
+// 18. ITENS
+// ============================================================
+
+function renderizarItensPedidoConfirmado(
+    pedido
+) {
 
     const container =
-        obterElemento('lista-itens-pedido');
+        obterElementoPedidoConfirmado(
+            'conf-lista-itens'
+        );
+
 
     if (!container) {
         return;
     }
+
 
     const itens =
         Array.isArray(
@@ -517,13 +754,15 @@ function renderizarItensPedido(pedido) {
             : [];
 
 
-    if (itens.length === 0) {
+    if (
+        itens.length === 0
+    ) {
 
         container.innerHTML = `
             <p style="
                 color:#64748b;
-                font-size:14px;
                 margin:0;
+                font-size:14px;
             ">
                 Nenhum item encontrado neste pedido.
             </p>
@@ -538,44 +777,83 @@ function renderizarItensPedido(pedido) {
             .map(
                 item => {
 
+                    const nome =
+                        item.nome_produto ||
+                        'Produto';
+
+
                     const quantidade =
                         Number(
                             item.quantidade
                         ) || 0;
+
 
                     const preco =
                         Number(
                             item.preco_unitario
                         ) || 0;
 
+
                     const subtotal =
                         Number(
                             item.subtotal
                         ) ||
-                        preco * quantidade;
+                        (
+                            preco *
+                            quantidade
+                        );
 
 
                     return `
                         <div
-                            class="pedido-item"
-                            data-item-id="${item.id || ''}"
+                            style="
+                                display:flex;
+                                justify-content:space-between;
+                                align-items:center;
+                                gap:10px;
+                                padding:8px 0;
+                                border-bottom:1px solid #f1f5f9;
+                            "
                         >
 
-                            <div class="pedido-item-info">
+                            <div
+                                style="
+                                    display:flex;
+                                    flex-direction:column;
+                                    gap:3px;
+                                "
+                            >
 
-                                <strong>
-                                    ${item.nome_produto || 'Produto'}
+                                <strong
+                                    style="
+                                        color:#0f172a;
+                                        font-size:14px;
+                                    "
+                                >
+                                    ${escaparHTMLPedidoConfirmado(nome)}
                                 </strong>
 
-                                <span>
+                                <span
+                                    style="
+                                        color:#64748b;
+                                        font-size:12px;
+                                    "
+                                >
                                     ${quantidade}x
+                                    ${formatarValorPedidoConfirmado(preco)}
                                 </span>
 
                             </div>
 
-                            <div class="pedido-item-preco">
-                                ${formatarValor(subtotal)}
-                            </div>
+                            <strong
+                                style="
+                                    color:#0f172a;
+                                    font-size:14px;
+                                    white-space:nowrap;
+                                "
+                            >
+                                ${formatarValorPedidoConfirmado(subtotal)}
+                            </strong>
 
                         </div>
                     `;
@@ -586,198 +864,705 @@ function renderizarItensPedido(pedido) {
 
 
 // ============================================================
-// 15. EXIBIR DATA DO PEDIDO
+// 19. ESCAPAR HTML
 // ============================================================
 
-function renderizarDataPedido(pedido) {
+function escaparHTMLPedidoConfirmado(
+    valor
+) {
+
+    return String(valor)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+
+// ============================================================
+// 20. HORA DA APROVAÇÃO
+// ============================================================
+
+function renderizarHoraAprovadoPedidoConfirmado(
+    pedido
+) {
 
     const elemento =
-        document.querySelector(
-            '#data-pedido, .data-pedido'
+        obterElementoPedidoConfirmado(
+            'conf-hora-aprovado'
         );
+
 
     if (!elemento) {
         return;
     }
 
-    if (!pedido.created_at) {
 
-        elemento.textContent =
-            '-';
+    const statusPagamento =
+        String(
+            pedido.status_pagamento ||
+            ''
+        ).toLowerCase();
 
-        return;
+
+    let dataAprovacao;
+
+
+    if (
+        statusPagamento === 'aprovado' ||
+        statusPagamento === 'pago' ||
+        statusPagamento === 'approved'
+    ) {
+
+        dataAprovacao =
+            pedido.updated_at ||
+            pedido.created_at;
+
+    } else {
+
+        dataAprovacao =
+            pedido.created_at;
     }
 
-    try {
 
-        const data =
-            new Date(
-                pedido.created_at
-            );
-
-        elemento.textContent =
-            data.toLocaleString(
-                'pt-BR',
-                {
-                    dateStyle:
-                        'short',
-
-                    timeStyle:
-                        'short'
-                }
-            );
-
-    } catch (erro) {
-
-        elemento.textContent =
-            '-';
-    }
+    elemento.textContent =
+        formatarHoraPedidoConfirmado(
+            dataAprovacao
+        );
 }
 
 
 // ============================================================
-// 16. RENDERIZAR TODAS AS INFORMAÇÕES
+// 21. ENDEREÇO
 // ============================================================
 
-function renderizarPedidoConfirmado(pedido) {
+function renderizarEnderecoPedidoConfirmado(
+    pedido
+) {
+
+    const container =
+        obterElementoPedidoConfirmado(
+            'conf-container-endereco'
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    let endereco =
+        null;
+
+
+    // --------------------------------------------------------
+    // ENDEREÇO VINDO DO BANCO
+    // --------------------------------------------------------
+
+    if (
+        pedido.enderecos
+    ) {
+
+        if (
+            Array.isArray(
+                pedido.enderecos
+            )
+        ) {
+
+            endereco =
+                pedido.enderecos[0] ||
+                null;
+
+        } else {
+
+            endereco =
+                pedido.enderecos;
+        }
+    }
+
+
+    // --------------------------------------------------------
+    // FALLBACK LOCALSTORAGE
+    // --------------------------------------------------------
+
+    if (!endereco) {
+
+        try {
+
+            const usuario =
+                obterUsuarioPedidoConfirmado();
+
+
+            const chaves = [];
+
+
+            if (
+                usuario &&
+                usuario.email
+            ) {
+
+                chaves.push(
+                    'ultimo_endereco_cliente_' +
+                    String(
+                        usuario.email
+                    )
+                        .trim()
+                        .toLowerCase()
+                );
+            }
+
+
+            chaves.push(
+                'ultimo_endereco_cliente'
+            );
+
+
+            for (
+                const chave
+                of chaves
+            ) {
+
+                const dados =
+                    localStorage.getItem(
+                        chave
+                    );
+
+
+                if (!dados) {
+                    continue;
+                }
+
+
+                const enderecoLocal =
+                    JSON.parse(
+                        dados
+                    );
+
+
+                if (
+                    enderecoLocal &&
+                    (
+                        enderecoLocal.rua ||
+                        enderecoLocal.cep
+                    )
+                ) {
+
+                    endereco =
+                        enderecoLocal;
+
+                    break;
+                }
+            }
+
+        } catch (erro) {
+
+            console.warn(
+                'Erro ao obter endereço local:',
+                erro
+            );
+        }
+    }
+
+
+    // --------------------------------------------------------
+    // SEM ENDEREÇO
+    // --------------------------------------------------------
+
+    if (!endereco) {
+
+        container.innerHTML = `
+            <p style="
+                color:#64748b;
+                margin:0;
+            ">
+                Endereço de entrega não encontrado.
+            </p>
+        `;
+
+        return;
+    }
+
+
+    const nome =
+        endereco.nome_destinatario ||
+        endereco.nome ||
+        '';
+
+
+    const rua =
+        endereco.rua ||
+        '';
+
+
+    const numero =
+        endereco.numero ||
+        '';
+
+
+    const complemento =
+        endereco.complemento ||
+        '';
+
+
+    const bairro =
+        endereco.bairro ||
+        '';
+
+
+    const cidade =
+        endereco.cidade ||
+        '';
+
+
+    const estado =
+        endereco.estado ||
+        endereco.uf ||
+        '';
+
+
+    const cep =
+        endereco.cep ||
+        '';
+
+
+    container.innerHTML = `
+
+        ${
+            nome
+                ? `
+                    <strong
+                        style="
+                            display:block;
+                            color:#0f172a;
+                            margin-bottom:4px;
+                        "
+                    >
+                        ${escaparHTMLPedidoConfirmado(nome)}
+                    </strong>
+                `
+                : ''
+        }
+
+        ${
+            rua
+                ? `
+                    <div>
+                        ${escaparHTMLPedidoConfirmado(rua)}
+                        ${
+                            numero
+                                ? `, nº ${escaparHTMLPedidoConfirmado(numero)}`
+                                : ''
+                        }
+                    </div>
+                `
+                : ''
+        }
+
+        ${
+            complemento
+                ? `
+                    <div>
+                        ${escaparHTMLPedidoConfirmado(complemento)}
+                    </div>
+                `
+                : ''
+        }
+
+        ${
+            bairro
+                ? `
+                    <div>
+                        ${escaparHTMLPedidoConfirmado(bairro)}
+                    </div>
+                `
+                : ''
+        }
+
+        ${
+            cidade
+                ? `
+                    <div>
+                        ${escaparHTMLPedidoConfirmado(cidade)}
+                        ${
+                            estado
+                                ? `/${escaparHTMLPedidoConfirmado(String(estado).toUpperCase())}`
+                                : ''
+                        }
+                    </div>
+                `
+                : ''
+        }
+
+        ${
+            cep
+                ? `
+                    <div
+                        style="
+                            margin-top:4px;
+                            color:#2563eb;
+                            font-weight:600;
+                        "
+                    >
+                        CEP:
+                        ${escaparHTMLPedidoConfirmado(cep)}
+                    </div>
+                `
+                : ''
+        }
+    `;
+}
+
+
+// ============================================================
+// 22. STATUS VISUAL
+// ============================================================
+
+function atualizarStatusVisualPedidoConfirmado(
+    pedido
+) {
 
     if (!pedido) {
         return;
     }
 
-    renderizarNumeroPedido(
-        pedido
-    );
 
-    renderizarStatusPedido(
-        pedido
-    );
-
-    renderizarStatusPagamento(
-        pedido
-    );
-
-    renderizarValores(
-        pedido
-    );
-
-    renderizarItensPedido(
-        pedido
-    );
-
-    renderizarDataPedido(
-        pedido
-    );
-}
-
-
-// ============================================================
-// 17. MOSTRAR ERRO
-// ============================================================
-
-function mostrarErroPedidoConfirmado(mensagem) {
-
-    const elementos =
+    const passos =
         document.querySelectorAll(
-            '#erro-pedido, .erro-pedido'
+            '.status-passo'
         );
 
-    if (!elementos.length) {
 
-        console.error(
-            mensagem
-        );
-
+    if (!passos.length) {
         return;
     }
 
-    elementos.forEach(
-        elemento => {
 
-            elemento.textContent =
-                mensagem;
+    const statusPagamento =
+        String(
+            pedido.status_pagamento ||
+            ''
+        )
+            .trim()
+            .toLowerCase();
 
-            elemento.style.display =
-                'block';
+
+    const statusPedido =
+        String(
+            pedido.status ||
+            ''
+        )
+            .trim()
+            .toLowerCase();
+
+
+    // --------------------------------------------------------
+    // RESET
+    // --------------------------------------------------------
+
+    passos.forEach(
+        passo => {
+
+            passo.classList.remove(
+                'concluido'
+            );
+
+            passo.classList.remove(
+                'ativo'
+            );
         }
+    );
+
+
+    // --------------------------------------------------------
+    // PAGAMENTO
+    // --------------------------------------------------------
+
+    if (
+        statusPagamento === 'aprovado' ||
+        statusPagamento === 'pago' ||
+        statusPagamento === 'approved'
+    ) {
+
+        if (passos[0]) {
+
+            passos[0]
+                .classList.add(
+                    'concluido'
+                );
+        }
+
+    } else {
+
+        if (passos[0]) {
+
+            passos[0]
+                .classList.add(
+                    'ativo'
+                );
+        }
+    }
+
+
+    // --------------------------------------------------------
+    // SEPARAÇÃO
+    // --------------------------------------------------------
+
+    if (
+        statusPedido === 'processando' ||
+        statusPedido === 'separando' ||
+        statusPedido === 'separacao'
+    ) {
+
+        if (passos[1]) {
+
+            passos[1]
+                .classList.add(
+                    'ativo'
+                );
+        }
+
+    } else if (
+        statusPedido === 'enviado' ||
+        statusPedido === 'entregue' ||
+        statusPedido === 'concluido' ||
+        statusPedido === 'finalizado'
+    ) {
+
+        if (passos[1]) {
+
+            passos[1]
+                .classList.add(
+                    'concluido'
+                );
+        }
+    }
+
+
+    // --------------------------------------------------------
+    // TRANSPORTE
+    // --------------------------------------------------------
+
+    if (
+        statusPedido === 'enviado' ||
+        statusPedido === 'em_transporte' ||
+        statusPedido === 'transporte' ||
+        statusPedido === 'entregue' ||
+        statusPedido === 'concluido' ||
+        statusPedido === 'finalizado'
+    ) {
+
+        if (passos[2]) {
+
+            passos[2]
+                .classList.add(
+                    'concluido'
+                );
+        }
+    }
+}
+
+
+// ============================================================
+// 23. RENDERIZAR PEDIDO COMPLETO
+// ============================================================
+
+function renderizarPedidoConfirmado(
+    pedido
+) {
+
+    if (!pedido) {
+        return;
+    }
+
+
+    console.log(
+        'Renderizando pedido confirmado:',
+        pedido
+    );
+
+
+    renderizarNumeroPedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarDataPedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarPagamentoPedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarSubtotalPedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarFretePedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarDescontoPedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarTotalPedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarItensPedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarHoraAprovadoPedidoConfirmado(
+        pedido
+    );
+
+
+    renderizarEnderecoPedidoConfirmado(
+        pedido
+    );
+
+
+    atualizarStatusVisualPedidoConfirmado(
+        pedido
     );
 }
 
 
 // ============================================================
-// 18. CARREGAR PEDIDO CONFIRMADO
+// 24. CARREGAR PEDIDO
 // ============================================================
 
 async function carregarPedidoConfirmado() {
 
-    const usuario =
-        obterUsuarioPedidoConfirmado();
+    console.log(
+        '=========================================='
+    );
 
-    if (!usuario) {
+    console.log(
+        'ZORAVISION - PEDIDO CONFIRMADO'
+    );
 
-        mostrarErroPedidoConfirmado(
-            'Você precisa estar logado para visualizar este pedido.'
-        );
-
-        return;
-    }
-
-
-    let pedido =
-        obterPedidoLocal();
-
-
-    if (!pedido) {
-
-        mostrarErroPedidoConfirmado(
-            'Não foi possível encontrar os dados deste pedido.'
-        );
-
-        return;
-    }
-
-
-    /*
-    ------------------------------------------------------------
-    EXIBE PRIMEIRO OS DADOS LOCAIS
-    ------------------------------------------------------------
-    */
-
-    renderizarPedidoConfirmado(
-        pedido
+    console.log(
+        '=========================================='
     );
 
 
-    /*
-    ------------------------------------------------------------
-    BUSCA DADOS ATUALIZADOS NO SUPABASE
-    ------------------------------------------------------------
-    */
-
-    const pedidoAtualizado =
-        await buscarPedidoAtualizado(
-            pedido.id
-        );
+    const pedidoLocal =
+        obterPedidoLocalConfirmado();
 
 
-    if (pedidoAtualizado) {
+    const pedidoId =
+        obterIdPedidoConfirmado();
 
-        pedido =
-            pedidoAtualizado;
+
+    console.log(
+        'Pedido salvo localmente:',
+        pedidoLocal
+    );
+
+
+    console.log(
+        'ID do pedido:',
+        pedidoId
+    );
+
+
+    // --------------------------------------------------------
+    // RENDERIZAÇÃO LOCAL INICIAL
+    // --------------------------------------------------------
+
+    if (pedidoLocal) {
 
         renderizarPedidoConfirmado(
-            pedido
-        );
-
-        salvarPedidoConfirmado(
-            pedido
+            pedidoLocal
         );
     }
+
+
+    // --------------------------------------------------------
+    // SEM ID
+    // --------------------------------------------------------
+
+    if (!pedidoId) {
+
+        console.warn(
+            'ID do pedido não encontrado no localStorage.'
+        );
+
+
+        const numero =
+            obterElementoPedidoConfirmado(
+                'conf-numero-pedido'
+            );
+
+
+        if (numero) {
+
+            numero.textContent =
+                'Pedido não identificado';
+        }
+
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // BUSCA NO SUPABASE
+    // --------------------------------------------------------
+
+    const pedidoAtualizado =
+        await buscarPedidoConfirmadoNoSupabase(
+            pedidoId
+        );
+
+
+    if (!pedidoAtualizado) {
+
+        console.warn(
+            'Não foi possível atualizar o pedido pelo Supabase.'
+        );
+
+        return;
+    }
+
+
+    // --------------------------------------------------------
+    // RENDERIZAÇÃO FINAL
+    // --------------------------------------------------------
+
+    renderizarPedidoConfirmado(
+        pedidoAtualizado
+    );
+
+
+    // --------------------------------------------------------
+    // SALVA NOVAMENTE
+    // --------------------------------------------------------
+
+    salvarPedidoConfirmadoLocal(
+        pedidoAtualizado
+    );
+
+
+    console.log(
+        'Pedido confirmado carregado com sucesso.'
+    );
 }
 
 
 // ============================================================
-// 19. IR PARA A LOJA
+// 25. VOLTAR PARA A LOJA
 // ============================================================
 
 function voltarParaLoja() {
@@ -788,23 +1573,18 @@ function voltarParaLoja() {
 
 
 // ============================================================
-// 20. IR PARA MEUS PEDIDOS
+// 26. IR PARA MEUS PEDIDOS
 // ============================================================
 
 function irParaMeusPedidos() {
 
-    /*
-     * Ajuste o nome do arquivo abaixo caso sua página
-     * de pedidos tenha outro nome.
-     */
-
     window.location.href =
-        'Pedidos.html';
+        '03-Meus-pedidos.html';
 }
 
 
 // ============================================================
-// 21. INICIALIZAÇÃO
+// 27. INICIALIZAÇÃO
 // ============================================================
 
 document.addEventListener(
@@ -818,7 +1598,7 @@ document.addEventListener(
 
 
 // ============================================================
-// 22. EXPORTAÇÕES GLOBAIS
+// 28. EXPORTAÇÕES GLOBAIS
 // ============================================================
 
 window.carregarPedidoConfirmado =
@@ -830,11 +1610,9 @@ window.voltarParaLoja =
 window.irParaMeusPedidos =
     irParaMeusPedidos;
 
-window.formatarValor =
-    formatarValor;
+window.formatarValorPedidoConfirmado =
+    formatarValorPedidoConfirmado;
 
-window.formatarStatusPedidoConfirmado =
-    formatarStatusPedidoConfirmado;
+window.renderizarPedidoConfirmado =
+    renderizarPedidoConfirmado;
 
-window.formatarStatusPagamentoConfirmado =
-    formatarStatusPagamentoConfirmado;

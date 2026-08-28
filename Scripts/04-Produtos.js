@@ -612,8 +612,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                             quantidade
                         );
 
-
                     if (adicionado) {
+
+                        localStorage.setItem(
+                            'produto_origem_checkout',
+                            JSON.stringify({
+                                id: produto.id,
+                                sku: produto.sku || '',
+                                nome: produto.nome
+                            })
+                        );
 
                         window.location.href =
                             '04-Checkout.html';
