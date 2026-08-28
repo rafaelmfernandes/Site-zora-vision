@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             window.location.href =
-                '03-Meus-pedidos.html';
+                '03-Meu-perfil.html';
 
 
         } catch (erro) {

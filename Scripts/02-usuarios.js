@@ -11,8 +11,12 @@
 // - Atualização do perfil
 // - Recuperação de senha
 // - Alteração de senha
+// - Verificação da sessão
 //
-// A conexão com o Supabase fica exclusivamente em supabase.js.
+// IMPORTANTE:
+// - usuario.id = ID da tabela clientes
+// - usuario.auth_user_id = ID do Supabase Auth
+// - Logout direciona para 02-Login.html
 // ============================================================
 
 
@@ -53,7 +57,7 @@ function obterUsuarioLogado() {
     } catch (erro) {
 
         console.error(
-            'Erro ao ler usuário logado:',
+            '❌ Erro ao ler usuário logado:',
             erro
         );
 
@@ -75,7 +79,7 @@ function salvarUsuarioLogado(usuario) {
     ) {
 
         console.error(
-            'Usuário inválido para salvar.'
+            '❌ Usuário inválido para salvar.'
         );
 
         return false;
@@ -89,12 +93,13 @@ function salvarUsuarioLogado(usuario) {
             JSON.stringify(usuario)
         );
 
+
         return true;
 
     } catch (erro) {
 
         console.error(
-            'Erro ao salvar usuário logado:',
+            '❌ Erro ao salvar usuário logado:',
             erro
         );
 
@@ -112,21 +117,69 @@ function removerUsuarioLogado() {
     localStorage.removeItem(
         'usuario_logado'
     );
+
+
+    localStorage.removeItem(
+        'cliente_supabase_id'
+    );
+
+
+    console.log(
+        '🧹 Dados locais de autenticação removidos.'
+    );
 }
 
 
 // ============================================================
-// 4. BUSCAR CLIENTE NO SUPABASE
+// 4. LIMPAR DADOS DA SESSÃO
+// ============================================================
+
+function limparDadosSessaoCliente() {
+
+    const chaves = [
+
+        'usuario_logado',
+
+        'cliente_supabase_id',
+
+        'pedido_atual',
+
+        'pedido_pix_atual',
+
+        'pagamento_pix_atual',
+
+        'pedido_id_pix_verificacao',
+
+        'produto_origem_checkout'
+    ];
+
+
+    chaves.forEach(
+        chave => {
+
+            localStorage.removeItem(
+                chave
+            );
+
+        }
+    );
+
+
+    console.log(
+        '🧹 Dados da sessão do cliente removidos.'
+    );
+}
+
+
+// ============================================================
+// 5. BUSCAR CLIENTE NO SUPABASE
 // ============================================================
 
 async function buscarClienteNoSupabase(
     usuario
 ) {
 
-    if (
-        !usuario ||
-        !usuario.id
-    ) {
+    if (!usuario) {
         return null;
     }
 
@@ -138,7 +191,7 @@ async function buscarClienteNoSupabase(
     if (!supabase) {
 
         console.error(
-            'Supabase não está disponível.'
+            '❌ Supabase não está disponível.'
         );
 
         return null;
@@ -147,38 +200,87 @@ async function buscarClienteNoSupabase(
 
     try {
 
-        // Primeiro tenta localizar pelo auth_user_id.
-        const respostaAuth =
-            await supabase
-                .from('clientes')
-                .select('*')
-                .eq(
-                    'auth_user_id',
-                    usuario.id
-                )
-                .maybeSingle();
+        // ========================================================
+        // 5.1 - TENTAR PELO AUTH USER ID
+        // ========================================================
+
+        if (
+            usuario.auth_user_id
+        ) {
+
+            const respostaAuth =
+                await supabase
+                    .from('clientes')
+                    .select('*')
+                    .eq(
+                        'auth_user_id',
+                        usuario.auth_user_id
+                    )
+                    .maybeSingle();
 
 
-        if (respostaAuth.error) {
+            if (respostaAuth.error) {
 
-            console.error(
-                'Erro ao buscar cliente pelo auth_user_id:',
-                respostaAuth.error
-            );
+                console.error(
+                    '❌ Erro ao buscar cliente pelo auth_user_id:',
+                    respostaAuth.error
+                );
 
-            return null;
+                return null;
+            }
+
+
+            if (respostaAuth.data) {
+
+                return respostaAuth.data;
+            }
         }
 
 
-        if (respostaAuth.data) {
+        // ========================================================
+        // 5.2 - TENTAR PELO ID DO CLIENTE
+        // ========================================================
 
-            return respostaAuth.data;
+        if (
+            usuario.id
+        ) {
+
+            const respostaCliente =
+                await supabase
+                    .from('clientes')
+                    .select('*')
+                    .eq(
+                        'id',
+                        usuario.id
+                    )
+                    .maybeSingle();
+
+
+            if (respostaCliente.error) {
+
+                console.error(
+                    '❌ Erro ao buscar cliente pelo ID:',
+                    respostaCliente.error
+                );
+
+                return null;
+            }
+
+
+            if (respostaCliente.data) {
+
+                return respostaCliente.data;
+            }
         }
 
 
-        // Caso não encontre pelo auth_user_id,
-        // tenta pelo e-mail.
-        if (usuario.email) {
+        // ========================================================
+        // 5.3 - TENTAR PELO E-MAIL
+        // ========================================================
+
+        if (
+            usuario.email
+        ) {
 
             const respostaEmail =
                 await supabase
@@ -194,7 +296,7 @@ async function buscarClienteNoSupabase(
             if (respostaEmail.error) {
 
                 console.error(
-                    'Erro ao buscar cliente pelo e-mail:',
+                    '❌ Erro ao buscar cliente pelo e-mail:',
                     respostaEmail.error
                 );
 
@@ -214,7 +316,7 @@ async function buscarClienteNoSupabase(
     } catch (erro) {
 
         console.error(
-            'Erro inesperado ao buscar cliente:',
+            '❌ Erro inesperado ao buscar cliente:',
             erro
         );
 
@@ -224,7 +326,7 @@ async function buscarClienteNoSupabase(
 
 
 // ============================================================
-// 5. CADASTRAR USUÁRIO
+// 6. CADASTRAR USUÁRIO
 // ============================================================
 
 async function cadastrarUsuario({
@@ -284,7 +386,9 @@ async function cadastrarUsuario({
     }
 
 
-    if (senha.length < 6) {
+    if (
+        senha.length < 6
+    ) {
 
         throw new Error(
             'A senha deve possuir pelo menos 6 caracteres.'
@@ -303,13 +407,18 @@ async function cadastrarUsuario({
         await supabase.auth.signUp({
 
             email,
-            password: senha,
+
+            password:
+                senha,
 
             options: {
 
                 data: {
+
                     nome,
+
                     telefone,
+
                     cpf
                 }
             }
@@ -319,7 +428,7 @@ async function cadastrarUsuario({
     if (erroAuth) {
 
         console.error(
-            'Erro ao cadastrar usuário no Auth:',
+            '❌ Erro ao cadastrar usuário no Auth:',
             erroAuth
         );
 
@@ -385,7 +494,7 @@ async function cadastrarUsuario({
     if (erroCliente) {
 
         console.error(
-            'Erro ao criar cliente na tabela clientes:',
+            '❌ Erro ao criar cliente:',
             erroCliente
         );
 
@@ -396,27 +505,41 @@ async function cadastrarUsuario({
 
 
     // ========================================================
-    // SALVAR USUÁRIO LOCALMENTE
+    // USUÁRIO LOCAL
     // ========================================================
 
     const usuarioLocal = {
 
         id:
-            authUser.id,
+            cliente.id,
 
-        email:
-            authUser.email,
+        auth_user_id:
+            cliente.auth_user_id,
 
         nome:
-            cliente.nome,
+            cliente.nome || '',
 
-        cliente_id:
-            cliente.id
+        email:
+            cliente.email ||
+            authUser.email ||
+            '',
+
+        telefone:
+            cliente.telefone || '',
+
+        cpf:
+            cliente.cpf || ''
     };
 
 
     salvarUsuarioLogado(
         usuarioLocal
+    );
+
+
+    localStorage.setItem(
+        'cliente_supabase_id',
+        cliente.id
     );
 
 
@@ -436,7 +559,7 @@ async function cadastrarUsuario({
 
 
 // ============================================================
-// 6. LOGIN
+// 7. LOGIN
 // ============================================================
 
 async function fazerLogin(
@@ -477,6 +600,10 @@ async function fazerLogin(
     }
 
 
+    // ========================================================
+    // LOGIN PELO SUPABASE AUTH
+    // ========================================================
+
     const {
         data,
         error
@@ -493,7 +620,7 @@ async function fazerLogin(
     if (error) {
 
         console.error(
-            'Erro ao fazer login:',
+            '❌ Erro ao fazer login:',
             error
         );
 
@@ -527,6 +654,9 @@ async function fazerLogin(
         await buscarClienteNoSupabase({
 
             id:
+                null,
+
+            auth_user_id:
                 authUser.id,
 
             email:
@@ -535,8 +665,7 @@ async function fazerLogin(
 
 
     // ========================================================
-    // CASO O CLIENTE EXISTE, MAS AINDA NÃO POSSUI
-    // auth_user_id, TENTA VINCULAR
+    // CASO CLIENTE EXISTA SEM auth_user_id
     // ========================================================
 
     if (
@@ -564,7 +693,10 @@ async function fazerLogin(
                 .single();
 
 
-        if (!erroAtualizacao) {
+        if (
+            !erroAtualizacao &&
+            clienteAtualizado
+        ) {
 
             cliente =
                 clienteAtualizado;
@@ -572,35 +704,122 @@ async function fazerLogin(
     }
 
 
+    // ========================================================
+    // CLIENTE NÃO ENCONTRADO
+    // ========================================================
+
     if (!cliente) {
 
         console.warn(
-            'Usuário autenticado, mas cliente não encontrado na tabela clientes.'
+            '⚠️ Usuário autenticado, mas cliente não encontrado.'
+        );
+
+
+        await supabase.auth.signOut();
+
+
+        throw new Error(
+            'Sua conta foi autenticada, mas o cadastro da loja não foi encontrado.'
         );
     }
 
 
+    // ========================================================
+    // CONTA DESATIVADA
+    // ========================================================
+
+    if (
+        cliente.ativo === false
+    ) {
+
+        await supabase.auth.signOut();
+
+
+        throw new Error(
+            'Esta conta está desativada. Entre em contato com a loja.'
+        );
+    }
+
+
+    // ========================================================
+    // CRIAR USUÁRIO LOCAL
+    // ========================================================
+
     const usuarioLocal = {
 
+        // ID DA TABELA clientes
         id:
-            authUser.id,
+            cliente.id,
 
-        email:
-            authUser.email,
+        // ID DO SUPABASE AUTH
+        auth_user_id:
+            cliente.auth_user_id,
 
         nome:
-            cliente?.nome ||
+            cliente.nome ||
             authUser.user_metadata?.nome ||
             '',
 
-        cliente_id:
-            cliente?.id ||
-            null
+        email:
+            cliente.email ||
+            authUser.email ||
+            '',
+
+        telefone:
+            cliente.telefone ||
+            '',
+
+        cpf:
+            cliente.cpf ||
+            ''
     };
 
 
+    // ========================================================
+    // SALVAR LOGIN
+    // ========================================================
+
     salvarUsuarioLogado(
         usuarioLocal
+    );
+
+
+    localStorage.setItem(
+        'cliente_supabase_id',
+        cliente.id
+    );
+
+
+    console.log(
+        '=========================================='
+    );
+
+    console.log(
+        '✅ LOGIN REALIZADO COM SUCESSO'
+    );
+
+    console.log(
+        'Cliente ID:',
+        cliente.id
+    );
+
+    console.log(
+        'Auth User ID:',
+        cliente.auth_user_id
+    );
+
+    console.log(
+        'Cliente:',
+        cliente.nome
+    );
+
+    console.log(
+        'E-mail:',
+        cliente.email
+    );
+
+    console.log(
+        '=========================================='
     );
 
 
@@ -617,13 +836,29 @@ async function fazerLogin(
 
 
 // ============================================================
-// 7. LOGOUT
+// 8. LOGOUT
+// ============================================================
+//
+// IMPORTANTE:
+// O logout:
+// 1. encerra a sessão do Supabase;
+// 2. remove usuario_logado;
+// 3. remove cliente_supabase_id;
+// 4. remove dados temporários do pedido/pagamento;
+// 5. manda o usuário para 02-Login.html.
+//
+// O carrinho NÃO é apagado.
 // ============================================================
 
 async function fazerLogout() {
 
     const supabase =
         obterSupabase();
+
+
+    console.log(
+        '🚪 Iniciando logout...'
+    );
 
 
     try {
@@ -639,8 +874,14 @@ async function fazerLogout() {
             if (error) {
 
                 console.error(
-                    'Erro ao sair do Supabase:',
+                    '❌ Erro ao sair do Supabase:',
                     error
+                );
+
+            } else {
+
+                console.log(
+                    '✅ Sessão Supabase encerrada.'
                 );
             }
         }
@@ -648,19 +889,41 @@ async function fazerLogout() {
     } catch (erro) {
 
         console.error(
-            'Erro inesperado ao fazer logout:',
+            '❌ Erro inesperado ao fazer logout:',
             erro
         );
 
     } finally {
 
-        removerUsuarioLogado();
+        // ====================================================
+        // LIMPAR DADOS LOCAIS
+        // ====================================================
+
+        limparDadosSessaoCliente();
+
+
+        // ====================================================
+        // REDIRECIONAR PARA LOGIN
+        // ====================================================
+        //
+        // replace() é utilizado em vez de href para evitar
+        // criar uma nova entrada de logout no histórico.
+        //
+        // Assim o usuário é enviado diretamente para:
+        //
+        // 02-Login.html
+        //
+        // ====================================================
+
+        window.location.replace(
+            '02-Login.html'
+        );
     }
 }
 
 
 // ============================================================
-// 8. VERIFICAR SESSÃO DO SUPABASE
+// 9. VERIFICAR SESSÃO DO SUPABASE
 // ============================================================
 
 async function verificarSessaoUsuario() {
@@ -686,19 +949,30 @@ async function verificarSessaoUsuario() {
         if (error) {
 
             console.error(
-                'Erro ao verificar sessão:',
+                '❌ Erro ao verificar sessão:',
                 error
             );
+
+
+            limparDadosSessaoCliente();
+
 
             return null;
         }
 
+
+        // ====================================================
+        // NÃO EXISTE SESSÃO
+        // ====================================================
 
         if (
             !data ||
             !data.session ||
             !data.session.user
         ) {
+
+            limparDadosSessaoCliente();
+
 
             return null;
         }
@@ -708,10 +982,17 @@ async function verificarSessaoUsuario() {
             data.session.user;
 
 
+        // ====================================================
+        // BUSCAR CLIENTE
+        // ====================================================
+
         const cliente =
             await buscarClienteNoSupabase({
 
                 id:
+                    null,
+
+                auth_user_id:
                     authUser.id,
 
                 email:
@@ -719,27 +1000,83 @@ async function verificarSessaoUsuario() {
             });
 
 
+        // ====================================================
+        // CLIENTE NÃO EXISTE
+        // ====================================================
+
+        if (
+            !cliente ||
+            !cliente.id
+        ) {
+
+            await supabase.auth.signOut();
+
+
+            limparDadosSessaoCliente();
+
+
+            return null;
+        }
+
+
+        // ====================================================
+        // CONTA DESATIVADA
+        // ====================================================
+
+        if (
+            cliente.ativo === false
+        ) {
+
+            await supabase.auth.signOut();
+
+
+            limparDadosSessaoCliente();
+
+
+            return null;
+        }
+
+
+        // ====================================================
+        // RECONSTRUIR USUÁRIO LOCAL
+        // ====================================================
+
         const usuarioLocal = {
 
             id:
-                authUser.id,
+                cliente.id,
 
-            email:
-                authUser.email,
+            auth_user_id:
+                cliente.auth_user_id,
 
             nome:
-                cliente?.nome ||
+                cliente.nome ||
                 authUser.user_metadata?.nome ||
                 '',
 
-            cliente_id:
-                cliente?.id ||
-                null
+            email:
+                cliente.email ||
+                authUser.email ||
+                '',
+
+            telefone:
+                cliente.telefone ||
+                '',
+
+            cpf:
+                cliente.cpf ||
+                ''
         };
 
 
         salvarUsuarioLogado(
             usuarioLocal
+        );
+
+
+        localStorage.setItem(
+            'cliente_supabase_id',
+            cliente.id
         );
 
 
@@ -756,9 +1093,13 @@ async function verificarSessaoUsuario() {
     } catch (erro) {
 
         console.error(
-            'Erro ao verificar sessão:',
+            '❌ Erro ao verificar sessão:',
             erro
         );
+
+
+        limparDadosSessaoCliente();
+
 
         return null;
     }
@@ -766,7 +1107,7 @@ async function verificarSessaoUsuario() {
 
 
 // ============================================================
-// 9. ATUALIZAR PERFIL
+// 10. ATUALIZAR PERFIL
 // ============================================================
 
 async function atualizarPerfilUsuario({
@@ -858,7 +1199,7 @@ async function atualizarPerfilUsuario({
     if (error) {
 
         console.error(
-            'Erro ao atualizar perfil:',
+            '❌ Erro ao atualizar perfil:',
             error
         );
 
@@ -870,13 +1211,23 @@ async function atualizarPerfilUsuario({
 
     const usuarioAtualizado = {
 
-        ...usuario,
+        id:
+            data.id,
+
+        auth_user_id:
+            data.auth_user_id,
 
         nome:
             data.nome,
 
-        cliente_id:
-            data.id
+        email:
+            data.email,
+
+        telefone:
+            data.telefone || '',
+
+        cpf:
+            data.cpf || ''
     };
 
 
@@ -885,12 +1236,18 @@ async function atualizarPerfilUsuario({
     );
 
 
+    localStorage.setItem(
+        'cliente_supabase_id',
+        data.id
+    );
+
+
     return data;
 }
 
 
 // ============================================================
-// 10. RECUPERAR SENHA
+// 11. RECUPERAR SENHA
 // ============================================================
 
 async function recuperarSenha(
@@ -929,6 +1286,7 @@ async function recuperarSenha(
         await supabase.auth.resetPasswordForEmail(
             email,
             {
+
                 redirectTo:
                     `${window.location.origin}/Redefinir-senha.html`
             }
@@ -938,7 +1296,7 @@ async function recuperarSenha(
     if (error) {
 
         console.error(
-            'Erro ao solicitar recuperação de senha:',
+            '❌ Erro ao solicitar recuperação:',
             error
         );
 
@@ -954,7 +1312,7 @@ async function recuperarSenha(
 
 
 // ============================================================
-// 11. ALTERAR SENHA
+// 12. ALTERAR SENHA
 // ============================================================
 
 async function alterarSenha(
@@ -977,7 +1335,9 @@ async function alterarSenha(
         String(novaSenha || '');
 
 
-    if (novaSenha.length < 6) {
+    if (
+        novaSenha.length < 6
+    ) {
 
         throw new Error(
             'A nova senha deve possuir pelo menos 6 caracteres.'
@@ -999,7 +1359,7 @@ async function alterarSenha(
     if (error) {
 
         console.error(
-            'Erro ao alterar senha:',
+            '❌ Erro ao alterar senha:',
             error
         );
 
@@ -1015,7 +1375,13 @@ async function alterarSenha(
 
 
 // ============================================================
-// 12. VERIFICAR SE ESTÁ LOGADO
+// 13. VERIFICAR SE ESTÁ LOGADO
+// ============================================================
+//
+// Esta função verifica apenas a existência dos dados locais.
+//
+// Para verificar a sessão REAL do Supabase, utilize:
+// verificarSessaoUsuario()
 // ============================================================
 
 function usuarioEstaLogado() {
@@ -1033,20 +1399,33 @@ function usuarioEstaLogado() {
 
 
 // ============================================================
-// 13. REDIRECIONAR SE NÃO ESTIVER LOGADO
+// 14. EXIGIR LOGIN
+// ============================================================
+//
+// Se o usuário não estiver logado, vai para:
+//
+// 02-Login.html
+//
 // ============================================================
 
 function exigirLogin(
-    pagina = 'Login.html'
+    pagina = '02-Login.html'
 ) {
 
-    if (usuarioEstaLogado()) {
+    if (
+        usuarioEstaLogado()
+    ) {
+
         return true;
     }
 
 
-    window.location.href =
-        pagina;
+    removerUsuarioLogado();
+
+
+    window.location.replace(
+        pagina
+    );
 
 
     return false;
@@ -1054,44 +1433,65 @@ function exigirLogin(
 
 
 // ============================================================
-// 14. EXPORTAÇÕES GLOBAIS
+// 15. EXPORTAÇÕES GLOBAIS
 // ============================================================
 
 window.obterUsuarioLogado =
     obterUsuarioLogado;
 
+
 window.salvarUsuarioLogado =
     salvarUsuarioLogado;
+
 
 window.removerUsuarioLogado =
     removerUsuarioLogado;
 
+
+window.limparDadosSessaoCliente =
+    limparDadosSessaoCliente;
+
+
 window.buscarClienteNoSupabase =
     buscarClienteNoSupabase;
+
 
 window.cadastrarUsuario =
     cadastrarUsuario;
 
+
 window.fazerLogin =
     fazerLogin;
+
 
 window.fazerLogout =
     fazerLogout;
 
+
 window.verificarSessaoUsuario =
     verificarSessaoUsuario;
+
 
 window.atualizarPerfilUsuario =
     atualizarPerfilUsuario;
 
+
 window.recuperarSenha =
     recuperarSenha;
+
 
 window.alterarSenha =
     alterarSenha;
 
+
 window.usuarioEstaLogado =
     usuarioEstaLogado;
 
+
 window.exigirLogin =
     exigirLogin;
+
+
+// ============================================================
+// FIM DO 02-USUARIOS.JS
+// ============================================================
