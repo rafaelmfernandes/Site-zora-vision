@@ -47,8 +47,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
 
 
+        const clienteSupabase =
+            typeof obterSupabase === 'function'
+                ? obterSupabase()
+                : window.supabaseClient || window._supabase;
+
+        if (!clienteSupabase) {
+
+            throw new Error(
+                'Cliente Supabase não encontrado. Verifique o carregamento de Supabase/supabase.js.'
+            );
+        }
+
         const { data: produtos, error } =
-            await supabaseClient
+            await clienteSupabase
                 .from('produtos')
                 .select(`
                     id,

@@ -1,83 +1,284 @@
-
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>ZoraVision - E-commerce</title>
-
-
-    <!-- ========================================================= -->
-    <!-- FONTE DA LOGO -->
-    <!-- ========================================================= -->
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap"
-        rel="stylesheet"
-    >
+<title>ZoraVision - E-commerce</title>
 
 
-    <!-- ========================================================= -->
-    <!-- CSS -->
-    <!-- ========================================================= -->
+<!-- ========================================================= -->
+<!-- FONTE DA LOGO -->
+<!-- ========================================================= -->
 
-    <link
-        rel="stylesheet"
-        href="Folha-estilos/index2.css"
-    >
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap"
+    rel="stylesheet"
+>
+
+
+<!-- ========================================================= -->
+<!-- CSS -->
+<!-- ========================================================= -->
+
+<link
+    rel="stylesheet"
+    href="Folha-estilos/index2.css"
+>
+
 
 </head>
-
 
 <body>
 
 
-    <!-- ========================================================= -->
-    <!-- SUPABASE -->
-    <!-- ========================================================= -->
+<!-- ========================================================= -->
+<!-- SUPABASE -->
+<!-- ========================================================= -->
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <script src="Scripts/01-SupabaseClient.js"></script>
+<!-- Configuração central do Supabase -->
+<script src="Supabase/supabase.js"></script>
 
 
-    <!-- ========================================================= -->
-    <!-- HEADER -->
-    <!-- ========================================================= -->
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
 
-    <header class="header">
+<header class="header">
 
-        <a
-            href="index.html"
-            class="header-logo"
+    <a
+        href="index.html"
+        class="header-logo"
+    >
+
+        <span class="logo-marca"></span>
+
+        <span class="logo-texto">
+            ZoraVision
+        </span>
+
+    </a>
+
+
+    <a
+        href="Notificaçoes.html"
+        class="notificacao-btn"
+        aria-label="Notificações"
+    >
+
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            style="width:18px; height:18px;"
         >
 
-            <span class="logo-marca"></span>
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
 
-            <span class="logo-texto">
-                ZoraVision
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+
+        </svg>
+
+        <span class="notificacao-badge"></span>
+
+    </a>
+
+</header>
+
+
+<!-- ========================================================= -->
+<!-- BARRA DE PESQUISA -->
+<!-- ========================================================= -->
+
+<section class="search-container">
+
+    <input
+        type="text"
+        class="search-input"
+        placeholder="Buscar produtos, marcas..."
+    >
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- CARROSSEL -->
+<!-- ========================================================= -->
+
+<section
+    class="carrossel"
+    id="carrossel"
+>
+
+    <div
+        class="carrossel-trilho"
+        id="trilho"
+    >
+
+        <div class="slide slide-1">
+
+            <span class="slide-badge">
+                Decoração
             </span>
 
-        </a>
+            <h2 class="slide-titulo">
+                Deixe sua casa com a sua cara
+            </h2>
+
+            <p class="slide-subtitulo">
+                Peças únicas pra transformar qualquer ambiente em um espaço acolhedor.
+            </p>
+
+            <a
+                href="Categoria-produtos.html?categoria=decoracao"
+                class="slide-link"
+            >
+                Explorar decoração
+            </a>
+
+        </div>
 
 
-        <a
-            href="Notificaçoes.html"
-            class="notificacao-btn"
-            aria-label="Notificações"
+        <div class="slide slide-2">
+
+            <span class="slide-badge">
+                Cozinha
+            </span>
+
+            <h2 class="slide-titulo">
+                Cozinha nova, casa renovada
+            </h2>
+
+            <p class="slide-subtitulo">
+                Utensílios e organizadores que deixam o dia a dia mais prático.
+            </p>
+
+            <a
+                href="Categoria-produtos.html?categoria=cozinha"
+                class="slide-link"
+            >
+                Explorar cozinha
+            </a>
+
+        </div>
+
+
+        <div class="slide slide-3">
+
+            <span class="slide-badge">
+                Promoção
+            </span>
+
+            <h2 class="slide-titulo">
+                Até 40% off em Sala e Quarto
+            </h2>
+
+            <p class="slide-subtitulo">
+                Aproveite ofertas selecionadas com frete grátis por tempo limitado.
+            </p>
+
+            <a
+                href="Categoria-produtos.html?categoria=sala"
+                class="slide-link"
+            >
+                Aproveitar agora
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="carrossel-seta esquerda"
+        id="btnAnterior"
+        aria-label="Slide anterior"
+    >
+        ‹
+    </button>
+
+
+    <button
+        type="button"
+        class="carrossel-seta direita"
+        id="btnProximo"
+        aria-label="Próximo slide"
+    >
+        ›
+    </button>
+
+
+    <div
+        class="carrossel-pontos"
+        id="pontos"
+    ></div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- PRODUTOS EM DESTAQUE -->
+<!-- ========================================================= -->
+
+<main class="secao-container">
+
+    <div class="secao-header">
+
+        <h2 class="secao-titulo">
+            Produtos em destaque
+        </h2>
+
+        <span
+            class="contador-itens"
+            id="contador-produtos"
         >
+            0 itens
+        </span>
+
+    </div>
+
+
+    <div
+        class="produtos-grid"
+        id="grid-produtos-home"
+    ></div>
+
+</main>
+
+
+<!-- ========================================================= -->
+<!-- MENU INFERIOR -->
+<!-- ========================================================= -->
+
+<nav class="bottom-nav">
+
+
+    <!-- HOME -->
+
+    <a
+        href="index.html"
+        class="nav-item active"
+    >
+
+        <span class="nav-icon">
 
             <svg
                 viewBox="0 0 24 24"
@@ -86,370 +287,189 @@
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                style="width:18px; height:18px;"
+                style="width:18px; height:18px; vertical-align:middle;"
             >
 
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M3 10.5 12 3l9 7.5"></path>
 
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                <path d="M5 9.5V21h14V9.5"></path>
 
             </svg>
 
-            <span class="notificacao-badge"></span>
+        </span>
 
-        </a>
+        <span>
+            Home
+        </span>
 
-    </header>
-
-
-    <!-- ========================================================= -->
-    <!-- BARRA DE PESQUISA -->
-    <!-- ========================================================= -->
-
-    <section class="search-container">
-
-        <input
-            type="text"
-            class="search-input"
-            placeholder="Buscar produtos, marcas..."
-        >
-
-    </section>
+    </a>
 
 
-    <!-- ========================================================= -->
-    <!-- CARROSSEL -->
-    <!-- ========================================================= -->
+    <!-- CATEGORIAS -->
 
-    <section
-        class="carrossel"
-        id="carrossel"
+    <a
+        href="01-categorias.html"
+        class="nav-item"
     >
 
-        <div
-            class="carrossel-trilho"
-            id="trilho"
-        >
+        <span class="nav-icon">
 
-
-            <div class="slide slide-1">
-
-                <span class="slide-badge">
-                    Decoração
-                </span>
-
-                <h2 class="slide-titulo">
-                    Deixe sua casa com a sua cara
-                </h2>
-
-                <p class="slide-subtitulo">
-                    Peças únicas pra transformar qualquer ambiente em um espaço acolhedor.
-                </p>
-
-                <a
-                    href="Categoria-produtos.html?categoria=decoracao"
-                    class="slide-link"
-                >
-                    Explorar decoração
-                </a>
-
-            </div>
-
-
-            <div class="slide slide-2">
-
-                <span class="slide-badge">
-                    Cozinha
-                </span>
-
-                <h2 class="slide-titulo">
-                    Cozinha nova, casa renovada
-                </h2>
-
-                <p class="slide-subtitulo">
-                    Utensílios e organizadores que deixam o dia a dia mais prático.
-                </p>
-
-                <a
-                    href="Categoria-produtos.html?categoria=cozinha"
-                    class="slide-link"
-                >
-                    Explorar cozinha
-                </a>
-
-            </div>
-
-
-            <div class="slide slide-3">
-
-                <span class="slide-badge">
-                    Promoção
-                </span>
-
-                <h2 class="slide-titulo">
-                    Até 40% off em Sala e Quarto
-                </h2>
-
-                <p class="slide-subtitulo">
-                    Aproveite ofertas selecionadas com frete grátis por tempo limitado.
-                </p>
-
-                <a
-                    href="Categoria-produtos.html?categoria=sala"
-                    class="slide-link"
-                >
-                    Aproveitar agora
-                </a>
-
-            </div>
-
-
-        </div>
-
-
-        <button
-            type="button"
-            class="carrossel-seta esquerda"
-            id="btnAnterior"
-            aria-label="Slide anterior"
-        >
-            ‹
-        </button>
-
-
-        <button
-            type="button"
-            class="carrossel-seta direita"
-            id="btnProximo"
-            aria-label="Próximo slide"
-        >
-            ›
-        </button>
-
-
-        <div
-            class="carrossel-pontos"
-            id="pontos"
-        ></div>
-
-    </section>
-
-
-    <!-- ========================================================= -->
-    <!-- PRODUTOS EM DESTAQUE -->
-    <!-- ========================================================= -->
-
-    <main class="secao-container">
-
-        <div class="secao-header">
-
-            <h2 class="secao-titulo">
-                Produtos em destaque
-            </h2>
-
-            <span
-                class="contador-itens"
-                id="contador-produtos"
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="width:18px; height:18px; vertical-align:middle;"
             >
-                0 itens
-            </span>
 
-        </div>
+                <rect
+                    x="3"
+                    y="3"
+                    width="7"
+                    height="7"
+                ></rect>
+
+                <rect
+                    x="14"
+                    y="3"
+                    width="7"
+                    height="7"
+                ></rect>
+
+                <rect
+                    x="3"
+                    y="14"
+                    width="7"
+                    height="7"
+                ></rect>
+
+                <rect
+                    x="14"
+                    y="14"
+                    width="7"
+                    height="7"
+                ></rect>
 
+            </svg>
 
-        <div
-            class="produtos-grid"
-            id="grid-produtos-home"
-        ></div>
+        </span>
 
-    </main>
+        <span>
+            Categorias
+        </span>
 
+    </a>
 
-    <!-- ========================================================= -->
-    <!-- MENU INFERIOR -->
-    <!-- ========================================================= -->
 
-    <nav class="bottom-nav">
+    <!-- CARRINHO -->
 
+    <a
+        href="04-carrinho.html"
+        class="nav-item"
+    >
 
-        <!-- HOME -->
+        <span class="nav-icon">
 
-        <a
-            href="index.html"
-            class="nav-item active"
-        >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="width:18px; height:18px; vertical-align:middle;"
+            >
 
-            <span class="nav-icon">
+                <circle
+                    cx="9"
+                    cy="20"
+                    r="1.5"
+                ></circle>
 
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="width:18px; height:18px; vertical-align:middle;"
-                >
+                <circle
+                    cx="18"
+                    cy="20"
+                    r="1.5"
+                ></circle>
 
-                    <path d="M3 10.5 12 3l9 7.5"></path>
+                <path
+                    d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"
+                ></path>
 
-                    <path d="M5 9.5V21h14V9.5"></path>
+            </svg>
 
-                </svg>
+        </span>
 
-            </span>
+        <span class="carrinho-badge">
+            0
+        </span>
 
-            <span>
-                Home
-            </span>
+        <span>
+            Carrinho
+        </span>
 
-        </a>
+    </a>
 
 
-        <!-- CATEGORIAS -->
+    <!-- PERFIL -->
 
-        <a
-            href="01-categorias.html"
-            class="nav-item"
-        >
+    <a
+        href="03-Meu-perfil.html"
+        class="nav-item"
+    >
 
-            <span class="nav-icon">
+        <span class="nav-icon">
 
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="width:18px; height:18px; vertical-align:middle;"
-                >
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="width:18px; height:18px; vertical-align:middle;"
+            >
 
-                    <rect x="3" y="3" width="7" height="7"></rect>
+                <circle
+                    cx="12"
+                    cy="8"
+                    r="4"
+                ></circle>
 
-                    <rect x="14" y="3" width="7" height="7"></rect>
+                <path
+                    d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
+                ></path>
 
-                    <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
 
-                    <rect x="14" y="14" width="7" height="7"></rect>
+        </span>
 
-                </svg>
+        <span>
+            Perfil
+        </span>
 
-            </span>
+    </a>
 
-            <span>
-                Categorias
-            </span>
 
-        </a>
+</nav>
 
 
-        <!-- CARRINHO -->
+<!-- ========================================================= -->
+<!-- SCRIPTS -->
+<!-- ========================================================= -->
 
-        <a
-            href="04-carrinho.html"
-            class="nav-item"
-        >
+<!-- Favoritos -->
+<script src="Scripts/04-Favoritos.js"></script>
 
-            <span class="nav-icon">
+<!-- Home: produtos + carrossel -->
+<script src="Scripts/04-home.js"></script>
 
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="width:18px; height:18px; vertical-align:middle;"
-                >
-
-                    <circle
-                        cx="9"
-                        cy="20"
-                        r="1.5"
-                    ></circle>
-
-                    <circle
-                        cx="18"
-                        cy="20"
-                        r="1.5"
-                    ></circle>
-
-                    <path d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"></path>
-
-                </svg>
-
-            </span>
-
-            <span class="carrinho-badge">
-                0
-            </span>
-
-            <span>
-                Carrinho
-            </span>
-
-        </a>
-
-
-        <!-- PERFIL -->
-
-        <a
-            href="03-Meu-perfil.html"
-            class="nav-item"
-        >
-
-            <span class="nav-icon">
-
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    style="width:18px; height:18px; vertical-align:middle;"
-                >
-
-                    <circle
-                        cx="12"
-                        cy="8"
-                        r="4"
-                    ></circle>
-
-                    <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path>
-
-                </svg>
-
-            </span>
-
-            <span>
-                Perfil
-            </span>
-
-        </a>
-
-
-    </nav>
-
-
-    <!-- ========================================================= -->
-    <!-- SCRIPTS -->
-    <!-- ========================================================= -->
-
-    <!-- Carrinho -->
-
-    <!-- Favoritos -->
-    <script src="Scripts/04-Favoritos.js"></script>
-
-    <!-- Home: produtos + carrossel -->
-    <script src="Scripts/04-home.js"></script>
-
-    <!-- Busca -->
-    <script src="Scripts/04-busca.js"></script>
-
+<!-- Busca -->
+<script src="Scripts/04-busca.js"></script>
+```
 
 </body>
 
 </html>
-
