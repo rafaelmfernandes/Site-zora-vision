@@ -1,26 +1,26 @@
+
 // ============================================================
 // ZORAVISION - LOGIN
-// SUPABASE AUTH + TABELA CLIENTES
+// SUPABASE AUTH + TABELA CLIENTES + GOOGLE
 // ============================================================
 
-document.addEventListener('DOMContentLoaded', () => {
+
+// ============================================================
+// 1. INICIALIZAÇÃO
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', async () => {
 
     const formLogin =
         document.getElementById('form-login');
 
-    if (!formLogin) {
-
-        console.error(
-            'Erro: Formulário com ID "form-login" não foi encontrado no HTML.'
-        );
-
-        return;
-    }
+    const btnGoogle =
+        document.getElementById('btn-login-google');
 
 
-    // ============================================================
+    // ========================================================
     // CONEXÃO COM SUPABASE
-    // ============================================================
+    // ========================================================
 
     const supabaseClient =
         typeof _supabase !== 'undefined'
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     console.log(
-        '🔥 ZORAVISION - Login.js carregado'
+        '🔥 ZORAVISION - 02-Login.js carregado'
     );
 
     console.log(
@@ -51,488 +51,1029 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
 
-    // ============================================================
-    // FORMULÁRIO
-    // ============================================================
+    // ========================================================
+    // 2. PROCESSAR RETORNO DO GOOGLE
+    // ========================================================
+    //
+    // Quando o Google autenticar o usuário, o Supabase
+    // retorna para:
+    //
+    // 02-Login.html
+    //
+    // Neste momento verificamos se existe uma sessão real.
+    //
+    // ========================================================
 
-    formLogin.addEventListener('submit', async (event) => {
+    try {
 
-        event.preventDefault();
-
-
-        // ========================================================
-        // CAMPOS
-        // ========================================================
-
-        const inputEmail =
-            document.getElementById('email');
-
-        const inputSenha =
-            document.getElementById('senha');
+        const {
+            data: sessionData,
+            error: sessionError
+        } =
+            await supabaseClient.auth.getSession();
 
 
-        if (!inputEmail || !inputSenha) {
+        if (sessionError) {
 
             console.error(
-                '❌ Campos de e-mail ou senha não encontrados.'
+                '❌ Erro ao verificar sessão inicial:',
+                sessionError
             );
 
-            alert(
-                'Erro no formulário. Verifique os campos e tente novamente.'
-            );
+        } else {
 
-            return;
-        }
+            const session =
+                sessionData?.session;
 
 
-        // ========================================================
-        // VALORES
-        // ========================================================
+            if (session?.user) {
 
-        const email =
-            inputEmail.value
-                .trim()
-                .toLowerCase();
+                console.log(
+                    '🔐 Sessão Supabase encontrada.'
+                );
 
-        const senha =
-            inputSenha.value;
-
-
-        // ========================================================
-        // VALIDAÇÃO
-        // ========================================================
-
-        if (!email || !senha) {
-
-            alert(
-                'Por favor, preencha o e-mail e a senha.'
-            );
-
-            return;
-        }
-
-
-        // ========================================================
-        // BOTÃO
-        // ========================================================
-
-        const botaoEntrar =
-            formLogin.querySelector(
-                'button[type="submit"]'
-            );
-
-
-        if (botaoEntrar) {
-
-            botaoEntrar.disabled = true;
-
-            botaoEntrar.dataset.textoOriginal =
-                botaoEntrar.textContent;
-
-            botaoEntrar.textContent =
-                'Entrando...';
-
-        }
-
-
-        try {
-
-            console.log(
-                '🔐 Tentando fazer login:',
-                email
-            );
-
-
-            // ====================================================
-            // 1. LOGIN PELO SUPABASE AUTH
-            // ====================================================
-
-            const {
-                data: authData,
-                error: authError
-            } =
-                await supabaseClient.auth.signInWithPassword({
-
-                    email:
-                        email,
-
-                    password:
-                        senha
-
-                });
-
-
-            // ====================================================
-            // ERRO NO AUTH
-            // ====================================================
-
-            if (authError) {
-
-                console.error(
-                    '❌ Erro no login Auth:',
-                    authError
+                console.log(
+                    '👤 Usuário:',
+                    session.user.email
                 );
 
 
-                const mensagem =
-                    authError.message?.toLowerCase() || '';
+                // ==================================================
+                // PROCESSAR USUÁRIO AUTENTICADO
+                // ==================================================
+
+                const resultado =
+                    await processarUsuarioAutenticado(
+                        supabaseClient,
+                        session.user
+                    );
 
 
                 if (
-                    mensagem.includes(
-                        'email not confirmed'
-                    )
+                    resultado &&
+                    resultado.sucesso
                 ) {
 
-                    alert(
-                        'Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada e confirme sua conta.'
+                    console.log(
+                        '✅ Usuário OAuth processado com sucesso.'
                     );
 
-                } else if (
-                    mensagem.includes(
-                        'invalid login credentials'
-                    )
-                ) {
 
-                    alert(
-                        'E-mail ou senha incorretos. Verifique seus dados e tente novamente.'
+                    // ==================================================
+                    // REDIRECIONAR PARA O PERFIL
+                    // ==================================================
+
+                    window.location.replace(
+                        '03-Meu-perfil.html'
                     );
 
-                } else if (
-                    mensagem.includes(
-                        'too many requests'
-                    )
-                ) {
+                    return;
+                }
 
-                    alert(
-                        'Muitas tentativas foram realizadas. Aguarde alguns instantes e tente novamente.'
+            }
+
+        }
+
+    } catch (erro) {
+
+        console.error(
+            '❌ Erro ao processar sessão inicial:',
+            erro
+        );
+
+    }
+
+
+    // ========================================================
+    // 3. LOGIN COM GOOGLE
+    // ========================================================
+
+    if (btnGoogle) {
+
+        btnGoogle.addEventListener(
+            'click',
+            async () => {
+
+                console.log(
+                    '🔵 Iniciando login com Google...'
+                );
+
+
+                // ==============================================
+                // DESABILITAR BOTÃO
+                // ==============================================
+
+                btnGoogle.disabled =
+                    true;
+
+                btnGoogle.style.opacity =
+                    '0.6';
+
+                btnGoogle.style.pointerEvents =
+                    'none';
+
+
+                try {
+
+                    const {
+                        data,
+                        error
+                    } =
+                        await supabaseClient.auth.signInWithOAuth({
+
+                            provider:
+                                'google',
+
+                            options: {
+
+                                redirectTo:
+                                    `${window.location.origin}/02-Login.html`
+
+                            }
+
+                        });
+
+
+                    if (error) {
+
+                        console.error(
+                            '❌ Erro no login com Google:',
+                            error
+                        );
+
+                        alert(
+                            'Não foi possível entrar com o Google: ' +
+                            error.message
+                        );
+
+
+                        btnGoogle.disabled =
+                            false;
+
+                        btnGoogle.style.opacity =
+                            '1';
+
+                        btnGoogle.style.pointerEvents =
+                            'auto';
+
+                        return;
+                    }
+
+
+                    console.log(
+                        '✅ Redirecionamento para o Google iniciado.'
                     );
 
-                } else {
+                    console.log(
+                        'Dados OAuth:',
+                        data
+                    );
+
+
+                    // O Supabase fará o redirecionamento
+                    // automaticamente para o Google.
+
+
+                } catch (erro) {
+
+                    console.error(
+                        '❌ Erro inesperado no login Google:',
+                        erro
+                    );
 
                     alert(
-                        'Não foi possível realizar o login: ' +
-                        authError.message
+                        'Ocorreu um erro ao tentar entrar com o Google.'
                     );
+
+
+                    btnGoogle.disabled =
+                        false;
+
+                    btnGoogle.style.opacity =
+                        '1';
+
+                    btnGoogle.style.pointerEvents =
+                        'auto';
 
                 }
 
-                return;
             }
+        );
+
+    } else {
+
+        console.warn(
+            '⚠️ Botão "btn-login-google" não encontrado.'
+        );
+
+    }
 
 
-            // ====================================================
-            // 2. VERIFICAR USUÁRIO AUTH
-            // ====================================================
+    // ========================================================
+    // 4. LOGIN NORMAL
+    // ========================================================
 
-            const usuarioAuth =
-                authData?.user;
+    if (!formLogin) {
+
+        console.warn(
+            '⚠️ Formulário "form-login" não encontrado.'
+        );
+
+        return;
+    }
 
 
-            if (!usuarioAuth) {
+    formLogin.addEventListener(
+        'submit',
+        async (event) => {
+
+            event.preventDefault();
+
+
+            // ==================================================
+            // CAMPOS
+            // ==================================================
+
+            const inputEmail =
+                document.getElementById('email');
+
+            const inputSenha =
+                document.getElementById('senha');
+
+
+            if (!inputEmail || !inputSenha) {
 
                 console.error(
-                    '❌ Usuário Auth não retornado.'
+                    '❌ Campos de e-mail ou senha não encontrados.'
                 );
 
                 alert(
-                    'Não foi possível identificar sua conta. Tente novamente.'
+                    'Erro no formulário. Verifique os campos e tente novamente.'
                 );
 
                 return;
             }
 
 
-            console.log(
-                '✅ Login Auth realizado.'
-            );
+            // ==================================================
+            // VALORES
+            // ==================================================
 
-            console.log(
-                'Auth User ID:',
-                usuarioAuth.id
-            );
-
-            console.log(
-                'E-mail:',
-                usuarioAuth.email
-            );
-
-            console.log(
-                'E-mail confirmado:',
-                usuarioAuth.email_confirmed_at
-            );
+            const email =
+                inputEmail.value
+                    .trim()
+                    .toLowerCase();
 
 
-            // ====================================================
-            // 3. CONFIRMAR SESSÃO
-            // ====================================================
-
-            const {
-                data: sessionData,
-                error: sessionError
-            } =
-                await supabaseClient.auth.getSession();
+            const senha =
+                inputSenha.value;
 
 
-            if (sessionError) {
+            // ==================================================
+            // VALIDAÇÃO
+            // ==================================================
 
-                console.error(
-                    '❌ Erro ao verificar sessão:',
-                    sessionError
-                );
+            if (!email || !senha) {
 
                 alert(
-                    'Sua autenticação foi realizada, mas não foi possível criar a sessão. Tente novamente.'
+                    'Por favor, preencha o e-mail e a senha.'
                 );
 
                 return;
             }
 
 
-            if (!sessionData?.session) {
+            // ==================================================
+            // BOTÃO ENTRAR
+            // ==================================================
 
-                console.error(
-                    '❌ Login sem sessão ativa.'
+            const botaoEntrar =
+                formLogin.querySelector(
+                    'button[type="submit"]'
                 );
 
-                alert(
-                    'Não foi possível criar sua sessão. Tente novamente.'
-                );
 
-                return;
+            if (botaoEntrar) {
+
+                botaoEntrar.disabled =
+                    true;
+
+                botaoEntrar.dataset.textoOriginal =
+                    botaoEntrar.textContent;
+
+                botaoEntrar.textContent =
+                    'Entrando...';
+
             }
 
 
-            console.log(
-                '✅ Sessão Supabase confirmada.'
-            );
+            try {
 
-
-            // ====================================================
-            // 4. BUSCAR CLIENTE
-            // ====================================================
-            //
-            // Relacionamento:
-            //
-            // clientes.auth_user_id = auth.users.id
-            //
-            // ====================================================
-
-            const {
-                data: cliente,
-                error: clienteError
-            } =
-                await supabaseClient
-
-                    .from('clientes')
-
-                    .select(
-                        'id,nome,email,telefone,cpf,ativo,auth_user_id'
-                    )
-
-                    .eq(
-                        'auth_user_id',
-                        usuarioAuth.id
-                    )
-
-                    .maybeSingle();
-
-
-            // ====================================================
-            // ERRO AO BUSCAR CLIENTE
-            // ====================================================
-
-            if (clienteError) {
-
-                console.error(
-                    '❌ Erro ao consultar cliente:',
-                    clienteError
+                console.log(
+                    '🔐 Tentando fazer login:',
+                    email
                 );
 
-                await supabaseClient.auth.signOut();
 
-                alert(
-                    'Login realizado, mas não foi possível carregar seu cadastro. Tente novamente.'
+                // ==============================================
+                // LOGIN SUPABASE AUTH
+                // ==============================================
+
+                const {
+                    data: authData,
+                    error: authError
+                } =
+                    await supabaseClient.auth.signInWithPassword({
+
+                        email:
+                            email,
+
+                        password:
+                            senha
+
+                    });
+
+
+                // ==============================================
+                // ERRO AUTH
+                // ==============================================
+
+                if (authError) {
+
+                    console.error(
+                        '❌ Erro no login Auth:',
+                        authError
+                    );
+
+
+                    const mensagem =
+                        authError.message?.toLowerCase() || '';
+
+
+                    if (
+                        mensagem.includes(
+                            'email not confirmed'
+                        )
+                    ) {
+
+                        alert(
+                            'Seu e-mail ainda não foi confirmado. Verifique sua caixa de entrada e confirme sua conta.'
+                        );
+
+                    } else if (
+                        mensagem.includes(
+                            'invalid login credentials'
+                        )
+                    ) {
+
+                        alert(
+                            'E-mail ou senha incorretos. Verifique seus dados e tente novamente.'
+                        );
+
+                    } else if (
+                        mensagem.includes(
+                            'too many requests'
+                        )
+                    ) {
+
+                        alert(
+                            'Muitas tentativas foram realizadas. Aguarde alguns instantes e tente novamente.'
+                        );
+
+                    } else {
+
+                        alert(
+                            'Não foi possível realizar o login: ' +
+                            authError.message
+                        );
+
+                    }
+
+                    return;
+                }
+
+
+                // ==============================================
+                // USUÁRIO AUTH
+                // ==============================================
+
+                const usuarioAuth =
+                    authData?.user;
+
+
+                if (!usuarioAuth) {
+
+                    console.error(
+                        '❌ Usuário Auth não retornado.'
+                    );
+
+                    alert(
+                        'Não foi possível identificar sua conta. Tente novamente.'
+                    );
+
+                    return;
+                }
+
+
+                console.log(
+                    '✅ Login Auth realizado.'
                 );
 
-                return;
-            }
-
-
-            // ====================================================
-            // CLIENTE NÃO ENCONTRADO
-            // ====================================================
-
-            if (!cliente) {
-
-                console.error(
-                    '❌ Nenhum cliente encontrado para Auth User:',
+                console.log(
+                    'Auth User ID:',
                     usuarioAuth.id
                 );
 
-                await supabaseClient.auth.signOut();
-
-                alert(
-                    'Sua conta foi autenticada, mas o cadastro da loja não foi encontrado. Entre em contato com o suporte.'
+                console.log(
+                    'E-mail:',
+                    usuarioAuth.email
                 );
 
-                return;
+
+                // ==============================================
+                // CONFIRMAR SESSÃO
+                // ==============================================
+
+                const {
+                    data: sessionData,
+                    error: sessionError
+                } =
+                    await supabaseClient.auth.getSession();
+
+
+                if (sessionError) {
+
+                    console.error(
+                        '❌ Erro ao verificar sessão:',
+                        sessionError
+                    );
+
+                    await supabaseClient.auth.signOut();
+
+                    alert(
+                        'Sua autenticação foi realizada, mas não foi possível confirmar a sessão.'
+                    );
+
+                    return;
+                }
+
+
+                if (!sessionData?.session) {
+
+                    console.error(
+                        '❌ Login sem sessão ativa.'
+                    );
+
+                    await supabaseClient.auth.signOut();
+
+                    alert(
+                        'Não foi possível criar sua sessão. Tente novamente.'
+                    );
+
+                    return;
+                }
+
+
+                console.log(
+                    '✅ Sessão Supabase confirmada.'
+                );
+
+
+                // ==============================================
+                // PROCESSAR CLIENTE
+                // ==============================================
+
+                const resultado =
+                    await processarUsuarioAutenticado(
+                        supabaseClient,
+                        usuarioAuth
+                    );
+
+
+                if (
+                    !resultado ||
+                    !resultado.sucesso
+                ) {
+
+                    return;
+                }
+
+
+                // ==============================================
+                // SUCESSO
+                // ==============================================
+
+                alert(
+                    'Login realizado com sucesso! Bem-vindo de volta, ' +
+                    (resultado.cliente.nome || 'cliente') +
+                    ' 🎉'
+                );
+
+
+                // ==============================================
+                // REDIRECIONAMENTO
+                // ==============================================
+
+                window.location.replace(
+                    '03-Meu-perfil.html'
+                );
+
+            } catch (erro) {
+
+                console.error(
+                    '❌ Erro inesperado durante o login:',
+                    erro
+                );
+
+                alert(
+                    'Ocorreu um erro inesperado ao tentar fazer login. Tente novamente.'
+                );
+
+            } finally {
+
+                if (botaoEntrar) {
+
+                    botaoEntrar.disabled =
+                        false;
+
+                    botaoEntrar.textContent =
+                        botaoEntrar.dataset.textoOriginal ||
+                        'Entrar na minha conta';
+
+                }
+
             }
 
+        }
+    );
+
+});
+
+
+// ============================================================
+// 5. PROCESSAR USUÁRIO AUTENTICADO
+// ============================================================
+//
+// Esta função é utilizada tanto pelo:
+//
+// - Login por e-mail/senha
+// - Login com Google
+//
+// ============================================================
+
+async function processarUsuarioAutenticado(
+    supabaseClient,
+    usuarioAuth
+) {
+
+    try {
+
+        if (!usuarioAuth) {
+
+            console.error(
+                '❌ Usuário Auth inválido.'
+            );
+
+            return {
+                sucesso: false
+            };
+        }
+
+
+        console.log(
+            '🔎 Procurando cliente:',
+            usuarioAuth.id
+        );
+
+
+        // ======================================================
+        // BUSCAR CLIENTE PELO AUTH_USER_ID
+        // ======================================================
+
+        let {
+            data: cliente,
+            error: clienteError
+        } =
+            await supabaseClient
+                .from('clientes')
+                .select(
+                    'id,nome,email,telefone,cpf,ativo,auth_user_id'
+                )
+                .eq(
+                    'auth_user_id',
+                    usuarioAuth.id
+                )
+                .maybeSingle();
+
+
+        if (clienteError) {
+
+            console.error(
+                '❌ Erro ao buscar cliente pelo auth_user_id:',
+                clienteError
+            );
+
+            await supabaseClient.auth.signOut();
+
+            localStorage.removeItem(
+                'usuario_logado'
+            );
+
+            localStorage.removeItem(
+                'cliente_supabase_id'
+            );
+
+            alert(
+                'Não foi possível consultar seu cadastro.'
+            );
+
+            return {
+                sucesso: false
+            };
+        }
+
+
+        // ======================================================
+        // SE NÃO ENCONTROU, BUSCAR PELO E-MAIL
+        // ======================================================
+
+        if (
+            !cliente &&
+            usuarioAuth.email
+        ) {
 
             console.log(
-                '✅ Cliente encontrado:',
-                cliente.id
+                '🔎 Cliente não encontrado pelo Auth ID. Procurando pelo e-mail...'
             );
 
 
-            // ====================================================
-            // 5. VERIFICAR CONTA ATIVA
-            // ====================================================
+            const respostaEmail =
+                await supabaseClient
+                    .from('clientes')
+                    .select(
+                        'id,nome,email,telefone,cpf,ativo,auth_user_id'
+                    )
+                    .eq(
+                        'email',
+                        usuarioAuth.email.toLowerCase()
+                    )
+                    .maybeSingle();
 
-            if (cliente.ativo === false) {
 
-                console.warn(
-                    '⚠️ Cliente está desativado.'
+            if (respostaEmail.error) {
+
+                console.error(
+                    '❌ Erro ao buscar cliente pelo e-mail:',
+                    respostaEmail.error
                 );
 
                 await supabaseClient.auth.signOut();
 
-                alert(
-                    'Esta conta está desativada. Entre em contato com a loja.'
+                localStorage.removeItem(
+                    'usuario_logado'
                 );
 
-                return;
+                localStorage.removeItem(
+                    'cliente_supabase_id'
+                );
+
+                alert(
+                    'Não foi possível consultar seu cadastro.'
+                );
+
+                return {
+                    sucesso: false
+                };
             }
 
 
-            // ====================================================
-            // 6. CRIAR DADOS DO USUÁRIO LOCAL
-            // ====================================================
+            if (respostaEmail.data) {
 
-            const usuarioLogado = {
+                cliente =
+                    respostaEmail.data;
 
-                id:
-                    cliente.id,
 
-                auth_user_id:
-                    cliente.auth_user_id,
+                // ==================================================
+                // VINCULAR AUTH_USER_ID
+                // ==================================================
+
+                if (!cliente.auth_user_id) {
+
+                    console.log(
+                        '🔗 Vinculando cliente ao Auth User...'
+                    );
+
+
+                    const {
+                        data: clienteAtualizado,
+                        error: erroAtualizacao
+                    } =
+                        await supabaseClient
+                            .from('clientes')
+                            .update({
+
+                                auth_user_id:
+                                    usuarioAuth.id
+
+                            })
+                            .eq(
+                                'id',
+                                cliente.id
+                            )
+                            .select(
+                                'id,nome,email,telefone,cpf,ativo,auth_user_id'
+                            )
+                            .single();
+
+
+                    if (erroAtualizacao) {
+
+                        console.error(
+                            '❌ Erro ao vincular cliente:',
+                            erroAtualizacao
+                        );
+
+                    } else {
+
+                        cliente =
+                            clienteAtualizado;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        // ======================================================
+        // CLIENTE NÃO EXISTE
+        // ======================================================
+
+        if (!cliente) {
+
+            console.warn(
+                '⚠️ Nenhum cliente encontrado.'
+            );
+
+
+            // ==================================================
+            // GOOGLE NOVO
+            // ==================================================
+            //
+            // Para um usuário novo do Google, criamos o cadastro
+            // automaticamente na tabela clientes.
+            //
+            // ==================================================
+
+            const nomeGoogle =
+                usuarioAuth.user_metadata?.full_name ||
+                usuarioAuth.user_metadata?.name ||
+                usuarioAuth.email?.split('@')[0] ||
+                'Cliente';
+
+
+            const emailGoogle =
+                usuarioAuth.email ||
+                '';
+
+
+            const dadosNovoCliente = {
 
                 nome:
-                    cliente.nome || '',
+                    nomeGoogle,
 
                 email:
-                    cliente.email ||
-                    usuarioAuth.email ||
-                    '',
+                    emailGoogle,
 
                 telefone:
-                    cliente.telefone || '',
+                    null,
 
                 cpf:
-                    cliente.cpf || ''
+                    null,
+
+                auth_user_id:
+                    usuarioAuth.id,
+
+                ativo:
+                    true
 
             };
 
 
-            // ====================================================
-            // 7. SALVAR SESSÃO LOCAL
-            // ====================================================
-
-            localStorage.setItem(
-                'usuario_logado',
-                JSON.stringify(usuarioLogado)
-            );
-
-
-            localStorage.setItem(
-                'cliente_supabase_id',
-                cliente.id
-            );
-
-
-            // ====================================================
-            // 8. LOG DE SUCESSO
-            // ====================================================
-
             console.log(
-                '=========================================='
-            );
-
-            console.log(
-                '✅ LOGIN REALIZADO COM SUCESSO'
-            );
-
-            console.log(
-                'Cliente ID:',
-                cliente.id
-            );
-
-            console.log(
-                'Auth User ID:',
-                cliente.auth_user_id
-            );
-
-            console.log(
-                'Cliente:',
-                cliente.nome
-            );
-
-            console.log(
-                'E-mail:',
-                cliente.email
-            );
-
-            console.log(
-                'Sessão ativa:',
-                true
-            );
-
-            console.log(
-                '=========================================='
+                '🆕 Criando cliente para usuário Google...'
             );
 
 
-            // ====================================================
-            // 9. REDIRECIONAMENTO
-            // ====================================================
-
-            alert(
-                'Login realizado com sucesso! Bem-vindo de volta, ' +
-                (cliente.nome || 'cliente') +
-                ' 🎉'
-            );
-
-
-            window.location.href =
-                '03-Meu-perfil.html';
+            const {
+                data: novoCliente,
+                error: erroNovoCliente
+            } =
+                await supabaseClient
+                    .from('clientes')
+                    .insert([
+                        dadosNovoCliente
+                    ])
+                    .select()
+                    .single();
 
 
-        } catch (erro) {
+            if (erroNovoCliente) {
 
-            console.error(
-                '❌ Erro inesperado durante o login:',
-                erro
-            );
+                console.error(
+                    '❌ Erro ao criar cliente Google:',
+                    erroNovoCliente
+                );
 
-            alert(
-                'Ocorreu um erro inesperado ao tentar fazer login. Tente novamente.'
-            );
+                await supabaseClient.auth.signOut();
 
-        } finally {
+                localStorage.removeItem(
+                    'usuario_logado'
+                );
 
-            if (botaoEntrar) {
+                localStorage.removeItem(
+                    'cliente_supabase_id'
+                );
 
-                botaoEntrar.disabled = false;
+                alert(
+                    'Sua conta Google foi autenticada, mas não foi possível criar seu cadastro na loja.'
+                );
 
-                botaoEntrar.textContent =
-                    botaoEntrar.dataset.textoOriginal ||
-                    'Entrar na minha conta';
-
+                return {
+                    sucesso: false
+                };
             }
+
+
+            cliente =
+                novoCliente;
+
+
+            console.log(
+                '✅ Cliente Google criado:',
+                cliente.id
+            );
 
         }
 
-    });
 
-});
+        // ======================================================
+        // CONTA DESATIVADA
+        // ======================================================
+
+        if (cliente.ativo === false) {
+
+            console.warn(
+                '⚠️ Cliente desativado.'
+            );
+
+            await supabaseClient.auth.signOut();
+
+            localStorage.removeItem(
+                'usuario_logado'
+            );
+
+            localStorage.removeItem(
+                'cliente_supabase_id'
+            );
+
+            alert(
+                'Esta conta está desativada. Entre em contato com a loja.'
+            );
+
+            return {
+                sucesso: false
+            };
+        }
+
+
+        // ======================================================
+        // CRIAR USUÁRIO LOCAL
+        // ======================================================
+
+        const usuarioLogado = {
+
+            id:
+                cliente.id,
+
+            auth_user_id:
+                cliente.auth_user_id,
+
+            nome:
+                cliente.nome || '',
+
+            email:
+                cliente.email ||
+                usuarioAuth.email ||
+                '',
+
+            telefone:
+                cliente.telefone || '',
+
+            cpf:
+                cliente.cpf || ''
+
+        };
+
+
+        // ======================================================
+        // SALVAR LOCALSTORAGE
+        // ======================================================
+
+        localStorage.setItem(
+            'usuario_logado',
+            JSON.stringify(
+                usuarioLogado
+            )
+        );
+
+
+        localStorage.setItem(
+            'cliente_supabase_id',
+            cliente.id
+        );
+
+
+        // ======================================================
+        // LOG
+        // ======================================================
+
+        console.log(
+            '=========================================='
+        );
+
+        console.log(
+            '✅ USUÁRIO AUTENTICADO COM SUCESSO'
+        );
+
+        console.log(
+            'Cliente ID:',
+            cliente.id
+        );
+
+        console.log(
+            'Auth User ID:',
+            cliente.auth_user_id
+        );
+
+        console.log(
+            'Cliente:',
+            cliente.nome
+        );
+
+        console.log(
+            'E-mail:',
+            cliente.email
+        );
+
+        console.log(
+            '=========================================='
+        );
+
+
+        return {
+
+            sucesso:
+                true,
+
+            cliente,
+
+            usuario:
+                usuarioLogado,
+
+            authUser:
+                usuarioAuth
+
+        };
+
+    } catch (erro) {
+
+        console.error(
+            '❌ Erro ao processar usuário autenticado:',
+            erro
+        );
+
+        await supabaseClient.auth.signOut();
+
+        localStorage.removeItem(
+            'usuario_logado'
+        );
+
+        localStorage.removeItem(
+            'cliente_supabase_id'
+        );
+
+        alert(
+            'Ocorreu um erro ao carregar sua conta.'
+        );
+
+        return {
+            sucesso: false
+        };
+
+    }
+
+}
+

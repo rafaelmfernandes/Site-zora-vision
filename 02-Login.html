@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
@@ -18,22 +19,23 @@
 
   <header class="header">
 
-    <a
-      href="index.html"
-      class="btn-voltar"
-      title="Voltar"
-    >
-      &#8592;
-    </a>
+```
+<a
+  href="index.html"
+  class="btn-voltar"
+  title="Voltar"
+>
+  &#8592;
+</a>
 
-    <h1 class="header-titulo">
-      Acessar Conta
-    </h1>
+<h1 class="header-titulo">
+  Acessar Conta
+</h1>
 
-    <div class="header-espaco"></div>
+<div class="header-espaco"></div>
+```
 
   </header>
-
 
   <!-- ============================================================
        CONTEÚDO PRINCIPAL
@@ -41,144 +43,162 @@
 
   <main class="login-container">
 
-    <div class="boas-vindas">
+```
+<div class="boas-vindas">
 
-      <h2>
-        Bem-vindo de volta! 👋
-      </h2>
+  <h2>
+    Bem-vindo de volta! 👋
+  </h2>
 
-      <p>
-        Acesse sua conta para continuar suas compras e acompanhar pedidos.
-      </p>
+  <p>
+    Acesse sua conta para continuar suas compras e acompanhar pedidos.
+  </p>
 
-    </div>
-
-
-    <!-- ============================================================
-         LOGIN SOCIAL
-         ============================================================ -->
-
-    <div class="social-box">
-
-      <a
-        href="#"
-        class="btn-social google"
-      >
-        <span class="social-icon">
-          🌐
-        </span>
-
-        <span>
-          Entrar com o Google
-        </span>
-      </a>
+</div>
 
 
-      <a
-        href="#"
-        class="btn-social apple"
-      >
-        <span class="social-icon">
-          🍎
-        </span>
+<!-- ============================================================
+     LOGIN SOCIAL
+     ============================================================ -->
 
-        <span>
-          Entrar com a Apple
-        </span>
-      </a>
+<div class="social-box">
 
-    </div>
+  <!-- ==========================================================
+       GOOGLE
+       ========================================================== -->
 
+  <button
+    type="button"
+    id="btn-login-google"
+    class="btn-social google"
+  >
 
-    <!-- ============================================================
-         DIVISOR
-         ============================================================ -->
+    <span class="social-icon">
+      🌐
+    </span>
 
-    <div class="divisor">
+    <span>
+      Entrar com o Google
+    </span>
 
-      <span class="linha"></span>
-
-      <span class="divisor-texto">
-        OU
-      </span>
-
-      <span class="linha"></span>
-
-    </div>
+  </button>
 
 
-    <!-- ============================================================
-         FORMULÁRIO DE LOGIN
-         ============================================================ -->
-    <form id="form-login">
+  <!-- ==========================================================
+       APPLE
+       ========================================================== -->
 
-      <div class="campo">
+  <button
+    type="button"
+    class="btn-social apple"
+    id="btn-login-apple"
+  >
 
-        <label for="email">
-          E-mail
-        </label>
+    <span class="social-icon">
+      🍎
+    </span>
 
-        <input
-          type="email"
-          id="email"
-          placeholder="seuemail@exemplo.com"
-          autocomplete="email"
-          required
-        >
+    <span>
+      Entrar com a Apple
+    </span>
 
-      </div>
+  </button>
 
-
-      <div class="campo">
-
-        <label for="senha">
-          Senha
-        </label>
-
-        <input
-          type="password"
-          id="senha"
-          placeholder="Digite sua senha"
-          autocomplete="current-password"
-          required
-        >
-
-      </div>
+</div>
 
 
-      <div class="esqueceu-senha">
+<!-- ============================================================
+     DIVISOR
+     ============================================================ -->
 
-        <a href="02-Recuperar-senha.html">Esqueceu a senha?</a>
+<div class="divisor">
 
-      </div>
+  <span class="linha"></span>
 
+  <span class="divisor-texto">
+    OU
+  </span>
 
-      <button
-        type="submit"
-        class="btn-entrar"
-      >
-        Entrar na minha conta
-      </button>
+  <span class="linha"></span>
 
-    </form>
+</div>
 
 
-    <!-- ============================================================
-         CADASTRO
-         ============================================================ -->
+<!-- ============================================================
+     FORMULÁRIO DE LOGIN
+     ============================================================ -->
 
-    <div class="link-cadastro-box">
+<form id="form-login">
 
-      Ainda não tem conta?
+  <div class="campo">
 
-      <a href="02-cadastro.html">
-        Cadastrar-se
-      </a>
+    <label for="email">
+      E-mail
+    </label>
 
-    </div>
+    <input
+      type="email"
+      id="email"
+      placeholder="seuemail@exemplo.com"
+      autocomplete="email"
+      required
+    >
+
+  </div>
+
+
+  <div class="campo">
+
+    <label for="senha">
+      Senha
+    </label>
+
+    <input
+      type="password"
+      id="senha"
+      placeholder="Digite sua senha"
+      autocomplete="current-password"
+      required
+    >
+
+  </div>
+
+
+  <div class="esqueceu-senha">
+
+    <a href="02-Recuperar-senha.html">
+      Esqueceu a senha?
+    </a>
+
+  </div>
+
+
+  <button
+    type="submit"
+    class="btn-entrar"
+  >
+    Entrar na minha conta
+  </button>
+
+</form>
+
+
+<!-- ============================================================
+     CADASTRO
+     ============================================================ -->
+
+<div class="link-cadastro-box">
+
+  Ainda não tem conta?
+
+  <a href="02-cadastro.html">
+    Cadastrar-se
+  </a>
+
+</div>
+```
 
   </main>
-
 
   <!-- ============================================================
        NAVEGAÇÃO INFERIOR
@@ -186,203 +206,202 @@
 
   <nav class="bottom-nav">
 
-    <a
-      href="index.html"
-      class="nav-item"
+```
+<a
+  href="index.html"
+  class="nav-item"
+>
+
+  <span class="nav-icon">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="width:18px; height:18px; vertical-align:middle;"
     >
 
-      <span class="nav-icon">
+      <path d="M3 10.5 12 3l9 7.5"></path>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:18px; height:18px; vertical-align:middle;"
-        >
+      <path d="M5 9.5V21h14V9.5"></path>
 
-          <path d="M3 10.5 12 3l9 7.5"></path>
+    </svg>
 
-          <path d="M5 9.5V21h14V9.5"></path>
+  </span>
 
-        </svg>
+  <span>
+    Home
+  </span>
 
-      </span>
-
-      <span>
-        Home
-      </span>
-
-    </a>
+</a>
 
 
-    <a
-      href="01-categorias.html"
-      class="nav-item"
+<a
+  href="01-categorias.html"
+  class="nav-item"
+>
+
+  <span class="nav-icon">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      style="width:18px; height:18px; vertical-align:middle;"
     >
 
-      <span class="nav-icon">
+      <rect
+        x="3"
+        y="3"
+        width="7"
+        height="7"
+      ></rect>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:18px; height:18px; vertical-align:middle;"
-        >
+      <rect
+        x="14"
+        y="3"
+        width="7"
+        height="7"
+      ></rect>
 
-          <rect
-            x="3"
-            y="3"
-            width="7"
-            height="7"
-          ></rect>
+      <rect
+        x="3"
+        y="14"
+        width="7"
+        height="7"
+      ></rect>
 
-          <rect
-            x="14"
-            y="3"
-            width="7"
-            height="7"
-          ></rect>
+      <rect
+        x="14"
+        y="14"
+        width="7"
+        height="7"
+      ></rect>
 
-          <rect
-            x="3"
-            y="14"
-            width="7"
-            height="7"
-          ></rect>
+    </svg>
 
-          <rect
-            x="14"
-            y="14"
-            width="7"
-            height="7"
-          ></rect>
+  </span>
 
-        </svg>
+  <span>
+    Categorias
+  </span>
 
-      </span>
-
-      <span>
-        Categorias
-      </span>
-
-    </a>
+</a>
 
 
-    <a
-      href="04-carrinho.html"
-      class="nav-item"
+<a
+  href="04-carrinho.html"
+  class="nav-item"
+>
+
+  <span class="nav-icon">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      style="width:18px; height:18px; vertical-align:middle;"
     >
 
-      <span class="nav-icon">
+      <circle
+        cx="9"
+        cy="20"
+        r="1.5"
+      ></circle>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:18px; height:18px; vertical-align:middle;"
-        >
+      <circle
+        cx="18"
+        cy="20"
+        r="1.5"
+      ></circle>
 
-          <circle
-            cx="9"
-            cy="20"
-            r="1.5"
-          ></circle>
+      <path
+        d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"
+      ></path>
 
-          <circle
-            cx="18"
-            cy="20"
-            r="1.5"
-          ></circle>
+    </svg>
 
-          <path
-            d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"
-          ></path>
+  </span>
 
-        </svg>
+  <span class="carrinho-count">
+    0
+  </span>
 
-      </span>
+  <span>
+    Carrinho
+  </span>
 
-      <span class="carrinho-count">
-        0
-      </span>
-
-      <span>
-        Carrinho
-      </span>
-
-    </a>
+</a>
 
 
-    <a
-      href="02-Login.html"
-      class="nav-item active"
+<a
+  href="02-Login.html"
+  class="nav-item active"
+>
+
+  <span class="nav-icon">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      style="width:18px; height:18px; vertical-align:middle;"
     >
 
-      <span class="nav-icon">
+      <circle
+        cx="12"
+        cy="8"
+        r="4"
+      ></circle>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:18px; height:18px; vertical-align:middle;"
-        >
+      <path
+        d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
+      ></path>
 
-          <circle
-            cx="12"
-            cy="8"
-            r="4"
-          ></circle>
+    </svg>
 
-          <path
-            d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
-          ></path>
+  </span>
 
-        </svg>
+  <span>
+    Entrar
+  </span>
 
-      </span>
-
-      <span>
-        Entrar
-      </span>
-
-    </a>
+</a>
+```
 
   </nav>
-
 
   <!-- ============================================================
        SUPABASE
        ============================================================ -->
 
-  <!-- Biblioteca oficial do Supabase -->
   <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
   ></script>
 
-
-  <!-- Configuração do projeto -->
   <script
     src="Supabase/supabase.js"
   ></script>
 
+  <!-- ============================================================
+       LOGIN
+       ============================================================ -->
 
-  <!-- Sistema de login -->
   <script
     src="Scripts/02-Login.js"
   ></script>
-
 
 </body>
 
