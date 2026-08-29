@@ -1,0 +1,637 @@
+/* ============================================================
+ZORAVISION - POLÍTICAS E DOCUMENTOS
+Folha-estilos/Politicas.css
+============================================================ */
+
+/* ============================================================
+RESET
+============================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+min-height: 100vh;
+
+```
+display: flex;
+flex-direction: column;
+
+font-family: Arial, Helvetica, sans-serif;
+
+background: #f7f8fa;
+
+color: #222222;
+
+line-height: 1.6;
+```
+
+}
+
+a {
+color: inherit;
+text-decoration: none;
+}
+
+/* ============================================================
+CABEÇALHO
+============================================================ */
+
+.cabecalho {
+width: 100%;
+
+```
+background: #ffffff;
+
+border-bottom: 1px solid #e9e9e9;
+```
+
+}
+
+.cabecalho-container {
+width: 100%;
+max-width: 1200px;
+
+```
+height: 76px;
+
+margin: 0 auto;
+padding: 0 24px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+position: relative;
+```
+
+}
+
+/* ============================================================
+LOGO
+============================================================ */
+
+.logo {
+color: #151515;
+
+```
+font-size: 25px;
+
+font-weight: 700;
+
+letter-spacing: -0.6px;
+```
+
+}
+
+.logo span {
+color: #6c4df6;
+}
+
+/* ============================================================
+BOTÃO VOLTAR
+============================================================ */
+
+.botao-voltar {
+position: absolute;
+
+```
+left: 24px;
+
+top: 50%;
+
+transform: translateY(-50%);
+
+display: inline-flex;
+
+align-items: center;
+
+gap: 8px;
+
+padding: 9px 14px;
+
+border: 1px solid #dedede;
+
+border-radius: 8px;
+
+background: #ffffff;
+
+color: #555555;
+
+font-size: 13px;
+
+font-weight: 600;
+
+transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+```
+
+}
+
+.botao-voltar:hover {
+background: #f7f7f7;
+
+```
+border-color: #cfcfcf;
+
+color: #6c4df6;
+```
+
+}
+
+.seta {
+font-size: 17px;
+
+```
+line-height: 1;
+```
+
+}
+
+/* ============================================================
+CONTEÚDO
+============================================================ */
+
+.pagina {
+width: 100%;
+max-width: 900px;
+
+```
+margin: 0 auto;
+
+padding: 65px 24px 80px;
+
+flex: 1;
+```
+
+}
+
+/* ============================================================
+INTRODUÇÃO
+============================================================ */
+
+.introducao {
+text-align: center;
+
+```
+margin-bottom: 45px;
+```
+
+}
+
+.etiqueta {
+display: inline-block;
+
+```
+margin-bottom: 15px;
+
+padding: 6px 12px;
+
+border-radius: 30px;
+
+background: #f0edff;
+
+color: #6245df;
+
+font-size: 11px;
+
+font-weight: 700;
+
+text-transform: uppercase;
+
+letter-spacing: 0.5px;
+```
+
+}
+
+.introducao h1 {
+margin-bottom: 12px;
+
+```
+color: #151515;
+
+font-size: 38px;
+
+line-height: 1.2;
+
+letter-spacing: -0.8px;
+```
+
+}
+
+.introducao p {
+max-width: 600px;
+
+```
+margin: 0 auto;
+
+color: #777777;
+
+font-size: 15px;
+```
+
+}
+
+/* ============================================================
+DOCUMENTOS
+============================================================ */
+
+.documentos {
+display: grid;
+
+```
+grid-template-columns: 1fr 1fr;
+
+gap: 20px;
+```
+
+}
+
+/* ============================================================
+CARD
+============================================================ */
+
+.documento-card {
+display: flex;
+
+```
+flex-direction: column;
+
+padding: 28px;
+
+background: #ffffff;
+
+border: 1px solid #e7e7e7;
+
+border-radius: 14px;
+
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.025);
+
+transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+```
+
+}
+
+.documento-card:hover {
+transform: translateY(-3px);
+
+```
+border-color: #dcd6ff;
+
+box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+```
+
+}
+
+/* ============================================================
+ÍCONE
+============================================================ */
+
+.documento-icone {
+width: 48px;
+height: 48px;
+
+```
+margin-bottom: 20px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+border-radius: 12px;
+
+background: #f0edff;
+
+font-size: 21px;
+```
+
+}
+
+/* ============================================================
+CONTEÚDO DO CARD
+============================================================ */
+
+.documento-conteudo h2 {
+margin-bottom: 10px;
+
+```
+color: #222222;
+
+font-size: 19px;
+
+line-height: 1.3;
+```
+
+}
+
+.documento-conteudo p {
+margin-bottom: 20px;
+
+```
+color: #777777;
+
+font-size: 14px;
+
+line-height: 1.7;
+```
+
+}
+
+/* ============================================================
+LINK
+============================================================ */
+
+.documento-link {
+display: inline-flex;
+
+```
+align-items: center;
+
+gap: 7px;
+
+margin-top: auto;
+
+color: #6245df;
+
+font-size: 13px;
+
+font-weight: 700;
+```
+
+}
+
+.documento-link span {
+font-size: 16px;
+
+```
+transition: transform 0.2s ease;
+```
+
+}
+
+.documento-card:hover .documento-link span {
+transform: translateX(3px);
+}
+
+/* ============================================================
+AVISO
+============================================================ */
+
+.aviso {
+display: flex;
+
+```
+align-items: flex-start;
+
+gap: 14px;
+
+margin-top: 30px;
+
+padding: 20px 22px;
+
+background: #ffffff;
+
+border: 1px solid #e7e7e7;
+
+border-radius: 12px;
+```
+
+}
+
+.aviso-icone {
+width: 28px;
+height: 28px;
+
+```
+flex-shrink: 0;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+border-radius: 50%;
+
+background: #f0edff;
+
+color: #6245df;
+
+font-size: 14px;
+
+font-weight: 700;
+```
+
+}
+
+.aviso h2 {
+margin-bottom: 4px;
+
+```
+color: #333333;
+
+font-size: 14px;
+```
+
+}
+
+.aviso p {
+color: #777777;
+
+```
+font-size: 13px;
+
+line-height: 1.6;
+```
+
+}
+
+/* ============================================================
+RODAPÉ
+============================================================ */
+
+.rodape {
+width: 100%;
+
+```
+background: #ffffff;
+
+border-top: 1px solid #e9e9e9;
+```
+
+}
+
+.rodape-container {
+width: 100%;
+max-width: 1200px;
+
+```
+margin: 0 auto;
+
+padding: 25px 24px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+gap: 20px;
+```
+
+}
+
+.rodape-logo {
+color: #222222;
+
+```
+font-size: 17px;
+
+font-weight: 700;
+```
+
+}
+
+.rodape-logo span {
+color: #6c4df6;
+}
+
+.rodape-container p {
+color: #999999;
+
+```
+font-size: 12px;
+```
+
+}
+
+/* ============================================================
+ACESSIBILIDADE
+============================================================ */
+
+a:focus-visible {
+outline: 2px solid #6c4df6;
+
+```
+outline-offset: 3px;
+```
+
+}
+
+/* ============================================================
+TABLETS
+============================================================ */
+
+@media (max-width: 700px) {
+
+```
+.cabecalho-container {
+    height: 68px;
+
+    padding: 0 16px;
+}
+
+.botao-voltar {
+    left: 16px;
+
+    padding: 8px 11px;
+
+    font-size: 12px;
+}
+
+.logo {
+    font-size: 22px;
+}
+
+.pagina {
+    padding: 50px 18px 60px;
+}
+
+.introducao {
+    margin-bottom: 35px;
+}
+
+.introducao h1 {
+    font-size: 32px;
+}
+
+.documentos {
+    grid-template-columns: 1fr;
+}
+```
+
+}
+
+/* ============================================================
+CELULARES
+============================================================ */
+
+@media (max-width: 480px) {
+
+```
+.cabecalho-container {
+    justify-content: flex-end;
+}
+
+.logo {
+    font-size: 20px;
+}
+
+.botao-voltar {
+    left: 12px;
+
+    padding: 7px 9px;
+}
+
+.botao-voltar span:last-child {
+    display: none;
+}
+
+.pagina {
+    padding: 40px 14px 50px;
+}
+
+.introducao h1 {
+    font-size: 28px;
+}
+
+.introducao p {
+    font-size: 14px;
+}
+
+.documento-card {
+    padding: 24px;
+}
+
+.aviso {
+    padding: 18px;
+}
+
+.rodape-container {
+    flex-direction: column;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 22px 16px;
+}
+```
+
+}
