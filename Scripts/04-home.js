@@ -1,4 +1,3 @@
-
 // ============================================================
 // ZORAVISION - HOME
 // Produtos + Carrossel
@@ -12,6 +11,7 @@
 // - Busca somente dos campos necessários
 // - Compatível com FavoritosModule
 // - Compatível com CarrinhoCheckoutModule
+// - Categorias carregadas separadamente
 // ============================================================
 
 
@@ -191,7 +191,7 @@ async function carregarMaisProdutosHome(
 
 
         // ====================================================
-        // CONSULTA SUPABASE
+        // BUSCAR PRODUTOS
         // ====================================================
 
         const {
@@ -211,11 +211,7 @@ async function carregarMaisProdutosHome(
                     imagem_url,
                     ativo,
                     destaque,
-                    categoria_id,
-                    categorias (
-                        id,
-                        nome
-                    )
+                    categoria_id
                 `)
                 .eq(
                     'ativo',
@@ -234,7 +230,7 @@ async function carregarMaisProdutosHome(
 
 
         // ====================================================
-        // ERRO
+        // ERRO PRODUTOS
         // ====================================================
 
         if (error) {
@@ -297,6 +293,124 @@ async function carregarMaisProdutosHome(
 
 
         // ====================================================
+        // BUSCAR CATEGORIAS
+        // ====================================================
+
+        const categoriaIds =
+            [
+                ...new Set(
+                    produtos
+                        .map(
+                            produto =>
+                                produto.categoria_id
+                        )
+                        .filter(
+                            categoriaId =>
+                                categoriaId
+                        )
+                )
+            ];
+
+
+        let categorias =
+            [];
+
+
+        if (
+            categoriaIds.length > 0
+        ) {
+
+            const {
+                data: categoriasRecebidas,
+                error: erroCategorias
+            } =
+                await supabaseAtual
+                    .from('categorias')
+                    .select(`
+                        id,
+                        nome
+                    `)
+                    .in(
+                        'id',
+                        categoriaIds
+                    )
+                    .eq(
+                        'ativo',
+                        true
+                    );
+
+
+            if (erroCategorias) {
+
+                console.error(
+                    '❌ Erro ao buscar categorias:',
+                    erroCategorias
+                );
+
+            }
+            else {
+
+                categorias =
+                    categoriasRecebidas || [];
+
+            }
+
+        }
+
+
+        // ====================================================
+        // MAPA DE CATEGORIAS
+        // ====================================================
+
+        const mapaCategorias =
+            new Map();
+
+
+        categorias.forEach(
+            categoria => {
+
+                mapaCategorias.set(
+                    String(
+                        categoria.id
+                    ),
+                    categoria.nome
+                );
+
+            }
+        );
+
+
+        // ====================================================
+        // ADICIONAR CATEGORIA AOS PRODUTOS
+        // ====================================================
+
+        produtos.forEach(
+            produto => {
+
+                const nomeCategoria =
+                    mapaCategorias.get(
+                        String(
+                            produto.categoria_id
+                        )
+                    );
+
+
+                produto.categorias =
+                    nomeCategoria
+                        ? {
+                            id:
+                                produto.categoria_id,
+
+                            nome:
+                                nomeCategoria
+                        }
+                        : null;
+
+            }
+        );
+
+
+        // ====================================================
         // CRIAR CARDS
         // ====================================================
 
@@ -342,6 +456,7 @@ async function carregarMaisProdutosHome(
                 gridProdutos,
                 contadorProdutos
             );
+
         }
 
 
@@ -2065,4 +2180,3 @@ function inicializarCarrossel() {
     );
 
 }
-
