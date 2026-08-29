@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
     if (!usuarioLogado || !usuarioLogado.email) {
         alert('Faça login para cadastrar uma forma de pagamento.');
-        window.location.href = 'Login.html';
+        window.location.href = '02-Login.html';
         return;
     }
 
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const chave = chaveCartoesCliente();
             if (!chave) {
                 alert('Faça login para cadastrar uma forma de pagamento.');
-                window.location.href = 'Login.html';
+                window.location.href = '02-Login.html';
                 return;
             }
 

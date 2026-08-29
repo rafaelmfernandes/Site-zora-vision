@@ -107,7 +107,7 @@ function renderizarPaginaFavoritos() {
             estadoVazio.style.display = 'block';
             estadoVazio.innerHTML = `
                 <p style="font-size: 1.05rem; margin-bottom: 0.5rem;">Faça login para ver seus favoritos 🔒</p>
-                <a href="Login.html" style="color:#2563eb; font-weight:600; text-decoration:none;">Entrar na minha conta</a>
+                <a href="02-Login.html" style="color:#2563eb; font-weight:600; text-decoration:none;">Entrar na minha conta</a>
             `;
         }
         if (badgeContador) badgeContador.textContent = '0 Itens';

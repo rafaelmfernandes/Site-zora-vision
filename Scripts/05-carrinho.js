@@ -196,7 +196,7 @@ const CarrinhoModule = {
             );
 
             window.location.href =
-                'Login.html';
+                '02-Login.html';
 
             return false;
         }
@@ -439,7 +439,7 @@ const CarrinhoModule = {
             );
 
             window.location.href =
-                'Login.html';
+                '02-Login.html';
 
             return;
         }
@@ -1027,7 +1027,7 @@ function finalizarPedido() {
         );
 
         window.location.href =
-            'Login.html';
+            '02-Login.html';
 
         return;
     }

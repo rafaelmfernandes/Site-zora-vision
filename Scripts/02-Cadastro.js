@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     );
 
                     window.location.href =
-                        'Login.html';
+                        '02-Login.html';
 
                     return;
                 }
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
             window.location.href =
-                'Login.html';
+                '02-Login.html';
 
         } catch (erro) {
 

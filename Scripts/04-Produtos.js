@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         );
 
                         window.location.href =
-                            'Login.html';
+                            '02-Login.html';
 
                         return;
                     }
@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         );
 
                         window.location.href =
-                            'Login.html';
+                            '02-Login.html';
 
                         return;
                     }
@@ -871,7 +871,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             );
 
             window.location.href =
-                'Login.html';
+                '02-Login.html';
 
             return false;
         }

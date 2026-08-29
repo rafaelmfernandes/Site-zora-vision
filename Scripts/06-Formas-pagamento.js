@@ -20,7 +20,7 @@ function renderizarCartoes() {
         containerLista.innerHTML = `
             <div style="text-align:center; padding:2rem 1rem; color:#64748b;">
                 <p>Faça login para ver suas formas de pagamento.</p>
-                <a href="Login.html" style="color:#2563eb; font-weight:600; text-decoration:none;">Entrar na minha conta</a>
+                <a href="02-Login.html" style="color:#2563eb; font-weight:600; text-decoration:none;">Entrar na minha conta</a>
             </div>`;
         if (acaoFixa) acaoFixa.style.display = 'none';
         return;

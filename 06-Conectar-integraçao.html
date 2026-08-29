@@ -14,7 +14,7 @@
       var usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
 
       if (!usuarioLogado || !usuarioLogado.email || usuarioLogado.email.toLowerCase() !== EMAIL_ADMIN.toLowerCase()) {
-        window.location.href = 'Login.html';
+        window.location.href = '02-Login.html';
       }
     })();
   </script>

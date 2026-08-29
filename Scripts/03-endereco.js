@@ -586,7 +586,7 @@ function carregarDadosFormularioEndereco() {
         );
 
         window.location.href =
-            'Login.html';
+            '02-Login.html';
 
         return;
     }
@@ -895,7 +895,7 @@ async function carregarPaginaEnderecos() {
         );
 
         window.location.href =
-            'Login.html';
+            '02-Login.html';
 
         return;
     }
@@ -1518,7 +1518,7 @@ function confirmarSelecaoEndereco() {
         );
 
         window.location.href =
-            'Login.html';
+            '02-Login.html';
 
         return;
     }

@@ -1842,7 +1842,7 @@ async function validarCheckout() {
         );
 
         window.location.href =
-            'Login.html';
+            '02-Login.html';
 
         return false;
     }
@@ -2762,7 +2762,7 @@ async function carregarCheckout() {
         );
 
         window.location.href =
-            'Login.html';
+            '02-Login.html';
 
         return;
     }
