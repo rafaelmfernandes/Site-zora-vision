@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="pt-BR">
@@ -7,10 +6,11 @@
 
   <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
 
   <title>Minha Conta - ZoraVision</title>
 
@@ -21,19 +21,17 @@
 
 </head>
 
-
 <body>
 
-
   <!-- ========================================================= -->
+
   <!-- LOG INICIAL -->
+
   <!-- ========================================================= -->
 
   <script>
 
-    console.log(
-      '🟢 03-MEU-PERFIL.HTML FOI CARREGADO'
-    );
+    console.log('🟢 03-MEU-PERFIL.HTML FOI CARREGADO');
 
     console.log(
       'cliente_supabase_id:',
@@ -47,71 +45,72 @@
 
   </script>
 
-
   <!-- ========================================================= -->
+
   <!-- CABEÇALHO -->
+
   <!-- ========================================================= -->
 
   <header class="header">
 
+<a
+  href="javascript:history.back()"
+  class="btn-voltar"
+  title="Voltar"
+>
+  &#8592;
+</a>
 
-    <a
-      href="javascript:history.back()"
-      class="btn-voltar"
-      title="Voltar"
-    >
-      &#8592;
-    </a>
+<h1 class="header-titulo">
+  Minha Conta
+</h1>
 
-
-    <h1 class="header-titulo">
-      Minha Conta
-    </h1>
-
-
-    <div class="header-espaco"></div>
+<div class="header-espaco"></div>
 
 
   </header>
 
-
   <!-- ========================================================= -->
+
   <!-- PERFIL -->
+
   <!-- ========================================================= -->
 
   <section class="perfil-card">
 
 
-    <div class="avatar-container">
+<div class="avatar-container">
 
-      <div class="avatar-img">
-        👤
-      </div>
+  <div
+    class="avatar-img"
+    id="perfil-foto"
+  >
+    👤
+  </div>
 
-    </div>
+</div>
 
+<h2
+  class="usuario-nome"
+  id="perfil-nome-usuario"
+>
+  Carregando...
+</h2>
 
-    <h2
-      class="usuario-nome"
-      id="perfil-nome-usuario"
-    >
-      Carregando...
-    </h2>
-
-
-    <p
-      class="usuario-email"
-      id="perfil-email-usuario"
-    >
-      Carregando...
-    </p>
+<p
+  class="usuario-email"
+  id="perfil-email-usuario"
+>
+  Carregando...
+</p>
 
 
   </section>
 
-
   <!-- ========================================================= -->
+
   <!-- PAINEL ADMINISTRATIVO -->
+
   <!-- ========================================================= -->
 
   <section
@@ -120,544 +119,221 @@
     style="display:none;"
   >
 
+<div class="menu-lista">
 
-    <div class="menu-lista">
+  <a
+    href="05-admin.html"
+    class="menu-item admin-link"
+    style="
+      background-color:#eff6ff;
+      border:1px solid #bfdbfe;
+      color:#1e40af;
+      font-weight:600;
+    "
+  >
 
+    <span class="item-icon">
 
-      <a
-        href="05-admin.html"
-        class="menu-item admin-link"
-        style="
-          background-color:#eff6ff;
-          border:1px solid #bfdbfe;
-          color:#1e40af;
-          font-weight:600;
-        "
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="width:20px;height:20px;vertical-align:middle;"
       >
 
+        <circle
+          cx="12"
+          cy="12"
+          r="3"
+        ></circle>
 
-        <span class="item-icon">
+        <path
+          d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+        ></path>
 
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="width:20px;height:20px;vertical-align:middle;"
-          >
+      </svg>
 
-            <circle
-              cx="12"
-              cy="12"
-              r="3"
-            ></circle>
+    </span>
 
+    <span class="item-texto">
+      Painel Administrativo
+    </span>
 
-            <path
-              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-            ></path>
+    <span class="item-seta">
+      &#10095;
+    </span>
 
-          </svg>
+  </a>
 
-        </span>
-
-
-        <span class="item-texto">
-          Painel Administrativo
-        </span>
-
-
-        <span class="item-seta">
-          &#10095;
-        </span>
-
-
-      </a>
-
-
-    </div>
-
+</div>
 
   </section>
 
-
   <!-- ========================================================= -->
+
   <!-- RESUMO DOS PEDIDOS -->
+
   <!-- ========================================================= -->
 
   <section class="pedidos-resumo">
 
 
-    <a
-      href="03-Meus-pedidos.html"
-      class="status-item"
+<a
+  href="03-Meus-pedidos.html"
+  class="status-item"
+>
+
+  <span class="status-icon">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="width:20px;height:20px;vertical-align:middle;"
     >
 
-      <span class="status-icon">
+      <path
+        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+      ></path>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:20px;height:20px;vertical-align:middle;"
-        >
+      <polyline
+        points="3.27 6.96 12 12.01 20.73 6.96"
+      ></polyline>
 
-          <path
-            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-          ></path>
+      <line
+        x1="12"
+        y1="22.08"
+        x2="12"
+        y2="12"
+      ></line>
 
-          <polyline
-            points="3.27 6.96 12 12.01 20.73 6.96"
-          ></polyline>
+    </svg>
 
-          <line
-            x1="12"
-            y1="22.08"
-            x2="12"
-            y2="12"
-          ></line>
+  </span>
 
-        </svg>
+  <span class="status-label">
+    Preparando
+  </span>
 
-      </span>
+</a>
 
 
-      <span class="status-label">
-        Preparando
-      </span>
+<a
+  href="03-Meus-pedidos.html"
+  class="status-item"
+>
 
+  <span class="status-icon">
 
-    </a>
-
-
-    <a
-      href="03-Meus-pedidos.html"
-      class="status-item"
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="width:20px;height:20px;vertical-align:middle;"
     >
 
-      <span class="status-icon">
+      <rect
+        x="1"
+        y="3"
+        width="15"
+        height="13"
+      ></rect>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:20px;height:20px;vertical-align:middle;"
-        >
+      <polygon
+        points="16 8 20 8 23 11 23 16 16 16 16 8"
+      ></polygon>
 
-          <rect
-            x="1"
-            y="3"
-            width="15"
-            height="13"
-          ></rect>
+      <circle
+        cx="5.5"
+        cy="18.5"
+        r="2.5"
+      ></circle>
 
-          <polygon
-            points="16 8 20 8 23 11 23 16 16 16 16 8"
-          ></polygon>
+      <circle
+        cx="18.5"
+        cy="18.5"
+        r="2.5"
+      ></circle>
 
-          <circle
-            cx="5.5"
-            cy="18.5"
-            r="2.5"
-          ></circle>
+    </svg>
 
-          <circle
-            cx="18.5"
-            cy="18.5"
-            r="2.5"
-          ></circle>
+  </span>
 
-        </svg>
+  <span class="status-label">
+    A Caminho
+  </span>
 
-      </span>
+</a>
 
 
-      <span class="status-label">
-        A Caminho
-      </span>
+<a
+  href="03-Meus-pedidos.html"
+  class="status-item"
+>
 
+  <span class="status-icon">
 
-    </a>
-
-
-    <a
-      href="03-Meus-pedidos.html"
-      class="status-item"
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="width:20px;height:20px;vertical-align:middle;"
     >
 
-      <span class="status-icon">
+      <path
+        d="M22 11.08V12a10 10 0 1 1-5.93-9.14"
+      ></path>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:20px;height:20px;vertical-align:middle;"
-        >
+      <polyline
+        points="22 4 12 14.01 9 11.01"
+      ></polyline>
 
-          <path
-            d="M22 11.08V12a10 10 0 1 1-5.93-9.14"
-          ></path>
+    </svg>
 
-          <polyline
-            points="22 4 12 14.01 9 11.01"
-          ></polyline>
+  </span>
 
-        </svg>
+  <span class="status-label">
+    Entregues
+  </span>
 
-      </span>
-
-
-      <span class="status-label">
-        Entregues
-      </span>
-
-
-    </a>
+</a>
 
 
   </section>
 
-
   <!-- ========================================================= -->
+
   <!-- MINHAS COMPRAS -->
+
   <!-- ========================================================= -->
 
   <main class="menu-secao">
 
 
-    <h3 class="secao-titulo">
-      Minhas Compras
-    </h3>
+<h3 class="secao-titulo">
+  Minhas Compras
+</h3>
 
+<div class="menu-lista">
 
-    <div class="menu-lista">
+  <a
+    href="03-Meus-pedidos.html"
+    class="menu-item"
+  >
 
-
-      <a
-        href="03-Meus-pedidos.html"
-        class="menu-item"
-      >
-
-        <span class="item-icon">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="width:20px;height:20px;vertical-align:middle;"
-          >
-
-            <path
-              d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
-            ></path>
-
-            <path
-              d="M3 6h18"
-            ></path>
-
-            <path
-              d="M16 10a4 4 0 0 1-8 0"
-            ></path>
-
-          </svg>
-
-        </span>
-
-
-        <span class="item-texto">
-          Meus Pedidos
-        </span>
-
-
-        <span class="item-seta">
-          &#10095;
-        </span>
-
-
-      </a>
-
-
-      <a
-        href="04-Cupons.html"
-        class="menu-item"
-      >
-
-        <span class="item-icon">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="width:20px;height:20px;vertical-align:middle;"
-          >
-
-            <path
-              d="M20.59 13.41 11 3.83a2 2 0 0 0-1.42-.59H4a2 2 0 0 0-2 2v5.59c0 .53.21 1.04.59 1.42l9.58 9.58a2 2 0 0 0 2.83 0l6.59-6.59a2 2 0 0 0 0-2.83Z"
-            ></path>
-
-            <circle
-              cx="7.5"
-              cy="7.5"
-              r="1.5"
-            ></circle>
-
-          </svg>
-
-        </span>
-
-
-        <span class="item-texto">
-          Meus Cupons de Desconto
-        </span>
-
-
-        <span class="item-seta">
-          &#10095;
-        </span>
-
-
-      </a>
-
-
-      <a
-        href="03-favoritos.html"
-        class="menu-item"
-      >
-
-        <span class="item-icon">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="width:20px;height:20px;vertical-align:middle;"
-          >
-
-            <path
-              d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-            ></path>
-
-          </svg>
-
-        </span>
-
-
-        <span class="item-texto">
-          Produtos Favoritos
-        </span>
-
-
-        <span class="item-seta">
-          &#10095;
-        </span>
-
-
-      </a>
-
-
-    </div>
-
-
-  </main>
-
-
-  <!-- ========================================================= -->
-  <!-- CONFIGURAÇÕES DA CONTA -->
-  <!-- ========================================================= -->
-
-  <section class="menu-secao">
-
-
-    <h3 class="secao-titulo">
-      Configurações da Conta
-    </h3>
-
-
-    <div class="menu-lista">
-
-
-      <a
-        href="03-Enderecos.html"
-        class="menu-item"
-      >
-
-        <span class="item-icon">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="width:20px;height:20px;vertical-align:middle;"
-          >
-
-            <path
-              d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"
-            ></path>
-
-            <circle
-              cx="12"
-              cy="10"
-              r="3"
-            ></circle>
-
-          </svg>
-
-        </span>
-
-
-        <span class="item-texto">
-          Endereços de Entrega
-        </span>
-
-
-        <span class="item-seta">
-          &#10095;
-        </span>
-
-
-      </a>
-
-
-      <a
-        href="03-Formas-pagamento.html"
-        class="menu-item"
-      >
-
-        <span class="item-icon">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="width:20px;height:20px;vertical-align:middle;"
-          >
-
-            <rect
-              x="1"
-              y="4"
-              width="22"
-              height="16"
-              rx="2"
-              ry="2"
-            ></rect>
-
-            <line
-              x1="1"
-              y1="10"
-              x2="23"
-              y2="10"
-            ></line>
-
-          </svg>
-
-        </span>
-
-
-        <span class="item-texto">
-          Formas de Pagamento
-        </span>
-
-
-        <span class="item-seta">
-          &#10095;
-        </span>
-
-
-      </a>
-
-
-      <a
-        href="03-Dados-pessoais.html"
-        class="menu-item"
-      >
-
-        <span class="item-icon">
-
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            style="width:20px;height:20px;vertical-align:middle;"
-          >
-
-            <rect
-              x="3"
-              y="11"
-              width="18"
-              height="11"
-              rx="2"
-            ></rect>
-
-            <path
-              d="M7 11V7a5 5 0 0 1 10 0v4"
-            ></path>
-
-          </svg>
-
-        </span>
-
-
-        <span class="item-texto">
-          Dados Pessoais e Senha
-        </span>
-
-
-        <span class="item-seta">
-          &#10095;
-        </span>
-
-
-      </a>
-
-
-    </div>
-
-
-  </section>
-
-
-  <!-- ========================================================= -->
-  <!-- SAIR -->
-  <!-- ========================================================= -->
-
-  <div class="btn-sair-box">
-
-
-    <a
-      href="02-Login.html"
-      id="btn-sair"
-      class="btn-sair"
-    >
-
+    <span class="item-icon">
 
       <svg
         viewBox="0 0 24 24"
@@ -670,240 +346,515 @@
       >
 
         <path
-          d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+          d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"
         ></path>
 
-        <polyline
-          points="16 17 21 12 16 7"
-        ></polyline>
+        <path
+          d="M3 6h18"
+        ></path>
+
+        <path
+          d="M16 10a4 4 0 0 1-8 0"
+        ></path>
+
+      </svg>
+
+    </span>
+
+    <span class="item-texto">
+      Meus Pedidos
+    </span>
+
+    <span class="item-seta">
+      &#10095;
+    </span>
+
+  </a>
+
+
+  <a
+    href="04-Cupons.html"
+    class="menu-item"
+  >
+
+    <span class="item-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="width:20px;height:20px;vertical-align:middle;"
+      >
+
+        <path
+          d="M20.59 13.41 11 3.83a2 2 0 0 0-1.42-.59H4a2 2 0 0 0-2 2v5.59c0 .53.21 1.04.59 1.42l9.58 9.58a2 2 0 0 0 2.83 0l6.59-6.59a2 2 0 0 0 0-2.83Z"
+        ></path>
+
+        <circle
+          cx="7.5"
+          cy="7.5"
+          r="1.5"
+        ></circle>
+
+      </svg>
+
+    </span>
+
+    <span class="item-texto">
+      Meus Cupons de Desconto
+    </span>
+
+    <span class="item-seta">
+      &#10095;
+    </span>
+
+  </a>
+
+
+  <a
+    href="03-favoritos.html"
+    class="menu-item"
+  >
+
+    <span class="item-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="width:20px;height:20px;vertical-align:middle;"
+      >
+
+        <path
+          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+        ></path>
+
+      </svg>
+
+    </span>
+
+    <span class="item-texto">
+      Produtos Favoritos
+    </span>
+
+    <span class="item-seta">
+      &#10095;
+    </span>
+
+  </a>
+
+</div>
+
+
+  </main>
+
+  <!-- ========================================================= -->
+
+  <!-- CONFIGURAÇÕES DA CONTA -->
+
+  <!-- ========================================================= -->
+
+  <section class="menu-secao">
+
+<h3 class="secao-titulo">
+  Configurações da Conta
+</h3>
+
+<div class="menu-lista">
+
+  <a
+    href="03-Enderecos.html"
+    class="menu-item"
+  >
+
+    <span class="item-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="width:20px;height:20px;vertical-align:middle;"
+      >
+
+        <path
+          d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"
+        ></path>
+
+        <circle
+          cx="12"
+          cy="10"
+          r="3"
+        ></circle>
+
+      </svg>
+
+    </span>
+
+    <span class="item-texto">
+      Endereços de Entrega
+    </span>
+
+    <span class="item-seta">
+      &#10095;
+    </span>
+
+  </a>
+
+
+  <a
+    href="03-Formas-pagamento.html"
+    class="menu-item"
+  >
+
+    <span class="item-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="width:20px;height:20px;vertical-align:middle;"
+      >
+
+        <rect
+          x="1"
+          y="4"
+          width="22"
+          height="16"
+          rx="2"
+          ry="2"
+        ></rect>
 
         <line
-          x1="21"
-          y1="12"
-          x2="9"
-          y2="12"
+          x1="1"
+          y1="10"
+          x2="23"
+          y2="10"
         ></line>
 
       </svg>
 
+    </span>
 
-      Sair da Conta
+    <span class="item-texto">
+      Formas de Pagamento
+    </span>
+
+    <span class="item-seta">
+      &#10095;
+    </span>
+
+  </a>
 
 
-    </a>
+  <a
+    href="03-Dados-pessoais.html"
+    class="menu-item"
+  >
 
+    <span class="item-icon">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        style="width:20px;height:20px;vertical-align:middle;"
+      >
+
+        <rect
+          x="3"
+          y="11"
+          width="18"
+          height="11"
+          rx="2"
+        ></rect>
+
+        <path
+          d="M7 11V7a5 5 0 0 1 10 0v4"
+        ></path>
+
+      </svg>
+
+    </span>
+
+    <span class="item-texto">
+      Dados Pessoais e Senha
+    </span>
+
+    <span class="item-seta">
+      &#10095;
+    </span>
+
+  </a>
+
+</div>
+```
+
+  </section>
+
+  <!-- ========================================================= -->
+
+  <!-- SAIR -->
+
+  <!-- ========================================================= -->
+
+  <div class="btn-sair-box">
+
+<a
+  href="02-Login.html"
+  id="btn-sair"
+  class="btn-sair"
+>
+
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    style="width:20px;height:20px;vertical-align:middle;"
+  >
+
+    <path
+      d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+    ></path>
+
+    <polyline
+      points="16 17 21 12 16 7"
+    ></polyline>
+
+    <line
+      x1="21"
+      y1="12"
+      x2="9"
+      y2="12"
+    ></line>
+
+  </svg>
+
+  Sair da Conta
+
+</a>
+```
 
   </div>
 
-
   <!-- ========================================================= -->
+
   <!-- MENU INFERIOR -->
+
   <!-- ========================================================= -->
 
   <nav class="bottom-nav">
 
+<a
+  href="index.html"
+  class="nav-item"
+>
 
-    <a
-      href="index.html"
-      class="nav-item"
+  <span class="nav-icon">
+
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="width:18px;height:18px;vertical-align:middle;"
     >
 
-      <span class="nav-icon">
+      <path d="M3 10.5 12 3l9 7.5"></path>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:18px;height:18px;vertical-align:middle;"
-        >
+      <path d="M5 9.5V21h14V9.5"></path>
 
-          <path d="M3 10.5 12 3l9 7.5"></path>
+    </svg>
 
-          <path d="M5 9.5V21h14V9.5"></path>
+  </span>
 
-        </svg>
+  <span>
+    Home
+  </span>
 
-      </span>
+</a>
 
 
-      <span>
-        Home
-      </span>
+<a
+  href="01-categorias.html"
+  class="nav-item"
+>
 
+  <span class="nav-icon">
 
-    </a>
-
-
-    <a
-      href="01-categorias.html"
-      class="nav-item"
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="width:18px;height:18px;vertical-align:middle;"
     >
 
-      <span class="nav-icon">
+      <rect
+        x="3"
+        y="3"
+        width="7"
+        height="7"
+      ></rect>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:18px;height:18px;vertical-align:middle;"
-        >
+      <rect
+        x="14"
+        y="3"
+        width="7"
+        height="7"
+      ></rect>
 
-          <rect
-            x="3"
-            y="3"
-            width="7"
-            height="7"
-          ></rect>
+      <rect
+        x="3"
+        y="14"
+        width="7"
+        height="7"
+      ></rect>
 
-          <rect
-            x="14"
-            y="3"
-            width="7"
-            height="7"
-          ></rect>
+      <rect
+        x="14"
+        y="14"
+        width="7"
+        height="7"
+      ></rect>
 
-          <rect
-            x="3"
-            y="14"
-            width="7"
-            height="7"
-          ></rect>
+    </svg>
 
-          <rect
-            x="14"
-            y="14"
-            width="7"
-            height="7"
-          ></rect>
+  </span>
 
-        </svg>
+  <span>
+    Categorias
+  </span>
 
-      </span>
+</a>
 
 
-      <span>
-        Categorias
-      </span>
+<a
+  href="04-carrinho.html"
+  class="nav-item"
+>
 
+  <span class="nav-icon">
 
-    </a>
-
-
-    <a
-      href="04-carrinho.html"
-      class="nav-item"
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="width:18px;height:18px;vertical-align:middle;"
     >
 
-      <span class="nav-icon">
+      <circle
+        cx="9"
+        cy="20"
+        r="1.5"
+      ></circle>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:18px;height:18px;vertical-align:middle;"
-        >
+      <circle
+        cx="18"
+        cy="20"
+        r="1.5"
+      ></circle>
 
-          <circle
-            cx="9"
-            cy="20"
-            r="1.5"
-          ></circle>
+      <path
+        d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"
+      ></path>
 
-          <circle
-            cx="18"
-            cy="20"
-            r="1.5"
-          ></circle>
+    </svg>
 
-          <path
-            d="M2 3h2l2.4 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 7H6"
-          ></path>
+  </span>
 
-        </svg>
+  <span class="carrinho-count">
+    0
+  </span>
 
-      </span>
+  <span>
+    Carrinho
+  </span>
+
+</a>
 
 
-      <span class="carrinho-count">
-        0
-      </span>
+<a
+  href="03-Meu-perfil.html"
+  class="nav-item active"
+>
 
+  <span class="nav-icon">
 
-      <span>
-        Carrinho
-      </span>
-
-
-    </a>
-
-
-    <a
-      href="03-Meu-perfil.html"
-      class="nav-item active"
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      style="width:18px;height:18px;vertical-align:middle;"
     >
 
-      <span class="nav-icon">
+      <circle
+        cx="12"
+        cy="8"
+        r="4"
+      ></circle>
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          style="width:18px;height:18px;vertical-align:middle;"
-        >
+      <path
+        d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
+      ></path>
 
-          <circle
-            cx="12"
-            cy="8"
-            r="4"
-          ></circle>
+    </svg>
 
-          <path
-            d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"
-          ></path>
+  </span>
 
-        </svg>
+  <span>
+    Perfil
+  </span>
 
-      </span>
-
-
-      <span>
-        Perfil
-      </span>
-
-
-    </a>
+</a>
 
 
   </nav>
 
-
   <!-- ========================================================= -->
+
   <!-- SUPABASE -->
+
   <!-- ========================================================= -->
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script src="Supabase/supabase.js"></script>
 
-
   <!-- ========================================================= -->
+
   <!-- CONTROLE DO PERFIL -->
+
   <!-- ========================================================= -->
 
   <script>
-
 
     // ==========================================================
     // ELEMENTOS
@@ -914,18 +865,20 @@
         'perfil-nome-usuario'
       );
 
-
     const elEmail =
       document.getElementById(
         'perfil-email-usuario'
       );
 
+    const elFoto =
+      document.getElementById(
+        'perfil-foto'
+      );
 
     const containerAdmin =
       document.getElementById(
         'opcao-admin-container'
       );
-
 
     const btnSair =
       document.getElementById(
@@ -938,6 +891,19 @@
 
 
     // ==========================================================
+    // CONTROLE DE ESTADO
+    // ==========================================================
+
+    let validacaoEmAndamento = false;
+
+    let perfilValidado = false;
+
+    let listenerAuthRegistrado = false;
+
+    let fotoCarregada = false;
+
+
+    // ==========================================================
     // LIMPAR DADOS LOCAIS
     // ==========================================================
 
@@ -947,11 +913,9 @@
         '🧹 Limpando dados locais do usuário...'
       );
 
-
       localStorage.removeItem(
         'usuario_logado'
       );
-
 
       localStorage.removeItem(
         'cliente_supabase_id'
@@ -970,9 +934,7 @@
         '➡️ Redirecionando para 02-Login.html'
       );
 
-
       limparDadosLocais();
-
 
       window.location.replace(
         '02-Login.html'
@@ -1010,10 +972,358 @@
 
 
     // ==========================================================
+    // FOTO PADRÃO
+    // ==========================================================
+
+    function colocarFotoPadrao() {
+
+      if (!elFoto) {
+        return;
+      }
+
+
+      fotoCarregada =
+        false;
+
+
+      elFoto.textContent =
+        '👤';
+
+
+      elFoto.style.backgroundImage =
+        'none';
+
+
+      elFoto.style.backgroundColor =
+        '#f1f5f9';
+
+
+      elFoto.style.backgroundSize =
+        'cover';
+
+
+      elFoto.style.backgroundPosition =
+        'center';
+
+
+      elFoto.style.backgroundRepeat =
+        'no-repeat';
+
+
+      elFoto.style.display =
+        'flex';
+
+
+      elFoto.style.alignItems =
+        'center';
+
+
+      elFoto.style.justifyContent =
+        'center';
+
+
+      elFoto.style.overflow =
+        'hidden';
+
+    }
+
+
+    // ==========================================================
+    // MOSTRAR FOTO
+    // ==========================================================
+
+    function mostrarFotoPerfil(url) {
+
+      if (!elFoto || !url) {
+        return;
+      }
+
+
+      fotoCarregada =
+        true;
+
+
+      console.log(
+        '🖼️ Exibindo foto de perfil.'
+      );
+
+
+      elFoto.textContent =
+        '';
+
+
+      elFoto.style.backgroundColor =
+        '#f1f5f9';
+
+
+      elFoto.style.backgroundImage =
+        `url("${url}")`;
+
+
+      elFoto.style.backgroundSize =
+        'cover';
+
+
+      elFoto.style.backgroundPosition =
+        'center';
+
+
+      elFoto.style.backgroundRepeat =
+        'no-repeat';
+
+
+      elFoto.style.display =
+        'flex';
+
+
+      elFoto.style.alignItems =
+        'center';
+
+
+      elFoto.style.justifyContent =
+        'center';
+
+
+      elFoto.style.overflow =
+        'hidden';
+
+    }
+
+
+    // ==========================================================
+    // CARREGAR FOTO DE PERFIL
+    // ==========================================================
+    //
+    // OTIMIZAÇÕES:
+    //
+    // 1. Lista somente 1 arquivo.
+    // 2. Não baixa a imagem antecipadamente com new Image().
+    // 3. Não usa Date.now() para gerar uma nova URL a cada
+    //    carregamento.
+    // 4. Evita executar novamente se a foto já foi carregada.
+    // 5. Mantém apenas uma consulta ao Storage.
+    //
+    // ==========================================================
+
+    async function carregarFotoPerfil(
+      supabaseConn,
+      authUserId
+    ) {
+
+      if (
+        !supabaseConn ||
+        !authUserId
+      ) {
+
+        colocarFotoPadrao();
+
+        return;
+
+      }
+
+
+      if (fotoCarregada) {
+
+        console.log(
+          '✅ Foto já carregada. Consulta ignorada.'
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        console.log(
+          '📷 Procurando foto de perfil...'
+        );
+
+
+        const bucket =
+          'fotos-perfil';
+
+
+        // ======================================================
+        // BUSCAR SOMENTE O ARQUIVO MAIS RECENTE
+        // ======================================================
+
+        const {
+          data: arquivos,
+          error: erroLista
+        } =
+          await supabaseConn
+            .storage
+            .from(bucket)
+            .list(
+              authUserId,
+              {
+                limit: 1,
+
+                sortBy: {
+                  column: 'updated_at',
+                  order: 'desc'
+                }
+              }
+            );
+
+
+        if (erroLista) {
+
+          console.error(
+            '❌ Erro ao procurar foto:',
+            erroLista
+          );
+
+
+          colocarFotoPadrao();
+
+          return;
+
+        }
+
+
+        if (
+          !arquivos ||
+          arquivos.length === 0
+        ) {
+
+          console.log(
+            'ℹ️ Nenhuma foto de perfil encontrada.'
+          );
+
+
+          colocarFotoPadrao();
+
+          return;
+
+        }
+
+
+        const arquivoFoto =
+          arquivos[0];
+
+
+        if (
+          !arquivoFoto ||
+          !arquivoFoto.name
+        ) {
+
+          colocarFotoPadrao();
+
+          return;
+
+        }
+
+
+        const caminho =
+          `${authUserId}/${arquivoFoto.name}`;
+
+
+        // ======================================================
+        // GERAR URL PÚBLICA
+        // ======================================================
+
+        const {
+          data: urlData
+        } =
+          supabaseConn
+            .storage
+            .from(bucket)
+            .getPublicUrl(
+              caminho
+            );
+
+
+        const publicUrl =
+          urlData?.publicUrl;
+
+
+        if (!publicUrl) {
+
+          console.error(
+            '❌ URL pública da foto não encontrada.'
+          );
+
+
+          colocarFotoPadrao();
+
+          return;
+
+        }
+
+
+        // ======================================================
+        // MOSTRAR FOTO
+        // ======================================================
+
+        mostrarFotoPerfil(
+          publicUrl
+        );
+
+
+        console.log(
+          '✅ Foto de perfil carregada.'
+        );
+
+      }
+      catch (erro) {
+
+        console.error(
+          '❌ Erro inesperado ao carregar foto:',
+          erro
+        );
+
+
+        colocarFotoPadrao();
+
+      }
+
+    }
+
+
+    // ==========================================================
     // VALIDAR SESSÃO REAL
     // ==========================================================
 
-    async function validarSessaoPerfil() {
+    async function validarSessaoPerfil(
+      forcar = false
+    ) {
+
+      // ========================================================
+      // EVITAR VALIDAÇÕES DUPLICADAS
+      // ========================================================
+
+      if (validacaoEmAndamento) {
+
+        console.log(
+          '⏳ Validação já está em andamento.'
+        );
+
+
+        return perfilValidado;
+
+      }
+
+
+      if (
+        perfilValidado &&
+        !forcar
+      ) {
+
+        console.log(
+          '✅ Perfil já validado. Nenhuma nova consulta necessária.'
+        );
+
+
+        return true;
+
+      }
+
+
+      validacaoEmAndamento =
+        true;
+
 
       console.log(
         '🔎 Validando sessão REAL do Supabase...'
@@ -1042,6 +1352,10 @@
         }
 
 
+        validacaoEmAndamento =
+          false;
+
+
         return false;
 
       }
@@ -1049,9 +1363,8 @@
 
       try {
 
-
         // ======================================================
-        // CONSULTAR SESSÃO REAL
+        // BUSCAR SESSÃO
         // ======================================================
 
         const {
@@ -1069,6 +1382,10 @@
           );
 
 
+          perfilValidado =
+            false;
+
+
           redirecionarParaLogin();
 
 
@@ -1081,21 +1398,15 @@
           sessionData?.session;
 
 
-        console.log(
-          '🔐 Sessão atual do Supabase:',
-          session
-        );
-
-
-        // ======================================================
-        // NÃO EXISTE SESSÃO
-        // ======================================================
-
         if (!session) {
 
           console.warn(
             '⚠️ Nenhuma sessão Supabase encontrada.'
           );
+
+
+          perfilValidado =
+            false;
 
 
           redirecionarParaLogin();
@@ -1106,10 +1417,6 @@
         }
 
 
-        // ======================================================
-        // USUÁRIO AUTH
-        // ======================================================
-
         const usuarioAuth =
           session.user;
 
@@ -1117,22 +1424,15 @@
         if (!usuarioAuth) {
 
           console.error(
-            '❌ Sessão existe, mas usuário não foi encontrado.'
+            '❌ Usuário Auth não encontrado.'
           );
 
 
-          try {
+          perfilValidado =
+            false;
 
-            await supabaseConn.auth.signOut();
 
-          } catch (erroSignOut) {
-
-            console.error(
-              'Erro ao encerrar sessão:',
-              erroSignOut
-            );
-
-          }
+          await supabaseConn.auth.signOut();
 
 
           redirecionarParaLogin();
@@ -1180,10 +1480,6 @@
             .maybeSingle();
 
 
-        // ======================================================
-        // ERRO AO BUSCAR CLIENTE
-        // ======================================================
-
         if (clienteError) {
 
           console.error(
@@ -1192,9 +1488,24 @@
           );
 
 
-          alert(
-            'Não foi possível carregar os dados da sua conta.'
-          );
+          if (elNome) {
+
+            elNome.textContent =
+              'Erro ao carregar perfil';
+
+          }
+
+
+          if (elEmail) {
+
+            elEmail.textContent =
+              'Não foi possível carregar os dados.';
+
+          }
+
+
+          perfilValidado =
+            false;
 
 
           return false;
@@ -1202,29 +1513,18 @@
         }
 
 
-        // ======================================================
-        // CLIENTE NÃO ENCONTRADO
-        // ======================================================
-
         if (!cliente) {
 
           console.error(
-            '❌ Cliente não encontrado para este usuário Auth.'
+            '❌ Cliente não encontrado.'
           );
 
 
-          try {
+          perfilValidado =
+            false;
 
-            await supabaseConn.auth.signOut();
 
-          } catch (erroSignOut) {
-
-            console.error(
-              'Erro ao encerrar sessão:',
-              erroSignOut
-            );
-
-          }
+          await supabaseConn.auth.signOut();
 
 
           redirecionarParaLogin();
@@ -1236,28 +1536,23 @@
 
 
         // ======================================================
-        // CONTA DESATIVADA
+        // VERIFICAR CONTA ATIVA
         // ======================================================
 
-        if (cliente.ativo === false) {
+        if (
+          cliente.ativo === false
+        ) {
 
           alert(
             'Sua conta está desativada. Entre em contato com a loja.'
           );
 
 
-          try {
+          perfilValidado =
+            false;
 
-            await supabaseConn.auth.signOut();
 
-          } catch (erroSignOut) {
-
-            console.error(
-              'Erro ao encerrar sessão:',
-              erroSignOut
-            );
-
-          }
+          await supabaseConn.auth.signOut();
 
 
           redirecionarParaLogin();
@@ -1269,7 +1564,7 @@
 
 
         // ======================================================
-        // PREENCHER PERFIL
+        // PREENCHER NOME
         // ======================================================
 
         if (elNome) {
@@ -1281,6 +1576,10 @@
         }
 
 
+        // ======================================================
+        // PREENCHER E-MAIL
+        // ======================================================
+
         if (elEmail) {
 
           elEmail.textContent =
@@ -1289,49 +1588,6 @@
             '';
 
         }
-
-
-        // ======================================================
-        // ATUALIZAR DADOS LOCAIS
-        // ======================================================
-
-        const usuarioLogado = {
-
-          id:
-            cliente.id,
-
-          auth_user_id:
-            cliente.auth_user_id,
-
-          nome:
-            cliente.nome || '',
-
-          email:
-            cliente.email ||
-            usuarioAuth.email ||
-            '',
-
-          telefone:
-            cliente.telefone || '',
-
-          cpf:
-            cliente.cpf || ''
-
-        };
-
-
-        localStorage.setItem(
-          'usuario_logado',
-          JSON.stringify(
-            usuarioLogado
-          )
-        );
-
-
-        localStorage.setItem(
-          'cliente_supabase_id',
-          cliente.id
-        );
 
 
         // ======================================================
@@ -1351,7 +1607,8 @@
 
           }
 
-        } else {
+        }
+        else {
 
           if (containerAdmin) {
 
@@ -1364,8 +1621,68 @@
 
 
         // ======================================================
-        // LOG
+        // ATUALIZAR LOCALSTORAGE
         // ======================================================
+
+        const usuarioLogado = {
+
+          id:
+            cliente.id,
+
+          auth_user_id:
+            cliente.auth_user_id,
+
+          nome:
+            cliente.nome ||
+            '',
+
+          email:
+            cliente.email ||
+            usuarioAuth.email ||
+            '',
+
+          telefone:
+            cliente.telefone ||
+            '',
+
+          cpf:
+            cliente.cpf ||
+            ''
+
+        };
+
+
+        localStorage.setItem(
+          'usuario_logado',
+          JSON.stringify(
+            usuarioLogado
+          )
+        );
+
+
+        localStorage.setItem(
+          'cliente_supabase_id',
+          cliente.id
+        );
+
+
+        // ======================================================
+        // CARREGAR FOTO
+        // ======================================================
+
+        await carregarFotoPerfil(
+          supabaseConn,
+          usuarioAuth.id
+        );
+
+
+        // ======================================================
+        // PERFIL VALIDADO
+        // ======================================================
+
+        perfilValidado =
+          true;
+
 
         console.log(
           '=========================================='
@@ -1408,8 +1725,8 @@
 
         return true;
 
-
-      } catch (erro) {
+      }
+      catch (erro) {
 
         console.error(
           '❌ Erro inesperado ao validar sessão:',
@@ -1417,10 +1734,20 @@
         );
 
 
+        perfilValidado =
+          false;
+
+
         redirecionarParaLogin();
 
 
         return false;
+
+      }
+      finally {
+
+        validacaoEmAndamento =
+          false;
 
       }
 
@@ -1449,9 +1776,11 @@
 
         limparDadosLocais();
 
+
         window.location.replace(
           '02-Login.html'
         );
+
 
         return;
 
@@ -1471,11 +1800,6 @@
 
 
       try {
-
-
-        // ======================================================
-        // ENCERRAR SESSÃO SUPABASE
-        // ======================================================
 
         const {
           error: logoutError
@@ -1518,78 +1842,8 @@
         );
 
 
-        // ======================================================
-        // LIMPAR DADOS LOCAIS
-        // ======================================================
-
-        limparDadosLocais();
-
-
-        // ======================================================
-        // CONFIRMAR LOGOUT
-        // ======================================================
-
-        const {
-          data: sessaoDepoisLogout
-        } =
-          await supabaseConn.auth.getSession();
-
-
-        console.log(
-          '🔐 Sessão depois do logout:',
-          sessaoDepoisLogout?.session
-        );
-
-
-        if (sessaoDepoisLogout?.session) {
-
-          console.error(
-            '⚠️ A sessão ainda está ativa.'
-          );
-
-
-          alert(
-            'A sessão não foi encerrada completamente. Tente novamente.'
-          );
-
-
-          if (btnSair) {
-
-            btnSair.style.pointerEvents =
-              'auto';
-
-
-            btnSair.style.opacity =
-              '1';
-
-          }
-
-
-          return;
-
-        }
-
-
-        console.log(
-          '✅ Sessão encerrada completamente.'
-        );
-
-
-        // ======================================================
-        // IR PARA LOGIN
-        // ======================================================
-
-        window.location.replace(
-          '02-Login.html'
-        );
-
-
-      } catch (erro) {
-
-        console.error(
-          '❌ Erro inesperado durante logout:',
-          erro
-        );
+        perfilValidado =
+          false;
 
 
         limparDadosLocais();
@@ -1600,6 +1854,112 @@
         );
 
       }
+      catch (erro) {
+
+        console.error(
+          '❌ Erro inesperado durante logout:',
+          erro
+        );
+
+
+        perfilValidado =
+          false;
+
+
+        limparDadosLocais();
+
+
+        window.location.replace(
+          '02-Login.html'
+        );
+
+      }
+
+    }
+
+
+    // ==========================================================
+    // LISTENER DE AUTENTICAÇÃO
+    // ==========================================================
+
+    function iniciarListenerAuth() {
+
+      if (listenerAuthRegistrado) {
+
+        return;
+
+      }
+
+
+      const supabaseConn =
+        obterConexaoSupabase();
+
+
+      if (!supabaseConn) {
+
+        return;
+
+      }
+
+
+      listenerAuthRegistrado =
+        true;
+
+
+      supabaseConn.auth.onAuthStateChange(
+        (
+          event,
+          session
+        ) => {
+
+          console.log(
+            '🔔 Alteração de autenticação:',
+            event
+          );
+
+
+          if (
+            event === 'SIGNED_OUT'
+          ) {
+
+            console.log(
+              '🚪 Usuário não possui mais sessão.'
+            );
+
+
+            perfilValidado =
+              false;
+
+
+            fotoCarregada =
+              false;
+
+
+            limparDadosLocais();
+
+
+            window.location.replace(
+              '02-Login.html'
+            );
+
+
+            return;
+
+          }
+
+
+          if (
+            event === 'INITIAL_SESSION'
+          ) {
+
+            console.log(
+              'ℹ️ Sessão inicial recebida pelo listener.'
+            );
+
+          }
+
+        }
+      );
 
     }
 
@@ -1619,7 +1979,7 @@
 
 
     // ==========================================================
-    // PRIMEIRA ABERTURA DA PÁGINA
+    // DOM CONTENT LOADED
     // ==========================================================
 
     document.addEventListener(
@@ -1631,6 +1991,9 @@
         );
 
 
+        iniciarListenerAuth();
+
+
         await validarSessaoPerfil();
 
       }
@@ -1638,12 +2001,12 @@
 
 
     // ==========================================================
-    // PÁGINA RESTAURADA DO BFCache
+    // BFCache
     // ==========================================================
 
     window.addEventListener(
       'pageshow',
-      async (event) => {
+      async event => {
 
         console.log(
           '🔄 PAGESHOW disparado.'
@@ -1656,19 +2019,20 @@
         );
 
 
-        // ------------------------------------------------------
-        // Se a página foi restaurada pelo BFCache,
-        // validar novamente a sessão REAL.
-        // ------------------------------------------------------
-
         if (event.persisted) {
 
           console.log(
-            '♻️ Página restaurada pelo BFCache.'
+            '♻️ Página restaurada pelo BFCache. Revalidando sessão.'
           );
 
 
-          await validarSessaoPerfil();
+          perfilValidado =
+            false;
+
+
+          await validarSessaoPerfil(
+            true
+          );
 
         }
 
@@ -1677,12 +2041,17 @@
 
 
     // ==========================================================
-    // QUANDO A PÁGINA VOLTA A FICAR VISÍVEL
+    // VISIBILIDADE
+    // ==========================================================
+    //
+    // Não fazemos nova consulta quando a página fica visível.
+    // Isso evita consultas desnecessárias ao Supabase Storage.
+    //
     // ==========================================================
 
     document.addEventListener(
       'visibilitychange',
-      async () => {
+      () => {
 
         if (
           document.visibilityState ===
@@ -1693,80 +2062,12 @@
             '👁️ Página voltou a ficar visível.'
           );
 
-
-          await validarSessaoPerfil();
-
         }
 
       }
     );
-
-
-    // ==========================================================
-    // MONITORAR ALTERAÇÕES DE AUTENTICAÇÃO
-    // ==========================================================
-
-    document.addEventListener(
-      'DOMContentLoaded',
-      () => {
-
-        const supabaseConn =
-          obterConexaoSupabase();
-
-
-        if (!supabaseConn) {
-          return;
-        }
-
-
-        supabaseConn.auth.onAuthStateChange(
-          (event, session) => {
-
-            console.log(
-              '🔔 Alteração de autenticação:',
-              event
-            );
-
-
-            console.log(
-              'Sessão:',
-              session
-            );
-
-
-            // --------------------------------------------------
-            // Se a sessão foi encerrada enquanto esta página
-            // estava aberta, mandar imediatamente para login.
-            // --------------------------------------------------
-
-            if (
-              event === 'SIGNED_OUT' ||
-              !session
-            ) {
-
-              console.log(
-                '🚪 Usuário não possui mais sessão.'
-              );
-
-
-              limparDadosLocais();
-
-
-              window.location.replace(
-                '02-Login.html'
-              );
-
-            }
-
-          }
-        );
-
-      }
-    );
-
 
   </script>
-
 
 </body>
 
