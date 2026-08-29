@@ -2575,7 +2575,7 @@ async function iniciarPagamentoPix() {
         // ------------------------------------------------------
 
         window.location.href =
-            '04-pagamento-pix.html';
+            '04-Pagamento-pix.html';
 
 
     } catch (erro) {
