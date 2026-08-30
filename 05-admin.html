@@ -1,269 +1,677 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
   <meta charset="UTF-8">
 
-  <!-- ========================================== -->
-  <!-- PROTEÇÃO DE ACESSO: só o e-mail do admin passa daqui.  -->
-  <!-- Roda antes do resto da página, pra ninguém ver conteúdo -->
-  <!-- administrativo mesmo por uma fração de segundo.        -->
-  <!-- ========================================== -->
-  <script>
-    (function verificarAcessoAdmin() {
-      var EMAIL_ADMIN = 'rafaelmelo116@gmail.com';
-      var usuarioLogado = JSON.parse(localStorage.getItem('usuario_logado'));
+  <!-- ========================================================= -->
 
-      if (!usuarioLogado || !usuarioLogado.email || usuarioLogado.email.toLowerCase() !== EMAIL_ADMIN.toLowerCase()) {
-        window.location.href = '02-Login.html';
+  <!-- PROTEÇÃO INICIAL DO ADMIN -->
+
+  <!-- ========================================================= -->
+
+  <script>
+
+    (function verificarAcessoAdmin() {
+
+      const EMAIL_ADMIN =
+        'rafaelmelo116@gmail.com';
+
+      try {
+
+        const usuarioLogado =
+          JSON.parse(
+            localStorage.getItem('usuario_logado')
+          );
+
+        if (
+          !usuarioLogado ||
+          !usuarioLogado.email ||
+          usuarioLogado.email.toLowerCase() !==
+          EMAIL_ADMIN.toLowerCase()
+        ) {
+
+          window.location.replace(
+            '02-Login.html'
+          );
+
+        }
+
       }
+      catch (erro) {
+
+        console.error(
+          'Erro ao verificar acesso administrativo:',
+          erro
+        );
+
+        window.location.replace(
+          '02-Login.html'
+        );
+
+      }
+
     })();
+
   </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo - E-commerce</title>
-  <link rel="stylesheet" href="Folha-estilos/admin.css">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+  <title>
+    Painel Administrativo - ZoraVision
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="Folha-estilos/admin.css"
+  >
+
 </head>
+
 <body>
 
+  <!-- ========================================================= -->
+
+  <!-- CABEÇALHO -->
+
+  <!-- ========================================================= -->
+
   <header class="admin-header">
-    <div class="header-conteudo">
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <!-- BOTÃO DE VOLTAR -->
-        <a href="03-Meus-pedidos.html" title="Voltar ao Perfil" style="background: rgba(255, 255, 255, 0.15); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.2rem; transition: background 0.2s;">&#8592;</a>
-        
-        <div class="admin-brand">
-          <span class="admin-logo-icon">⚡</span>
-          <div>
-            <h1 class="admin-titulo">Painel Administrativo</h1>
-            <span class="admin-subtitulo">Visão Geral da Loja</span>
-          </div>
-        </div>
+
+
+<div class="header-conteudo">
+
+  <div
+    style="
+      display:flex;
+      align-items:center;
+      gap:15px;
+    "
+  >
+
+    <a
+      href="03-Meu-perfil.html"
+      title="Voltar ao Perfil"
+      style="
+        background:rgba(255,255,255,0.15);
+        color:#ffffff;
+        border:1px solid rgba(255,255,255,0.3);
+        width:40px;
+        height:40px;
+        border-radius:8px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-decoration:none;
+        font-size:1.2rem;
+      "
+    >
+      &#8592;
+    </a>
+
+
+    <div class="admin-brand">
+
+      <span class="admin-logo-icon">
+        ⚡
+      </span>
+
+      <div>
+
+        <h1 class="admin-titulo">
+          Painel Administrativo
+        </h1>
+
+        <span class="admin-subtitulo">
+          Visão Geral da Loja
+        </span>
+
       </div>
-      <a href="index.html" class="btn-loja-link" target="_blank">Ver Loja ↗</a>
+
     </div>
+
+  </div>
+
+
+  <a
+    href="index.html"
+    class="btn-loja-link"
+    target="_blank"
+  >
+    Ver Loja ↗
+  </a>
+
+</div>
+
+
   </header>
+
+  <!-- ========================================================= -->
+
+  <!-- CONTAINER PRINCIPAL -->
+
+  <!-- ========================================================= -->
 
   <main class="container">
 
-    <section class="grid-dashboard">
-      
-      <div class="card-kpi destaque-financeiro">
-        <div class="kpi-topo">
-          <span class="kpi-rotulo">Faturamento Hoje</span>
-          <span class="kpi-icone icon-green">💰</span>
-        </div>
-        <div class="kpi-corpo">
-          <span class="kpi-valor">R$ 1.450,80</span>
-          <span class="kpi-tendencia positiva">↑ +12.5% em relação a ontem</span>
-        </div>
+
+<!-- ======================================================= -->
+<!-- DASHBOARD -->
+<!-- ======================================================= -->
+
+<section class="grid-dashboard">
+
+
+  <!-- FATURAMENTO -->
+
+  <div class="card-kpi destaque-financeiro">
+
+    <div class="kpi-topo">
+
+      <span class="kpi-rotulo">
+        Faturamento
+      </span>
+
+      <span class="kpi-icone icon-green">
+        💰
+      </span>
+
+    </div>
+
+    <div class="kpi-corpo">
+
+      <span
+        class="kpi-valor"
+        id="admin-faturamento"
+      >
+        R$ 0,00
+      </span>
+
+      <span class="kpi-subtexto">
+        Pedidos não cancelados
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- PEDIDOS PENDENTES -->
+
+  <div class="card-kpi">
+
+    <div class="kpi-topo">
+
+      <span class="kpi-rotulo">
+        Pedidos Pendentes
+      </span>
+
+      <span class="kpi-icone icon-orange">
+        📦
+      </span>
+
+    </div>
+
+    <div class="kpi-corpo">
+
+      <span
+        class="kpi-valor"
+        id="admin-pedidos-pendentes"
+      >
+        0 Pedidos
+      </span>
+
+      <span
+        class="kpi-subtexto"
+        id="admin-resumo-status"
+      >
+        Carregando...
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- PEDIDOS A CAMINHO -->
+
+  <div class="card-kpi">
+
+    <div class="kpi-topo">
+
+      <span class="kpi-rotulo">
+        A Caminho
+      </span>
+
+      <span class="kpi-icone icon-blue">
+        🚚
+      </span>
+
+    </div>
+
+    <div class="kpi-corpo">
+
+      <span
+        class="kpi-valor"
+        id="admin-pedidos-caminho"
+      >
+        0 Pedidos
+      </span>
+
+      <span class="kpi-subtexto">
+        Pedidos enviados
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- ENTREGUES -->
+
+  <div class="card-kpi">
+
+    <div class="kpi-topo">
+
+      <span class="kpi-rotulo">
+        Entregues
+      </span>
+
+      <span class="kpi-icone icon-purple">
+        ✅
+      </span>
+
+    </div>
+
+    <div class="kpi-corpo">
+
+      <span
+        class="kpi-valor"
+        id="admin-pedidos-entregues"
+      >
+        0 Pedidos
+      </span>
+
+      <span class="kpi-subtexto">
+        Pedidos concluídos
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================= -->
+<!-- PEDIDOS -->
+<!-- ======================================================= -->
+
+<section class="painel-card">
+
+  <div class="painel-cabecalho">
+
+    <div>
+
+      <h2 class="painel-titulo">
+        📋 Pedidos Recentes
+      </h2>
+
+      <p class="painel-descricao">
+        Pedidos reais registrados na loja.
+      </p>
+
+    </div>
+
+
+    <span
+      class="contador-badge"
+      id="contador-pedidos"
+    >
+      0 pedidos
+    </span>
+
+  </div>
+
+
+  <div
+    class="lista-pedidos"
+    id="lista-pedidos-admin"
+  >
+
+    <div
+      style="
+        text-align:center;
+        padding:2rem;
+        color:#64748b;
+      "
+    >
+      Carregando pedidos...
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================= -->
+<!-- PRODUTOS -->
+<!-- ======================================================= -->
+
+<section class="painel-card">
+
+  <div class="painel-cabecalho flex-between">
+
+    <div>
+
+      <h2 class="painel-titulo">
+        🏷️ Produtos Cadastrados
+      </h2>
+
+      <p class="painel-descricao">
+        Produtos cadastrados no Supabase.
+      </p>
+
+    </div>
+
+
+    <div
+      style="
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+      "
+    >
+
+      <a
+        href="Pagina-produtos.html"
+        class="btn-cadastrar-novo"
+        style="background:#2563eb;"
+      >
+        Ver Todos os Produtos 📦
+      </a>
+
+
+      <a
+        href="05-cadastro-produto.html"
+        class="btn-cadastrar-novo"
+      >
+        + Cadastrar Produto
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="tabela-responsive">
+
+    <table class="tabela-admin">
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Produto
+          </th>
+
+          <th>
+            Preço
+          </th>
+
+          <th>
+            Estoque
+          </th>
+
+          <th>
+            Status
+          </th>
+
+          <th>
+            Destaque
+          </th>
+
+          <th class="text-right">
+            Ações
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody id="tabela-produtos-corpo">
+
+        <tr>
+
+          <td
+            colspan="6"
+            style="
+              text-align:center;
+              padding:2rem;
+              color:#64748b;
+            "
+          >
+            Carregando produtos...
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================= -->
+<!-- BANNERS -->
+<!-- ======================================================= -->
+
+<section class="painel-card">
+
+  <div class="painel-cabecalho flex-between">
+
+    <div>
+
+      <h2 class="painel-titulo">
+        🖼️ Banners do Carrossel
+      </h2>
+
+      <p class="painel-descricao">
+        Gerencie as promoções exibidas no carrossel.
+      </p>
+
+    </div>
+
+
+    <a
+      href="05-cadastro-banner.html"
+      class="btn-cadastrar-novo"
+    >
+      + Adicionar Banner
+    </a>
+
+  </div>
+
+
+  <div
+    id="lista-banners-admin"
+    style="
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    "
+  >
+
+    <p
+      style="
+        text-align:center;
+        padding:1.5rem;
+        color:#64748b;
+      "
+    >
+      Nenhum banner cadastrado.
+    </p>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================= -->
+<!-- INTEGRAÇÕES -->
+<!-- ======================================================= -->
+
+<section class="painel-card">
+
+  <div class="painel-cabecalho flex-between">
+
+    <div>
+
+      <h2 class="painel-titulo">
+        🔗 Integrações & Canais de Venda
+      </h2>
+
+      <p class="painel-descricao">
+        Gerencie os canais de venda da loja.
+      </p>
+
+    </div>
+
+
+    <a
+      href="Integraçoes.html"
+      class="btn-gerenciar-integracoes"
+    >
+      Gerenciar Integrações ⚙️
+    </a>
+
+  </div>
+
+
+  <div class="grid-integracoes">
+
+    <div class="card-integracao status-pendente">
+
+      <div class="integracao-header">
+
+        <span class="mkt-logo logo-ml">
+          🟡
+        </span>
+
+        <span class="badge-status pendente">
+          Não configurado
+        </span>
+
       </div>
 
-      <div class="card-kpi">
-        <div class="kpi-topo">
-          <span class="kpi-rotulo">Pedidos Pendentes</span>
-          <span class="kpi-icone icon-orange">📦</span>
-        </div>
-        <div class="kpi-corpo">
-          <span class="kpi-valor">5 Pedidos</span>
-          <span class="kpi-subtexto">3 aguardando separação</span>
-        </div>
-      </div>
+      <div class="integracao-info">
 
-      <div class="card-kpi">
-        <div class="kpi-topo">
-          <span class="kpi-rotulo">Visualizações (Mês)</span>
-          <span class="kpi-icone icon-blue">👁️</span>
-        </div>
-        <div class="kpi-corpo">
-          <span class="kpi-valor">12.480</span>
-          <span class="kpi-tendencia positiva">↑ +8.2% este mês</span>
-        </div>
-      </div>
+        <h3 class="mkt-nome">
+          Mercado Livre
+        </h3>
 
-      <div class="card-kpi">
-        <div class="kpi-topo">
-          <span class="kpi-rotulo">Ticket Médio</span>
-          <span class="kpi-icone icon-purple">📊</span>
-        </div>
-        <div class="kpi-corpo">
-          <span class="kpi-valor">R$ 164,20</span>
-          <span class="kpi-subtexto">Média por cliente</span>
-        </div>
-      </div>
-
-    </section>
-
-    <section class="painel-card">
-      <div class="painel-cabecalho">
-        <div>
-          <h2 class="painel-titulo">📋 Pedidos Recentes para Separação</h2>
-          <p class="painel-descricao">Confira os detalhes de entrega e imprima a etiqueta de envio.</p>
-        </div>
-        <span class="contador-badge">5 para separar</span>
-      </div>
-
-      <div class="lista-pedidos">
-
-        <article class="pedido-card-admin">
-          <div class="pedido-header">
-            <div class="pedido-id-box">
-              <span class="pedido-numero">Pedido #84920</span>
-              <span class="pedido-data">17/08/2026 às 21:25</span>
-            </div>
-            <span class="status-pill status-separacao">Em Separação</span>
-          </div>
-
-          <div class="pedido-corpo-grid">
-            
-            <div class="bloco-info cliente-box">
-              <h3 class="bloco-titulo">👤 Cliente & Entrega</h3>
-              <p class="cliente-nome">João Silva</p>
-              <p class="cliente-contato">📱 (62) 99999-8888 • joao.silva@email.com</p>
-              <div class="endereco-entrega">
-                <strong>Endereço de Entrega:</strong><br>
-                Rua T-63, Quadra 12, Lote 05, nº 1020<br>
-                Setor Bueno - Goiânia / GO • CEP: 74230-100<br>
-                <em>Ref: Próximo à praça principal</em>
-              </div>
-            </div>
-
-            <div class="bloco-info produtos-box">
-              <h3 class="bloco-titulo">🛒 Itens do Pedido</h3>
-              <ul class="lista-itens-pedido">
-                <li>
-                  <span>1x Fone Bluetooth Sem Fio Premium</span>
-                  <strong>R$ 129,90</strong>
-                </li>
-                <li>
-                  <span>1x Capa Protetora Anti-impacto</span>
-                  <strong>R$ 39,90</strong>
-                </li>
-              </ul>
-              <div class="resumo-financeiro-pedido">
-                <span>Total Pago (com frete):</span>
-                <span class="valor-total-pedido">R$ 176,31</span>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="pedido-rodape-acoes">
-            <button type="button" class="btn-acao btn-imprimir-etiqueta" onclick="alert('Gerando etiqueta de envio para impressão...')">
-              🖨️ Gerar Etiqueta de Envio
-            </button>
-            <div class="select-status-container">
-              <label for="status-select-1">Alterar Status:</label>
-              <select id="status-select-1" class="select-status">
-                <option value="separacao" selected>Em Separação</option>
-                <option value="transporte">Em Transporte</option>
-                <option value="concluido">Entregue / Concluído</option>
-                <option value="cancelado">Cancelar Pedido</option>
-              </select>
-            </div>
-          </div>
-        </article>
+        <span class="mkt-detalhe">
+          Integração ainda não configurada.
+        </span>
 
       </div>
-    </section>
 
-    <section class="painel-card">
-      <div class="painel-cabecalho flex-between">
-        <div>
-          <h2 class="painel-titulo">🏷️ Produtos Cadastrados</h2>
-          <p class="painel-descricao">Acompanhe visualizações, vendas e estoque de cada produto.</p>
-        </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <a href="Pagina-produtos.html" class="btn-cadastrar-novo" style="background: #2563eb;">Ver Todos os Produtos 📦</a>
-          <a href="05-cadastro-produto.html" class="btn-cadastrar-novo">+ Cadastrar Produto</a>
-        </div>
-      </div>
+    </div>
 
-      <div class="tabela-responsive">
-        <table class="tabela-admin">
-          <thead>
-            <tr>
-              <th>Produto</th>
-              <th>Preço</th>
-              <th>Estoque</th>
-              <th>Visualizações</th>
-              <th>Vendas</th>
-              <th class="text-right">Ações</th>
-            </tr>
-          </thead>
-          <!-- ID adicionado para o script injetar os produtos dinamicamente -->
-          <tbody id="tabela-produtos-corpo">
-            <!-- Os produtos cadastrados serão carregados aqui automaticamente -->
-          </tbody>
-        </table>
-      </div>
-    </section>
 
-    <!-- SEÇÃO: BANNERS DO CARROSSEL -->
-    <section class="painel-card">
-      <div class="painel-cabecalho flex-between">
-        <div>
-          <h2 class="painel-titulo">🖼️ Banners do Carrossel</h2>
-          <p class="painel-descricao">Gerencie as promoções exibidas no carrossel da página inicial.</p>
-        </div>
-        <a href="05-cadastro-banner.html" class="btn-cadastrar-novo">+ Adicionar Banner</a>
-      </div>
+    <div class="card-integracao status-pendente">
 
-      <div id="lista-banners-admin" style="display: flex; flex-direction: column; gap: 10px;">
-        <!-- Os banners cadastrados serão carregados aqui automaticamente -->
-      </div>
-    </section>
+      <div class="integracao-header">
 
-    <!-- SEÇÃO: INTEGRAÇÕES COM MARKETPLACES -->
-    <section class="painel-card">
-      <div class="painel-cabecalho flex-between">
-        <div>
-          <h2 class="painel-titulo">🔗 Integrações & Canais de Venda</h2>
-          <p class="painel-descricao">Sincronize seu estoque e vendas com os principais marketplaces.</p>
-        </div>
-        <a href="Integraçoes.html" class="btn-gerenciar-integracoes">Gerenciar Integrações ⚙️</a>
-      </div>
+        <span class="mkt-logo logo-shopee">
+          🟠
+        </span>
 
-      <div class="grid-integracoes">
-
-        <!-- Mercado Livre -->
-        <div class="card-integracao status-ativo">
-          <div class="integracao-header">
-            <span class="mkt-logo logo-ml">🟡</span>
-            <span class="badge-status ativo">Conectado</span>
-          </div>
-          <div class="integracao-info">
-            <h3 class="mkt-nome">Mercado Livre</h3>
-            <span class="mkt-detalhe">Sincronização Ativa • 42 Anúncios</span>
-          </div>
-        </div>
-
-        <!-- Shopee -->
-        <div class="card-integracao status-ativo">
-          <div class="integracao-header">
-            <span class="mkt-logo logo-shopee">🟠</span>
-            <span class="badge-status ativo">Conectado</span>
-          </div>
-          <div class="integracao-info">
-            <h3 class="mkt-nome">Shopee</h3>
-            <span class="mkt-detalhe">Sincronização Ativa • 38 Anúncios</span>
-          </div>
-        </div>
-
-        <!-- TikTok Shop -->
-        <div class="card-integracao status-pendente">
-          <div class="integracao-header">
-            <span class="mkt-logo logo-tiktok">🖤</span>
-            <span class="badge-status pendente">Pendente</span>
-          </div>
-          <div class="integracao-info">
-            <h3 class="mkt-nome">TikTok Shop</h3>
-            <span class="mkt-detalhe">Conexão necessária</span>
-          </div>
-        </div>
+        <span class="badge-status pendente">
+          Não configurado
+        </span>
 
       </div>
-    </section>
+
+      <div class="integracao-info">
+
+        <h3 class="mkt-nome">
+          Shopee
+        </h3>
+
+        <span class="mkt-detalhe">
+          Integração ainda não configurada.
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="card-integracao status-pendente">
+
+      <div class="integracao-header">
+
+        <span class="mkt-logo logo-tiktok">
+          🖤
+        </span>
+
+        <span class="badge-status pendente">
+          Não configurado
+        </span>
+
+      </div>
+
+      <div class="integracao-info">
+
+        <h3 class="mkt-nome">
+          TikTok Shop
+        </h3>
+
+        <span class="mkt-detalhe">
+          Integração ainda não configurada.
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
 
   </main>
-  <script src="Scripts/admin.js"></script>
+
+  <!-- ========================================================= -->
+
+  <!-- SUPABASE -->
+
+  <!-- ========================================================= -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="Supabase/supabase.js"></script>
+
+  <!-- ========================================================= -->
+
+  <!-- SCRIPT DO ADMIN -->
+
+  <!-- ========================================================= -->
+
+  <script src="Scripts/07-admin.js"></script>
+
 </body>
+
 </html>
