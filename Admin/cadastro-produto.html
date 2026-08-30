@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Cadastro de Produto - ZoraVision</title>
+
+<link
+    rel="stylesheet"
+    href="../Folha-estilos/Cadastro-produto.css"
+>
+
+
+</head>
+
+<body>
+
+<header class="admin-header">
+
+
+<div class="admin-header-top">
+
+    <a
+        href="admin-produtos.html"
+        class="btn-voltar"
+    >
+        ‹
+    </a>
+
+    <div class="admin-logo">
+        ZoraVision
+    </div>
+
+    <button
+        type="button"
+        class="btn-sair"
+        id="btn-sair-admin"
+    >
+        Sair
+    </button>
+
+</div>
+
+<div class="admin-header-info">
+
+    <span class="admin-status"></span>
+
+    <span>
+        Administração
+    </span>
+
+</div>
+
+</header>
+
+<main class="cadastro-container">
+
+
+<section class="cadastro-topo">
+
+    <span class="section-label">
+        CATÁLOGO
+    </span>
+
+    <h1 id="titulo-pagina">
+        Cadastrar produto
+    </h1>
+
+    <p id="descricao-pagina">
+        Adicione um novo produto ao catálogo da ZoraVision.
+    </p>
+
+</section>
+
+
+<form
+    id="form-cadastro-produto"
+    class="produto-form"
+>
+
+
+    <section class="form-section">
+
+        <div class="form-section-header">
+
+            <span class="section-label">
+                INFORMAÇÕES
+            </span>
+
+            <h2>
+                Dados do produto
+            </h2>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="produto-nome">
+                Nome do produto
+                <span>*</span>
+            </label>
+
+            <input
+                type="text"
+                id="produto-nome"
+                name="nome"
+                placeholder="Ex.: Kit de Facas"
+                autocomplete="off"
+                required
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="produto-descricao">
+                Descrição
+            </label>
+
+            <textarea
+                id="produto-descricao"
+                name="descricao"
+                placeholder="Descreva o produto..."
+                rows="5"
+            ></textarea>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="produto-categoria">
+                Categoria
+            </label>
+
+            <select
+                id="produto-categoria"
+                name="categoria_id"
+            >
+
+                <option value="">
+                    Selecione uma categoria
+                </option>
+
+            </select>
+
+        </div>
+
+    </section>
+
+
+    <section class="form-section">
+
+        <div class="form-section-header">
+
+            <span class="section-label">
+                VALORES
+            </span>
+
+            <h2>
+                Preço e estoque
+            </h2>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="produto-preco">
+                Preço
+                <span>*</span>
+            </label>
+
+            <input
+                type="number"
+                id="produto-preco"
+                name="preco"
+                placeholder="0,00"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                required
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="produto-preco-promocional">
+                Preço promocional
+            </label>
+
+            <input
+                type="number"
+                id="produto-preco-promocional"
+                name="preco_promocional"
+                placeholder="0,00"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+            >
+
+            <small>
+                Deixe vazio caso o produto não esteja em promoção.
+            </small>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="produto-estoque">
+                Estoque
+                <span>*</span>
+            </label>
+
+            <input
+                type="number"
+                id="produto-estoque"
+                name="estoque"
+                placeholder="0"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                required
+            >
+
+        </div>
+
+    </section>
+
+
+    <section class="form-section">
+
+        <div class="form-section-header">
+
+            <span class="section-label">
+                IMAGEM
+            </span>
+
+            <h2>
+                Foto do produto
+            </h2>
+
+        </div>
+
+
+        <div
+            class="imagem-upload"
+            id="area-upload-imagem"
+        >
+
+            <input
+                type="file"
+                id="input-imagem-produto"
+                accept="image/*"
+                hidden
+            >
+
+            <label
+                for="input-imagem-produto"
+                class="upload-label"
+            >
+
+                <div
+                    class="upload-preview"
+                    id="preview-imagem-produto"
+                >
+
+                    <span class="upload-icone">
+                        📷
+                    </span>
+
+                    <strong>
+                        Adicionar imagem
+                    </strong>
+
+                    <small>
+                        Toque para selecionar uma imagem
+                    </small>
+
+                </div>
+
+            </label>
+
+        </div>
+
+
+        <p
+            class="imagem-status"
+            id="status-imagem-produto"
+        >
+            Nenhuma imagem selecionada.
+        </p>
+
+    </section>
+
+
+    <section class="form-section">
+
+        <div class="form-section-header">
+
+            <span class="section-label">
+                PUBLICAÇÃO
+            </span>
+
+            <h2>
+                Status do produto
+            </h2>
+
+        </div>
+
+
+        <label
+            class="switch-row"
+            for="produto-ativo"
+        >
+
+            <div>
+
+                <strong>
+                    Produto ativo
+                </strong>
+
+                <span>
+                    O produto aparecerá disponível no catálogo.
+                </span>
+
+            </div>
+
+            <input
+                type="checkbox"
+                id="produto-ativo"
+                name="ativo"
+                checked
+            >
+
+            <span class="switch"></span>
+
+        </label>
+
+    </section>
+
+
+    <div
+        class="form-mensagem"
+        id="mensagem-formulario"
+    ></div>
+
+
+    <div class="form-acoes">
+
+        <a
+            href="admin-produtos.html"
+            class="btn-cancelar"
+        >
+            Cancelar
+        </a>
+
+        <button
+            type="submit"
+            class="btn-salvar"
+            id="btn-salvar-produto"
+        >
+            Salvar produto
+        </button>
+
+    </div>
+
+
+</form>
+
+
+</main>
+
+<footer class="admin-footer">
+
+
+<span>
+    ZoraVision
+</span>
+
+<small>
+    Cadastro de produto
+</small>
+
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../Supabase/supabase.js"></script>
+
+<script src="cadastro-produto.js"></script>
+
+<script src="Painel-admin.js"></script>
+
+</body>
+
+</html>

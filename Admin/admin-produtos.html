@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Produtos - ZoraVision</title>
+
+<link
+    rel="stylesheet"
+    href="../Folha-estilos/admin-produtos.css"
+>
+
+
+</head>
+
+<body>
+
+<!-- ========================================================= -->
+
+<!-- CABEÇALHO -->
+
+<!-- ========================================================= -->
+
+<header class="admin-header">
+
+
+<div class="admin-header-top">
+
+    <a
+        href="05-admin.html"
+        class="btn-voltar"
+    >
+        ‹
+    </a>
+
+    <div class="admin-logo">
+        ZoraVision
+    </div>
+
+    <button
+        type="button"
+        class="btn-sair"
+        id="btn-sair-admin"
+    >
+        Sair
+    </button>
+
+</div>
+
+<div class="admin-header-info">
+
+    <span class="admin-status"></span>
+
+    <span>
+        Gerenciamento de produtos
+    </span>
+
+</div>
+
+
+</header>
+
+<!-- ========================================================= -->
+
+<!-- CONTEÚDO -->
+
+<!-- ========================================================= -->
+
+<main class="produtos-container">
+
+
+<!-- ===================================================== -->
+<!-- TÍTULO -->
+<!-- ===================================================== -->
+
+<section class="produtos-topo">
+
+    <div>
+
+        <span class="section-label">
+            CATÁLOGO
+        </span>
+
+        <h1>
+            Produtos
+        </h1>
+
+        <p>
+            Gerencie os produtos cadastrados na ZoraVision.
+        </p>
+
+    </div>
+
+    <a
+        href="cadastro-produto.html"
+        class="btn-cadastrar"
+    >
+        + Cadastrar produto
+    </a>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- BUSCA -->
+<!-- ===================================================== -->
+
+<section class="produtos-busca">
+
+    <label
+        for="campo-busca-produto"
+    >
+        Buscar produto
+    </label>
+
+    <div class="campo-busca">
+
+        <span class="icone-busca">
+            🔎
+        </span>
+
+        <input
+            type="search"
+            id="campo-busca-produto"
+            placeholder="Digite o nome do produto..."
+            autocomplete="off"
+        >
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- RESUMO -->
+<!-- ===================================================== -->
+
+<section class="produtos-resumo">
+
+    <div class="resumo-box">
+
+        <span>
+            Produtos cadastrados
+        </span>
+
+        <strong id="total-produtos-admin">
+            0
+        </strong>
+
+    </div>
+
+    <div class="resumo-box">
+
+        <span>
+            Produtos ativos
+        </span>
+
+        <strong id="total-produtos-ativos">
+            0
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- LISTA DE PRODUTOS -->
+<!-- ===================================================== -->
+
+<section class="lista-produtos-section">
+
+    <div class="lista-header">
+
+        <div>
+
+            <span class="section-label">
+                CATÁLOGO
+            </span>
+
+            <h2>
+                Produtos cadastrados
+            </h2>
+
+        </div>
+
+        <button
+            type="button"
+            class="btn-atualizar"
+            id="btn-atualizar-produtos"
+        >
+            Atualizar
+        </button>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CARREGANDO -->
+    <!-- ================================================= -->
+
+    <div
+        class="estado-produtos"
+        id="produtos-carregando"
+    >
+
+        <div class="spinner"></div>
+
+        <p>
+            Carregando produtos...
+        </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- LISTA -->
+    <!-- ================================================= -->
+
+    <div
+        class="lista-produtos"
+        id="lista-produtos"
+    >
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SEM PRODUTOS -->
+    <!-- ================================================= -->
+
+    <div
+        class="estado-produtos estado-vazio"
+        id="produtos-vazio"
+        hidden
+    >
+
+        <div class="estado-icone">
+            🛍️
+        </div>
+
+        <h3>
+            Nenhum produto encontrado
+        </h3>
+
+        <p>
+            Cadastre seu primeiro produto para começar a montar seu catálogo.
+        </p>
+
+        <a
+            href="cadastro-produto.html"
+            class="btn-cadastrar-vazio"
+        >
+            Cadastrar produto
+        </a>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ERRO -->
+    <!-- ================================================= -->
+
+    <div
+        class="estado-produtos estado-erro"
+        id="produtos-erro"
+        hidden
+    >
+
+        <div class="estado-icone">
+            ⚠️
+        </div>
+
+        <h3>
+            Não foi possível carregar os produtos
+        </h3>
+
+        <p id="mensagem-erro-produtos">
+            Tente novamente.
+        </p>
+
+        <button
+            type="button"
+            class="btn-tentar"
+            id="btn-tentar-produtos"
+        >
+            Tentar novamente
+        </button>
+
+    </div>
+
+</section>
+
+
+</main>
+
+<!-- ========================================================= -->
+
+<!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+
+<!-- ========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="modal-excluir-produto"
+    hidden
+>
+
+<div class="modal">
+
+    <div class="modal-icone">
+        ⚠️
+    </div>
+
+    <h2>
+        Excluir produto?
+    </h2>
+
+    <p>
+        Tem certeza que deseja excluir este produto?
+        Essa ação não poderá ser desfeita.
+    </p>
+
+    <div class="modal-acoes">
+
+        <button
+            type="button"
+            class="btn-cancelar"
+            id="btn-cancelar-exclusao"
+        >
+            Cancelar
+        </button>
+
+        <button
+            type="button"
+            class="btn-confirmar-exclusao"
+            id="btn-confirmar-exclusao"
+        >
+            Excluir
+        </button>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- ========================================================= -->
+
+<!-- RODAPÉ -->
+
+<!-- ========================================================= -->
+
+<footer class="admin-footer">
+
+
+<span>
+    ZoraVision
+</span>
+
+<small>
+    Gerenciamento de produtos
+</small>
+
+
+</footer>
+
+<!-- ========================================================= -->
+
+<!-- SCRIPTS -->
+
+<!-- ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../Supabase/supabase.js"></script>
+
+<script src="Painel-admin.js"></script>
+
+<script src="produtos-admin.js"></script>
+</body>
+
+</html>

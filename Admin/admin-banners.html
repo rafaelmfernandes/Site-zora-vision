@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Banners - ZoraVision</title>
+
+<link
+    rel="stylesheet"
+    href="../Folha-estilos/admin-banners.css"
+>
+
+
+</head>
+
+<body>
+
+<!-- ========================================================= -->
+
+<!-- CABEÇALHO -->
+
+<!-- ========================================================= -->
+
+<header class="admin-header">
+
+
+<div class="admin-header-top">
+
+    <a
+        href="05-admin.html"
+        class="btn-voltar"
+    >
+        ‹
+    </a>
+
+    <div class="admin-logo">
+        ZoraVision
+    </div>
+
+    <button
+        type="button"
+        class="btn-sair"
+        id="btn-sair-admin"
+    >
+        Sair
+    </button>
+
+</div>
+
+<div class="admin-header-info">
+
+    <span class="admin-status"></span>
+
+    <span>
+        Gerenciamento de banners
+    </span>
+
+</div>
+
+
+</header>
+
+<!-- ========================================================= -->
+
+<!-- CONTEÚDO PRINCIPAL -->
+
+<!-- ========================================================= -->
+
+<main class="banners-container">
+
+
+<!-- ===================================================== -->
+<!-- TOPO -->
+<!-- ===================================================== -->
+
+<section class="banners-topo">
+
+    <div>
+
+        <span class="section-label">
+            PÁGINA INICIAL
+        </span>
+
+        <h1>
+            Banners
+        </h1>
+
+        <p>
+            Gerencie os banners exibidos na página inicial da ZoraVision.
+        </p>
+
+    </div>
+
+    <a
+        href="cadastro-banner.html"
+        class="btn-cadastrar"
+    >
+        + Cadastrar banner
+    </a>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- RESUMO -->
+<!-- ===================================================== -->
+
+<section class="banners-resumo">
+
+    <div class="resumo-box">
+
+        <span>
+            Banners cadastrados
+        </span>
+
+        <strong id="total-banners-admin">
+            0
+        </strong>
+
+    </div>
+
+    <div class="resumo-box">
+
+        <span>
+            Banners ativos
+        </span>
+
+        <strong id="total-banners-ativos">
+            0
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- LISTA DE BANNERS -->
+<!-- ===================================================== -->
+
+<section class="lista-banners-section">
+
+    <div class="lista-header">
+
+        <div>
+
+            <span class="section-label">
+                CATÁLOGO
+            </span>
+
+            <h2>
+                Banners cadastrados
+            </h2>
+
+        </div>
+
+        <button
+            type="button"
+            class="btn-atualizar"
+            id="btn-atualizar-banners"
+        >
+            Atualizar
+        </button>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CARREGANDO -->
+    <!-- ================================================= -->
+
+    <div
+        class="estado-banners"
+        id="banners-carregando"
+        hidden
+    >
+
+        <div class="spinner"></div>
+
+        <p>
+            Carregando banners...
+        </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- LISTA -->
+    <!-- ================================================= -->
+
+    <div
+        class="lista-banners"
+        id="lista-banners"
+    >
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- VAZIO -->
+    <!-- ================================================= -->
+
+    <div
+        class="estado-banners estado-vazio"
+        id="banners-vazio"
+        hidden
+    >
+
+        <div class="estado-icone">
+            🖼️
+        </div>
+
+        <h3>
+            Nenhum banner encontrado
+        </h3>
+
+        <p>
+            Cadastre seu primeiro banner para exibi-lo na página inicial.
+        </p>
+
+        <a
+            href="cadastro-banner.html"
+            class="btn-cadastrar-vazio"
+        >
+            Cadastrar banner
+        </a>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ERRO -->
+    <!-- ================================================= -->
+
+    <div
+        class="estado-banners estado-erro"
+        id="banners-erro"
+        hidden
+    >
+
+        <div class="estado-icone">
+            ⚠️
+        </div>
+
+        <h3>
+            Não foi possível carregar os banners
+        </h3>
+
+        <p id="mensagem-erro-banners">
+            Tente novamente.
+        </p>
+
+        <button
+            type="button"
+            class="btn-tentar"
+            id="btn-tentar-banners"
+        >
+            Tentar novamente
+        </button>
+
+    </div>
+
+</section>
+
+
+</main>
+
+<!-- ========================================================= -->
+
+<!-- MODAL DE EXCLUSÃO -->
+
+<!-- ========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="modal-excluir-banner"
+    hidden
+>
+
+
+<div class="modal">
+
+    <div class="modal-icone">
+        ⚠️
+    </div>
+
+    <h2>
+        Excluir banner?
+    </h2>
+
+    <p>
+        Tem certeza que deseja excluir este banner?
+        Essa ação não poderá ser desfeita.
+    </p>
+
+    <div class="modal-acoes">
+
+        <button
+            type="button"
+            class="btn-cancelar"
+            id="btn-cancelar-exclusao"
+        >
+            Cancelar
+        </button>
+
+        <button
+            type="button"
+            class="btn-confirmar-exclusao"
+            id="btn-confirmar-exclusao"
+        >
+            Excluir
+        </button>
+
+    </div>
+
+</div>
+
+
+</div>
+
+<!-- ========================================================= -->
+
+<!-- RODAPÉ -->
+
+<!-- ========================================================= -->
+
+<footer class="admin-footer">
+
+
+<span>
+    ZoraVision
+</span>
+
+<small>
+    Gerenciamento de banners
+</small>
+
+
+</footer>
+
+<!-- ========================================================= -->
+
+<!-- SCRIPTS -->
+
+<!-- ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../Supabase/supabase.js"></script>
+
+<script src="banners-admin.js"></script>
+
+<script src="Painel-admin.js"></script>
+
+</body>
+
+</html>

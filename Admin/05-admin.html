@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Painel Administrativo - ZoraVision</title>
+
+<link
+    rel="stylesheet"
+    href="../Folha-estilos/Painel-admin.css"
+>
+
+
+</head>
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- CABEÇALHO -->
+<!-- ========================================================= -->
+
+<header class="admin-header">
+
+    <div class="admin-header-top">
+
+        <div class="admin-logo">
+            ZoraVision
+        </div>
+
+        <button
+            type="button"
+            class="btn-sair"
+            id="btn-sair-admin"
+        >
+            Sair
+        </button>
+
+    </div>
+
+    <div class="admin-header-info">
+
+        <span class="admin-status"></span>
+
+        <span>
+            Painel Administrativo
+        </span>
+
+    </div>
+
+</header>
+
+
+<!-- ========================================================= -->
+<!-- CONTEÚDO PRINCIPAL -->
+<!-- ========================================================= -->
+
+<main class="admin-container">
+
+
+    <!-- ===================================================== -->
+    <!-- DASHBOARD -->
+    <!-- ===================================================== -->
+
+    <section class="admin-section">
+
+        <div class="section-header">
+
+            <div>
+                <span class="section-label">
+                    VISÃO GERAL
+                </span>
+
+                <h1>
+                    Dashboard
+                </h1>
+            </div>
+
+            <button
+                type="button"
+                class="btn-atualizar"
+                id="btn-atualizar-dashboard"
+            >
+                Atualizar
+            </button>
+
+        </div>
+
+
+        <!-- PEDIDOS PENDENTES -->
+
+        <div class="dashboard-grid">
+
+            <div class="dashboard-card">
+
+                <div class="dashboard-card-icon">
+                    🕐
+                </div>
+
+                <div class="dashboard-card-info">
+
+                    <span>
+                        Pendentes
+                    </span>
+
+                    <strong id="total-pedidos-pendentes">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- A CAMINHO -->
+
+            <div class="dashboard-card">
+
+                <div class="dashboard-card-icon">
+                    🚚
+                </div>
+
+                <div class="dashboard-card-info">
+
+                    <span>
+                        A caminho
+                    </span>
+
+                    <strong id="total-pedidos-caminho">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ENTREGUES -->
+
+            <div class="dashboard-card">
+
+                <div class="dashboard-card-icon">
+                    ✓
+                </div>
+
+                <div class="dashboard-card-info">
+
+                    <span>
+                        Entregues
+                    </span>
+
+                    <strong id="total-pedidos-entregues">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- FATURAMENTO -->
+
+            <div class="dashboard-card dashboard-card-faturamento">
+
+                <div class="dashboard-card-icon">
+                    R$
+                </div>
+
+                <div class="dashboard-card-info">
+
+                    <span>
+                        Faturado
+                    </span>
+
+                    <strong id="valor-faturado">
+                        R$ 0,00
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- MENU ADMINISTRATIVO -->
+    <!-- ===================================================== -->
+
+    <section class="admin-section">
+
+        <div class="section-header">
+
+            <div>
+                <span class="section-label">
+                    GERENCIAMENTO
+                </span>
+
+                <h2>
+                    Administração
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="admin-menu">
+
+
+            <!-- PRODUTOS -->
+
+            <a
+                href="admin-produtos.html"
+                class="admin-menu-card"
+            >
+
+                <div class="admin-menu-icon">
+                    🛍️
+                </div>
+
+                <div class="admin-menu-content">
+
+                    <strong>
+                        Produtos
+                    </strong>
+
+                    <span>
+                        Cadastrar, editar e excluir produtos
+                    </span>
+
+                </div>
+
+                <div class="admin-menu-arrow">
+                    ›
+                </div>
+
+            </a>
+
+
+            <!-- BANNERS -->
+
+            <a
+                href="admin-banners.html"
+                class="admin-menu-card"
+            >
+
+                <div class="admin-menu-icon">
+                    🖼️
+                </div>
+
+                <div class="admin-menu-content">
+
+                    <strong>
+                        Banners
+                    </strong>
+
+                    <span>
+                        Gerenciar banners da página inicial
+                    </span>
+
+                </div>
+
+                <div class="admin-menu-arrow">
+                    ›
+                </div>
+
+            </a>
+
+
+            <!-- INTEGRAÇÕES -->
+
+            <a
+                href="admin-integracoes.html"
+                class="admin-menu-card"
+            >
+
+                <div class="admin-menu-icon">
+                    🔗
+                </div>
+
+                <div class="admin-menu-content">
+
+                    <strong>
+                        Integrações
+                    </strong>
+
+                    <span>
+                        Mercado Livre, TikTok Shop e configurações
+                    </span>
+
+                </div>
+
+                <div class="admin-menu-arrow">
+                    ›
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ===================================================== -->
+    <!-- RESUMO -->
+    <!-- ===================================================== -->
+
+    <section class="admin-section">
+
+        <div class="section-header">
+
+            <div>
+                <span class="section-label">
+                    SISTEMA
+                </span>
+
+                <h2>
+                    Resumo
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="resumo-card">
+
+            <div class="resumo-item">
+
+                <span>
+                    Produtos cadastrados
+                </span>
+
+                <strong id="total-produtos">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="resumo-divider"></div>
+
+
+            <div class="resumo-item">
+
+                <span>
+                    Banners cadastrados
+                </span>
+
+                <strong id="total-banners">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="resumo-divider"></div>
+
+
+            <div class="resumo-item">
+
+                <span>
+                    Integrações ativas
+                </span>
+
+                <strong id="total-integracoes">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- ========================================================= -->
+<!-- RODAPÉ -->
+<!-- ========================================================= -->
+
+<footer class="admin-footer">
+
+    <span>
+        ZoraVision
+    </span>
+
+    <small>
+        Painel Administrativo
+    </small>
+
+</footer>
+
+
+<!-- ========================================================= -->
+<!-- SCRIPTS -->
+<!-- ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../Supabase/supabase.js"></script>
+
+<script src="dashboard-admin.js"></script>
+<script src="Painel-admin.js"></script>
+
+</body>
+
+</html>

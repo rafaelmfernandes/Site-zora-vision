@@ -1,0 +1,742 @@
+/* ============================================================
+ZORAVISION - ADMINISTRAÇÃO DE BANNERS
+Arquivo: Folha-estilos/admin-banners.css
+============================================================ */
+
+/* ============================================================
+
+1. RESET
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  }
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+min-height: 100vh;
+font-family: Arial, Helvetica, sans-serif;
+background: #f6f7f9;
+color: #171717;
+line-height: 1.5;
+}
+
+/* ============================================================
+2. CABEÇALHO
+============================================================ */
+
+.admin-header {
+background: #ffffff;
+border-bottom: 1px solid #e5e7eb;
+position: sticky;
+top: 0;
+z-index: 100;
+}
+
+.admin-header-top {
+width: min(1180px, calc(100% - 32px));
+min-height: 70px;
+margin: 0 auto;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 16px;
+}
+
+.admin-logo {
+font-size: 21px;
+font-weight: 800;
+letter-spacing: -0.5px;
+}
+
+.btn-voltar {
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+text-decoration: none;
+color: #171717;
+border: 1px solid #e1e4e8;
+border-radius: 10px;
+background: #ffffff;
+font-size: 28px;
+line-height: 1;
+transition: 0.2s ease;
+}
+
+.btn-voltar:hover {
+background: #f3f4f6;
+}
+
+.btn-sair {
+border: 1px solid #e1e4e8;
+background: #ffffff;
+color: #333333;
+border-radius: 9px;
+padding: 9px 16px;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.btn-sair:hover {
+background: #f3f4f6;
+}
+
+.admin-header-info {
+width: min(1180px, calc(100% - 32px));
+margin: 0 auto;
+min-height: 38px;
+display: flex;
+align-items: center;
+gap: 8px;
+color: #6b7280;
+font-size: 13px;
+}
+
+.admin-status {
+width: 8px;
+height: 8px;
+border-radius: 50%;
+background: #22c55e;
+display: inline-block;
+}
+
+/* ============================================================
+3. CONTAINER
+============================================================ */
+
+.banners-container {
+width: min(1180px, calc(100% - 32px));
+margin: 0 auto;
+padding: 42px 0 60px;
+}
+
+/* ============================================================
+4. TOPO
+============================================================ */
+
+.banners-topo {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+gap: 30px;
+margin-bottom: 30px;
+}
+
+.section-label {
+display: block;
+margin-bottom: 7px;
+color: #777f89;
+font-size: 11px;
+font-weight: 800;
+letter-spacing: 1.2px;
+}
+
+.banners-topo h1 {
+font-size: 34px;
+line-height: 1.15;
+letter-spacing: -1px;
+margin-bottom: 8px;
+}
+
+.banners-topo p {
+color: #6b7280;
+font-size: 15px;
+}
+
+.btn-cadastrar {
+flex-shrink: 0;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+min-height: 44px;
+padding: 0 18px;
+border-radius: 10px;
+background: #171717;
+color: #ffffff;
+text-decoration: none;
+font-size: 14px;
+font-weight: 700;
+transition: 0.2s ease;
+}
+
+.btn-cadastrar:hover {
+background: #333333;
+}
+
+/* ============================================================
+5. RESUMO
+============================================================ */
+
+.banners-resumo {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 16px;
+margin-bottom: 34px;
+}
+
+.resumo-box {
+background: #ffffff;
+border: 1px solid #e5e7eb;
+border-radius: 14px;
+min-height: 105px;
+padding: 20px 22px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
+
+.resumo-box span {
+color: #6b7280;
+font-size: 13px;
+margin-bottom: 5px;
+}
+
+.resumo-box strong {
+font-size: 28px;
+line-height: 1.1;
+}
+
+/* ============================================================
+6. SEÇÃO DA LISTA
+============================================================ */
+
+.lista-banners-section {
+background: #ffffff;
+border: 1px solid #e5e7eb;
+border-radius: 16px;
+padding: 25px;
+}
+
+.lista-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 20px;
+margin-bottom: 24px;
+}
+
+.lista-header h2 {
+font-size: 21px;
+line-height: 1.2;
+}
+
+.btn-atualizar {
+border: 1px solid #dfe3e8;
+background: #ffffff;
+color: #333333;
+border-radius: 9px;
+padding: 9px 15px;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.btn-atualizar:hover {
+background: #f5f6f8;
+}
+
+.btn-atualizar:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+/* ============================================================
+7. LISTA DE BANNERS
+============================================================ */
+
+.lista-banners {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 18px;
+}
+
+/* ============================================================
+8. CARD DE BANNER
+============================================================ */
+
+.banner-admin-card {
+overflow: hidden;
+background: #ffffff;
+border: 1px solid #e3e6ea;
+border-radius: 14px;
+transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.banner-admin-card:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.banner-admin-imagem-container {
+width: 100%;
+aspect-ratio: 16 / 6;
+background: #f0f2f4;
+overflow: hidden;
+}
+
+.banner-admin-imagem {
+width: 100%;
+height: 100%;
+display: block;
+object-fit: cover;
+}
+
+.banner-admin-sem-imagem {
+width: 100%;
+height: 100%;
+min-height: 150px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #9ca3af;
+font-size: 42px;
+}
+
+.banner-admin-conteudo {
+padding: 18px;
+}
+
+.banner-admin-topo {
+display: flex;
+align-items: flex-start;
+justify-content: space-between;
+gap: 12px;
+margin-bottom: 10px;
+}
+
+.banner-admin-titulo {
+min-width: 0;
+font-size: 17px;
+font-weight: 750;
+line-height: 1.3;
+overflow-wrap: anywhere;
+}
+
+.banner-admin-descricao {
+margin-top: 7px;
+color: #6b7280;
+font-size: 13px;
+line-height: 1.5;
+}
+
+.banner-admin-status {
+flex-shrink: 0;
+}
+
+.banner-status {
+display: inline-flex;
+align-items: center;
+min-height: 25px;
+padding: 0 9px;
+border-radius: 999px;
+font-size: 11px;
+font-weight: 800;
+}
+
+.banner-ativo {
+background: #ecfdf3;
+color: #15803d;
+}
+
+.banner-inativo {
+background: #f3f4f6;
+color: #6b7280;
+}
+
+.banner-admin-informacoes {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 13px;
+}
+
+.banner-info-item {
+display: inline-flex;
+align-items: center;
+min-height: 27px;
+padding: 0 9px;
+background: #f6f7f9;
+border-radius: 7px;
+color: #5f6670;
+font-size: 11px;
+font-weight: 600;
+}
+
+.banner-admin-acoes {
+display: flex;
+gap: 9px;
+padding: 14px 18px 18px;
+border-top: 1px solid #eef0f2;
+}
+
+.btn-editar-banner,
+.btn-excluir-banner {
+flex: 1;
+min-height: 38px;
+border-radius: 8px;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.btn-editar-banner {
+border: 1px solid #dfe3e8;
+background: #ffffff;
+color: #222222;
+}
+
+.btn-editar-banner:hover {
+background: #f5f6f8;
+}
+
+.btn-excluir-banner {
+border: 1px solid #f0d4d4;
+background: #fffafa;
+color: #c62828;
+}
+
+.btn-excluir-banner:hover {
+background: #fff0f0;
+}
+
+/* ============================================================
+9. ESTADOS
+============================================================ */
+
+.estado-banners {
+width: 100%;
+padding: 45px 20px;
+text-align: center;
+}
+
+.estado-banners[hidden] {
+display: none !important;
+}
+
+.estado-banners .spinner {
+width: 34px;
+height: 34px;
+margin: 0 auto 14px;
+border: 3px solid #e5e7eb;
+border-top-color: #171717;
+border-radius: 50%;
+animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+to {
+transform: rotate(360deg);
+}
+}
+
+.estado-banners p {
+color: #6b7280;
+font-size: 14px;
+}
+
+.estado-icone {
+font-size: 42px;
+margin-bottom: 12px;
+}
+
+.estado-vazio h3,
+.estado-erro h3 {
+margin-bottom: 7px;
+font-size: 18px;
+}
+
+.estado-vazio p,
+.estado-erro p {
+max-width: 480px;
+margin: 0 auto 20px;
+color: #6b7280;
+}
+
+.btn-cadastrar-vazio,
+.btn-tentar {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+min-height: 40px;
+padding: 0 16px;
+border-radius: 9px;
+font-size: 13px;
+font-weight: 700;
+text-decoration: none;
+cursor: pointer;
+}
+
+.btn-cadastrar-vazio {
+background: #171717;
+color: #ffffff;
+}
+
+.btn-tentar {
+border: 1px solid #dfe3e8;
+background: #ffffff;
+color: #222222;
+}
+
+.estado-erro {
+color: #333333;
+}
+
+/* ============================================================
+10. CARREGAMENTO INTERNO
+============================================================ */
+
+.admin-loading {
+min-height: 180px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: #6b7280;
+font-size: 14px;
+}
+
+.admin-empty {
+grid-column: 1 / -1;
+min-height: 180px;
+padding: 40px 20px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+color: #6b7280;
+}
+
+.admin-empty-icon {
+font-size: 38px;
+margin-bottom: 10px;
+}
+
+.admin-empty strong {
+color: #333333;
+font-size: 15px;
+}
+
+/* ============================================================
+11. MODAL
+============================================================ */
+
+.modal-overlay {
+position: fixed;
+inset: 0;
+z-index: 500;
+padding: 20px;
+display: flex;
+align-items: center;
+justify-content: center;
+background: rgba(0, 0, 0, 0.45);
+}
+
+.modal-overlay[hidden] {
+display: none !important;
+}
+
+.modal {
+width: min(440px, 100%);
+background: #ffffff;
+border-radius: 16px;
+padding: 28px;
+box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+text-align: center;
+}
+
+.modal-icone {
+font-size: 38px;
+margin-bottom: 12px;
+}
+
+.modal h2 {
+font-size: 21px;
+margin-bottom: 9px;
+}
+
+.modal p {
+color: #6b7280;
+font-size: 14px;
+line-height: 1.55;
+}
+
+.modal-acoes {
+display: flex;
+gap: 10px;
+margin-top: 24px;
+}
+
+.btn-cancelar,
+.btn-confirmar-exclusao {
+flex: 1;
+min-height: 42px;
+border-radius: 9px;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+}
+
+.btn-cancelar {
+border: 1px solid #dfe3e8;
+background: #ffffff;
+color: #333333;
+}
+
+.btn-confirmar-exclusao {
+border: 1px solid #c62828;
+background: #c62828;
+color: #ffffff;
+}
+
+/* ============================================================
+12. RODAPÉ
+============================================================ */
+
+.admin-footer {
+width: min(1180px, calc(100% - 32px));
+margin: 0 auto;
+padding: 24px 0 35px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 15px;
+color: #6b7280;
+font-size: 13px;
+}
+
+.admin-footer span {
+color: #333333;
+font-weight: 700;
+}
+
+.admin-footer small {
+font-size: 12px;
+}
+
+/* ============================================================
+13. RESPONSIVIDADE
+============================================================ */
+
+@media (max-width: 800px) {
+
+
+.banners-topo {
+    align-items: stretch;
+    flex-direction: column;
+}
+
+.btn-cadastrar {
+    width: 100%;
+}
+
+.lista-banners {
+    grid-template-columns: 1fr;
+}
+
+}
+
+@media (max-width: 600px) {
+
+
+.admin-header-top {
+    min-height: 62px;
+}
+
+.admin-logo {
+    font-size: 19px;
+}
+
+.admin-header-info {
+    min-height: 34px;
+    font-size: 12px;
+}
+
+.banners-container {
+    padding-top: 28px;
+}
+
+.banners-topo h1 {
+    font-size: 29px;
+}
+
+.banners-resumo {
+    grid-template-columns: 1fr;
+}
+
+.lista-banners-section {
+    padding: 17px;
+    border-radius: 13px;
+}
+
+.lista-header {
+    align-items: flex-start;
+}
+
+.lista-header h2 {
+    font-size: 18px;
+}
+
+.banner-admin-topo {
+    flex-direction: column;
+}
+
+.banner-admin-status {
+    order: -1;
+}
+
+.banner-admin-acoes {
+    flex-direction: column;
+}
+
+.admin-footer {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+}
+
+@media (max-width: 420px) {
+
+
+.admin-header-top,
+.admin-header-info,
+.banners-container,
+.admin-footer {
+    width: min(100% - 22px, 1180px);
+}
+
+.banners-topo h1 {
+    font-size: 26px;
+}
+
+.resumo-box {
+    min-height: 90px;
+    padding: 17px;
+}
+
+.resumo-box strong {
+    font-size: 24px;
+}
+
+.lista-banners-section {
+    padding: 14px;
+}
+
+.modal {
+    padding: 23px 18px;
+
+
+}
+}
