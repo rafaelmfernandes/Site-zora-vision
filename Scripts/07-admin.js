@@ -1005,22 +1005,13 @@ function atualizarIndicadoresDashboard() {
 
 function atualizarIndicadoresDashboard() {
 
-    let faturamentoHoje = 0;
+    let faturamento = 0;
 
     let pedidosPendentes = 0;
 
     let pedidosACaminho = 0;
 
     let pedidosEntregues = 0;
-
-
-    const hoje = new Date();
-
-    const anoHoje = hoje.getFullYear();
-
-    const mesHoje = hoje.getMonth();
-
-    const diaHoje = hoje.getDate();
 
 
     pedidosAdmin.forEach(pedido => {
@@ -1031,28 +1022,15 @@ function atualizarIndicadoresDashboard() {
 
 
         // ================================================
-        // FATURAMENTO DE HOJE
+        // FATURAMENTO
+        // Conta todos os pedidos que NÃO estão cancelados
         // ================================================
 
         if (status !== 'cancelado') {
 
-            const dataPedido = new Date(
-                pedido.created_at
+            faturamento += Number(
+                pedido.total || 0
             );
-
-
-            if (
-                !Number.isNaN(dataPedido.getTime()) &&
-                dataPedido.getFullYear() === anoHoje &&
-                dataPedido.getMonth() === mesHoje &&
-                dataPedido.getDate() === diaHoje
-            ) {
-
-                faturamentoHoje += Number(
-                    pedido.total || 0
-                );
-
-            }
 
         }
 
@@ -1141,21 +1119,21 @@ function atualizarIndicadoresDashboard() {
 
 
     // ================================================
-    // ATUALIZAR FATURAMENTO
+    // FATURAMENTO
     // ================================================
 
     if (elFaturamento) {
 
         elFaturamento.textContent =
             formatarMoeda(
-                faturamentoHoje
+                faturamento
             );
 
     }
 
 
     // ================================================
-    // ATUALIZAR PENDENTES
+    // PENDENTES
     // ================================================
 
     if (elPedidosPendentes) {
@@ -1167,7 +1145,7 @@ function atualizarIndicadoresDashboard() {
 
 
     // ================================================
-    // ATUALIZAR A CAMINHO
+    // A CAMINHO
     // ================================================
 
     if (elPedidosACaminho) {
@@ -1179,7 +1157,7 @@ function atualizarIndicadoresDashboard() {
 
 
     // ================================================
-    // ATUALIZAR ENTREGUES
+    // ENTREGUES
     // ================================================
 
     if (elPedidosEntregues) {
@@ -1191,7 +1169,7 @@ function atualizarIndicadoresDashboard() {
 
 
     // ================================================
-    // RESUMO DO CARD DE PENDENTES
+    // RESUMO
     // ================================================
 
     if (elResumoStatus) {
@@ -1203,7 +1181,7 @@ function atualizarIndicadoresDashboard() {
 
 
     // ================================================
-    // BADGE DOS PEDIDOS
+    // TOTAL DE PEDIDOS
     // ================================================
 
     if (badgeContador) {
@@ -1219,9 +1197,9 @@ function atualizarIndicadoresDashboard() {
     // ================================================
 
     console.log(
-        '📊 CONTADORES DO DASHBOARD:',
+        '📊 DASHBOARD ATUALIZADO:',
         {
-            faturamentoHoje,
+            faturamento,
             pedidosPendentes,
             pedidosACaminho,
             pedidosEntregues,

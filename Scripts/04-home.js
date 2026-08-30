@@ -1,17 +1,20 @@
+
 // ============================================================
 // ZORAVISION - HOME
 // Produtos + Carrossel
 // ============================================================
-// Estrutura preparada para muitos produtos:
-//
-// - Carregamento inicial limitado
-// - Paginação através de range()
-// - Botão "Carregar mais"
-// - Imagens com lazy loading
-// - Busca somente dos campos necessários
-// - Compatível com FavoritosModule
-// - Compatível com CarrinhoCheckoutModule
-// - Categorias carregadas separadamente
+// Responsabilidades:
+// - Carregar produtos do Supabase
+// - Paginação de produtos
+// - Categorias
+// - Cards de produtos
+// - Carrinho
+// - Favoritos
+// - Badge do carrinho
+// - Carrossel
+// - Banners personalizados do localStorage
+// - Imagem de fundo dos banners
+// - Overlay automático para melhorar leitura
 // ============================================================
 
 
@@ -23,7 +26,7 @@ const HOME_PRODUTOS_POR_PAGINA = 12;
 
 
 // ============================================================
-// VARIÁVEIS DA HOME
+// VARIÁVEIS
 // ============================================================
 
 let homePaginaAtual = 0;
@@ -39,33 +42,24 @@ let homeTodosProdutosCarregados = false;
 
 document.addEventListener(
     'DOMContentLoaded',
-    async () => {
+    async function () {
 
-        console.log(
-            '🏠 Home iniciada.'
-        );
-
-
-        // ====================================================
-        // ELEMENTOS
-        // ====================================================
+        console.log('🏠 ZoraVision Home iniciada.');
 
         const gridProdutos =
             document.getElementById(
                 'grid-produtos-home'
             );
 
-
         const contadorProdutos =
             document.getElementById(
                 'contador-produtos'
             );
 
-
         if (!gridProdutos) {
 
             console.error(
-                '❌ Elemento #grid-produtos-home não encontrado.'
+                '❌ #grid-produtos-home não encontrado.'
             );
 
             return;
@@ -73,24 +67,22 @@ document.addEventListener(
 
 
         // ====================================================
-        // VERIFICAR SUPABASE
+        // SUPABASE
         // ====================================================
 
         const supabaseAtual =
             window.supabaseClient ||
             window._supabase;
 
-
         if (!supabaseAtual) {
 
             console.error(
-                '❌ Supabase não está disponível na Home.'
+                '❌ Supabase não está disponível.'
             );
-
 
             gridProdutos.innerHTML = `
                 <div style="
-                    grid-column: 1 / -1;
+                    grid-column:1/-1;
                     text-align:center;
                     padding:40px 20px;
                 ">
@@ -112,7 +104,7 @@ document.addEventListener(
 
 
         // ====================================================
-        // PRIMEIRA CARGA
+        // PRODUTOS
         // ====================================================
 
         await carregarMaisProdutosHome(
@@ -121,12 +113,19 @@ document.addEventListener(
             contadorProdutos
         );
 
+
+        // ====================================================
+        // BADGE
+        // ====================================================
+
+        atualizarBadgeCarrinhoHome();
+
     }
 );
 
 
 // ============================================================
-// CARREGAR MAIS PRODUTOS
+// CARREGAR PRODUTOS
 // ============================================================
 
 async function carregarMaisProdutosHome(
@@ -143,14 +142,8 @@ async function carregarMaisProdutosHome(
         return;
     }
 
+    homeCarregandoProdutos = true;
 
-    homeCarregandoProdutos =
-        true;
-
-
-    // ========================================================
-    // BOTÃO
-    // ========================================================
 
     const botaoCarregarMais =
         document.getElementById(
@@ -160,29 +153,19 @@ async function carregarMaisProdutosHome(
 
     if (botaoCarregarMais) {
 
-        botaoCarregarMais.disabled =
-            true;
+        botaoCarregarMais.disabled = true;
 
         botaoCarregarMais.textContent =
             'Carregando...';
+
     }
 
 
     try {
 
-        console.log(
-            `🔎 Buscando produtos da página ${homePaginaAtual + 1}...`
-        );
-
-
-        // ====================================================
-        // CALCULAR RANGE
-        // ====================================================
-
         const inicio =
             homePaginaAtual *
             HOME_PRODUTOS_POR_PAGINA;
-
 
         const fim =
             inicio +
@@ -190,8 +173,15 @@ async function carregarMaisProdutosHome(
             1;
 
 
+        console.log(
+            '🔎 Buscando produtos:',
+            inicio,
+            fim
+        );
+
+
         // ====================================================
-        // BUSCAR PRODUTOS
+        // PRODUTOS
         // ====================================================
 
         const {
@@ -211,7 +201,8 @@ async function carregarMaisProdutosHome(
                     imagem_url,
                     ativo,
                     destaque,
-                    categoria_id
+                    categoria_id,
+                    created_at
                 `)
                 .eq(
                     'ativo',
@@ -229,10 +220,6 @@ async function carregarMaisProdutosHome(
                 );
 
 
-        // ====================================================
-        // ERRO PRODUTOS
-        // ====================================================
-
         if (error) {
 
             console.error(
@@ -240,33 +227,20 @@ async function carregarMaisProdutosHome(
                 error
             );
 
-
             mostrarErroProdutosHome(
                 gridProdutos
             );
 
-
             return;
         }
 
-
-        console.log(
-            `✅ ${produtos?.length || 0} produto(s) recebidos.`
-        );
-
-
-        // ====================================================
-        // NENHUM PRODUTO
-        // ====================================================
 
         if (
             !produtos ||
             produtos.length === 0
         ) {
 
-            homeTodosProdutosCarregados =
-                true;
-
+            homeTodosProdutosCarregados = true;
 
             if (
                 homePaginaAtual === 0
@@ -278,22 +252,23 @@ async function carregarMaisProdutosHome(
 
             }
 
-
             removerBotaoCarregarMais();
 
-
             atualizarContadorProdutosHome(
-                contadorProdutos,
-                0
+                contadorProdutos
             );
-
 
             return;
         }
 
 
+        console.log(
+            `✅ ${produtos.length} produto(s) carregado(s).`
+        );
+
+
         // ====================================================
-        // BUSCAR CATEGORIAS
+        // CATEGORIAS
         // ====================================================
 
         const categoriaIds =
@@ -305,15 +280,13 @@ async function carregarMaisProdutosHome(
                                 produto.categoria_id
                         )
                         .filter(
-                            categoriaId =>
-                                categoriaId
+                            id => id
                         )
                 )
             ];
 
 
-        let categorias =
-            [];
+        let categorias = [];
 
 
         if (
@@ -359,7 +332,7 @@ async function carregarMaisProdutosHome(
 
 
         // ====================================================
-        // MAPA DE CATEGORIAS
+        // MAPA CATEGORIAS
         // ====================================================
 
         const mapaCategorias =
@@ -381,7 +354,7 @@ async function carregarMaisProdutosHome(
 
 
         // ====================================================
-        // ADICIONAR CATEGORIA AOS PRODUTOS
+        // ADICIONAR CATEGORIA
         // ====================================================
 
         produtos.forEach(
@@ -426,15 +399,11 @@ async function carregarMaisProdutosHome(
         );
 
 
-        // ====================================================
-        // ATUALIZAR PÁGINA
-        // ====================================================
-
         homePaginaAtual++;
 
 
         // ====================================================
-        // VERIFICAR SE EXISTEM MAIS
+        // MAIS PRODUTOS?
         // ====================================================
 
         if (
@@ -442,9 +411,7 @@ async function carregarMaisProdutosHome(
             HOME_PRODUTOS_POR_PAGINA
         ) {
 
-            homeTodosProdutosCarregados =
-                true;
-
+            homeTodosProdutosCarregados = true;
 
             removerBotaoCarregarMais();
 
@@ -469,26 +436,16 @@ async function carregarMaisProdutosHome(
         );
 
 
-        // ====================================================
-        // BADGE
-        // ====================================================
-
         atualizarBadgeCarrinhoHome();
-
-
-        console.log(
-            '🎉 Produtos carregados na Home.'
-        );
 
 
     }
     catch (erro) {
 
         console.error(
-            '❌ Erro inesperado ao carregar produtos:',
+            '❌ Erro inesperado:',
             erro
         );
-
 
         mostrarErroProdutosHome(
             gridProdutos
@@ -497,8 +454,7 @@ async function carregarMaisProdutosHome(
     }
     finally {
 
-        homeCarregandoProdutos =
-            false;
+        homeCarregandoProdutos = false;
 
 
         const botao =
@@ -509,29 +465,26 @@ async function carregarMaisProdutosHome(
 
         if (botao) {
 
-            botao.disabled =
-                false;
+            botao.disabled = false;
 
             botao.textContent =
                 'Carregar mais produtos';
+
         }
 
     }
+
 }
 
 
 // ============================================================
-// CRIAR CARD DO PRODUTO
+// CARD PRODUTO
 // ============================================================
 
 function criarCardProdutoHome(
     produto,
     gridProdutos
 ) {
-
-    // ========================================================
-    // PREÇOS
-    // ========================================================
 
     const preco =
         Number(
@@ -571,10 +524,6 @@ function criarCardProdutoHome(
             : 0;
 
 
-    // ========================================================
-    // FORMATAÇÃO
-    // ========================================================
-
     const precoAtualFormatado =
         precoAtual
             .toFixed(2)
@@ -593,35 +542,18 @@ function criarCardProdutoHome(
             );
 
 
-    // ========================================================
-    // CATEGORIA
-    // ========================================================
-
     const categoria =
         produto.categorias?.nome ||
         'Geral';
 
-
-    // ========================================================
-    // IMAGEM
-    // ========================================================
 
     const imagem =
         produto.imagem_url ||
         '';
 
 
-    // ========================================================
-    // VENDAS
-    // ========================================================
+    const vendas = 0;
 
-    const vendas =
-        0;
-
-
-    // ========================================================
-    // CARD
-    // ========================================================
 
     const card =
         document.createElement(
@@ -642,17 +574,24 @@ function criarCardProdutoHome(
 
 
     // ========================================================
-    // CLIQUE NO CARD
+    // CLIQUE
     // ========================================================
 
     card.addEventListener(
         'click',
-        evento => {
+        function (evento) {
 
             if (
                 evento.target.closest(
                     '.btn-adicionar'
-                ) ||
+                )
+            ) {
+
+                return;
+            }
+
+
+            if (
                 evento.target.closest(
                     '.btn-favoritar'
                 )
@@ -682,6 +621,65 @@ function criarCardProdutoHome(
 
 
     // ========================================================
+    // FAVORITO
+    // ========================================================
+
+    let favoritoHtml = '';
+
+
+    if (
+        typeof FavoritosModule !== 'undefined'
+    ) {
+
+        favoritoHtml =
+            FavoritosModule.botaoHtml(
+                produto.id,
+                `
+                position:absolute;
+                top:8px;
+                right:8px;
+                z-index:5;
+                background:rgba(255,255,255,0.9);
+                border:none;
+                border-radius:50%;
+                width:28px;
+                height:28px;
+                cursor:pointer;
+                font-size:14px;
+                `
+            );
+
+    }
+    else {
+
+        favoritoHtml = `
+            <button
+                type="button"
+                class="btn-favoritar"
+                data-id="${produto.id}"
+                aria-label="Favoritar"
+                style="
+                    position:absolute;
+                    top:8px;
+                    right:8px;
+                    z-index:5;
+                    background:rgba(255,255,255,0.9);
+                    border:none;
+                    border-radius:50%;
+                    width:28px;
+                    height:28px;
+                    cursor:pointer;
+                    font-size:14px;
+                "
+            >
+                🤍
+            </button>
+        `;
+
+    }
+
+
+    // ========================================================
     // HTML
     // ========================================================
 
@@ -693,56 +691,13 @@ function criarCardProdutoHome(
                     <div class="badge-desconto">
                         -${percentualDesconto}%
                     </div>
-                  `
+                `
                 : ''
         }
 
 
-        ${
-            typeof FavoritosModule !== 'undefined'
-                ? FavoritosModule.botaoHtml(
-                    produto.id,
-                    `
-                    position:absolute;
-                    top:8px;
-                    right:8px;
-                    z-index:2;
-                    background:rgba(255,255,255,0.9);
-                    border:none;
-                    border-radius:50%;
-                    width:28px;
-                    height:28px;
-                    cursor:pointer;
-                    font-size:14px;
-                    `
-                )
-                : `
-                    <button
-                        type="button"
-                        class="btn-favoritar"
-                        data-id="${produto.id}"
-                        aria-label="Favoritar"
-                        style="
-                            position:absolute;
-                            top:8px;
-                            right:8px;
-                            z-index:2;
-                            background:rgba(255,255,255,0.9);
-                            border:none;
-                            border-radius:50%;
-                            width:28px;
-                            height:28px;
-                            cursor:pointer;
-                            font-size:14px;
-                        "
-                    >
-                        🤍
-                    </button>
-                  `
-        }
+        ${favoritoHtml}
 
-
-        <!-- IMAGEM -->
 
         <div
             class="card-img-box"
@@ -770,21 +725,23 @@ function criarCardProdutoHome(
                             "
                             onerror="
                                 this.style.display='none';
-                                this.parentElement.innerHTML='<span style=\\'font-size:3rem;\\'>📦</span>';
+                                this.parentElement.innerHTML='<span style=&quot;font-size:3rem;&quot;>📦</span>';
                             "
                         >
-                      `
+                    `
                     : `
-                        <span style="font-size:3rem;">
+                        <span
+                            style="
+                                font-size:3rem;
+                            "
+                        >
                             📦
                         </span>
-                      `
+                    `
             }
 
         </div>
 
-
-        <!-- INFORMAÇÕES -->
 
         <div class="card-detalhes">
 
@@ -814,8 +771,6 @@ function criarCardProdutoHome(
             </div>
 
 
-            <!-- PREÇO -->
-
             <div class="card-rodape-info">
 
                 <div class="preco-linha">
@@ -826,7 +781,7 @@ function criarCardProdutoHome(
                                 <span class="preco-antigo">
                                     R$ ${precoOriginalFormatado}
                                 </span>
-                              `
+                            `
                             : ''
                     }
 
@@ -851,15 +806,10 @@ function criarCardProdutoHome(
         </div>
 
 
-        <!-- BOTÃO CARRINHO -->
-
         <button
             type="button"
             class="btn-adicionar"
             data-id="${produto.id}"
-            data-nome="${produto.nome}"
-            data-preco="${precoAtual}"
-            data-imagem="${imagem}"
         >
             🛒 Adicionar
         </button>
@@ -867,17 +817,13 @@ function criarCardProdutoHome(
     `;
 
 
-    // ========================================================
-    // ADICIONAR AO GRID
-    // ========================================================
-
     gridProdutos.appendChild(
         card
     );
 
 
     // ========================================================
-    // BOTÃO ADICIONAR
+    // BOTÃO CARRINHO
     // ========================================================
 
     const botaoAdicionar =
@@ -890,16 +836,12 @@ function criarCardProdutoHome(
 
         botaoAdicionar.addEventListener(
             'click',
-            evento => {
+            function (evento) {
 
                 evento.preventDefault();
 
                 evento.stopPropagation();
 
-
-                // ============================================
-                // LOGIN
-                // ============================================
 
                 if (
                     !usuarioEstaLogadoHome()
@@ -909,18 +851,12 @@ function criarCardProdutoHome(
                         'Você precisa estar logado para adicionar produtos ao carrinho.'
                     );
 
-
                     window.location.href =
                         '02-Login.html';
-
 
                     return;
                 }
 
-
-                // ============================================
-                // ESTOQUE
-                // ============================================
 
                 const estoque =
                     Number(
@@ -940,10 +876,6 @@ function criarCardProdutoHome(
                 }
 
 
-                // ============================================
-                // ADICIONAR
-                // ============================================
-
                 const adicionado =
                     adicionarProdutoHome(
                         produto,
@@ -962,6 +894,7 @@ function criarCardProdutoHome(
 
             }
         );
+
     }
 
 
@@ -982,12 +915,11 @@ function criarCardProdutoHome(
 
         botaoFavorito.addEventListener(
             'click',
-            evento => {
+            function (evento) {
 
                 evento.preventDefault();
 
                 evento.stopPropagation();
-
 
                 alert(
                     'Sistema de favoritos ainda não está disponível.'
@@ -1079,7 +1011,7 @@ function criarOuAtualizarBotaoCarregarMais(
 
         botao.addEventListener(
             'click',
-            () => {
+            function () {
 
                 carregarMaisProdutosHome(
                     supabaseAtual,
@@ -1126,8 +1058,7 @@ function removerBotaoCarregarMais() {
 // ============================================================
 
 function atualizarContadorProdutosHome(
-    contadorProdutos,
-    quantidadeAtual = null
+    contadorProdutos
 ) {
 
     if (!contadorProdutos) {
@@ -1143,9 +1074,7 @@ function atualizarContadorProdutosHome(
 
 
     const quantidade =
-        quantidadeAtual !== null
-            ? quantidadeAtual
-            : cards.length;
+        cards.length;
 
 
     contadorProdutos.textContent =
@@ -1168,16 +1097,20 @@ function mostrarNenhumProdutoHome(
 
     gridProdutos.innerHTML = `
 
-        <div style="
-            grid-column:1 / -1;
-            text-align:center;
-            padding:40px 20px;
-        ">
+        <div
+            style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:40px 20px;
+            "
+        >
 
-            <div style="
-                font-size:40px;
-                margin-bottom:10px;
-            ">
+            <div
+                style="
+                    font-size:40px;
+                    margin-bottom:10px;
+                "
+            >
                 📦
             </div>
 
@@ -1202,15 +1135,18 @@ function mostrarErroProdutosHome(
 
     gridProdutos.innerHTML = `
 
-        <div style="
-            grid-column:1 / -1;
-            text-align:center;
-            padding:40px 20px;
-        ">
+        <div
+            style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:40px 20px;
+            "
+        >
 
             <p>
                 Não foi possível carregar os produtos.
             </p>
+
 
             <button
                 type="button"
@@ -1234,7 +1170,7 @@ function mostrarErroProdutosHome(
 
 
 // ============================================================
-// VERIFICAR LOGIN
+// LOGIN
 // ============================================================
 
 function usuarioEstaLogadoHome() {
@@ -1269,7 +1205,6 @@ function usuarioEstaLogadoHome() {
             usuario.email
         );
 
-
     }
     catch (erro) {
 
@@ -1278,7 +1213,6 @@ function usuarioEstaLogadoHome() {
             erro
         );
 
-
         return false;
     }
 
@@ -1286,7 +1220,7 @@ function usuarioEstaLogadoHome() {
 
 
 // ============================================================
-// ADICIONAR PRODUTO AO CARRINHO
+// ADICIONAR PRODUTO
 // ============================================================
 
 function adicionarProdutoHome(
@@ -1305,13 +1239,12 @@ function adicionarProdutoHome(
             produto
         );
 
-
         return false;
     }
 
 
     // ========================================================
-    // MÓDULO PRINCIPAL
+    // CARRINHO PRINCIPAL
     // ========================================================
 
     if (
@@ -1354,12 +1287,8 @@ function adicionarProdutoHome(
 
             if (!resultado) {
 
-                console.warn(
-                    '⚠️ O módulo do carrinho recusou o produto.'
-                );
-
-
                 return false;
+
             }
 
 
@@ -1393,19 +1322,13 @@ function adicionarProdutoHome(
             );
 
 
-            console.log(
-                '✅ Produto adicionado pelo CarrinhoCheckoutModule:',
-                produto.id
-            );
-
-
             return true;
 
         }
         catch (erro) {
 
             console.error(
-                '❌ Erro no CarrinhoCheckoutModule:',
+                '❌ Erro no carrinho:',
                 erro
             );
 
@@ -1415,7 +1338,7 @@ function adicionarProdutoHome(
 
 
     // ========================================================
-    // FALLBACK LOCALSTORAGE
+    // FALLBACK
     // ========================================================
 
     let usuario = null;
@@ -1433,8 +1356,7 @@ function adicionarProdutoHome(
     }
     catch (erro) {
 
-        usuario =
-            null;
+        usuario = null;
 
     }
 
@@ -1475,11 +1397,6 @@ function adicionarProdutoHome(
     }
     catch (erro) {
 
-        console.warn(
-            '⚠️ Carrinho inválido no localStorage. Será recriado.'
-        );
-
-
         carrinho = [];
 
     }
@@ -1515,19 +1432,16 @@ function adicionarProdutoHome(
 
         existente.quantidade =
             Math.min(
-
                 (
                     Number(
                         existente.quantidade
                     ) || 0
                 ) +
                 quantidadeFinal,
-
                 Number(
                     produto.estoque
                 ) ||
                 quantidadeFinal
-
             );
 
     }
@@ -1582,19 +1496,13 @@ function adicionarProdutoHome(
     );
 
 
-    console.log(
-        '✅ Produto adicionado ao carrinho pelo fallback:',
-        produto.id
-    );
-
-
     return true;
 
 }
 
 
 // ============================================================
-// ATUALIZAR BADGE DO CARRINHO
+// BADGE CARRINHO
 // ============================================================
 
 function atualizarBadgeCarrinhoHome() {
@@ -1618,7 +1526,6 @@ function atualizarBadgeCarrinhoHome() {
         badge.textContent =
             '0';
 
-
         return;
     }
 
@@ -1638,8 +1545,7 @@ function atualizarBadgeCarrinhoHome() {
     }
     catch (erro) {
 
-        usuario =
-            null;
+        usuario = null;
 
     }
 
@@ -1687,16 +1593,19 @@ function atualizarBadgeCarrinhoHome() {
 
     const total =
         carrinho.reduce(
-            (
+            function (
                 soma,
                 item
-            ) =>
-                soma +
-                (
-                    Number(
-                        item.quantidade
-                    ) || 0
-                ),
+            ) {
+
+                return soma +
+                    (
+                        Number(
+                            item.quantidade
+                        ) || 0
+                    );
+
+            },
             0
         );
 
@@ -1725,13 +1634,12 @@ function inicializarCarrossel() {
             '⚠️ Trilho do carrossel não encontrado.'
         );
 
-
         return;
     }
 
 
     // ========================================================
-    // BANNERS
+    // RECUPERAR BANNERS
     // ========================================================
 
     let bannersSalvos = [];
@@ -1749,10 +1657,10 @@ function inicializarCarrossel() {
     }
     catch (erro) {
 
-        console.warn(
-            '⚠️ Banners salvos inválidos.'
+        console.error(
+            '❌ Erro ao ler banners:',
+            erro
         );
-
 
         bannersSalvos = [];
 
@@ -1763,120 +1671,417 @@ function inicializarCarrossel() {
         bannersSalvos
             .filter(
                 banner =>
+                    banner &&
                     banner.ativo !== false
             )
             .sort(
-                (
+                function (
                     a,
                     b
-                ) =>
-                    (
-                        a.ordem ||
-                        1
+                ) {
+
+                    return (
+                        Number(
+                            a.ordem
+                        ) || 1
                     ) -
                     (
-                        b.ordem ||
-                        1
-                    )
+                        Number(
+                            b.ordem
+                        ) || 1
+                    );
+
+                }
             );
 
 
-    const CORES_BANNER = {
-
-        azul:
-            'linear-gradient(135deg, #2563eb, #1d4ed8)',
-
-        laranja:
-            'linear-gradient(135deg, #d85a30, #b8451f)',
-
-        escuro:
-            'linear-gradient(135deg, #0f172a, #334155)'
-
-    };
-
-
     // ========================================================
-    // BANNERS PERSONALIZADOS
+    // SE NÃO HOUVER BANNER PERSONALIZADO
     // ========================================================
 
     if (
-        bannersAtivos.length > 0
+        bannersAtivos.length === 0
     ) {
 
-        trilho.innerHTML =
-            bannersAtivos
-                .map(
-                    banner => {
+        console.log(
+            '🎠 Nenhum banner personalizado. Mantendo banners do HTML.'
+        );
 
-                        const fundo =
-                            banner.imagem
-                                ? `background-image:url(${banner.imagem});background-size:cover;background-position:center;`
-                                : `background:${CORES_BANNER[banner.cor] || CORES_BANNER.azul};`;
+    }
+    else {
 
+        // ====================================================
+        // LIMPAR TRILHO
+        // ====================================================
 
-                        return `
-
-                            <div
-                                class="slide"
-                                style="${fundo}"
-                            >
-
-                                ${
-                                    banner.badge
-                                        ? `
-                                            <span class="slide-badge">
-                                                ${banner.badge}
-                                            </span>
-                                          `
-                                        : ''
-                                }
+        trilho.innerHTML = '';
 
 
-                                <h2 class="slide-titulo">
-                                    ${banner.titulo}
-                                </h2>
+        // ====================================================
+        // CRIAR CADA BANNER
+        // ====================================================
+
+        bannersAtivos.forEach(
+            function (
+                banner
+            ) {
+
+                const slide =
+                    document.createElement(
+                        'div'
+                    );
 
 
-                                ${
-                                    banner.subtitulo
-                                        ? `
-                                            <p class="slide-subtitulo">
-                                                ${banner.subtitulo}
-                                            </p>
-                                          `
-                                        : ''
-                                }
+                slide.className =
+                    'slide';
 
 
-                                ${
-                                    banner.textoLink
-                                        ? `
-                                            <a
-                                                href="${
-                                                    banner.linkDestino ||
-                                                    '#'
-                                                }"
-                                                class="slide-link"
-                                            >
-                                                ${banner.textoLink}
-                                            </a>
-                                          `
-                                        : ''
-                                }
+                // ==================================================
+                // ESTRUTURA DO SLIDE
+                // ==================================================
 
-                            </div>
+                slide.style.position =
+                    'relative';
 
-                        `;
+                slide.style.overflow =
+                    'hidden';
 
-                    }
-                )
-                .join('');
+
+                // ==================================================
+                // FUNDO
+                // ==================================================
+
+                if (
+                    banner.imagem
+                ) {
+
+                    const imagemFundo =
+                        document.createElement(
+                            'div'
+                        );
+
+
+                    imagemFundo.className =
+                        'banner-imagem-fundo';
+
+
+                    imagemFundo.style.position =
+                        'absolute';
+
+
+                    imagemFundo.style.inset =
+                        '0';
+
+
+                    imagemFundo.style.width =
+                        '100%';
+
+
+                    imagemFundo.style.height =
+                        '100%';
+
+
+                    imagemFundo.style.backgroundImage =
+                        `url("${banner.imagem}")`;
+
+
+                    imagemFundo.style.backgroundSize =
+                        'cover';
+
+
+                    imagemFundo.style.backgroundPosition =
+                        'center';
+
+
+                    imagemFundo.style.backgroundRepeat =
+                        'no-repeat';
+
+
+                    imagemFundo.style.zIndex =
+                        '0';
+
+
+                    slide.appendChild(
+                        imagemFundo
+                    );
+
+
+                    // ==================================================
+                    // OVERLAY
+                    // ==================================================
+
+                    const overlay =
+                        document.createElement(
+                            'div'
+                        );
+
+
+                    overlay.className =
+                        'banner-overlay';
+
+
+                    overlay.style.position =
+                        'absolute';
+
+
+                    overlay.style.inset =
+                        '0';
+
+
+                    overlay.style.width =
+                        '100%';
+
+
+                    overlay.style.height =
+                        '100%';
+
+
+                    overlay.style.zIndex =
+                        '1';
+
+
+                    // Overlay escuro suave.
+                    // Ele garante leitura do texto branco.
+                    overlay.style.background =
+                        'linear-gradient(90deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.38) 45%, rgba(0,0,0,0.10) 100%)';
+
+
+                    slide.appendChild(
+                        overlay
+                    );
+
+                }
+                else {
+
+                    // ==================================================
+                    // SEM IMAGEM
+                    // ==================================================
+
+                    const cores = {
+
+                        azul:
+                            'linear-gradient(135deg, #2563eb, #1d4ed8)',
+
+                        laranja:
+                            'linear-gradient(135deg, #d85a30, #b8451f)',
+
+                        escuro:
+                            'linear-gradient(135deg, #0f172a, #334155)'
+
+                    };
+
+
+                    slide.style.background =
+                        cores[
+                            banner.cor
+                        ] ||
+                        cores.azul;
+
+                }
+
+
+                // ==================================================
+                // CONTEÚDO
+                // ==================================================
+
+                const conteudo =
+                    document.createElement(
+                        'div'
+                    );
+
+
+                conteudo.className =
+                    'banner-conteudo';
+
+
+                conteudo.style.position =
+                    'relative';
+
+
+                conteudo.style.zIndex =
+                    '2';
+
+
+                conteudo.style.height =
+                    '100%';
+
+
+                conteudo.style.display =
+                    'flex';
+
+
+                conteudo.style.flexDirection =
+                    'column';
+
+
+                conteudo.style.alignItems =
+                    'flex-start';
+
+
+                conteudo.style.justifyContent =
+                    'center';
+
+
+                // ==================================================
+                // BADGE
+                // ==================================================
+
+                if (
+                    banner.badge
+                ) {
+
+                    const badge =
+                        document.createElement(
+                            'span'
+                        );
+
+
+                    badge.className =
+                        'slide-badge';
+
+
+                    badge.textContent =
+                        banner.badge;
+
+
+                    conteudo.appendChild(
+                        badge
+                    );
+
+                }
+
+
+                // ==================================================
+                // TÍTULO
+                // ==================================================
+
+                const titulo =
+                    document.createElement(
+                        'h2'
+                    );
+
+
+                titulo.className =
+                    'slide-titulo';
+
+
+                titulo.textContent =
+                    banner.titulo ||
+                    '';
+
+
+                // Texto branco para funcionar
+                // sobre o overlay.
+
+                titulo.style.color =
+                    '#ffffff';
+
+
+                titulo.style.textShadow =
+                    '0 2px 8px rgba(0,0,0,0.55)';
+
+
+                conteudo.appendChild(
+                    titulo
+                );
+
+
+                // ==================================================
+                // SUBTÍTULO
+                // ==================================================
+
+                if (
+                    banner.subtitulo
+                ) {
+
+                    const subtitulo =
+                        document.createElement(
+                            'p'
+                        );
+
+
+                    subtitulo.className =
+                        'slide-subtitulo';
+
+
+                    subtitulo.textContent =
+                        banner.subtitulo;
+
+
+                    subtitulo.style.color =
+                        '#ffffff';
+
+
+                    subtitulo.style.textShadow =
+                        '0 2px 7px rgba(0,0,0,0.55)';
+
+
+                    conteudo.appendChild(
+                        subtitulo
+                    );
+
+                }
+
+
+                // ==================================================
+                // LINK
+                // ==================================================
+
+                if (
+                    banner.textoLink
+                ) {
+
+                    const link =
+                        document.createElement(
+                            'a'
+                        );
+
+
+                    link.className =
+                        'slide-link';
+
+
+                    link.textContent =
+                        banner.textoLink;
+
+
+                    link.href =
+                        banner.linkDestino ||
+                        '#';
+
+
+                    link.style.position =
+                        'relative';
+
+
+                    link.style.zIndex =
+                        '3';
+
+
+                    conteudo.appendChild(
+                        link
+                    );
+
+                }
+
+
+                slide.appendChild(
+                    conteudo
+                );
+
+
+                trilho.appendChild(
+                    slide
+                );
+
+            }
+        );
 
     }
 
 
     // ========================================================
-    // ELEMENTOS
+    // ELEMENTOS DO CARROSSEL
     // ========================================================
 
     const pontosContainer =
@@ -1885,14 +2090,17 @@ function inicializarCarrossel() {
         );
 
 
+    const slides =
+        trilho.querySelectorAll(
+            '.slide'
+        );
+
+
     const totalSlides =
-        document.querySelectorAll(
-            '#carrossel .slide'
-        ).length;
+        slides.length;
 
 
     if (
-        !pontosContainer ||
         totalSlides === 0
     ) {
 
@@ -1900,63 +2108,70 @@ function inicializarCarrossel() {
             '⚠️ Nenhum slide encontrado.'
         );
 
-
         return;
     }
 
 
-    let indiceAtual =
-        0;
+    let indiceAtual = 0;
 
-
-    let autoplayInterval;
+    let autoplayInterval = null;
 
 
     // ========================================================
     // PONTOS
     // ========================================================
 
-    pontosContainer.innerHTML =
-        '';
+    if (pontosContainer) {
+
+        pontosContainer.innerHTML = '';
 
 
-    for (
-        let i = 0;
-        i < totalSlides;
-        i++
-    ) {
+        for (
+            let i = 0;
+            i < totalSlides;
+            i++
+        ) {
 
-        const ponto =
-            document.createElement(
-                'button'
+            const ponto =
+                document.createElement(
+                    'button'
+                );
+
+
+            ponto.type =
+                'button';
+
+
+            ponto.className =
+                'ponto' +
+                (
+                    i === 0
+                        ? ' ativo'
+                        : ''
+                );
+
+
+            ponto.setAttribute(
+                'aria-label',
+                `Ir para o slide ${i + 1}`
             );
 
 
-        ponto.className =
-            'ponto' +
-            (
-                i === 0
-                    ? ' ativo'
-                    : ''
+            ponto.addEventListener(
+                'click',
+                function () {
+
+                    irParaSlide(i);
+
+                }
             );
 
 
-        ponto.setAttribute(
-            'aria-label',
-            `Ir para o slide ${i + 1}`
-        );
+            pontosContainer.appendChild(
+                ponto
+            );
 
-
-        ponto.addEventListener(
-            'click',
-            () =>
-                irParaSlide(i)
-        );
-
-
-        pontosContainer.appendChild(
-            ponto
-        );
+        }
 
     }
 
@@ -1981,24 +2196,28 @@ function inicializarCarrossel() {
             `translateX(-${indiceAtual * 100}%)`;
 
 
-        document
-            .querySelectorAll(
-                '#pontos .ponto'
-            )
-            .forEach(
-                (
-                    ponto,
-                    indicePonto
-                ) => {
+        if (pontosContainer) {
 
-                    ponto.classList.toggle(
-                        'ativo',
-                        indicePonto ===
-                        indiceAtual
-                    );
+            pontosContainer
+                .querySelectorAll(
+                    '.ponto'
+                )
+                .forEach(
+                    function (
+                        ponto,
+                        indicePonto
+                    ) {
 
-                }
-            );
+                        ponto.classList.toggle(
+                            'ativo',
+                            indicePonto ===
+                            indiceAtual
+                        );
+
+                    }
+                );
+
+        }
 
 
         reiniciarAutoplay();
@@ -2020,10 +2239,13 @@ function inicializarCarrossel() {
 
         btnProximo.addEventListener(
             'click',
-            () =>
+            function () {
+
                 irParaSlide(
                     indiceAtual + 1
-                )
+                );
+
+            }
         );
 
     }
@@ -2043,10 +2265,13 @@ function inicializarCarrossel() {
 
         btnAnterior.addEventListener(
             'click',
-            () =>
+            function () {
+
                 irParaSlide(
                     indiceAtual - 1
-                )
+                );
+
+            }
         );
 
     }
@@ -2068,10 +2293,13 @@ function inicializarCarrossel() {
 
         autoplayInterval =
             setInterval(
-                () =>
+                function () {
+
                     irParaSlide(
                         indiceAtual + 1
-                    ),
+                    );
+
+                },
                 4000
             );
 
@@ -2080,9 +2308,15 @@ function inicializarCarrossel() {
 
     function reiniciarAutoplay() {
 
-        clearInterval(
+        if (
             autoplayInterval
-        );
+        ) {
+
+            clearInterval(
+                autoplayInterval
+            );
+
+        }
 
 
         iniciarAutoplay();
@@ -2094,21 +2328,34 @@ function inicializarCarrossel() {
     // SWIPE
     // ========================================================
 
-    let posicaoInicial =
-        null;
+    let posicaoInicial = null;
 
 
     trilho.addEventListener(
         'touchstart',
-        evento => {
+        function (
+            evento
+        ) {
 
-            posicaoInicial =
-                evento.touches[0].clientX;
+            if (
+                evento.touches.length > 0
+            ) {
+
+                posicaoInicial =
+                    evento.touches[0].clientX;
+
+            }
 
 
-            clearInterval(
+            if (
                 autoplayInterval
-            );
+            ) {
+
+                clearInterval(
+                    autoplayInterval
+                );
+
+            }
 
         }
     );
@@ -2116,12 +2363,23 @@ function inicializarCarrossel() {
 
     trilho.addEventListener(
         'touchend',
-        evento => {
+        function (
+            evento
+        ) {
 
             if (
-                posicaoInicial ===
-                null
+                posicaoInicial === null
             ) {
+
+                return;
+            }
+
+
+            if (
+                evento.changedTouches.length === 0
+            ) {
+
+                posicaoInicial = null;
 
                 return;
             }
@@ -2161,8 +2419,7 @@ function inicializarCarrossel() {
             }
 
 
-            posicaoInicial =
-                null;
+            posicaoInicial = null;
 
         }
     );
@@ -2172,11 +2429,16 @@ function inicializarCarrossel() {
     // INICIAR
     // ========================================================
 
+    trilho.style.transform =
+        'translateX(0%)';
+
+
     iniciarAutoplay();
 
 
     console.log(
-        '🎠 Carrossel iniciado.'
+        `🎠 Carrossel iniciado com ${totalSlides} banner(s).`
     );
 
 }
+
