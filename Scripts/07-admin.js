@@ -1,4 +1,4 @@
-javascript
+
 // ============================================================
 // ZORAVISION - PAINEL ADMINISTRATIVO
 // ============================================================
@@ -596,107 +596,142 @@ function atualizarIndicadoresDashboard() {
     let pedidosEntregues = 0;
 
 
-    const hoje =
-        new Date();
+    const hoje = new Date();
 
-    const anoHoje =
-        hoje.getFullYear();
+    const anoHoje = hoje.getFullYear();
 
-    const mesHoje =
-        hoje.getMonth();
+    const mesHoje = hoje.getMonth();
 
-    const diaHoje =
-        hoje.getDate();
+    const diaHoje = hoje.getDate();
 
 
-    pedidosAdmin.forEach(
-        pedido => {
+    pedidosAdmin.forEach(pedido => {
 
-            const status =
-                String(
-                    pedido.status || ''
-                ).toLowerCase();
-
-
-            if (
-                status !== 'cancelado'
-            ) {
-
-                const dataPedido =
-                    new Date(
-                        pedido.created_at
-                    );
+        const status = String(
+            pedido.status || ''
+        )
+            .trim()
+            .toLowerCase();
 
 
-                if (
-                    dataPedido.getFullYear() === anoHoje &&
-                    dataPedido.getMonth() === mesHoje &&
-                    dataPedido.getDate() === diaHoje
-                ) {
+        console.log(
+            '📊 Contando pedido:',
+            pedido.numero_pedido || pedido.id,
+            'Status:',
+            status
+        );
 
-                    faturamentoHoje +=
-                        Number(
-                            pedido.total || 0
-                        );
 
-                }
+        // ====================================================
+        // FATURAMENTO DE HOJE
+        // ====================================================
 
-            }
+        if (status !== 'cancelado') {
+
+            const dataPedido = new Date(
+                pedido.created_at
+            );
 
 
             if (
-                status === 'pendente' ||
-                status === 'confirmado' ||
-                status === 'processando'
+                !Number.isNaN(dataPedido.getTime()) &&
+                dataPedido.getFullYear() === anoHoje &&
+                dataPedido.getMonth() === mesHoje &&
+                dataPedido.getDate() === diaHoje
             ) {
 
-                pedidosPendentes++;
-
-            }
-
-
-            if (
-                status === 'enviado'
-            ) {
-
-                pedidosACaminho++;
-
-            }
-
-
-            if (
-                status === 'entregue'
-            ) {
-
-                pedidosEntregues++;
+                faturamentoHoje += Number(
+                    pedido.total || 0
+                );
 
             }
 
         }
+
+
+        // ====================================================
+        // PEDIDOS PENDENTES
+        // ====================================================
+
+        if (
+            status === 'pendente' ||
+            status === 'confirmado' ||
+            status === 'processando'
+        ) {
+
+            pedidosPendentes++;
+
+        }
+
+
+        // ====================================================
+        // PEDIDOS A CAMINHO
+        // ====================================================
+
+        if (
+            status === 'enviado'
+        ) {
+
+            pedidosACaminho++;
+
+        }
+
+
+        // ====================================================
+        // PEDIDOS ENTREGUES
+        // ====================================================
+
+        if (
+            status === 'entregue'
+        ) {
+
+            pedidosEntregues++;
+
+        }
+
+    });
+
+
+    console.log(
+        '=========================================='
     );
 
+    console.log(
+        '📊 CONTADORES DO DASHBOARD'
+    );
+
+    console.log(
+        '💰 Faturamento hoje:',
+        faturamentoHoje
+    );
+
+    console.log(
+        '⏳ Pedidos pendentes:',
+        pedidosPendentes
+    );
+
+    console.log(
+        '🚚 Pedidos a caminho:',
+        pedidosACaminho
+    );
+
+    console.log(
+        '✅ Pedidos entregues:',
+        pedidosEntregues
+    );
+
+    console.log(
+        '=========================================='
+    );
+
+
+    // ========================================================
+    // FATURAMENTO
+    // ========================================================
 
     const elFaturamento =
         document.querySelector(
             '.card-kpi.destaque-financeiro .kpi-valor'
-        );
-
-
-    const elPedidosPendentes =
-        document.querySelector(
-            '.card-kpi:nth-child(2) .kpi-valor'
-        );
-
-
-    const elSubtextoPendentes =
-        document.querySelector(
-            '.card-kpi:nth-child(2) .kpi-subtexto'
-        );
-
-
-    const badgeContador =
-        document.querySelector(
-            '.contador-badge'
         );
 
 
@@ -710,6 +745,22 @@ function atualizarIndicadoresDashboard() {
     }
 
 
+    // ========================================================
+    // PEDIDOS PENDENTES
+    // ========================================================
+
+    const elPedidosPendentes =
+        document.querySelector(
+            '.card-kpi:nth-child(2) .kpi-valor'
+        );
+
+
+    const elSubtextoPendentes =
+        document.querySelector(
+            '.card-kpi:nth-child(2) .kpi-subtexto'
+        );
+
+
     if (elPedidosPendentes) {
 
         elPedidosPendentes.textContent =
@@ -720,10 +771,20 @@ function atualizarIndicadoresDashboard() {
 
     if (elSubtextoPendentes) {
 
-        elSubtextoPendentes.innerHTML =
+        elSubtextoPendentes.textContent =
             `📦 ${pedidosPendentes} pendentes • 🚚 ${pedidosACaminho} a caminho • ✅ ${pedidosEntregues} entregues`;
 
     }
+
+
+    // ========================================================
+    // BADGE DE PEDIDOS PARA SEPARAR
+    // ========================================================
+
+    const badgeContador =
+        document.querySelector(
+            '.contador-badge'
+        );
 
 
     if (badgeContador) {
@@ -733,66 +794,440 @@ function atualizarIndicadoresDashboard() {
 
     }
 
-}
 
+    // ========================================================
+    // ENCONTRAR CARD DE PEDIDOS ENTREGUES
+    // ========================================================
+
+    const cardsKpi =
+        document.querySelectorAll(
+            '.card-kpi'
+        );
+
+
+    cardsKpi.forEach(card => {
+
+        const textoCard =
+            String(
+                card.textContent || ''
+            )
+                .toLowerCase()
+                .trim();
+
+
+        // ----------------------------------------------------
+        // CARD DE ENTREGUES
+        // ----------------------------------------------------
+
+        if (
+            textoCard.includes('pedidos entregues') ||
+            textoCard.includes('pedido entregue') ||
+            textoCard.includes('entregues')
+        ) {
+
+            const valor =
+                card.querySelector(
+                    '.kpi-valor'
+                );
+
+
+            const subtexto =
+                card.querySelector(
+                    '.kpi-subtexto'
+                );
+
+
+            if (valor) {
+
+                valor.textContent =
+                    pedidosEntregues;
+
+            }
+
+
+            if (subtexto) {
+
+                subtexto.textContent =
+                    pedidosEntregues === 1
+                        ? '1 pedido entregue'
+                        : `${pedidosEntregues} pedidos entregues`;
+
+            }
+
+        }
+
+
+        // ----------------------------------------------------
+        // CARD DE PEDIDOS A CAMINHO
+        // ----------------------------------------------------
+
+        if (
+            textoCard.includes('a caminho') ||
+            textoCard.includes('em transporte') ||
+            textoCard.includes('enviados')
+        ) {
+
+            const valor =
+                card.querySelector(
+                    '.kpi-valor'
+                );
+
+
+            const subtexto =
+                card.querySelector(
+                    '.kpi-subtexto'
+                );
+
+
+            if (valor) {
+
+                valor.textContent =
+                    pedidosACaminho;
+
+            }
+
+
+            if (subtexto) {
+
+                subtexto.textContent =
+                    pedidosACaminho === 1
+                        ? '1 pedido a caminho'
+                        : `${pedidosACaminho} pedidos a caminho`;
+
+            }
+
+        }
+
+    });
+
+
+    // ========================================================
+    // CONTADORES COM IDs - CASO EXISTAM NO HTML
+    // ========================================================
+
+    const possiveisIdsEntregues = [
+
+        'pedidos-entregues',
+
+        'contador-entregues',
+
+        'total-entregues',
+
+        'kpi-entregues',
+
+        'pedidosEntregues'
+
+    ];
+
+
+    possiveisIdsEntregues.forEach(id => {
+
+        const elemento =
+            document.getElementById(id);
+
+
+        if (elemento) {
+
+            elemento.textContent =
+                pedidosEntregues;
+
+        }
+
+    });
+
+
+    const possiveisIdsCaminho = [
+
+        'pedidos-a-caminho',
+
+        'contador-a-caminho',
+
+        'total-a-caminho',
+
+        'kpi-a-caminho',
+
+        'pedidosACaminho'
+
+    ];
+
+
+    possiveisIdsCaminho.forEach(id => {
+
+        const elemento =
+            document.getElementById(id);
+
+
+        if (elemento) {
+
+            elemento.textContent =
+                pedidosACaminho;
+
+        }
+
+    });
+
+
+    const possiveisIdsPendentes = [
+
+        'pedidos-pendentes',
+
+        'contador-pendentes',
+
+        'total-pendentes',
+
+        'kpi-pendentes',
+
+        'pedidosPendentes'
+
+    ];
+
+
+    possiveisIdsPendentes.forEach(id => {
+
+        const elemento =
+            document.getElementById(id);
+
+
+        if (elemento) {
+
+            elemento.textContent =
+                pedidosPendentes;
+
+        }
+
+    });
+
+}
 
 // ============================================================
 // DASHBOARD VAZIO
 // ============================================================
 
-function atualizarDashboardVazio() {
+function atualizarIndicadoresDashboard() {
+
+    let faturamentoHoje = 0;
+
+    let pedidosPendentes = 0;
+
+    let pedidosACaminho = 0;
+
+    let pedidosEntregues = 0;
+
+
+    const hoje = new Date();
+
+    const anoHoje = hoje.getFullYear();
+
+    const mesHoje = hoje.getMonth();
+
+    const diaHoje = hoje.getDate();
+
+
+    pedidosAdmin.forEach(pedido => {
+
+        const status = String(
+            pedido.status || ''
+        ).trim().toLowerCase();
+
+
+        // ================================================
+        // FATURAMENTO DE HOJE
+        // ================================================
+
+        if (status !== 'cancelado') {
+
+            const dataPedido = new Date(
+                pedido.created_at
+            );
+
+
+            if (
+                !Number.isNaN(dataPedido.getTime()) &&
+                dataPedido.getFullYear() === anoHoje &&
+                dataPedido.getMonth() === mesHoje &&
+                dataPedido.getDate() === diaHoje
+            ) {
+
+                faturamentoHoje += Number(
+                    pedido.total || 0
+                );
+
+            }
+
+        }
+
+
+        // ================================================
+        // PEDIDOS PENDENTES
+        // ================================================
+
+        if (
+            status === 'pendente' ||
+            status === 'confirmado' ||
+            status === 'processando'
+        ) {
+
+            pedidosPendentes++;
+
+        }
+
+
+        // ================================================
+        // PEDIDOS A CAMINHO
+        // ================================================
+
+        if (
+            status === 'enviado'
+        ) {
+
+            pedidosACaminho++;
+
+        }
+
+
+        // ================================================
+        // PEDIDOS ENTREGUES
+        // ================================================
+
+        if (
+            status === 'entregue'
+        ) {
+
+            pedidosEntregues++;
+
+        }
+
+    });
+
+
+    // ================================================
+    // ELEMENTOS DO HTML
+    // ================================================
 
     const elFaturamento =
-        document.querySelector(
-            '.card-kpi.destaque-financeiro .kpi-valor'
+        document.getElementById(
+            'admin-faturamento'
         );
 
-    const elPedidos =
-        document.querySelector(
-            '.card-kpi:nth-child(2) .kpi-valor'
+
+    const elPedidosPendentes =
+        document.getElementById(
+            'admin-pedidos-pendentes'
         );
 
-    const elSubtexto =
-        document.querySelector(
-            '.card-kpi:nth-child(2) .kpi-subtexto'
+
+    const elPedidosACaminho =
+        document.getElementById(
+            'admin-pedidos-caminho'
         );
 
-    const badge =
-        document.querySelector(
-            '.contador-badge'
+
+    const elPedidosEntregues =
+        document.getElementById(
+            'admin-pedidos-entregues'
         );
 
+
+    const elResumoStatus =
+        document.getElementById(
+            'admin-resumo-status'
+        );
+
+
+    const badgeContador =
+        document.getElementById(
+            'contador-pedidos'
+        );
+
+
+    // ================================================
+    // ATUALIZAR FATURAMENTO
+    // ================================================
 
     if (elFaturamento) {
 
         elFaturamento.textContent =
-            'R$ 0,00';
+            formatarMoeda(
+                faturamentoHoje
+            );
 
     }
 
 
-    if (elPedidos) {
+    // ================================================
+    // ATUALIZAR PENDENTES
+    // ================================================
 
-        elPedidos.textContent =
-            '0 Pendentes';
+    if (elPedidosPendentes) {
 
-    }
-
-
-    if (elSubtexto) {
-
-        elSubtexto.textContent =
-            'Nenhum pedido registrado';
+        elPedidosPendentes.textContent =
+            `${pedidosPendentes} Pedidos`;
 
     }
 
 
-    if (badge) {
+    // ================================================
+    // ATUALIZAR A CAMINHO
+    // ================================================
 
-        badge.textContent =
-            '0 para separar';
+    if (elPedidosACaminho) {
+
+        elPedidosACaminho.textContent =
+            `${pedidosACaminho} Pedidos`;
 
     }
+
+
+    // ================================================
+    // ATUALIZAR ENTREGUES
+    // ================================================
+
+    if (elPedidosEntregues) {
+
+        elPedidosEntregues.textContent =
+            `${pedidosEntregues} Pedidos`;
+
+    }
+
+
+    // ================================================
+    // RESUMO DO CARD DE PENDENTES
+    // ================================================
+
+    if (elResumoStatus) {
+
+        elResumoStatus.textContent =
+            `📦 ${pedidosPendentes} pendentes • 🚚 ${pedidosACaminho} a caminho • ✅ ${pedidosEntregues} entregues`;
+
+    }
+
+
+    // ================================================
+    // BADGE DOS PEDIDOS
+    // ================================================
+
+    if (badgeContador) {
+
+        badgeContador.textContent =
+            `${pedidosAdmin.length} pedidos`;
+
+    }
+
+
+    // ================================================
+    // DEBUG
+    // ================================================
+
+    console.log(
+        '📊 CONTADORES DO DASHBOARD:',
+        {
+            faturamentoHoje,
+            pedidosPendentes,
+            pedidosACaminho,
+            pedidosEntregues,
+            totalPedidos: pedidosAdmin.length
+        }
+    );
 
 }
 
