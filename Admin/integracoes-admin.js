@@ -9,9 +9,10 @@
 // - OAuth 2.0 com PKCE
 // - Gerar code_verifier
 // - Gerar code_challenge
+// - Gerar state
+// - Salvar dados temporários do OAuth
 // - Redirecionar para autorização do Mercado Livre
-// - Detectar retorno OAuth
-// - Exibir status da integração
+// - Verificar conexão existente
 // ============================================================
 
 // ============================================================
@@ -20,6 +21,12 @@
 
 const MERCADO_LIVRE_CLIENT_ID =
 '8816875791365432';
+
+// IMPORTANTE:
+// O Mercado Livre deve retornar para esta página.
+//
+// O callback precisa estar na mesma origem do site,
+// porque o code_verifier está salvo no sessionStorage.
 
 const MERCADO_LIVRE_REDIRECT_URI =
 'https://rafaelmfernandes.github.io/Site-zora-vision/Admin/mercadolivre-callback.html';
@@ -30,6 +37,9 @@ const MERCADO_LIVRE_AUTH_URL =
 const CHAVE_PKCE_MERCADO_LIVRE =
 'zoravision_ml_code_verifier';
 
+const CHAVE_STATE_MERCADO_LIVRE =
+'zoravision_ml_oauth_state';
+
 // ============================================================
 // 2. SUPABASE
 // ============================================================
@@ -38,14 +48,21 @@ function obterSupabaseIntegracoes() {
 
 
 if (window.supabaseClient) {
+
     return window.supabaseClient;
+
 }
 
 if (window._supabase) {
+
     return window._supabase;
+
 }
 
-if (typeof window.obterSupabase === 'function') {
+if (
+    typeof window.obterSupabase ===
+    'function'
+) {
 
     try {
 
@@ -75,13 +92,17 @@ return null;
 // 3. BASE64 URL
 // ============================================================
 
-function base64UrlEncode(buffer) {
+function base64UrlEncode(
+buffer
+) {
 
 
 let binary = '';
 
 const bytes =
-    new Uint8Array(buffer);
+    new Uint8Array(
+        buffer
+    );
 
 for (
     let i = 0;
@@ -95,10 +116,21 @@ for (
 
 }
 
-return btoa(binary)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
+return btoa(
+    binary
+)
+    .replace(
+        /\+/g,
+        '-'
+    )
+    .replace(
+        /\//g,
+        '_'
+    )
+    .replace(
+        /=+$/,
+        ''
+    );
 
 
 }
@@ -115,16 +147,23 @@ const caracteres =
     'abcdefghijklmnopqrstuvwxyz' +
     '0123456789-._~';
 
+
 const tamanho = 64;
 
+
 const valores =
-    new Uint32Array(tamanho);
+    new Uint32Array(
+        tamanho
+    );
+
 
 crypto.getRandomValues(
     valores
 );
 
+
 let verifier = '';
+
 
 for (
     let i = 0;
@@ -139,6 +178,7 @@ for (
         ];
 
 }
+
 
 return verifier;
 
@@ -157,16 +197,19 @@ codeVerifier
 const encoder =
     new TextEncoder();
 
+
 const dados =
     encoder.encode(
         codeVerifier
     );
+
 
 const hash =
     await crypto.subtle.digest(
         'SHA-256',
         dados
     );
+
 
 return base64UrlEncode(
     hash
@@ -176,7 +219,32 @@ return base64UrlEncode(
 }
 
 // ============================================================
-// 6. SALVAR CODE VERIFIER
+// 6. GERAR STATE
+// ============================================================
+
+function gerarState() {
+
+
+const stateArray =
+    new Uint8Array(
+        32
+    );
+
+
+crypto.getRandomValues(
+    stateArray
+);
+
+
+return base64UrlEncode(
+    stateArray
+);
+
+
+}
+
+// ============================================================
+// 7. SALVAR CODE VERIFIER
 // ============================================================
 
 function salvarCodeVerifier(
@@ -191,11 +259,14 @@ try {
         codeVerifier
     );
 
+
     console.log(
         'Code verifier salvo no sessionStorage.'
     );
 
+
     return true;
+
 
 } catch (erro) {
 
@@ -203,6 +274,7 @@ try {
         'Erro ao salvar code verifier:',
         erro
     );
+
 
     return false;
 
@@ -212,7 +284,7 @@ try {
 }
 
 // ============================================================
-// 7. RECUPERAR CODE VERIFIER
+// 8. RECUPERAR CODE VERIFIER
 // ============================================================
 
 function obterCodeVerifier() {
@@ -239,7 +311,7 @@ try {
 }
 
 // ============================================================
-// 8. REMOVER CODE VERIFIER
+// 9. REMOVER CODE VERIFIER
 // ============================================================
 
 function removerCodeVerifier() {
@@ -264,7 +336,99 @@ try {
 }
 
 // ============================================================
-// 9. ATUALIZAR STATUS MERCADO LIVRE
+// 10. SALVAR STATE
+// ============================================================
+
+function salvarState(
+state
+) {
+
+
+try {
+
+    sessionStorage.setItem(
+        CHAVE_STATE_MERCADO_LIVRE,
+        state
+    );
+
+
+    console.log(
+        'State OAuth salvo.'
+    );
+
+
+    return true;
+
+
+} catch (erro) {
+
+    console.error(
+        'Erro ao salvar state:',
+        erro
+    );
+
+
+    return false;
+
+}
+
+
+}
+
+// ============================================================
+// 11. RECUPERAR STATE
+// ============================================================
+
+function obterState() {
+
+
+try {
+
+    return sessionStorage.getItem(
+        CHAVE_STATE_MERCADO_LIVRE
+    );
+
+} catch (erro) {
+
+    console.error(
+        'Erro ao recuperar state:',
+        erro
+    );
+
+    return null;
+
+}
+
+
+}
+
+// ============================================================
+// 12. REMOVER STATE
+// ============================================================
+
+function removerState() {
+
+
+try {
+
+    sessionStorage.removeItem(
+        CHAVE_STATE_MERCADO_LIVRE
+    );
+
+} catch (erro) {
+
+    console.error(
+        'Erro ao remover state:',
+        erro
+    );
+
+}
+
+
+}
+
+// ============================================================
+// 13. ATUALIZAR STATUS MERCADO LIVRE
 // ============================================================
 
 function atualizarStatusMercadoLivre(
@@ -277,64 +441,80 @@ const status =
         'status-mercado-livre'
     );
 
+
 const botao =
     document.getElementById(
         'btn-conectar-mercado-livre'
     );
 
+
 if (!status) {
+
     return;
+
 }
+
 
 if (conectado) {
 
     status.textContent =
         'Conectado';
 
+
     status.classList.remove(
         'status-desconectado'
     );
 
+
     status.classList.add(
         'status-conectado'
     );
+
 
     if (botao) {
 
         botao.textContent =
             'Mercado Livre conectado';
 
+
         botao.classList.remove(
             'btn-conectar'
         );
+
 
         botao.classList.add(
             'btn-conectado'
         );
 
     }
+
 
 } else {
 
     status.textContent =
         'Desconectado';
 
+
     status.classList.remove(
         'status-conectado'
     );
 
+
     status.classList.add(
         'status-desconectado'
     );
+
 
     if (botao) {
 
         botao.textContent =
             'Conectar Mercado Livre';
 
+
         botao.classList.remove(
             'btn-conectado'
         );
+
 
         botao.classList.add(
             'btn-conectar'
@@ -348,73 +528,7 @@ if (conectado) {
 }
 
 // ============================================================
-// 10. VERIFICAR RETORNO DO OAUTH
-// ============================================================
-
-function verificarRetornoMercadoLivre() {
-
-
-const url =
-    new URL(
-        window.location.href
-    );
-
-const code =
-    url.searchParams.get(
-        'code'
-    );
-
-const error =
-    url.searchParams.get(
-        'error'
-    );
-
-const errorDescription =
-    url.searchParams.get(
-        'error_description'
-    );
-
-if (error) {
-
-    console.error(
-        'Mercado Livre retornou erro:',
-        error,
-        errorDescription
-    );
-
-    alert(
-        'Não foi possível conectar ao Mercado Livre.\n\n' +
-        (
-            errorDescription ||
-            error
-        )
-    );
-
-    limparParametrosOAuth();
-
-    return false;
-
-}
-
-if (!code) {
-    return false;
-}
-
-console.log(
-    'Código OAuth do Mercado Livre detectado.'
-);
-
-console.log(
-    'Code recebido com sucesso.'
-);
-
-return true;
-
-
-}
-
-// ============================================================
-// 11. LIMPAR PARÂMETROS OAUTH
+// 14. LIMPAR PARÂMETROS OAUTH
 // ============================================================
 
 function limparParametrosOAuth() {
@@ -427,21 +541,26 @@ try {
             window.location.href
         );
 
+
     url.searchParams.delete(
         'code'
     );
+
 
     url.searchParams.delete(
         'error'
     );
 
+
     url.searchParams.delete(
         'error_description'
     );
 
+
     url.searchParams.delete(
         'state'
     );
+
 
     window.history.replaceState(
         {},
@@ -450,6 +569,7 @@ try {
         url.search +
         url.hash
     );
+
 
 } catch (erro) {
 
@@ -464,7 +584,7 @@ try {
 }
 
 // ============================================================
-// 12. CONECTAR MERCADO LIVRE
+// 15. CONECTAR MERCADO LIVRE
 // ============================================================
 
 async function conectarMercadoLivre() {
@@ -475,6 +595,7 @@ const botao =
         'btn-conectar-mercado-livre'
     );
 
+
 if (
     botao &&
     botao.disabled
@@ -484,19 +605,23 @@ if (
 
 }
 
+
 try {
 
     console.log(
         '============================================================'
     );
 
-    console.log(
-        'Iniciando conexão com Mercado Livre...'
-    );
 
     console.log(
-        'Fluxo OAuth 2.0 + PKCE'
+        'ZoraVision - Mercado Livre'
     );
+
+
+    console.log(
+        'Iniciando OAuth 2.0 + PKCE...'
+    );
+
 
     console.log(
         '============================================================'
@@ -508,6 +633,7 @@ try {
         botao.disabled =
             true;
 
+
         botao.textContent =
             'Preparando conexão...';
 
@@ -515,11 +641,12 @@ try {
 
 
     // --------------------------------------------------------
-    // GERAR VERIFIER
+    // GERAR CODE VERIFIER
     // --------------------------------------------------------
 
     const codeVerifier =
         gerarCodeVerifier();
+
 
     console.log(
         'Code verifier gerado.'
@@ -527,7 +654,7 @@ try {
 
 
     // --------------------------------------------------------
-    // GERAR CHALLENGE
+    // GERAR CODE CHALLENGE
     // --------------------------------------------------------
 
     const codeChallenge =
@@ -535,24 +662,26 @@ try {
             codeVerifier
         );
 
+
     console.log(
         'Code challenge gerado.'
     );
 
 
     // --------------------------------------------------------
-    // SALVAR VERIFIER
+    // SALVAR CODE VERIFIER
     // --------------------------------------------------------
 
-    const salvo =
+    const verifierSalvo =
         salvarCodeVerifier(
             codeVerifier
         );
 
-    if (!salvo) {
+
+    if (!verifierSalvo) {
 
         throw new Error(
-            'Não foi possível salvar o code verifier.'
+            'Não foi possível salvar o código de segurança PKCE.'
         );
 
     }
@@ -562,51 +691,75 @@ try {
     // GERAR STATE
     // --------------------------------------------------------
 
-    const stateArray =
-        new Uint8Array(32);
-
-    crypto.getRandomValues(
-        stateArray
-    );
-
     const state =
-        base64UrlEncode(
-            stateArray
+        gerarState();
+
+
+    const stateSalvo =
+        salvarState(
+            state
         );
 
-    sessionStorage.setItem(
-        'zoravision_ml_oauth_state',
+
+    if (!stateSalvo) {
+
+        removerCodeVerifier();
+
+
+        throw new Error(
+            'Não foi possível iniciar a validação de segurança.'
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // MONTAR PARÂMETROS
+    // --------------------------------------------------------
+
+    const parametros =
+        new URLSearchParams();
+
+
+    parametros.set(
+        'response_type',
+        'code'
+    );
+
+
+    parametros.set(
+        'client_id',
+        MERCADO_LIVRE_CLIENT_ID
+    );
+
+
+    parametros.set(
+        'redirect_uri',
+        MERCADO_LIVRE_REDIRECT_URI
+    );
+
+
+    parametros.set(
+        'code_challenge',
+        codeChallenge
+    );
+
+
+    parametros.set(
+        'code_challenge_method',
+        'S256'
+    );
+
+
+    parametros.set(
+        'state',
         state
     );
 
 
     // --------------------------------------------------------
-    // MONTAR URL DO MERCADO LIVRE
+    // URL FINAL
     // --------------------------------------------------------
-
-    const parametros =
-        new URLSearchParams({
-
-            response_type:
-                'code',
-
-            client_id:
-                MERCADO_LIVRE_CLIENT_ID,
-
-            redirect_uri:
-                MERCADO_LIVRE_REDIRECT_URI,
-
-            code_challenge:
-                codeChallenge,
-
-            code_challenge_method:
-                'S256',
-
-            state:
-                state
-
-        });
-
 
     const urlAutorizacao =
         MERCADO_LIVRE_AUTH_URL +
@@ -615,38 +768,49 @@ try {
 
 
     console.log(
-        'URL de autorização preparada.'
+        'URI de redirect:',
+        MERCADO_LIVRE_REDIRECT_URI
     );
+
 
     console.log(
-        'Redirecionando para o Mercado Livre...'
+        'State gerado.'
+    );
+
+
+    console.log(
+        'Redirecionando para Mercado Livre...'
     );
 
 
     // --------------------------------------------------------
-    // REDIRECIONAMENTO REAL
+    // REDIRECIONAMENTO
     // --------------------------------------------------------
 
-    window.location.href =
-        urlAutorizacao;
+    window.location.assign(
+        urlAutorizacao
+    );
 
 
 } catch (erro) {
 
     console.error(
-        'Erro ao iniciar OAuth do Mercado Livre:',
+        'Erro ao iniciar OAuth:',
         erro
     );
+
 
     if (botao) {
 
         botao.disabled =
             false;
 
+
         botao.textContent =
             'Conectar Mercado Livre';
 
     }
+
 
     alert(
         'Não foi possível iniciar a conexão com o Mercado Livre.\n\n' +
@@ -662,7 +826,7 @@ try {
 }
 
 // ============================================================
-// 13. PROCESSAR RETORNO
+// 16. PROCESSAR RETORNO CASO A PÁGINA RECEBA CALLBACK
 // ============================================================
 
 async function processarRetornoMercadoLivre() {
@@ -673,158 +837,46 @@ const url =
         window.location.href
     );
 
-const code =
+
+const sucesso =
     url.searchParams.get(
-        'code'
+        'mercadolivre'
     );
 
-const state =
-    url.searchParams.get(
-        'state'
-    );
-
-if (!code) {
-    return;
-}
-
-console.log(
-    'Processando retorno do Mercado Livre...'
-);
-
-
-// --------------------------------------------------------
-// VALIDAR STATE
-// --------------------------------------------------------
-
-const stateSalvo =
-    sessionStorage.getItem(
-        'zoravision_ml_oauth_state'
-    );
 
 if (
-    stateSalvo &&
-    state &&
-    stateSalvo !== state
+    sucesso ===
+    'conectado'
 ) {
 
-    console.error(
-        'State OAuth inválido.'
+    atualizarStatusMercadoLivre(
+        true
     );
 
-    alert(
-        'A validação de segurança da conexão falhou.'
-    );
 
     limparParametrosOAuth();
 
-    return;
-
-}
-
-
-// --------------------------------------------------------
-// RECUPERAR VERIFIER
-// --------------------------------------------------------
-
-const codeVerifier =
-    obterCodeVerifier();
-
-if (!codeVerifier) {
-
-    console.error(
-        'Code verifier não encontrado.'
-    );
-
-    alert(
-        'Não foi possível concluir a conexão.\n\n' +
-        'O código de segurança PKCE não foi encontrado. ' +
-        'Tente conectar novamente.'
-    );
-
-    limparParametrosOAuth();
 
     return;
 
 }
 
 
-console.log(
-    'Code verifier recuperado.'
-);
-
-
-// --------------------------------------------------------
-// IMPORTANTE
-// --------------------------------------------------------
-//
-// Neste momento NÃO vamos fazer fetch para a Edge Function.
-//
-// O Mercado Livre deve redirecionar diretamente para:
-//
-// mercadolivre-oauth
-//
-// A Edge Function receberá o "code".
-//
-// O code_verifier precisará ser enviado para o backend
-// de forma segura no próximo passo.
-//
-// --------------------------------------------------------
-
-
-console.log(
-    'Código OAuth recebido.'
-);
-
-console.log(
-    'PKCE validado no navegador.'
-);
-
-
 }
 
 // ============================================================
-// 14. CONFIGURAR BOTÃO MERCADO LIVRE
-// ============================================================
-
-function configurarBotaoMercadoLivre() {
-
-
-const botao =
-    document.getElementById(
-        'btn-conectar-mercado-livre'
-    );
-
-if (!botao) {
-
-    console.warn(
-        'Botão do Mercado Livre não encontrado.'
-    );
-
-    return;
-
-}
-
-botao.addEventListener(
-    'click',
-    conectarMercadoLivre
-);
-
-
-}
-
-// ============================================================
-// 15. VERIFICAR CONEXÃO EXISTENTE
+// 17. VERIFICAR CONEXÃO EXISTENTE
 // ============================================================
 
 async function verificarConexaoMercadoLivre() {
 
 
 /*
- * Nesta etapa ainda não consultamos tokens.
+ * Neste momento o status ainda será controlado
+ * pela tabela de integrações quando a Edge Function
+ * estiver salvando a conexão no Supabase.
  *
- * Depois que a Edge Function estiver salvando
- * a conexão no Supabase, esta função passará a
- * consultar a tabela de integrações.
+ * Por enquanto iniciamos como desconectado.
  */
 
 atualizarStatusMercadoLivre(
@@ -835,7 +887,40 @@ atualizarStatusMercadoLivre(
 }
 
 // ============================================================
-// 16. INICIALIZAÇÃO
+// 18. CONFIGURAR BOTÃO
+// ============================================================
+
+function configurarBotaoMercadoLivre() {
+
+
+const botao =
+    document.getElementById(
+        'btn-conectar-mercado-livre'
+    );
+
+
+if (!botao) {
+
+    console.warn(
+        'Botão do Mercado Livre não encontrado.'
+    );
+
+
+    return;
+
+}
+
+
+botao.addEventListener(
+    'click',
+    conectarMercadoLivre
+);
+
+
+}
+
+// ============================================================
+// 19. INICIALIZAÇÃO
 // ============================================================
 
 document.addEventListener(
@@ -847,13 +932,21 @@ async function() {
         '============================================================'
     );
 
+
     console.log(
         'ZoraVision - Integrações'
     );
 
+
     console.log(
-        'Inicializando integração Mercado Livre...'
+        'Inicializando painel...'
     );
+
+
+    console.log(
+        'Mercado Livre OAuth 2.0 + PKCE'
+    );
+
 
     console.log(
         '============================================================'
@@ -866,21 +959,11 @@ async function() {
     await verificarConexaoMercadoLivre();
 
 
-    /*
-     * Detecta se esta página recebeu um callback OAuth.
-     *
-     * Normalmente, com a configuração atual,
-     * o Mercado Livre deverá enviar o usuário
-     * diretamente para a Edge Function.
-     */
-
-    verificarRetornoMercadoLivre();
-
-    processarRetornoMercadoLivre();
+    await processarRetornoMercadoLivre();
 
 
     console.log(
-        'Inicialização das integrações finalizada.'
+        'Inicialização concluída.'
     );
 
 }
@@ -889,7 +972,7 @@ async function() {
 );
 
 // ============================================================
-// 17. FUNÇÕES GLOBAIS
+// 20. FUNÇÕES GLOBAIS
 // ============================================================
 
 window.conectarMercadoLivre =
