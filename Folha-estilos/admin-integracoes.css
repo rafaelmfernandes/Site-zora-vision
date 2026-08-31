@@ -3,11 +3,6 @@ ZORAVISION - INTEGRAÇÕES ADMINISTRATIVAS
 Arquivo: Folha-estilos/admin-integracoes.css
 ============================================================ */
 
-/* ============================================================
-
-1. RESET
-   ============================================================ */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -27,7 +22,7 @@ line-height: 1.5;
 }
 
 /* ============================================================
-2. CABEÇALHO
+CABEÇALHO
 ============================================================ */
 
 .admin-header {
@@ -110,7 +105,7 @@ display: inline-block;
 }
 
 /* ============================================================
-3. CONTAINER
+CONTAINER
 ============================================================ */
 
 .integracoes-container {
@@ -120,7 +115,7 @@ padding: 42px 0 60px;
 }
 
 /* ============================================================
-4. TOPO
+TOPO
 ============================================================ */
 
 .integracoes-topo {
@@ -150,7 +145,7 @@ font-size: 15px;
 }
 
 /* ============================================================
-5. AVISO
+AVISO
 ============================================================ */
 
 .integracao-aviso {
@@ -188,7 +183,7 @@ font-size: 12px;
 }
 
 /* ============================================================
-6. CARD DE INTEGRAÇÃO
+CARD
 ============================================================ */
 
 .integracao-card {
@@ -256,6 +251,10 @@ font-size: 18px;
 line-height: 1.2;
 }
 
+/* ============================================================
+STATUS
+============================================================ */
+
 .integracao-status {
 flex-shrink: 0;
 display: inline-flex;
@@ -283,7 +282,7 @@ color: #be123c;
 }
 
 /* ============================================================
-7. CONTEÚDO
+CONTEÚDO
 ============================================================ */
 
 .integracao-card-conteudo {
@@ -317,52 +316,61 @@ font-weight: 600;
 }
 
 /* ============================================================
-8. AÇÕES
+ÁREA DOS BOTÕES
 ============================================================ */
 
 .integracao-card-acoes {
 padding: 15px 21px 20px;
 border-top: 1px solid #eef0f2;
+
+
 display: flex;
 align-items: center;
 justify-content: flex-end;
-gap: 10px;
 flex-wrap: wrap;
+gap: 10px;
+
+
 }
 
 /* ============================================================
-9. BOTÕES DE INTEGRAÇÃO
+BOTÕES
 ============================================================ */
 
 .btn-integracao {
 min-height: 40px;
-padding: 0 17px;
-border-radius: 9px;
-font-family: Arial, Helvetica, sans-serif;
-font-size: 13px;
-font-weight: 700;
-line-height: 1;
-cursor: pointer;
-transition:
-background 0.2s ease,
-border-color 0.2s ease,
-color 0.2s ease,
-box-shadow 0.2s ease,
-transform 0.15s ease;
-text-decoration: none;
+padding: 0 16px;
+
+
 display: inline-flex;
 align-items: center;
 justify-content: center;
-white-space: nowrap;
+gap: 7px;
+
+border-radius: 9px;
+font-size: 13px;
+font-weight: 700;
+
+cursor: pointer;
+transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+
 }
 
 .btn-integracao:hover {
 transform: translateY(-1px);
 }
 
-/* ============================================================
-10. BOTÃO CONECTAR
-============================================================ */
+.btn-integracao:active {
+transform: translateY(0);
+}
+
+/* CONECTAR */
 
 .btn-conectar {
 border: 1px solid #171717;
@@ -373,140 +381,117 @@ color: #ffffff;
 .btn-conectar:hover {
 background: #333333;
 border-color: #333333;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.btn-conectar:disabled {
-opacity: 0.6;
-cursor: not-allowed;
-transform: none;
-box-shadow: none;
-}
-
-/* ============================================================
-11. BOTÃO CONECTADO
-============================================================ */
+/* CONECTADO */
 
 .btn-conectado {
 border: 1px solid #d1d5db;
-background: #f9fafb;
-color: #374151;
+background: #f3f4f6;
+color: #555b63;
+cursor: default;
 }
 
 .btn-conectado:hover {
-background: #f3f4f6;
-border-color: #cfd3d8;
+transform: none;
 }
 
-/* ============================================================
-12. BOTÃO IMPORTAR PRODUTOS
-============================================================ */
+/* IMPORTAR */
 
-.btn-importar-produtos {
+.btn-importar {
+border: 1px solid #171717;
+background: #ffffff;
+color: #171717;
+}
+
+.btn-importar:hover {
+background: #f3f4f6;
+}
+
+/* GERENCIAR */
+
+.btn-gerenciar {
 border: 1px solid #171717;
 background: #171717;
 color: #ffffff;
 }
 
-.btn-importar-produtos:hover {
+.btn-gerenciar:hover {
 background: #333333;
 border-color: #333333;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
-.btn-importar-produtos:disabled {
+/* DESABILITADO */
+
+.btn-integracao:disabled {
 opacity: 0.6;
 cursor: not-allowed;
-transform: none;
-box-shadow: none;
 }
 
-/* ============================================================
-13. BOTÃO GERENCIAR PRODUTOS
-============================================================ */
-
-.btn-gerenciar-produtos {
-border: 1px solid #d9dde2;
-background: #ffffff;
-color: #252a31;
-}
-
-.btn-gerenciar-produtos:hover {
-background: #f6f7f9;
-border-color: #c8cdd3;
-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
-}
-
-/* ============================================================
-14. BOTÃO SECUNDÁRIO
-============================================================ */
-
-.btn-secundario {
-border: 1px solid #d9dde2;
-background: #ffffff;
-color: #333333;
-}
-
-.btn-secundario:hover {
-background: #f6f7f9;
-border-color: #c8cdd3;
-}
-
-/* ============================================================
-15. BOTÃO INDISPONÍVEL
-============================================================ */
-
-.btn-indisponivel {
-border: 1px solid #e1e4e8;
-background: #f3f4f6;
-color: #8a9098;
-cursor: not-allowed;
+.btn-integracao:disabled:hover {
 transform: none;
 }
 
-.btn-indisponivel:hover {
-transform: none;
-box-shadow: none;
-}
-
 /* ============================================================
-16. ÁREA DE AÇÕES DO MERCADO LIVRE
+RESULTADO DA IMPORTAÇÃO
 ============================================================ */
 
-.mercado-livre-acoes {
-display: flex;
-align-items: center;
-justify-content: flex-end;
-gap: 10px;
-flex-wrap: wrap;
+.resultado-importacao {
+margin-top: 18px;
+padding: 14px 16px;
+
+
+border: 1px solid #e5e7eb;
+border-radius: 10px;
+
+background: #f8fafc;
+color: #4b5563;
+
+font-size: 12px;
+line-height: 1.6;
+
+
 }
 
 /* ============================================================
-17. FUTURAS INTEGRAÇÕES
+FUTURAS INTEGRAÇÕES
 ============================================================ */
 
 .integracoes-futuras {
 display: flex;
 align-items: center;
 gap: 15px;
+
+
 margin-top: 24px;
 padding: 20px;
+
 border: 1px dashed #d7dbe0;
 border-radius: 14px;
+
 background: transparent;
+
+
 }
 
 .futuras-icone {
 width: 42px;
 height: 42px;
+
+
 flex-shrink: 0;
+
 display: flex;
 align-items: center;
 justify-content: center;
+
 border: 1px solid #dfe3e8;
 border-radius: 10px;
+
 color: #6b7280;
 font-size: 22px;
+
+
 }
 
 .integracoes-futuras h2 {
@@ -520,30 +505,42 @@ font-size: 12px;
 }
 
 /* ============================================================
-18. SEGURANÇA
+SEGURANÇA
 ============================================================ */
 
 .seguranca-card {
 display: flex;
 align-items: flex-start;
 gap: 14px;
+
+
 margin-top: 18px;
 padding: 19px 20px;
+
 background: #ffffff;
 border: 1px solid #e5e7eb;
 border-radius: 14px;
+
+
 }
 
 .seguranca-icone {
 width: 38px;
 height: 38px;
+
+
 flex-shrink: 0;
+
 display: flex;
 align-items: center;
 justify-content: center;
+
 border-radius: 9px;
 background: #f3f4f6;
+
 font-size: 18px;
+
+
 }
 
 .seguranca-card h2 {
@@ -558,19 +555,25 @@ line-height: 1.55;
 }
 
 /* ============================================================
-19. RODAPÉ
+RODAPÉ
 ============================================================ */
 
 .admin-footer {
 width: min(980px, calc(100% - 32px));
+
+
 margin: 0 auto;
 padding: 24px 0 35px;
+
 display: flex;
 align-items: center;
 justify-content: space-between;
 gap: 15px;
+
 color: #6b7280;
 font-size: 13px;
+
+
 }
 
 .admin-footer span {
@@ -583,31 +586,22 @@ font-size: 12px;
 }
 
 /* ============================================================
-20. RESPONSIVIDADE
+RESPONSIVIDADE
 ============================================================ */
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
 
 
 .integracao-card-acoes {
     justify-content: stretch;
 }
 
-.mercado-livre-acoes {
-    width: 100%;
-    justify-content: stretch;
-}
-
 .btn-integracao {
-    flex: 1 1 auto;
+    flex: 1 1 200px;
 }
 
 
 }
-
-/* ============================================================
-21. RESPONSIVIDADE PRINCIPAL
-============================================================ */
 
 @media (max-width: 600px) {
 
@@ -645,13 +639,6 @@ font-size: 12px;
 .integracao-card-acoes {
     flex-direction: column;
     align-items: stretch;
-    justify-content: stretch;
-}
-
-.mercado-livre-acoes {
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
 }
 
 .btn-integracao {
@@ -671,10 +658,6 @@ font-size: 12px;
 
 
 }
-
-/* ============================================================
-22. CELULARES PEQUENOS
-============================================================ */
 
 @media (max-width: 420px) {
 
@@ -701,51 +684,5 @@ font-size: 12px;
     padding-right: 16px;
 }
 
-.btn-integracao {
-    min-height: 42px;
-}
 
-
-}
-
-/* ============================================================
-23. ESTADO DE CARREGAMENTO
-============================================================ */
-
-.btn-integracao.carregando {
-position: relative;
-pointer-events: none;
-opacity: 0.7;
-}
-
-.btn-integracao.carregando::after {
-content: "";
-width: 13px;
-height: 13px;
-margin-left: 8px;
-border: 2px solid currentColor;
-border-right-color: transparent;
-border-radius: 50%;
-animation: integracao-spinner 0.7s linear infinite;
-}
-
-@keyframes integracao-spinner {
-
-
-to {
-    transform: rotate(360deg);
-}
-
-
-}
-
-/* ============================================================
-24. ACESSIBILIDADE
-============================================================ */
-
-.btn-integracao:focus-visible,
-.btn-voltar:focus-visible,
-.btn-sair:focus-visible {
-outline: 2px solid #171717;
-outline-offset: 2px;
 }

@@ -4,12 +4,12 @@
 
 <head>
 
-
 <meta charset="UTF-8">
 
 <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+
 >
 
 <title>Integrações - ZoraVision</title>
@@ -18,7 +18,6 @@
     rel="stylesheet"
     href="../Folha-estilos/admin-integracoes.css"
 >
-
 
 </head>
 
@@ -67,35 +66,23 @@
 <main class="integracoes-container">
 
 
-<!-- =====================================================
-     TOPO
-     ===================================================== -->
-
 <section class="integracoes-topo">
 
-    <div>
+    <span class="section-label">
+        SISTEMA
+    </span>
 
-        <span class="section-label">
-            SISTEMA
-        </span>
+    <h1>
+        Integrações
+    </h1>
 
-        <h1>
-            Integrações
-        </h1>
-
-        <p>
-            Conecte o ZoraVision a plataformas externas para
-            sincronizar produtos, estoque, preços e pedidos.
-        </p>
-
-    </div>
+    <p>
+        Conecte o ZoraVision a plataformas externas para
+        sincronizar produtos, estoque, preços e pedidos.
+    </p>
 
 </section>
 
-
-<!-- =====================================================
-     AVISO
-     ===================================================== -->
 
 <section class="integracao-aviso">
 
@@ -196,10 +183,6 @@
     </div>
 
 
-    <!-- =================================================
-         BOTÕES
-         ================================================= -->
-
     <div class="integracao-card-acoes">
 
         <button
@@ -226,7 +209,7 @@
             class="btn-integracao btn-gerenciar"
             id="btn-gerenciar-produtos-mercado-livre"
         >
-            Gerenciar produtos do Mercado Livre
+            📦 Gerenciar produtos
         </button>
 
     </div>
@@ -383,23 +366,11 @@
 
 </footer>
 
-<!-- =========================================================
-     SUPABASE
-     ========================================================= -->
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../Supabase/supabase.js"></script>
 
-<!-- =========================================================
-     ADMINISTRAÇÃO DE INTEGRAÇÕES
-     ========================================================= -->
-
 <script src="integracoes-admin.js"></script>
-
-<!-- =========================================================
-     PROTEÇÃO DO PAINEL
-     ========================================================= -->
 
 <script src="Painel-admin.js"></script>
 
