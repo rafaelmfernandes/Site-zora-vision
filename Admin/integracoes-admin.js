@@ -1,294 +1,326 @@
-/* ============================================================
-ZORAVISION - INTEGRAÇÕES ADMINISTRATIVAS
-Arquivo: Admin/integracoes-admin.js
+// ============================================================
+// ZORAVISION - ADMINISTRAÇÃO DE INTEGRAÇÕES
+// ============================================================
+// Arquivo: Admin/integracoes-admin.js
+//
+// Responsabilidades:
+// - Verificar acesso ao painel administrativo
+// - Verificar conexão com Mercado Livre
+// - Iniciar OAuth do Mercado Livre
+// - Atualizar status da integração
+// - Preparar estrutura para futuras integrações
+//
+// IMPORTANTE:
+// - NÃO colocar Client Secret neste arquivo.
+// - O Client Secret fica somente no Supabase Edge Function.
+// ============================================================
 
-Responsabilidades:
+// ============================================================
+// 1. CONFIGURAÇÕES
+// ============================================================
 
-* Gerenciar integrações do painel administrativo
-* Iniciar OAuth do Mercado Livre
-* Utilizar PKCE
-* Gerar code_verifier
-* Gerar code_challenge
-* Redirecionar para autorização do Mercado Livre
-  ============================================================ */
-
-/* ============================================================
-
-1. CONFIGURAÇÃO DO MERCADO LIVRE
-   ============================================================ */
-
-const MERCADO_LIVRE_CLIENT_ID =
-'8816875791365432';
-
-const MERCADO_LIVRE_REDIRECT_URI =
-'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-oauth';
-
-const MERCADO_LIVRE_AUTH_URL =
-'https://auth.mercadolivre.com.br/authorization';
-
-/* ============================================================
-2. GERAR STRING ALEATÓRIA SEGURA
-============================================================ */
-
-function gerarStringAleatoriaMercadoLivre(tamanho = 64) {
+const CONFIG_MERCADO_LIVRE = {
 
 
-const caracteres =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+CLIENT_ID:
+    '8816875791365432',
 
-const valores =
-    new Uint8Array(tamanho);
+REDIRECT_URI:
+    'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-oauth',
 
-crypto.getRandomValues(valores);
+AUTH_URL:
+    'https://auth.mercadolivre.com.br/authorization'
 
-let resultado = '';
 
-for (let i = 0; i < valores.length; i++) {
+};
 
-    resultado +=
-        caracteres[
-            valores[i] % caracteres.length
-        ];
+// ============================================================
+// 2. VARIÁVEIS
+// ============================================================
 
+let supabaseIntegracoes = null;
+
+// ============================================================
+// 3. SUPABASE
+// ============================================================
+
+function obterSupabaseIntegracoes() {
+
+
+if (window.supabaseClient) {
+    return window.supabaseClient;
 }
 
-return resultado;
-
-
+if (window._supabase) {
+    return window._supabase;
 }
 
-/* ============================================================
-3. BASE64 URL SAFE
-============================================================ */
+if (
+    typeof window.obterSupabase === 'function'
+) {
 
-function base64UrlEncodeMercadoLivre(buffer) {
+    try {
 
+        return window.obterSupabase();
 
-const bytes =
-    new Uint8Array(buffer);
+    } catch (erro) {
 
-let stringBinaria = '';
-
-bytes.forEach(
-    byte => {
-
-        stringBinaria +=
-            String.fromCharCode(byte);
+        console.error(
+            'Erro ao obter Supabase:',
+            erro
+        );
 
     }
+
+}
+
+console.error(
+    'Cliente Supabase não encontrado.'
 );
 
-return btoa(stringBinaria)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/g, '');
+return null;
 
 
 }
 
-/* ============================================================
-4. GERAR CODE CHALLENGE
-============================================================ */
+// ============================================================
+// 4. ELEMENTOS
+// ============================================================
 
-async function gerarCodeChallengeMercadoLivre(
-codeVerifier
+function obterElementosMercadoLivre() {
+
+
+return {
+
+    botao:
+        document.getElementById(
+            'btn-conectar-mercado-livre'
+        ),
+
+    status:
+        document.getElementById(
+            'status-mercado-livre'
+        )
+
+};
+
+
+}
+
+// ============================================================
+// 5. ATUALIZAR STATUS
+// ============================================================
+
+function atualizarStatusMercadoLivre(
+conectado
 ) {
 
 
-const encoder =
-    new TextEncoder();
+const elementos =
+    obterElementosMercadoLivre();
 
-const dados =
-    encoder.encode(
-        codeVerifier
+if (!elementos.status) {
+    return;
+}
+
+if (conectado) {
+
+    elementos.status.textContent =
+        'Conectado';
+
+    elementos.status.classList.remove(
+        'status-desconectado'
     );
 
-const hash =
-    await crypto.subtle.digest(
-        'SHA-256',
-        dados
+    elementos.status.classList.add(
+        'status-conectado'
     );
 
-return base64UrlEncodeMercadoLivre(
-    hash
-);
+} else {
+
+    elementos.status.textContent =
+        'Desconectado';
+
+    elementos.status.classList.remove(
+        'status-conectado'
+    );
+
+    elementos.status.classList.add(
+        'status-desconectado'
+    );
+
+}
 
 
 }
 
-/* ============================================================
-5. INICIAR OAUTH MERCADO LIVRE
-============================================================ */
+// ============================================================
+// 6. VERIFICAR CONEXÃO
+// ============================================================
+//
+// Nesta primeira etapa verificamos se existe uma conexão
+// salva futuramente no Supabase.
+//
+// A tabela será utilizada quando concluirmos o OAuth.
+//
+// Caso a tabela ainda não exista, mantemos o status
+// como "Desconectado" sem quebrar a página.
+// ============================================================
 
-async function conectarMercadoLivre() {
+async function verificarConexaoMercadoLivre() {
 
 
-console.log(
-    '============================================================'
-);
+const supabase =
+    obterSupabaseIntegracoes();
 
-console.log(
-    'ZoraVision - Iniciando conexão com Mercado Livre'
-);
+if (!supabase) {
 
-console.log(
-    '============================================================'
-);
+    atualizarStatusMercadoLivre(
+        false
+    );
 
+    return false;
+
+}
 
 try {
 
-    if (
-        !window.crypto ||
-        !window.crypto.subtle
-    ) {
+    // ====================================================
+    // FUTURA CONSULTA DA CONEXÃO
+    // ====================================================
+    //
+    // Quando criarmos a tabela de integrações,
+    // esta parte será ativada.
+    //
+    // Por enquanto não fazemos uma consulta que possa
+    // gerar erro caso a tabela ainda não exista.
+    // ====================================================
 
-        throw new Error(
-            'Seu navegador não suporta os recursos de segurança necessários para o OAuth PKCE.'
-        );
-
-    }
-
-
-    /* ====================================================
-    GERAR CODE VERIFIER
-    ==================================================== */
-
-    const codeVerifier =
-        gerarStringAleatoriaMercadoLivre(
-            64
-        );
-
-
-    console.log(
-        'Code verifier gerado.'
+    atualizarStatusMercadoLivre(
+        false
     );
 
-
-    /* ====================================================
-    GERAR CODE CHALLENGE
-    ==================================================== */
-
-    const codeChallenge =
-        await gerarCodeChallengeMercadoLivre(
-            codeVerifier
-        );
-
-
-    console.log(
-        'Code challenge gerado.'
-    );
-
-
-    /* ====================================================
-    SALVAR CODE VERIFIER TEMPORARIAMENTE
-    ==================================================== */
-
-    sessionStorage.setItem(
-        'mercado_livre_code_verifier',
-        codeVerifier
-    );
-
-
-    /* ====================================================
-    SALVAR MOMENTO DA AUTORIZAÇÃO
-    ==================================================== */
-
-    sessionStorage.setItem(
-        'mercado_livre_oauth_inicio',
-        String(
-            Date.now()
-        )
-    );
-
-
-    /* ====================================================
-    MONTAR URL DE AUTORIZAÇÃO
-    ==================================================== */
-
-    const parametros =
-        new URLSearchParams();
-
-
-    parametros.set(
-        'response_type',
-        'code'
-    );
-
-
-    parametros.set(
-        'client_id',
-        MERCADO_LIVRE_CLIENT_ID
-    );
-
-
-    parametros.set(
-        'redirect_uri',
-        MERCADO_LIVRE_REDIRECT_URI
-    );
-
-
-    parametros.set(
-        'code_challenge',
-        codeChallenge
-    );
-
-
-    parametros.set(
-        'code_challenge_method',
-        'S256'
-    );
-
-
-    const urlAutorizacao =
-        MERCADO_LIVRE_AUTH_URL +
-        '?' +
-        parametros.toString();
-
-
-    console.log(
-        'Redirecionando para autorização do Mercado Livre...'
-    );
-
-
-    console.log(
-        'Redirect URI:',
-        MERCADO_LIVRE_REDIRECT_URI
-    );
-
-
-    /* ====================================================
-    REDIRECIONAR
-    ==================================================== */
-
-    window.location.href =
-        urlAutorizacao;
-
+    return false;
 
 } catch (erro) {
 
     console.error(
-        'Erro ao iniciar OAuth do Mercado Livre:',
+        'Erro ao verificar conexão do Mercado Livre:',
         erro
     );
 
-
-    alert(
-        'Não foi possível iniciar a conexão com o Mercado Livre.\n\n' +
-        (
-            erro?.message ||
-            'Erro desconhecido.'
-        )
+    atualizarStatusMercadoLivre(
+        false
     );
 
+    return false;
+
 }
 
 
 }
 
-/* ============================================================
-6. CONFIGURAR BOTÃO MERCADO LIVRE
-============================================================ */
+// ============================================================
+// 7. GERAR URL DO OAUTH
+// ============================================================
+
+function gerarUrlOAuthMercadoLivre() {
+
+
+const parametros =
+    new URLSearchParams({
+
+        response_type:
+            'code',
+
+        client_id:
+            CONFIG_MERCADO_LIVRE.CLIENT_ID,
+
+        redirect_uri:
+            CONFIG_MERCADO_LIVRE.REDIRECT_URI
+
+    });
+
+return (
+    CONFIG_MERCADO_LIVRE.AUTH_URL +
+    '?' +
+    parametros.toString()
+);
+
+
+}
+
+// ============================================================
+// 8. CONECTAR MERCADO LIVRE
+// ============================================================
+
+function conectarMercadoLivre() {
+
+
+const botao =
+    document.getElementById(
+        'btn-conectar-mercado-livre'
+    );
+
+if (botao) {
+
+    botao.disabled = true;
+
+    botao.textContent =
+        'Conectando...';
+
+}
+
+try {
+
+    const url =
+        gerarUrlOAuthMercadoLivre();
+
+    console.log(
+        'Iniciando OAuth do Mercado Livre.'
+    );
+
+    console.log(
+        'Client ID:',
+        CONFIG_MERCADO_LIVRE.CLIENT_ID
+    );
+
+    console.log(
+        'Redirect URI:',
+        CONFIG_MERCADO_LIVRE.REDIRECT_URI
+    );
+
+    window.location.href =
+        url;
+
+} catch (erro) {
+
+    console.error(
+        'Erro ao iniciar OAuth:',
+        erro
+    );
+
+    alert(
+        'Não foi possível iniciar a conexão com o Mercado Livre.'
+    );
+
+    if (botao) {
+
+        botao.disabled = false;
+
+        botao.textContent =
+            'Conectar Mercado Livre';
+
+    }
+
+}
+
+
+}
+
+// ============================================================
+// 9. CONFIGURAR BOTÃO DO MERCADO LIVRE
+// ============================================================
 
 function configurarBotaoMercadoLivre() {
 
@@ -298,79 +330,21 @@ const botao =
         'btn-conectar-mercado-livre'
     );
 
-
 if (!botao) {
 
     console.warn(
-        'Botão btn-conectar-mercado-livre não encontrado.'
+        'Botão do Mercado Livre não encontrado.'
     );
 
     return;
 
 }
 
-
-if (
-    botao.dataset.configurado ===
-    'true'
-) {
-
-    return;
-
-}
-
-
-botao.dataset.configurado =
-    'true';
-
-
 botao.addEventListener(
     'click',
-    async function(event) {
+    function() {
 
-        event.preventDefault();
-
-
-        if (
-            botao.disabled
-        ) {
-
-            return;
-
-        }
-
-
-        botao.disabled =
-            true;
-
-
-        const textoOriginal =
-            botao.textContent;
-
-
-        botao.textContent =
-            'Conectando...';
-
-
-        try {
-
-            await conectarMercadoLivre();
-
-        } catch (erro) {
-
-            console.error(
-                'Erro ao conectar Mercado Livre:',
-                erro
-            );
-
-            botao.disabled =
-                false;
-
-            botao.textContent =
-                textoOriginal ||
-                'Conectar Mercado Livre';
-
-        }
+        conectarMercadoLivre();
 
     }
 );
@@ -378,13 +352,181 @@ botao.addEventListener(
 
 }
 
-/* ============================================================
-7. INICIALIZAÇÃO
-============================================================ */
+// ============================================================
+// 10. VERIFICAR RETORNO DO OAUTH
+// ============================================================
+
+function verificarRetornoOAuth() {
+
+
+const parametros =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const conectado =
+    parametros.get(
+        'mercadolivre'
+    );
+
+const erro =
+    parametros.get(
+        'erro'
+    );
+
+if (conectado === 'sucesso') {
+
+    atualizarStatusMercadoLivre(
+        true
+    );
+
+    alert(
+        'Mercado Livre conectado com sucesso!'
+    );
+
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+
+    return;
+
+}
+
+if (erro) {
+
+    console.error(
+        'Erro recebido no retorno do Mercado Livre:',
+        erro
+    );
+
+    alert(
+        'Não foi possível conectar ao Mercado Livre.'
+    );
+
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+
+}
+
+
+}
+
+// ============================================================
+// 11. BOTÃO SAIR
+// ============================================================
+
+function configurarBotaoSairAdmin() {
+
+
+const botao =
+    document.getElementById(
+        'btn-sair-admin'
+    );
+
+if (!botao) {
+    return;
+}
+
+botao.addEventListener(
+    'click',
+    async function() {
+
+        if (supabaseIntegracoes) {
+
+            try {
+
+                await supabaseIntegracoes.auth.signOut();
+
+            } catch (erro) {
+
+                console.error(
+                    'Erro ao sair:',
+                    erro
+                );
+
+            }
+
+        }
+
+        window.location.href =
+            '05-admin.html';
+
+    }
+);
+
+
+}
+
+// ============================================================
+// 12. VERIFICAR ADMINISTRADOR
+// ============================================================
+
+async function verificarAdministradorIntegracoes() {
+
+
+const supabase =
+    obterSupabaseIntegracoes();
+
+if (!supabase) {
+
+    console.warn(
+        'Supabase não disponível para verificar administrador.'
+    );
+
+    return;
+
+}
+
+try {
+
+    const resultado =
+        await supabase.auth.getSession();
+
+    const session =
+        resultado?.data?.session;
+
+    if (!session) {
+
+        console.warn(
+            'Nenhuma sessão encontrada.'
+        );
+
+        // Não redirecionamos nesta etapa para evitar
+        // interferir no fluxo atual do painel.
+
+        return;
+
+    }
+
+    console.log(
+        'Administrador autenticado:',
+        session.user?.email || 'usuário autenticado'
+    );
+
+} catch (erro) {
+
+    console.error(
+        'Erro ao verificar sessão:',
+        erro
+    );
+
+}
+
+
+}
+
+// ============================================================
+// 13. INICIALIZAÇÃO
+// ============================================================
 
 document.addEventListener(
 'DOMContentLoaded',
-function() {
+async function() {
 
 
     console.log(
@@ -396,7 +538,7 @@ function() {
     );
 
     console.log(
-        'Inicializando integrações administrativas...'
+        'Inicializando painel de integrações...'
     );
 
     console.log(
@@ -404,11 +546,59 @@ function() {
     );
 
 
+    // ----------------------------------------------------
+    // SUPABASE
+    // ----------------------------------------------------
+
+    supabaseIntegracoes =
+        obterSupabaseIntegracoes();
+
+
+    // ----------------------------------------------------
+    // RETORNO OAUTH
+    // ----------------------------------------------------
+
+    verificarRetornoOAuth();
+
+
+    // ----------------------------------------------------
+    // ADMIN
+    // ----------------------------------------------------
+
+    await verificarAdministradorIntegracoes();
+
+
+    // ----------------------------------------------------
+    // BOTÃO MERCADO LIVRE
+    // ----------------------------------------------------
+
     configurarBotaoMercadoLivre();
 
 
+    // ----------------------------------------------------
+    // BOTÃO SAIR
+    // ----------------------------------------------------
+
+    configurarBotaoSairAdmin();
+
+
+    // ----------------------------------------------------
+    // STATUS MERCADO LIVRE
+    // ----------------------------------------------------
+
+    await verificarConexaoMercadoLivre();
+
+
     console.log(
-        'Integrações administrativas inicializadas.'
+        '============================================================'
+    );
+
+    console.log(
+        'Painel de integrações inicializado.'
+    );
+
+    console.log(
+        '============================================================'
     );
 
 }
@@ -416,12 +606,18 @@ function() {
 
 );
 
-/* ============================================================
-8. FUNÇÕES GLOBAIS
-============================================================ */
+// ============================================================
+// 14. FUNÇÕES GLOBAIS
+// ============================================================
 
 window.conectarMercadoLivre =
 conectarMercadoLivre;
 
-window.gerarCodeChallengeMercadoLivre =
-gerarCodeChallengeMercadoLivre;
+window.gerarUrlOAuthMercadoLivre =
+gerarUrlOAuthMercadoLivre;
+
+window.verificarConexaoMercadoLivre =
+verificarConexaoMercadoLivre;
+
+window.atualizarStatusMercadoLivre =
+atualizarStatusMercadoLivre;
