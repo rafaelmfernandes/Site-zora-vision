@@ -33,6 +33,7 @@
 
 <div class="admin-header-top">
 
+
     <a
         href="admin-integracoes.html"
         class="btn-voltar"
@@ -41,9 +42,11 @@
         ‹
     </a>
 
+
     <div class="admin-logo">
         ZoraVision
     </div>
+
 
     <button
         type="button"
@@ -53,7 +56,9 @@
         Sair
     </button>
 
+
 </div>
+
 
 <div class="admin-header-info">
 
@@ -81,21 +86,27 @@
 
 <section class="produtos-topo">
 
+
     <span class="section-label">
         MERCADO LIVRE
     </span>
+
 
     <h1>
         Gerenciar produtos
     </h1>
 
+
     <p>
-        Gerencie os produtos importados do Mercado Livre,
-        controle quais estão ativos no ZoraVision e
-        acompanhe quais anúncios ainda não foram importados.
+        Gerencie os produtos do Mercado Livre,
+        acompanhe quais anúncios já foram importados,
+        controle os produtos ativos e inativos no
+        ZoraVision e importe novos produtos quando desejar.
     </p>
 
+
 </section>
+
 
 
 <!-- ========================================================
@@ -104,11 +115,16 @@
 
 <section class="produtos-resumo">
 
+
+    <!-- ENCONTRADOS -->
+
     <div class="resumo-card">
+
 
         <span class="resumo-label">
             Encontrados
         </span>
+
 
         <strong
             id="total-produtos"
@@ -117,18 +133,25 @@
             0
         </strong>
 
+
         <small>
             anúncios no Mercado Livre
         </small>
 
+
     </div>
 
 
+
+    <!-- IMPORTADOS -->
+
     <div class="resumo-card">
+
 
         <span class="resumo-label">
             Importados
         </span>
+
 
         <strong
             id="total-importados"
@@ -137,18 +160,25 @@
             0
         </strong>
 
+
         <small>
             produtos no ZoraVision
         </small>
 
+
     </div>
 
 
+
+    <!-- ATIVOS -->
+
     <div class="resumo-card">
+
 
         <span class="resumo-label">
             Ativos
         </span>
+
 
         <strong
             id="total-ativos"
@@ -157,18 +187,25 @@
             0
         </strong>
 
+
         <small>
             visíveis no site
         </small>
 
+
     </div>
 
 
+
+    <!-- INATIVOS -->
+
     <div class="resumo-card">
+
 
         <span class="resumo-label">
             Inativos
         </span>
+
 
         <strong
             id="total-inativos"
@@ -177,18 +214,25 @@
             0
         </strong>
 
+
         <small>
             ocultos do site
         </small>
 
+
     </div>
 
 
+
+    <!-- NÃO IMPORTADOS -->
+
     <div class="resumo-card">
+
 
         <span class="resumo-label">
             Pendentes
         </span>
+
 
         <strong
             id="total-nao-importados"
@@ -197,13 +241,17 @@
             0
         </strong>
 
+
         <small>
             ainda não importados
         </small>
 
+
     </div>
 
+
 </section>
+
 
 
 <!-- ========================================================
@@ -212,54 +260,79 @@
 
 <section class="produtos-filtros">
 
+
+    <!-- FILTRO STATUS -->
+
     <div class="filtro-grupo">
+
 
         <label for="filtro-status">
             Status
         </label>
 
-        <select id="filtro-status">
+
+        <select
+            id="filtro-status"
+            name="filtro-status"
+        >
+
 
             <option value="todos">
                 Todos os produtos
             </option>
 
+
             <option value="importados">
                 Importados
             </option>
+
 
             <option value="ativos">
                 Ativos no site
             </option>
 
+
             <option value="inativos">
                 Inativos no site
             </option>
+
 
             <option value="nao-importados">
                 Ainda não importados
             </option>
 
+
         </select>
+
 
     </div>
 
 
+
+    <!-- PESQUISA -->
+
     <div class="filtro-grupo filtro-pesquisa">
+
 
         <label for="campo-pesquisa">
             Pesquisar
         </label>
 
+
         <input
             type="search"
             id="campo-pesquisa"
+            name="campo-pesquisa"
             placeholder="Nome, SKU ou ID do Mercado Livre..."
             autocomplete="off"
         >
 
+
     </div>
 
+
+
+    <!-- ATUALIZAR -->
 
     <button
         type="button"
@@ -269,7 +342,9 @@
         Atualizar
     </button>
 
+
 </section>
+
 
 
 <!-- ========================================================
@@ -280,7 +355,10 @@
     id="mensagem-produtos"
     class="mensagem-produtos mensagem-info"
     style="display: none;"
+    role="status"
+    aria-live="polite"
 ></div>
+
 
 
 <!-- ========================================================
@@ -289,32 +367,42 @@
 
 <section class="produtos-acoes">
 
+
     <div class="produtos-acoes-esquerda">
 
+
         <label class="selecionar-todos">
+
 
             <input
                 type="checkbox"
                 id="checkbox-selecionar-todos"
             >
 
+
             <span>
                 Selecionar todos
             </span>
 
+
         </label>
+
+
 
         <span
             id="contador-produtos"
             class="contador-produtos"
         >
-            0 produtos selecionados
+            0 produtos encontrados
         </span>
+
 
     </div>
 
 
+
     <div class="produtos-acoes-direita">
+
 
         <button
             type="button"
@@ -323,6 +411,7 @@
         >
             Selecionar todos
         </button>
+
 
 
         <button
@@ -334,6 +423,7 @@
         </button>
 
 
+
         <button
             type="button"
             class="btn-produtos btn-sincronizar"
@@ -343,9 +433,12 @@
             Sincronizar selecionados
         </button>
 
+
     </div>
 
+
 </section>
+
 
 
 <!-- ========================================================
@@ -354,39 +447,62 @@
 
 <section class="produtos-legenda">
 
+
     <div class="legenda-item">
 
-        <span class="legenda-indicador legenda-ativo"></span>
+
+        <span
+            class="legenda-indicador legenda-ativo"
+            aria-hidden="true"
+        ></span>
+
 
         <span>
             Ativo no site
         </span>
 
+
     </div>
+
 
 
     <div class="legenda-item">
 
-        <span class="legenda-indicador legenda-inativo"></span>
+
+        <span
+            class="legenda-indicador legenda-inativo"
+            aria-hidden="true"
+        ></span>
+
 
         <span>
             Inativo no site
         </span>
 
+
     </div>
+
 
 
     <div class="legenda-item">
 
-        <span class="legenda-indicador legenda-pendente"></span>
+
+        <span
+            class="legenda-indicador legenda-pendente"
+            aria-hidden="true"
+        ></span>
+
 
         <span>
             Ainda não importado
         </span>
 
+
     </div>
 
+
 </section>
+
 
 
 <!-- ========================================================
@@ -399,25 +515,35 @@
     aria-live="polite"
 >
 
+
+    <!-- ====================================================
+         CARREGANDO
+    ===================================================== -->
+
     <div
         id="produtos-carregando"
         class="produtos-vazio"
     >
 
+
         <div class="produtos-vazio-icone">
             ⏳
         </div>
 
+
         <h2>
             Carregando produtos
         </h2>
+
 
         <p>
             Consultando os produtos do Mercado Livre
             e verificando quais já foram importados...
         </p>
 
+
     </div>
+
 
 </section>
 
@@ -434,6 +560,7 @@
 <span>
     ZoraVision
 </span>
+
 
 <small>
     Gerenciamento de produtos do Mercado Livre
