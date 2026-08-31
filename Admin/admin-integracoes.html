@@ -65,290 +65,307 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 
 <main class="integracoes-container">
 
+
 <section class="integracoes-topo">
 
+    <div>
 
-<div>
+        <span class="section-label">
+            SISTEMA
+        </span>
 
-    <span class="section-label">
-        SISTEMA
-    </span>
+        <h1>
+            Integrações
+        </h1>
 
-    <h1>
-        Integrações
-    </h1>
+        <p>
+            Conecte o ZoraVision a plataformas externas para
+            sincronizar produtos, estoque, preços e pedidos.
+        </p>
 
-    <p>
-        Conecte o ZoraVision a plataformas externas para
-        sincronizar produtos, estoque, preços e pedidos.
-    </p>
-
-</div>
-
+    </div>
 
 </section>
+
 
 <section class="integracao-aviso">
 
+    <div class="integracao-aviso-icone">
+        🔗
+    </div>
 
-<div class="integracao-aviso-icone">
-    🔗
-</div>
+    <div>
 
-<div>
+        <strong>
+            Central de integrações
+        </strong>
 
-    <strong>
-        Central de integrações
-    </strong>
+        <p>
+            Conecte suas contas externas ao ZoraVision
+            de forma segura.
+        </p>
 
-    <p>
-        Conecte suas contas externas ao ZoraVision
-        de forma segura.
-    </p>
-
-</div>
-
+    </div>
 
 </section>
 
-<!-- ===================================================== -->
 
+<!-- ===================================================== -->
 <!-- MERCADO LIVRE -->
-
 <!-- ===================================================== -->
 
 <section class="integracao-card">
 
+    <div class="integracao-card-topo">
 
-<div class="integracao-card-topo">
+        <div class="integracao-identidade">
 
-    <div class="integracao-identidade">
+            <div class="integracao-logo mercado-livre-logo">
+                ML
+            </div>
 
-        <div class="integracao-logo mercado-livre-logo">
-            ML
+            <div>
+
+                <span class="integracao-plataforma">
+                    Marketplace
+                </span>
+
+                <h2>
+                    Mercado Livre
+                </h2>
+
+            </div>
+
         </div>
 
-        <div>
+        <span
+            class="integracao-status status-desconectado"
+            id="status-mercado-livre"
+        >
+            Desconectado
+        </span>
 
-            <span class="integracao-plataforma">
-                Marketplace
+    </div>
+
+
+    <div class="integracao-card-conteudo">
+
+        <p>
+            Conecte sua conta do Mercado Livre para importar
+            os produtos já cadastrados e futuramente sincronizar
+            estoque, preços e informações das publicações.
+        </p>
+
+
+        <div class="integracao-recursos">
+
+            <span>
+                ✓ Importar produtos
             </span>
 
-            <h2>
-                Mercado Livre
-            </h2>
+            <span>
+                ✓ Sincronizar estoque
+            </span>
+
+            <span>
+                ✓ Sincronizar preços
+            </span>
+
+            <span>
+                ✓ Gerenciar publicações
+            </span>
 
         </div>
 
-    </div>
 
-    <span
-        class="integracao-status status-desconectado"
-        id="status-mercado-livre"
-    >
-        Desconectado
-    </span>
-
-</div>
-
-
-<div class="integracao-card-conteudo">
-
-    <p>
-        Conecte sua conta do Mercado Livre para importar
-        os produtos já cadastrados e futuramente sincronizar
-        estoque, preços e informações das publicações.
-    </p>
-
-    <div class="integracao-recursos">
-
-        <span>
-            ✓ Importar produtos
-        </span>
-
-        <span>
-            ✓ Sincronizar estoque
-        </span>
-
-        <span>
-            ✓ Sincronizar preços
-        </span>
-
-        <span>
-            ✓ Gerenciar publicações
-        </span>
+        <div
+            id="resultado-importacao-mercado-livre"
+            class="resultado-importacao"
+            style="display:none;"
+        ></div>
 
     </div>
 
-    <div
-        id="resultado-importacao-mercado-livre"
-        class="resultado-importacao"
-        style="display:none;"
-    ></div>
 
-</div>
+    <!-- ================================================= -->
+    <!-- AÇÕES MERCADO LIVRE -->
+    <!-- ================================================= -->
+
+    <div class="integracao-card-acoes">
 
 
-<div class="integracao-card-acoes">
+        <!-- CONECTAR -->
 
-    <button
-        type="button"
-        class="btn-integracao btn-conectar"
-        id="btn-conectar-mercado-livre"
-    >
-        Conectar Mercado Livre
-    </button>
+        <button
+            type="button"
+            class="btn-integracao btn-conectar"
+            id="btn-conectar-mercado-livre"
+        >
+            Conectar Mercado Livre
+        </button>
 
-    <button
-        type="button"
-        class="btn-integracao btn-importar"
-        id="btn-importar-mercado-livre"
-        style="display:none;"
-    >
-        📥 Importar produtos
-    </button>
-    <button
-        type="button"
-        id="btn-gerenciar-produtos-mercado-livre"
-        class="btn-conectar"
-    >
-        Gerenciar produtos do Mercado Livre
-    </button>
 
-</div>
+        <!-- IMPORTAR PRODUTOS -->
 
+        <button
+            type="button"
+            class="btn-integracao btn-importar"
+            id="btn-importar-produtos-mercado-livre"
+            style="display:none;"
+        >
+            📥 Importar produtos
+        </button>
+
+
+        <!-- GERENCIAR PRODUTOS -->
+
+        <button
+            type="button"
+            class="btn-integracao btn-gerenciar-produtos"
+            id="btn-gerenciar-produtos-mercado-livre"
+            style="display:none;"
+        >
+            📦 Gerenciar produtos
+        </button>
+
+
+    </div>
 
 </section>
 
-<!-- ===================================================== -->
 
+<!-- ===================================================== -->
 <!-- TIKTOK SHOP -->
-
 <!-- ===================================================== -->
 
 <section class="integracao-card">
 
+    <div class="integracao-card-topo">
 
-<div class="integracao-card-topo">
+        <div class="integracao-identidade">
 
-    <div class="integracao-identidade">
+            <div class="integracao-logo tiktok-logo">
+                TT
+            </div>
 
-        <div class="integracao-logo tiktok-logo">
-            TT
+            <div>
+
+                <span class="integracao-plataforma">
+                    Marketplace
+                </span>
+
+                <h2>
+                    TikTok Shop
+                </h2>
+
+            </div>
+
         </div>
 
-        <div>
+        <span
+            class="integracao-status status-desconectado"
+            id="status-tiktok"
+        >
+            Desconectado
+        </span>
 
-            <span class="integracao-plataforma">
-                Marketplace
+    </div>
+
+
+    <div class="integracao-card-conteudo">
+
+        <p>
+            Integração preparada para conectar o TikTok Shop
+            ao ZoraVision futuramente.
+        </p>
+
+        <div class="integracao-recursos">
+
+            <span>
+                ✓ Produtos
             </span>
 
-            <h2>
-                TikTok Shop
-            </h2>
+            <span>
+                ✓ Estoque
+            </span>
+
+            <span>
+                ✓ Pedidos
+            </span>
 
         </div>
 
     </div>
 
-    <span
-        class="integracao-status status-desconectado"
-        id="status-tiktok"
-    >
-        Desconectado
-    </span>
 
-</div>
+    <div class="integracao-card-acoes">
 
-
-<div class="integracao-card-conteudo">
-
-    <p>
-        Integração preparada para conectar o TikTok Shop
-        ao ZoraVision futuramente.
-    </p>
-
-    <div class="integracao-recursos">
-
-        <span>
-            ✓ Produtos
-        </span>
-
-        <span>
-            ✓ Estoque
-        </span>
-
-        <span>
-            ✓ Pedidos
-        </span>
+        <button
+            type="button"
+            class="btn-integracao btn-indisponivel"
+            disabled
+        >
+            Em breve
+        </button>
 
     </div>
 
-</div>
-
-
-<div class="integracao-card-acoes">
-
-    <button
-        type="button"
-        class="btn-integracao btn-indisponivel"
-        disabled
-    >
-        Em breve
-    </button>
-
-</div>
-
-
 </section>
+
+
+<!-- ===================================================== -->
+<!-- NOVAS INTEGRAÇÕES -->
+<!-- ===================================================== -->
 
 <section class="integracoes-futuras">
 
+    <div class="futuras-icone">
+        ＋
+    </div>
 
-<div class="futuras-icone">
-    ＋
-</div>
+    <div>
 
-<div>
+        <h2>
+            Novas integrações
+        </h2>
 
-    <h2>
-        Novas integrações
-    </h2>
+        <p>
+            Outras plataformas poderão ser adicionadas
+            futuramente ao ZoraVision.
+        </p>
 
-    <p>
-        Outras plataformas poderão ser adicionadas
-        futuramente ao ZoraVision.
-    </p>
-
-</div>
-
+    </div>
 
 </section>
+
+
+<!-- ===================================================== -->
+<!-- SEGURANÇA -->
+<!-- ===================================================== -->
 
 <section class="seguranca-card">
 
+    <div class="seguranca-icone">
+        🔒
+    </div>
 
-<div class="seguranca-icone">
-    🔒
-</div>
+    <div>
 
-<div>
+        <h2>
+            Segurança das integrações
+        </h2>
 
-    <h2>
-        Segurança das integrações
-    </h2>
+        <p>
+            As credenciais das plataformas externas não serão
+            armazenadas diretamente no código do site.
+            As conexões serão realizadas de forma segura
+            através do backend do ZoraVision.
+        </p>
 
-    <p>
-        As credenciais das plataformas externas não serão
-        armazenadas diretamente no código do site.
-        As conexões serão realizadas de forma segura
-        através do backend do ZoraVision.
-    </p>
-
-</div>
-
+    </div>
 
 </section>
+
 
 </main>
 
@@ -366,11 +383,29 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 
 </footer>
 
+<!-- ========================================================= -->
+
+<!-- SUPABASE -->
+
+<!-- ========================================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../Supabase/supabase.js"></script>
 
+<!-- ========================================================= -->
+
+<!-- INTEGRAÇÕES -->
+
+<!-- ========================================================= -->
+
 <script src="integracoes-admin.js"></script>
+
+<!-- ========================================================= -->
+
+<!-- PROTEÇÃO DO ADMIN -->
+
+<!-- ========================================================= -->
 
 <script src="Painel-admin.js"></script>
 
