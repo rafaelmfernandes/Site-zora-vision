@@ -67,6 +67,10 @@
 <main class="produtos-container">
 
 
+<!-- ======================================================
+     TÍTULO
+======================================================= -->
+
 <section class="produtos-topo">
 
     <span class="section-label">
@@ -74,29 +78,33 @@
     </span>
 
     <h1>
-        Produtos
+        Gerenciar produtos
     </h1>
 
     <p>
-        Gerencie os produtos importados do Mercado Livre.
+        Gerencie os produtos importados do Mercado Livre
+        e controle quais estarão disponíveis no ZoraVision.
     </p>
 
 </section>
 
 
-<!-- RESUMO -->
+<!-- ======================================================
+     DASHBOARD
+======================================================= -->
 
-<section class="produtos-resumo">
+<section class="dashboard-produtos">
 
-    <div class="resumo-card">
 
-        <span class="resumo-label">
+    <div class="dashboard-card">
+
+        <span class="dashboard-label">
             Encontrados
         </span>
 
         <strong
             id="total-produtos"
-            class="resumo-valor"
+            class="dashboard-valor"
         >
             0
         </strong>
@@ -108,15 +116,15 @@
     </div>
 
 
-    <div class="resumo-card">
+    <div class="dashboard-card">
 
-        <span class="resumo-label">
+        <span class="dashboard-label">
             Importados
         </span>
 
         <strong
             id="total-importados"
-            class="resumo-valor"
+            class="dashboard-valor"
         >
             0
         </strong>
@@ -128,35 +136,35 @@
     </div>
 
 
-    <div class="resumo-card">
+    <div class="dashboard-card">
 
-        <span class="resumo-label">
+        <span class="dashboard-label">
             Ativos
         </span>
 
         <strong
             id="total-ativos"
-            class="resumo-valor"
+            class="dashboard-valor"
         >
             0
         </strong>
 
         <small>
-            disponíveis
+            no site
         </small>
 
     </div>
 
 
-    <div class="resumo-card">
+    <div class="dashboard-card">
 
-        <span class="resumo-label">
+        <span class="dashboard-label">
             Inativos
         </span>
 
         <strong
             id="total-inativos"
-            class="resumo-valor"
+            class="dashboard-valor"
         >
             0
         </strong>
@@ -167,10 +175,33 @@
 
     </div>
 
+
+    <div class="dashboard-card">
+
+        <span class="dashboard-label">
+            Pendentes
+        </span>
+
+        <strong
+            id="total-nao-importados"
+            class="dashboard-valor"
+        >
+            0
+        </strong>
+
+        <small>
+            não importados
+        </small>
+
+    </div>
+
+
 </section>
 
 
-<!-- FILTROS -->
+<!-- ======================================================
+     FILTROS
+======================================================= -->
 
 <section class="produtos-filtros">
 
@@ -186,12 +217,20 @@
                 Todos
             </option>
 
+            <option value="importados">
+                Importados
+            </option>
+
             <option value="ativos">
                 Ativos
             </option>
 
             <option value="inativos">
                 Inativos
+            </option>
+
+            <option value="nao-importados">
+                Pendentes
             </option>
 
         </select>
@@ -208,7 +247,7 @@
         <input
             type="search"
             id="campo-pesquisa"
-            placeholder="Nome, SKU ou ID do Mercado Livre..."
+            placeholder="Nome, SKU ou ID do Mercado Livre"
             autocomplete="off"
         >
 
@@ -226,7 +265,9 @@
 </section>
 
 
-<!-- MENSAGEM -->
+<!-- ======================================================
+     MENSAGEM
+======================================================= -->
 
 <div
     id="mensagem-produtos"
@@ -235,7 +276,9 @@
 ></div>
 
 
-<!-- AÇÕES -->
+<!-- ======================================================
+     AÇÕES
+======================================================= -->
 
 <section class="produtos-acoes">
 
@@ -258,7 +301,7 @@
             id="contador-produtos"
             class="contador-produtos"
         >
-            0 produtos selecionados
+            0 produtos encontrados
         </span>
 
     </div>
@@ -296,11 +339,53 @@
 </section>
 
 
-<!-- LISTA -->
+<!-- ======================================================
+     LEGENDA
+======================================================= -->
+
+<section class="produtos-legenda">
+
+    <div class="legenda-item">
+
+        <span class="legenda-indicador legenda-ativo"></span>
+
+        <span>
+            Ativo no site
+        </span>
+
+    </div>
+
+    <div class="legenda-item">
+
+        <span class="legenda-indicador legenda-inativo"></span>
+
+        <span>
+            Inativo no site
+        </span>
+
+    </div>
+
+    <div class="legenda-item">
+
+        <span class="legenda-indicador legenda-pendente"></span>
+
+        <span>
+            Pendente
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     PRODUTOS
+======================================================= -->
 
 <section
     id="lista-produtos"
     class="lista-produtos"
+    aria-live="polite"
 >
 
     <div class="produtos-vazio">
@@ -314,7 +399,7 @@
         </h2>
 
         <p>
-            Consultando os produtos do Mercado Livre...
+            Consultando produtos do Mercado Livre...
         </p>
 
     </div>
@@ -332,11 +417,15 @@
 </strong>
 
 <span>
-    Produtos Mercado Livre
+    Gerenciamento de produtos do Mercado Livre
 </span>
 
 
 </footer>
+
+<!-- ==========================================================
+     SUPABASE
+=========================================================== -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
@@ -346,14 +435,21 @@
     src="../Supabase/supabase.js"
 ></script>
 
+<!-- ==========================================================
+     PAINEL ADMINISTRATIVO
+=========================================================== -->
+
 <script
     src="Painel-admin.js"
 ></script>
+
+<!-- ==========================================================
+     PRODUTOS MERCADO LIVRE
+=========================================================== -->
 
 <script
     src="mercadolivre-produtos.js"
 ></script>
 
 </body>
-
 </html>
