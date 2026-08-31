@@ -1,26 +1,26 @@
 /* ============================================================
-   ZORAVISION
-   PRODUTOS DO MERCADO LIVRE
+ZORAVISION
+PRODUTOS DO MERCADO LIVRE
 
-   Compatível com:
-   Admin/mercadolivre-produtos.html
+IMPORTANTE:
+Este arquivo utiliza somente colunas existentes na tabela produtos.
 
-   IMPORTANTE:
-   Este arquivo utiliza somente campos existentes
-   na tabela produtos.
-============================================================ */
+Não utiliza:
 
+* ml_status
+* status_mercado_livre
+  ============================================================ */
 
 /* ============================================================
-   1. CONFIGURAÇÃO
-============================================================ */
+
+1. CONFIGURAÇÃO
+   ============================================================ */
 
 const EDGE_FUNCTION_IMPORTAR =
-    'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-importar-produtos';
-
+'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-importar-produtos';
 
 /* ============================================================
-   2. ESTADO
+2. ESTADO
 ============================================================ */
 
 let produtosMercadoLivre = [];
@@ -29,1431 +29,1362 @@ let produtosFiltrados = [];
 
 let carregandoProdutos = false;
 
-
 /* ============================================================
-   3. SUPABASE
+3. SUPABASE
 ============================================================ */
 
 function obterSupabaseProdutos() {
 
-    if (window.supabaseClient) {
 
-        return window.supabaseClient;
-
-    }
-
-    if (window._supabase) {
-
-        return window._supabase;
-
-    }
-
-    if (typeof window.obterSupabase === 'function') {
-
-        try {
-
-            return window.obterSupabase();
-
-        } catch (erro) {
-
-            console.error(
-                'Erro ao obter Supabase:',
-                erro
-            );
-
-        }
-
-    }
-
-    console.error(
-        'Cliente Supabase não encontrado.'
-    );
-
-    return null;
+if (window.supabaseClient) {
+    return window.supabaseClient;
 }
 
+if (window._supabase) {
+    return window._supabase;
+}
+
+if (typeof window.obterSupabase === 'function') {
+
+    try {
+        return window.obterSupabase();
+    } catch (erro) {
+        console.error(
+            'Erro ao obter Supabase:',
+            erro
+        );
+    }
+
+}
+
+console.error(
+    'Cliente Supabase não encontrado.'
+);
+
+return null;
+
+
+}
 
 /* ============================================================
-   4. ELEMENTO
+4. ELEMENTO
 ============================================================ */
 
 function elemento(id) {
-
-    return document.getElementById(id);
-
+return document.getElementById(id);
 }
 
-
 /* ============================================================
-   5. NORMALIZAR TEXTO
+5. NORMALIZAR TEXTO
 ============================================================ */
 
 function normalizarTexto(texto) {
 
-    return String(texto || '')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .trim();
+
+return String(texto || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+
 
 }
 
-
 /* ============================================================
-   6. FORMATAR PREÇO
+6. PREÇO
 ============================================================ */
 
 function formatarPreco(valor) {
 
-    const numero = Number(valor || 0);
 
-    return numero.toLocaleString(
-        'pt-BR',
-        {
-            style: 'currency',
-            currency: 'BRL'
-        }
-    );
+const numero = Number(valor || 0);
+
+return numero.toLocaleString(
+    'pt-BR',
+    {
+        style: 'currency',
+        currency: 'BRL'
+    }
+);
+
 
 }
 
-
 /* ============================================================
-   7. MENSAGEM
+7. MENSAGEM
 ============================================================ */
 
 function mostrarMensagem(
-    texto,
-    tipo = 'info'
+texto,
+tipo = 'info'
 ) {
 
-    const campo =
-        elemento('mensagem-produtos');
 
-    if (!campo) {
+const campo =
+    elemento('mensagem-produtos');
 
-        return;
+if (!campo) {
+    return;
+}
 
-    }
+campo.textContent = texto;
 
-    campo.textContent =
-        texto;
+campo.className =
+    'mensagem-produtos mensagem-' + tipo;
 
-    campo.className =
-        'mensagem-produtos mensagem-' +
-        tipo;
+campo.style.display = 'block';
 
-    campo.style.display =
-        'block';
 
 }
 
-
 /* ============================================================
-   8. ESCONDER MENSAGEM
+8. ESCONDER MENSAGEM
 ============================================================ */
 
 function esconderMensagem() {
 
-    const campo =
-        elemento('mensagem-produtos');
 
-    if (!campo) {
+const campo =
+    elemento('mensagem-produtos');
 
-        return;
+if (!campo) {
+    return;
+}
 
-    }
+campo.style.display = 'none';
 
-    campo.style.display =
-        'none';
 
 }
 
-
 /* ============================================================
-   9. STATUS MERCADO LIVRE
-============================================================ */
-
-/*
-   A tabela produtos não possui:
-   - ml_status
-   - status_mercado_livre
-
-   Portanto, não consultamos nem acessamos essas colunas.
-
-   Todo produto retornado por esta página já possui
-   mercado_livre_item_id e, portanto, foi importado.
-*/
-
-function textoStatusMercadoLivre() {
-
-    return 'Importado';
-
-}
-
-
-/* ============================================================
-   10. CRIAR BADGE
-============================================================ */
-
-function criarBadge(
-    texto,
-    classe
-) {
-
-    const badge =
-        document.createElement('span');
-
-    badge.className =
-        'produto-status-badge ' +
-        classe;
-
-    badge.textContent =
-        texto;
-
-    return badge;
-
-}
-
-
-/* ============================================================
-   11. BUSCAR PRODUTOS
+9. BUSCAR PRODUTOS IMPORTADOS
 ============================================================ */
 
 async function buscarProdutosImportados() {
 
-    const supabase =
-        obterSupabaseProdutos();
 
-    if (!supabase) {
+const supabase =
+    obterSupabaseProdutos();
 
-        throw new Error(
-            'Cliente Supabase não encontrado.'
+if (!supabase) {
+
+    throw new Error(
+        'Cliente Supabase não encontrado.'
+    );
+}
+
+console.log(
+    'Consultando produtos importados...'
+);
+
+
+/*
+ * ATENÇÃO:
+ *
+ * Aqui estão SOMENTE colunas existentes
+ * na tabela produtos.
+ *
+ * Não colocar:
+ * ml_status
+ * status_mercado_livre
+ */
+
+const resultado =
+    await supabase
+        .from('produtos')
+        .select(
+            'id,nome,descricao,preco,preco_promocional,estoque,sku,imagem_url,ativo,destaque,created_at,updated_at,mercado_livre_item_id'
+        )
+        .not(
+            'mercado_livre_item_id',
+            'is',
+            null
+        )
+        .order(
+            'created_at',
+            {
+                ascending: false
+            }
         );
 
-    }
 
-    console.log(
-        'Consultando produtos importados...'
-    );
-
-
-    /*
-       IMPORTANTE:
-
-       NÃO adicionar:
-       ml_status
-       status_mercado_livre
-
-       A consulta abaixo utiliza somente
-       campos existentes na tabela produtos.
-    */
-
-    const resultado =
-        await supabase
-            .from('produtos')
-            .select(
-                'id,nome,descricao,preco,preco_promocional,estoque,sku,imagem_url,ativo,destaque,created_at,updated_at,mercado_livre_item_id'
-            )
-            .not(
-                'mercado_livre_item_id',
-                'is',
-                null
-            )
-            .order(
-                'created_at',
-                {
-                    ascending: false
-                }
-            );
-
-
-    if (resultado.error) {
-
-        throw resultado.error;
-
-    }
-
-
-    return resultado.data || [];
-
+if (resultado.error) {
+    throw resultado.error;
 }
 
 
+return resultado.data || [];
+
+
+}
+
 /* ============================================================
-   12. ATUALIZAR DASHBOARD
+10. ATUALIZAR DASHBOARD
 ============================================================ */
 
 function atualizarDashboard() {
 
-    const total =
-        produtosMercadoLivre.length;
+
+const total =
+    produtosMercadoLivre.length;
+
+const importados =
+    produtosMercadoLivre.length;
+
+const ativos =
+    produtosMercadoLivre.filter(
+        produto =>
+            produto.ativo === true
+    ).length;
+
+const inativos =
+    produtosMercadoLivre.filter(
+        produto =>
+            produto.ativo !== true
+    ).length;
+
+/*
+ * A página consulta somente produtos
+ * que já possuem mercado_livre_item_id.
+ *
+ * Portanto, pendentes = 0.
+ */
+
+const pendentes = 0;
 
 
-    const importados =
-        produtosMercadoLivre.length;
+const totalElemento =
+    elemento('total-produtos');
+
+const importadosElemento =
+    elemento('total-importados');
+
+const ativosElemento =
+    elemento('total-ativos');
+
+const inativosElemento =
+    elemento('total-inativos');
+
+const pendentesElemento =
+    elemento('total-nao-importados');
 
 
-    const ativos =
-        produtosMercadoLivre.filter(
-            produto =>
-                produto.ativo === true
-        ).length;
+if (totalElemento) {
+    totalElemento.textContent = total;
+}
 
+if (importadosElemento) {
+    importadosElemento.textContent = importados;
+}
 
-    const inativos =
-        produtosMercadoLivre.filter(
-            produto =>
-                produto.ativo !== true
-        ).length;
+if (ativosElemento) {
+    ativosElemento.textContent = ativos;
+}
 
+if (inativosElemento) {
+    inativosElemento.textContent = inativos;
+}
 
-    /*
-       Como estamos consultando apenas produtos que possuem
-       mercado_livre_item_id, todos os produtos encontrados
-       já estão importados.
-
-       A tabela produtos não permite saber, por esta consulta,
-       quantos anúncios do Mercado Livre ainda não foram importados.
-
-       Portanto, não inventamos esse número.
-    */
-
-    const pendentes = 0;
-
-
-    const totalElemento =
-        elemento('total-produtos');
-
-    const importadosElemento =
-        elemento('total-importados');
-
-    const ativosElemento =
-        elemento('total-ativos');
-
-    const inativosElemento =
-        elemento('total-inativos');
-
-    const pendentesElemento =
-        elemento('total-nao-importados');
-
-
-    if (totalElemento) {
-
-        totalElemento.textContent =
-            total;
-
-    }
-
-
-    if (importadosElemento) {
-
-        importadosElemento.textContent =
-            importados;
-
-    }
-
-
-    if (ativosElemento) {
-
-        ativosElemento.textContent =
-            ativos;
-
-    }
-
-
-    if (inativosElemento) {
-
-        inativosElemento.textContent =
-            inativos;
-
-    }
-
-
-    if (pendentesElemento) {
-
-        pendentesElemento.textContent =
-            pendentes;
-
-    }
-
+if (pendentesElemento) {
+    pendentesElemento.textContent = pendentes;
 }
 
 
+}
+
 /* ============================================================
-   13. CRIAR CARD DO PRODUTO
+11. CRIAR BADGE
+============================================================ */
+
+function criarBadge(
+texto,
+classe
+) {
+
+
+const badge =
+    document.createElement('span');
+
+badge.className =
+    'produto-status-badge ' + classe;
+
+badge.textContent = texto;
+
+return badge;
+
+
+}
+
+/* ============================================================
+12. CRIAR CARD
 ============================================================ */
 
 function criarCardProduto(produto) {
 
-    const card =
-        document.createElement('article');
+
+const card =
+    document.createElement('article');
+
+card.className =
+    'produto-mercado-livre-card';
 
 
-    card.className =
-        'produto-mercado-livre-card';
+if (produto.ativo === true) {
+
+    card.classList.add(
+        'produto-ativo'
+    );
+
+} else {
+
+    card.classList.add(
+        'produto-inativo'
+    );
+}
 
 
-    if (produto.ativo === true) {
-
-        card.classList.add(
-            'produto-ativo'
-        );
-
-    } else {
-
-        card.classList.add(
-            'produto-inativo'
-        );
-
-    }
+card.dataset.produtoId =
+    produto.id || '';
 
 
-    card.dataset.produtoId =
-        produto.id || '';
+/* ========================================================
+   CHECKBOX
+======================================================== */
+
+const areaSelecao =
+    document.createElement('div');
+
+areaSelecao.className =
+    'produto-selecao';
 
 
-    /* ========================================================
-       CHECKBOX
-    ======================================================== */
+const checkbox =
+    document.createElement('input');
 
-    const areaSelecao =
-        document.createElement('div');
+checkbox.type = 'checkbox';
 
-    areaSelecao.className =
-        'produto-selecao';
+checkbox.className =
+    'produto-checkbox';
 
+checkbox.value =
+    produto.id || '';
 
-    const checkbox =
-        document.createElement('input');
-
-    checkbox.type =
-        'checkbox';
-
-    checkbox.className =
-        'produto-checkbox';
-
-    checkbox.value =
-        produto.id || '';
-
-    checkbox.dataset.itemId =
-        produto.mercado_livre_item_id || '';
+checkbox.dataset.itemId =
+    produto.mercado_livre_item_id || '';
 
 
-    areaSelecao.appendChild(
-        checkbox
+areaSelecao.appendChild(
+    checkbox
+);
+
+
+/* ========================================================
+   IMAGEM
+======================================================== */
+
+const areaImagem =
+    document.createElement('div');
+
+areaImagem.className =
+    'produto-imagem';
+
+
+if (produto.imagem_url) {
+
+    const imagem =
+        document.createElement('img');
+
+    imagem.src =
+        produto.imagem_url;
+
+    imagem.alt =
+        produto.nome || 'Produto';
+
+    imagem.loading =
+        'lazy';
+
+
+    imagem.onerror =
+        function() {
+
+            areaImagem.innerHTML =
+                '<span>Sem imagem</span>';
+
+        };
+
+
+    areaImagem.appendChild(
+        imagem
+    );
+
+} else {
+
+    areaImagem.innerHTML =
+        '<span>Sem imagem</span>';
+}
+
+
+/* ========================================================
+   INFORMAÇÕES
+======================================================== */
+
+const informacoes =
+    document.createElement('div');
+
+informacoes.className =
+    'produto-informacoes';
+
+
+const titulo =
+    document.createElement('h3');
+
+titulo.textContent =
+    produto.nome ||
+    'Produto sem nome';
+
+
+const itemId =
+    document.createElement('p');
+
+itemId.className =
+    'produto-item-id';
+
+itemId.textContent =
+    'Mercado Livre: ' +
+    (
+        produto.mercado_livre_item_id ||
+        'Não informado'
     );
 
 
-    /* ========================================================
-       IMAGEM
-    ======================================================== */
+const sku =
+    document.createElement('p');
 
-    const areaImagem =
-        document.createElement('div');
+sku.className =
+    'produto-sku';
 
-    areaImagem.className =
-        'produto-imagem';
-
-
-    if (produto.imagem_url) {
-
-        const imagem =
-            document.createElement('img');
-
-        imagem.src =
-            produto.imagem_url;
-
-        imagem.alt =
-            produto.nome ||
-            'Produto';
-
-        imagem.loading =
-            'lazy';
-
-
-        imagem.onerror =
-            function() {
-
-                areaImagem.innerHTML =
-                    '<span>Sem imagem</span>';
-
-            };
-
-
-        areaImagem.appendChild(
-            imagem
-        );
-
-    } else {
-
-        areaImagem.innerHTML =
-            '<span>Sem imagem</span>';
-
-    }
-
-
-    /* ========================================================
-       INFORMAÇÕES
-    ======================================================== */
-
-    const informacoes =
-        document.createElement('div');
-
-    informacoes.className =
-        'produto-informacoes';
-
-
-    const titulo =
-        document.createElement('h3');
-
-    titulo.textContent =
-        produto.nome ||
-        'Produto sem nome';
-
-
-    const itemId =
-        document.createElement('p');
-
-    itemId.className =
-        'produto-item-id';
-
-    itemId.textContent =
-        'Mercado Livre: ' +
-        (
-            produto.mercado_livre_item_id ||
-            'Não informado'
-        );
-
-
-    const sku =
-        document.createElement('p');
-
-    sku.className =
-        'produto-sku';
-
-    sku.textContent =
-        'SKU: ' +
-        (
-            produto.sku ||
-            'Não informado'
-        );
-
-
-    const preco =
-        document.createElement('strong');
-
-    preco.className =
-        'produto-preco';
-
-    preco.textContent =
-        formatarPreco(
-            produto.preco
-        );
-
-
-    const estoque =
-        document.createElement('span');
-
-    estoque.className =
-        'produto-estoque';
-
-    estoque.textContent =
-        'Estoque: ' +
-        (
-            produto.estoque ?? 0
-        );
-
-
-    informacoes.appendChild(
-        titulo
-    );
-
-    informacoes.appendChild(
-        itemId
-    );
-
-    informacoes.appendChild(
-        sku
-    );
-
-    informacoes.appendChild(
-        preco
-    );
-
-    informacoes.appendChild(
-        estoque
+sku.textContent =
+    'SKU: ' +
+    (
+        produto.sku ||
+        'Não informado'
     );
 
 
-    /* ========================================================
-       STATUS
-    ======================================================== */
+const preco =
+    document.createElement('strong');
 
-    const areaStatus =
-        document.createElement('div');
+preco.className =
+    'produto-preco';
 
-    areaStatus.className =
-        'produto-status-area';
-
-
-    const statusSite =
-        document.createElement('div');
+preco.textContent =
+    formatarPreco(
+        produto.preco
+    );
 
 
-    if (produto.ativo === true) {
+const estoque =
+    document.createElement('span');
 
-        statusSite.appendChild(
-            criarBadge(
-                'Ativo no site',
-                'status-ativo'
-            )
-        );
+estoque.className =
+    'produto-estoque';
 
-    } else {
-
-        statusSite.appendChild(
-            criarBadge(
-                'Inativo no site',
-                'status-inativo'
-            )
-        );
-
-    }
+estoque.textContent =
+    'Estoque: ' +
+    (
+        produto.estoque ?? 0
+    );
 
 
-    const statusML =
-        document.createElement('div');
+informacoes.appendChild(
+    titulo
+);
+
+informacoes.appendChild(
+    itemId
+);
+
+informacoes.appendChild(
+    sku
+);
+
+informacoes.appendChild(
+    preco
+);
+
+informacoes.appendChild(
+    estoque
+);
 
 
-    statusML.appendChild(
+/* ========================================================
+   STATUS
+======================================================== */
+
+const areaStatus =
+    document.createElement('div');
+
+areaStatus.className =
+    'produto-status-area';
+
+
+if (produto.ativo === true) {
+
+    areaStatus.appendChild(
         criarBadge(
-            textoStatusMercadoLivre(),
-            'status-mercado-livre'
+            'Ativo no site',
+            'status-ativo'
         )
     );
 
+} else {
 
     areaStatus.appendChild(
-        statusSite
+        criarBadge(
+            'Inativo no site',
+            'status-inativo'
+        )
     );
-
-    areaStatus.appendChild(
-        statusML
-    );
+}
 
 
-    /* ========================================================
-       AÇÕES
-    ======================================================== */
+/*
+ * Como ml_status não existe,
+ * mostramos apenas que o produto
+ * foi importado do Mercado Livre.
+ */
 
-    const areaAcoes =
-        document.createElement('div');
-
-    areaAcoes.className =
-        'produto-acoes';
-
-
-    const botao =
-        document.createElement('button');
-
-    botao.type =
-        'button';
-
-    botao.className =
-        'btn-produto-acao';
+areaStatus.appendChild(
+    criarBadge(
+        'Importado do Mercado Livre',
+        'status-mercado-livre'
+    )
+);
 
 
-    if (produto.ativo === true) {
+/* ========================================================
+   AÇÕES
+======================================================== */
 
-        botao.textContent =
-            'Inativar';
+const areaAcoes =
+    document.createElement('div');
 
-        botao.classList.add(
-            'btn-inativar'
-        );
-
-
-        botao.addEventListener(
-            'click',
-            function() {
-
-                inativarProduto(
-                    produto.id,
-                    botao
-                );
-
-            }
-        );
-
-    } else {
-
-        botao.textContent =
-            'Ativar';
-
-        botao.classList.add(
-            'btn-ativar'
-        );
+areaAcoes.className =
+    'produto-acoes';
 
 
-        botao.addEventListener(
-            'click',
-            function() {
+const botao =
+    document.createElement('button');
 
-                ativarProduto(
-                    produto.id,
-                    botao
-                );
+botao.type = 'button';
 
-            }
-        );
-
-    }
+botao.className =
+    'btn-produto-acao';
 
 
-    areaAcoes.appendChild(
-        botao
+if (produto.ativo === true) {
+
+    botao.textContent =
+        'Inativar';
+
+    botao.classList.add(
+        'btn-inativar'
     );
 
 
-    /* ========================================================
-       MONTAR CARD
-    ======================================================== */
-
-    card.appendChild(
-        areaSelecao
-    );
-
-    card.appendChild(
-        areaImagem
-    );
-
-    card.appendChild(
-        informacoes
-    );
-
-    card.appendChild(
-        areaStatus
-    );
-
-    card.appendChild(
-        areaAcoes
-    );
-
-
-    /* ========================================================
-       SELEÇÃO
-    ======================================================== */
-
-    checkbox.addEventListener(
-        'change',
+    botao.addEventListener(
+        'click',
         function() {
 
-            card.classList.toggle(
-                'produto-selecionado',
-                checkbox.checked
+            inativarProduto(
+                produto.id,
+                botao
             );
-
-            atualizarContadorSelecionados();
 
         }
     );
 
+} else {
 
-    return card;
+    botao.textContent =
+        'Ativar';
 
+    botao.classList.add(
+        'btn-ativar'
+    );
+
+
+    botao.addEventListener(
+        'click',
+        function() {
+
+            ativarProduto(
+                produto.id,
+                botao
+            );
+
+        }
+    );
 }
 
 
+areaAcoes.appendChild(
+    botao
+);
+
+
+/* ========================================================
+   MONTAR CARD
+======================================================== */
+
+card.appendChild(
+    areaSelecao
+);
+
+card.appendChild(
+    areaImagem
+);
+
+card.appendChild(
+    informacoes
+);
+
+card.appendChild(
+    areaStatus
+);
+
+card.appendChild(
+    areaAcoes
+);
+
+
+/* ========================================================
+   SELEÇÃO
+======================================================== */
+
+checkbox.addEventListener(
+    'change',
+    function() {
+
+        card.classList.toggle(
+            'produto-selecionado',
+            checkbox.checked
+        );
+
+        atualizarContadorSelecionados();
+
+    }
+);
+
+
+return card;
+
+
+}
+
 /* ============================================================
-   14. RENDERIZAR PRODUTOS
+13. RENDERIZAR PRODUTOS
 ============================================================ */
 
 function renderizarProdutos() {
 
-    const lista =
-        elemento('lista-produtos');
+
+const lista =
+    elemento('lista-produtos');
 
 
-    if (!lista) {
+if (!lista) {
 
-        console.error(
-            'lista-produtos não encontrado.'
-        );
+    console.error(
+        'lista-produtos não encontrado.'
+    );
 
-        return;
+    return;
+}
 
-    }
 
+lista.innerHTML = '';
+
+
+if (
+    produtosFiltrados.length === 0
+) {
 
     lista.innerHTML =
-        '';
+        `
+        <div class="produtos-vazio">
 
-
-    if (
-        produtosFiltrados.length === 0
-    ) {
-
-        lista.innerHTML =
-            `
-            <div class="produtos-vazio">
-
-                <div class="produtos-vazio-icone">
-                    📦
-                </div>
-
-                <h2>
-                    Nenhum produto encontrado
-                </h2>
-
-                <p>
-                    Não existem produtos correspondentes
-                    aos filtros selecionados.
-                </p>
-
+            <div class="produtos-vazio-icone">
+                📦
             </div>
-            `;
 
+            <h2>
+                Nenhum produto encontrado
+            </h2>
 
-        atualizarContadorSelecionados();
+            <p>
+                Não existem produtos correspondentes
+                aos filtros selecionados.
+            </p>
 
-        return;
-
-    }
-
-
-    const fragmento =
-        document.createDocumentFragment();
-
-
-    produtosFiltrados.forEach(
-        function(produto) {
-
-            fragmento.appendChild(
-                criarCardProduto(produto)
-            );
-
-        }
-    );
-
-
-    lista.appendChild(
-        fragmento
-    );
+        </div>
+        `;
 
 
     atualizarContadorSelecionados();
 
+    return;
 }
 
 
+const fragmento =
+    document.createDocumentFragment();
+
+
+produtosFiltrados.forEach(
+    function(produto) {
+
+        fragmento.appendChild(
+            criarCardProduto(produto)
+        );
+
+    }
+);
+
+
+lista.appendChild(
+    fragmento
+);
+
+
+atualizarContadorSelecionados();
+
+
+}
+
 /* ============================================================
-   15. APLICAR FILTROS
+14. APLICAR FILTROS
 ============================================================ */
 
 function aplicarFiltros() {
 
-    const filtro =
-        elemento('filtro-status');
+
+const filtro =
+    elemento('filtro-status');
+
+const pesquisaCampo =
+    elemento('campo-pesquisa');
 
 
-    const pesquisaCampo =
-        elemento('campo-pesquisa');
+const valorFiltro =
+    filtro
+        ? filtro.value
+        : 'todos';
 
 
-    const valorFiltro =
-        filtro
-            ? filtro.value
-            : 'todos';
+const pesquisa =
+    pesquisaCampo
+        ? normalizarTexto(
+            pesquisaCampo.value
+        )
+        : '';
 
 
-    const pesquisa =
-        pesquisaCampo
-            ? normalizarTexto(
-                pesquisaCampo.value
-            )
-            : '';
+produtosFiltrados =
+    produtosMercadoLivre.filter(
+        function(produto) {
+
+            let passaStatus = true;
 
 
-    produtosFiltrados =
-        produtosMercadoLivre.filter(
-            function(produto) {
+            if (
+                valorFiltro === 'ativos'
+            ) {
 
-                let passaStatus =
-                    true;
-
-
-                if (
-                    valorFiltro === 'ativos'
-                ) {
-
-                    passaStatus =
-                        produto.ativo === true;
-
-                }
+                passaStatus =
+                    produto.ativo === true;
+            }
 
 
-                else if (
-                    valorFiltro === 'inativos'
-                ) {
+            else if (
+                valorFiltro === 'inativos'
+            ) {
 
-                    passaStatus =
-                        produto.ativo !== true;
-
-                }
-
-
-                else if (
-                    valorFiltro === 'importados'
-                ) {
-
-                    passaStatus =
-                        true;
-
-                }
+                passaStatus =
+                    produto.ativo !== true;
+            }
 
 
-                else if (
-                    valorFiltro === 'nao-importados'
-                ) {
+            else if (
+                valorFiltro === 'importados'
+            ) {
 
-                    /*
-                       Não existem produtos pendentes
-                       dentro desta consulta.
-
-                       A lista consulta somente registros
-                       que já possuem mercado_livre_item_id.
-                    */
-
-                    passaStatus =
-                        false;
-
-                }
+                passaStatus = true;
+            }
 
 
-                if (!passaStatus) {
+            else if (
+                valorFiltro === 'nao-importados'
+            ) {
 
-                    return false;
-
-                }
-
-
-                if (!pesquisa) {
-
-                    return true;
-
-                }
+                passaStatus = false;
+            }
 
 
-                const nome =
-                    normalizarTexto(
-                        produto.nome
-                    );
+            if (!passaStatus) {
+                return false;
+            }
 
 
-                const sku =
-                    normalizarTexto(
-                        produto.sku
-                    );
+            if (!pesquisa) {
+                return true;
+            }
 
 
-                const itemId =
-                    normalizarTexto(
-                        produto.mercado_livre_item_id
-                    );
-
-
-                return (
-                    nome.includes(pesquisa) ||
-                    sku.includes(pesquisa) ||
-                    itemId.includes(pesquisa)
+            const nome =
+                normalizarTexto(
+                    produto.nome
                 );
 
-            }
-        );
+
+            const sku =
+                normalizarTexto(
+                    produto.sku
+                );
 
 
-    renderizarProdutos();
+            const itemId =
+                normalizarTexto(
+                    produto.mercado_livre_item_id
+                );
+
+
+            return (
+                nome.includes(pesquisa) ||
+                sku.includes(pesquisa) ||
+                itemId.includes(pesquisa)
+            );
+
+        }
+    );
+
+
+renderizarProdutos();
+
 
 }
 
-
 /* ============================================================
-   16. CONTADOR
+15. CONTADOR
 ============================================================ */
 
 function atualizarContadorSelecionados() {
 
-    const selecionados =
-        document.querySelectorAll(
-            '.produto-checkbox:checked'
-        );
+
+const selecionados =
+    document.querySelectorAll(
+        '.produto-checkbox:checked'
+    );
 
 
-    const quantidade =
-        selecionados.length;
+const quantidade =
+    selecionados.length;
 
 
-    const contador =
-        elemento('contador-produtos');
+const contador =
+    elemento('contador-produtos');
 
 
-    if (contador) {
+if (contador) {
 
-        if (quantidade > 0) {
+    if (quantidade > 0) {
 
-            contador.textContent =
-                quantidade +
-                (
-                    quantidade === 1
-                        ? ' produto selecionado'
-                        : ' produtos selecionados'
-                );
+        contador.textContent =
+            quantidade +
+            (
+                quantidade === 1
+                    ? ' produto selecionado'
+                    : ' produtos selecionados'
+            );
 
-        } else {
+    } else {
 
-            contador.textContent =
-                produtosFiltrados.length +
-                (
-                    produtosFiltrados.length === 1
-                        ? ' produto encontrado'
-                        : ' produtos encontrados'
-                );
-
-        }
-
-    }
-
-
-    const botao =
-        elemento(
-            'btn-sincronizar-selecionados'
-        );
-
-
-    if (botao) {
-
-        botao.disabled =
-            quantidade === 0;
+        contador.textContent =
+            produtosFiltrados.length +
+            (
+                produtosFiltrados.length === 1
+                    ? ' produto encontrado'
+                    : ' produtos encontrados'
+            );
 
     }
-
-
-    atualizarCheckboxTodos();
-
 }
 
 
+const botao =
+    elemento(
+        'btn-sincronizar-selecionados'
+    );
+
+
+if (botao) {
+
+    botao.disabled =
+        quantidade === 0;
+}
+
+
+atualizarCheckboxTodos();
+
+
+}
+
 /* ============================================================
-   17. CHECKBOX TODOS
+16. CHECKBOX TODOS
 ============================================================ */
 
 function atualizarCheckboxTodos() {
 
-    const principal =
-        elemento(
-            'checkbox-selecionar-todos'
-        );
+
+const principal =
+    elemento(
+        'checkbox-selecionar-todos'
+    );
 
 
-    if (!principal) {
-
-        return;
-
-    }
-
-
-    const checkboxes =
-        document.querySelectorAll(
-            '.produto-checkbox'
-        );
-
-
-    const selecionados =
-        document.querySelectorAll(
-            '.produto-checkbox:checked'
-        );
-
-
-    if (
-        checkboxes.length === 0
-    ) {
-
-        principal.checked =
-            false;
-
-        principal.indeterminate =
-            false;
-
-        return;
-
-    }
-
-
-    principal.checked =
-        selecionados.length ===
-        checkboxes.length;
-
-
-    principal.indeterminate =
-        selecionados.length > 0 &&
-        selecionados.length <
-        checkboxes.length;
-
+if (!principal) {
+    return;
 }
 
 
+const checkboxes =
+    document.querySelectorAll(
+        '.produto-checkbox'
+    );
+
+
+const selecionados =
+    document.querySelectorAll(
+        '.produto-checkbox:checked'
+    );
+
+
+if (
+    checkboxes.length === 0
+) {
+
+    principal.checked = false;
+
+    principal.indeterminate = false;
+
+    return;
+}
+
+
+principal.checked =
+    selecionados.length ===
+    checkboxes.length;
+
+
+principal.indeterminate =
+    selecionados.length > 0 &&
+    selecionados.length <
+    checkboxes.length;
+
+
+}
+
 /* ============================================================
-   18. SELECIONAR TODOS
+17. SELECIONAR TODOS
 ============================================================ */
 
 function selecionarTodosProdutos() {
 
-    document
-        .querySelectorAll(
-            '.produto-checkbox'
-        )
-        .forEach(
-            function(checkbox) {
 
-                checkbox.checked =
-                    true;
+document
+    .querySelectorAll(
+        '.produto-checkbox'
+    )
+    .forEach(
+        function(checkbox) {
 
-
-                const card =
-                    checkbox.closest(
-                        '.produto-mercado-livre-card'
-                    );
+            checkbox.checked = true;
 
 
-                if (card) {
+            const card =
+                checkbox.closest(
+                    '.produto-mercado-livre-card'
+                );
 
-                    card.classList.add(
-                        'produto-selecionado'
-                    );
 
-                }
+            if (card) {
 
+                card.classList.add(
+                    'produto-selecionado'
+                );
             }
-        );
+
+        }
+    );
 
 
-    atualizarContadorSelecionados();
+atualizarContadorSelecionados();
+
 
 }
 
-
 /* ============================================================
-   19. DESMARCAR TODOS
+18. DESMARCAR TODOS
 ============================================================ */
 
 function desmarcarTodosProdutos() {
 
-    document
-        .querySelectorAll(
-            '.produto-checkbox'
-        )
-        .forEach(
-            function(checkbox) {
 
-                checkbox.checked =
-                    false;
+document
+    .querySelectorAll(
+        '.produto-checkbox'
+    )
+    .forEach(
+        function(checkbox) {
 
-
-                const card =
-                    checkbox.closest(
-                        '.produto-mercado-livre-card'
-                    );
+            checkbox.checked = false;
 
 
-                if (card) {
+            const card =
+                checkbox.closest(
+                    '.produto-mercado-livre-card'
+                );
 
-                    card.classList.remove(
-                        'produto-selecionado'
-                    );
 
-                }
+            if (card) {
 
+                card.classList.remove(
+                    'produto-selecionado'
+                );
             }
-        );
+
+        }
+    );
 
 
-    const principal =
-        elemento(
-            'checkbox-selecionar-todos'
-        );
+const principal =
+    elemento(
+        'checkbox-selecionar-todos'
+    );
 
 
-    if (principal) {
+if (principal) {
 
-        principal.checked =
-            false;
+    principal.checked = false;
 
-        principal.indeterminate =
-            false;
-
-    }
-
-
-    atualizarContadorSelecionados();
-
+    principal.indeterminate = false;
 }
 
 
+atualizarContadorSelecionados();
+
+
+}
+
 /* ============================================================
-   20. OBTER PRODUTOS SELECIONADOS
+19. PRODUTOS SELECIONADOS
 ============================================================ */
 
 function obterProdutosSelecionados() {
 
-    const produtos = [];
+
+const produtos = [];
 
 
-    document
-        .querySelectorAll(
-            '.produto-checkbox:checked'
-        )
-        .forEach(
-            function(checkbox) {
+document
+    .querySelectorAll(
+        '.produto-checkbox:checked'
+    )
+    .forEach(
+        function(checkbox) {
 
-                produtos.push({
+            produtos.push({
 
-                    produto_id:
-                        checkbox.value,
+                produto_id:
+                    checkbox.value,
 
-                    mercado_livre_item_id:
-                        checkbox.dataset.itemId
+                mercado_livre_item_id:
+                    checkbox.dataset.itemId
 
-                });
+            });
 
-            }
-        );
+        }
+    );
 
 
-    return produtos;
+return produtos;
+
 
 }
 
-
 /* ============================================================
-   21. ALTERAR STATUS DO PRODUTO
+20. ALTERAR STATUS
 ============================================================ */
 
 async function alterarStatusProduto(
-    produtoId,
-    ativo,
-    botao
+produtoId,
+ativo,
+botao
 ) {
 
-    const supabase =
-        obterSupabaseProdutos();
+
+const supabase =
+    obterSupabaseProdutos();
 
 
-    if (!supabase) {
+if (!supabase) {
 
-        alert(
-            'Cliente Supabase não encontrado.'
-        );
+    alert(
+        'Cliente Supabase não encontrado.'
+    );
 
-        return;
+    return;
+}
 
+
+const textoOriginal =
+    botao
+        ? botao.textContent
+        : '';
+
+
+try {
+
+    if (botao) {
+
+        botao.disabled = true;
+
+        botao.textContent =
+            ativo
+                ? 'Ativando...'
+                : 'Inativando...';
     }
 
 
-    const textoOriginal =
-        botao
-            ? botao.textContent
-            : '';
+    const resultado =
+        await supabase
+            .from('produtos')
+            .update({
 
+                ativo: ativo,
 
-    try {
+                updated_at:
+                    new Date().toISOString()
 
-        if (botao) {
-
-            botao.disabled =
-                true;
-
-            botao.textContent =
-                ativo
-                    ? 'Ativando...'
-                    : 'Inativando...';
-
-        }
-
-
-        const resultado =
-            await supabase
-                .from('produtos')
-                .update({
-
-                    ativo:
-                        ativo,
-
-                    updated_at:
-                        new Date().toISOString()
-
-                })
-                .eq(
-                    'id',
-                    produtoId
-                );
-
-
-        if (resultado.error) {
-
-            throw resultado.error;
-
-        }
-
-
-        const produto =
-            produtosMercadoLivre.find(
-                item =>
-                    String(item.id) ===
-                    String(produtoId)
+            })
+            .eq(
+                'id',
+                produtoId
             );
 
 
-        if (produto) {
-
-            produto.ativo =
-                ativo;
-
-        }
-
-
-        atualizarDashboard();
-
-        aplicarFiltros();
-
-
-    } catch (erro) {
-
-        console.error(
-            'Erro ao alterar status:',
-            erro
-        );
-
-
-        alert(
-            'Não foi possível alterar o status.\n\n' +
-            (
-                erro.message ||
-                'Erro desconhecido.'
-            )
-        );
-
-
-        if (botao) {
-
-            botao.disabled =
-                false;
-
-            botao.textContent =
-                textoOriginal;
-
-        }
-
+    if (resultado.error) {
+        throw resultado.error;
     }
 
+
+    const produto =
+        produtosMercadoLivre.find(
+            item =>
+                String(item.id) ===
+                String(produtoId)
+        );
+
+
+    if (produto) {
+
+        produto.ativo =
+            ativo;
+    }
+
+
+    atualizarDashboard();
+
+    aplicarFiltros();
+
+
+} catch (erro) {
+
+    console.error(
+        'Erro ao alterar status:',
+        erro
+    );
+
+
+    alert(
+        'Não foi possível alterar o status.\n\n' +
+        (
+            erro.message ||
+            'Erro desconhecido.'
+        )
+    );
+
+
+    if (botao) {
+
+        botao.disabled = false;
+
+        botao.textContent =
+            textoOriginal;
+    }
 }
 
 
+}
+
 /* ============================================================
-   22. INATIVAR
+21. INATIVAR
 ============================================================ */
 
 async function inativarProduto(
-    produtoId,
-    botao
+produtoId,
+botao
 ) {
 
-    const confirmar =
-        confirm(
-            'Deseja inativar este produto no ZoraVision?\n\n' +
-            'O produto não será excluído.'
-        );
 
-
-    if (!confirmar) {
-
-        return;
-
-    }
-
-
-    await alterarStatusProduto(
-        produtoId,
-        false,
-        botao
+const confirmar =
+    confirm(
+        'Deseja inativar este produto no ZoraVision?\n\n' +
+        'O produto não será excluído.'
     );
 
+
+if (!confirmar) {
+    return;
 }
 
 
+await alterarStatusProduto(
+    produtoId,
+    false,
+    botao
+);
+
+
+}
+
 /* ============================================================
-   23. ATIVAR
+22. ATIVAR
 ============================================================ */
 
 async function ativarProduto(
-    produtoId,
-    botao
+produtoId,
+botao
 ) {
 
-    const confirmar =
-        confirm(
-            'Deseja ativar este produto no ZoraVision?'
-        );
 
-
-    if (!confirmar) {
-
-        return;
-
-    }
-
-
-    await alterarStatusProduto(
-        produtoId,
-        true,
-        botao
+const confirmar =
+    confirm(
+        'Deseja ativar este produto no ZoraVision?'
     );
 
+
+if (!confirmar) {
+    return;
 }
 
 
+await alterarStatusProduto(
+    produtoId,
+    true,
+    botao
+);
+
+
+}
+
 /* ============================================================
-   24. CARREGAR PRODUTOS
+23. CARREGAR
 ============================================================ */
 
 async function carregarProdutosMercadoLivre() {
 
-    if (carregandoProdutos) {
 
-        return;
-
-    }
-
-
-    carregandoProdutos =
-        true;
+if (carregandoProdutos) {
+    return;
+}
 
 
-    esconderMensagem();
+carregandoProdutos = true;
 
 
-    const lista =
-        elemento('lista-produtos');
+esconderMensagem();
 
 
-    if (!lista) {
+const lista =
+    elemento('lista-produtos');
 
-        carregandoProdutos =
-            false;
 
-        return;
+if (!lista) {
 
-    }
+    carregandoProdutos = false;
+
+    return;
+}
+
+
+lista.innerHTML =
+    `
+    <div class="produtos-vazio">
+
+        <div class="produtos-vazio-icone">
+            ⏳
+        </div>
+
+        <h2>
+            Carregando produtos
+        </h2>
+
+        <p>
+            Consultando produtos do Mercado Livre...
+        </p>
+
+    </div>
+    `;
+
+
+try {
+
+    produtosMercadoLivre =
+        await buscarProdutosImportados();
+
+
+    produtosFiltrados =
+        [...produtosMercadoLivre];
+
+
+    atualizarDashboard();
+
+    aplicarFiltros();
+
+
+    console.log(
+        'Produtos carregados:',
+        produtosMercadoLivre.length
+    );
+
+
+} catch (erro) {
+
+    console.error(
+        'Erro ao carregar produtos:',
+        erro
+    );
+
+
+    mostrarMensagem(
+        'Não foi possível carregar os produtos: ' +
+        (
+            erro.message ||
+            'erro desconhecido'
+        ),
+        'erro'
+    );
 
 
     lista.innerHTML =
@@ -1461,490 +1392,398 @@ async function carregarProdutosMercadoLivre() {
         <div class="produtos-vazio">
 
             <div class="produtos-vazio-icone">
-                ⏳
+                ⚠️
             </div>
 
             <h2>
-                Carregando produtos
+                Erro ao carregar produtos
             </h2>
 
             <p>
-                Consultando produtos do Mercado Livre...
+                Verifique a conexão com o Supabase
+                e tente novamente.
             </p>
 
         </div>
         `;
 
 
-    try {
+} finally {
 
-        produtosMercadoLivre =
-            await buscarProdutosImportados();
-
-
-        produtosFiltrados =
-            [...produtosMercadoLivre];
-
-
-        atualizarDashboard();
-
-        aplicarFiltros();
-
-
-        console.log(
-            'Produtos carregados:',
-            produtosMercadoLivre.length
-        );
-
-
-    } catch (erro) {
-
-        console.error(
-            'Erro ao carregar produtos:',
-            erro
-        );
-
-
-        mostrarMensagem(
-            'Não foi possível carregar os produtos: ' +
-            (
-                erro.message ||
-                'erro desconhecido'
-            ),
-            'erro'
-        );
-
-
-        lista.innerHTML =
-            `
-            <div class="produtos-vazio">
-
-                <div class="produtos-vazio-icone">
-                    ⚠️
-                </div>
-
-                <h2>
-                    Erro ao carregar produtos
-                </h2>
-
-                <p>
-                    Verifique a conexão com o Supabase
-                    e tente novamente.
-                </p>
-
-            </div>
-            `;
-
-    } finally {
-
-        carregandoProdutos =
-            false;
-
-    }
+    carregandoProdutos = false;
 
 }
 
 
+}
+
 /* ============================================================
-   25. SINCRONIZAR PRODUTOS
+24. SINCRONIZAR
 ============================================================ */
 
 async function sincronizarProdutosSelecionados() {
 
-    const produtos =
-        obterProdutosSelecionados();
+
+const produtos =
+    obterProdutosSelecionados();
 
 
-    if (
-        produtos.length === 0
-    ) {
+if (
+    produtos.length === 0
+) {
 
-        alert(
-            'Selecione pelo menos um produto.'
-        );
+    alert(
+        'Selecione pelo menos um produto.'
+    );
 
-        return;
+    return;
+}
 
+
+const confirmar =
+    confirm(
+        'Deseja sincronizar ' +
+        produtos.length +
+        ' produto(s)?'
+    );
+
+
+if (!confirmar) {
+    return;
+}
+
+
+const botao =
+    elemento(
+        'btn-sincronizar-selecionados'
+    );
+
+
+const textoOriginal =
+    botao
+        ? botao.textContent
+        : 'Sincronizar selecionados';
+
+
+try {
+
+    if (botao) {
+
+        botao.disabled = true;
+
+        botao.textContent =
+            'Sincronizando...';
     }
 
 
-    const confirmar =
-        confirm(
-            'Deseja sincronizar ' +
-            produtos.length +
-            ' produto(s)?'
+    const resposta =
+        await fetch(
+            EDGE_FUNCTION_IMPORTAR,
+            {
+
+                method: 'POST',
+
+                headers: {
+
+                    'Content-Type':
+                        'application/json'
+
+                },
+
+                body:
+                    JSON.stringify({
+                        produtos:
+                            produtos
+                    })
+
+            }
         );
 
 
-    if (!confirmar) {
+    const texto =
+        await resposta.text();
 
-        return;
 
+    let resultado = null;
+
+
+    try {
+
+        resultado =
+            texto
+                ? JSON.parse(texto)
+                : null;
+
+    } catch {
+
+        resultado = null;
     }
 
 
-    const botao =
+    if (!resposta.ok) {
+
+        throw new Error(
+            resultado?.erro ||
+            resultado?.error ||
+            'Erro na sincronização.'
+        );
+    }
+
+
+    alert(
+        'Sincronização concluída.\n\n' +
+        'Encontrados: ' +
+        (
+            resultado?.total_encontrados ||
+            0
+        ) +
+        '\n' +
+        'Criados: ' +
+        (
+            resultado?.criados ||
+            0
+        ) +
+        '\n' +
+        'Atualizados: ' +
+        (
+            resultado?.atualizados ||
+            0
+        ) +
+        '\n' +
+        'Erros: ' +
+        (
+            resultado?.erros ||
+            0
+        )
+    );
+
+
+    await carregarProdutosMercadoLivre();
+
+
+} catch (erro) {
+
+    console.error(
+        'Erro na sincronização:',
+        erro
+    );
+
+
+    alert(
+        'Não foi possível sincronizar os produtos.\n\n' +
+        (
+            erro.message ||
+            'Erro desconhecido.'
+        )
+    );
+
+
+} finally {
+
+    if (botao) {
+
+        botao.textContent =
+            textoOriginal;
+    }
+
+
+    atualizarContadorSelecionados();
+}
+
+
+}
+
+/* ============================================================
+25. INICIALIZAÇÃO
+============================================================ */
+
+document.addEventListener(
+'DOMContentLoaded',
+function() {
+
+
+    console.log(
+        '============================================================'
+    );
+
+    console.log(
+        'ZoraVision - Produtos Mercado Livre'
+    );
+
+    console.log(
+        'Inicializando página...'
+    );
+
+    console.log(
+        '============================================================'
+    );
+
+
+    /* FILTRO */
+
+    const filtro =
+        elemento('filtro-status');
+
+
+    if (filtro) {
+
+        filtro.addEventListener(
+            'change',
+            aplicarFiltros
+        );
+    }
+
+
+    /* PESQUISA */
+
+    const pesquisa =
+        elemento('campo-pesquisa');
+
+
+    if (pesquisa) {
+
+        pesquisa.addEventListener(
+            'input',
+            aplicarFiltros
+        );
+    }
+
+
+    /* CHECKBOX PRINCIPAL */
+
+    const checkboxTodos =
+        elemento(
+            'checkbox-selecionar-todos'
+        );
+
+
+    if (checkboxTodos) {
+
+        checkboxTodos.addEventListener(
+            'change',
+            function() {
+
+                if (
+                    checkboxTodos.checked
+                ) {
+
+                    selecionarTodosProdutos();
+
+                } else {
+
+                    desmarcarTodosProdutos();
+
+                }
+
+            }
+        );
+    }
+
+
+    /* SELECIONAR */
+
+    const selecionar =
+        elemento(
+            'btn-selecionar-todos'
+        );
+
+
+    if (selecionar) {
+
+        selecionar.addEventListener(
+            'click',
+            selecionarTodosProdutos
+        );
+    }
+
+
+    /* DESMARCAR */
+
+    const desmarcar =
+        elemento(
+            'btn-desmarcar-todos'
+        );
+
+
+    if (desmarcar) {
+
+        desmarcar.addEventListener(
+            'click',
+            desmarcarTodosProdutos
+        );
+    }
+
+
+    /* SINCRONIZAR */
+
+    const sincronizar =
         elemento(
             'btn-sincronizar-selecionados'
         );
 
 
-    const textoOriginal =
-        botao
-            ? botao.textContent
-            : 'Sincronizar selecionados';
+    if (sincronizar) {
 
-
-    try {
-
-        if (botao) {
-
-            botao.disabled =
-                true;
-
-            botao.textContent =
-                'Sincronizando...';
-
-        }
-
-
-        const resposta =
-            await fetch(
-                EDGE_FUNCTION_IMPORTAR,
-                {
-
-                    method: 'POST',
-
-                    headers: {
-
-                        'Content-Type':
-                            'application/json'
-
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            produtos:
-                                produtos
-
-                        })
-
-                }
-            );
-
-
-        const texto =
-            await resposta.text();
-
-
-        let resultado =
-            null;
-
-
-        try {
-
-            resultado =
-                texto
-                    ? JSON.parse(texto)
-                    : null;
-
-        } catch {
-
-            resultado =
-                null;
-
-        }
-
-
-        if (!resposta.ok) {
-
-            throw new Error(
-                resultado?.erro ||
-                resultado?.error ||
-                'Erro na sincronização.'
-            );
-
-        }
-
-
-        alert(
-            'Sincronização concluída.\n\n' +
-            'Encontrados: ' +
-            (
-                resultado?.total_encontrados ||
-                0
-            ) +
-            '\n' +
-            'Criados: ' +
-            (
-                resultado?.criados ||
-                0
-            ) +
-            '\n' +
-            'Atualizados: ' +
-            (
-                resultado?.atualizados ||
-                0
-            ) +
-            '\n' +
-            'Erros: ' +
-            (
-                resultado?.erros ||
-                0
-            )
+        sincronizar.addEventListener(
+            'click',
+            sincronizarProdutosSelecionados
         );
-
-
-        await carregarProdutosMercadoLivre();
-
-
-    } catch (erro) {
-
-        console.error(
-            'Erro na sincronização:',
-            erro
-        );
-
-
-        alert(
-            'Não foi possível sincronizar os produtos.\n\n' +
-            (
-                erro.message ||
-                'Erro desconhecido.'
-            )
-        );
-
-
-    } finally {
-
-        if (botao) {
-
-            botao.textContent =
-                textoOriginal;
-
-        }
-
-
-        atualizarContadorSelecionados();
-
     }
+
+
+    /* ATUALIZAR */
+
+    const atualizar =
+        elemento(
+            'btn-atualizar-produtos'
+        );
+
+
+    if (atualizar) {
+
+        atualizar.addEventListener(
+            'click',
+            carregarProdutosMercadoLivre
+        );
+    }
+
+
+    /* CARREGAR */
+
+    carregarProdutosMercadoLivre();
 
 }
 
 
-/* ============================================================
-   26. INICIALIZAÇÃO
-============================================================ */
-
-document.addEventListener(
-    'DOMContentLoaded',
-    function() {
-
-        console.log(
-            '============================================================'
-        );
-
-        console.log(
-            'ZoraVision - Produtos Mercado Livre'
-        );
-
-        console.log(
-            'Inicializando página...'
-        );
-
-        console.log(
-            '============================================================'
-        );
-
-
-        /* ====================================================
-           FILTRO
-        ==================================================== */
-
-        const filtro =
-            elemento('filtro-status');
-
-
-        if (filtro) {
-
-            filtro.addEventListener(
-                'change',
-                aplicarFiltros
-            );
-
-        }
-
-
-        /* ====================================================
-           PESQUISA
-        ==================================================== */
-
-        const pesquisa =
-            elemento('campo-pesquisa');
-
-
-        if (pesquisa) {
-
-            pesquisa.addEventListener(
-                'input',
-                aplicarFiltros
-            );
-
-        }
-
-
-        /* ====================================================
-           CHECKBOX PRINCIPAL
-        ==================================================== */
-
-        const checkboxTodos =
-            elemento(
-                'checkbox-selecionar-todos'
-            );
-
-
-        if (checkboxTodos) {
-
-            checkboxTodos.addEventListener(
-                'change',
-                function() {
-
-                    if (
-                        checkboxTodos.checked
-                    ) {
-
-                        selecionarTodosProdutos();
-
-                    } else {
-
-                        desmarcarTodosProdutos();
-
-                    }
-
-                }
-            );
-
-        }
-
-
-        /* ====================================================
-           SELECIONAR TODOS
-        ==================================================== */
-
-        const selecionar =
-            elemento(
-                'btn-selecionar-todos'
-            );
-
-
-        if (selecionar) {
-
-            selecionar.addEventListener(
-                'click',
-                selecionarTodosProdutos
-            );
-
-        }
-
-
-        /* ====================================================
-           DESMARCAR
-        ==================================================== */
-
-        const desmarcar =
-            elemento(
-                'btn-desmarcar-todos'
-            );
-
-
-        if (desmarcar) {
-
-            desmarcar.addEventListener(
-                'click',
-                desmarcarTodosProdutos
-            );
-
-        }
-
-
-        /* ====================================================
-           SINCRONIZAR
-        ==================================================== */
-
-        const sincronizar =
-            elemento(
-                'btn-sincronizar-selecionados'
-            );
-
-
-        if (sincronizar) {
-
-            sincronizar.addEventListener(
-                'click',
-                sincronizarProdutosSelecionados
-            );
-
-        }
-
-
-        /* ====================================================
-           ATUALIZAR
-        ==================================================== */
-
-        const atualizar =
-            elemento(
-                'btn-atualizar-produtos'
-            );
-
-
-        if (atualizar) {
-
-            atualizar.addEventListener(
-                'click',
-                carregarProdutosMercadoLivre
-            );
-
-        }
-
-
-        /* ====================================================
-           CARREGAR
-        ==================================================== */
-
-        carregarProdutosMercadoLivre();
-
-    }
 );
 
-
 /* ============================================================
-   27. FUNÇÕES GLOBAIS
+26. FUNÇÕES GLOBAIS
 ============================================================ */
 
 window.carregarProdutosMercadoLivre =
-    carregarProdutosMercadoLivre;
+carregarProdutosMercadoLivre;
 
 window.selecionarTodosProdutos =
-    selecionarTodosProdutos;
+selecionarTodosProdutos;
 
 window.desmarcarTodosProdutos =
-    desmarcarTodosProdutos;
+desmarcarTodosProdutos;
 
 window.obterProdutosSelecionados =
-    obterProdutosSelecionados;
+obterProdutosSelecionados;
 
 window.sincronizarProdutosSelecionados =
-    sincronizarProdutosSelecionados;
+sincronizarProdutosSelecionados;
 
 window.ativarProduto =
-    ativarProduto;
+ativarProduto;
 
 window.inativarProduto =
-    inativarProduto;
+inativarProduto;
 
 window.alterarStatusProduto =
-    alterarStatusProduto;
+alterarStatusProduto;
 
 window.aplicarFiltros =
-    aplicarFiltros;
+aplicarFiltros;
