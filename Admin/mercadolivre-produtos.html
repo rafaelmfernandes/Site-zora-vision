@@ -43,8 +43,8 @@
 
     <button
         type="button"
-        class="btn-sair"
         id="btn-sair-admin"
+        class="btn-sair"
     >
         Sair
     </button>
@@ -67,10 +67,6 @@
 <main class="produtos-container">
 
 
-<!-- ========================================================
-     TOPO
-========================================================= -->
-
 <section class="produtos-topo">
 
     <span class="section-label">
@@ -82,104 +78,99 @@
     </h1>
 
     <p>
-        Gerencie os produtos importados do Mercado Livre
-        no ZoraVision.
+        Gerencie os produtos importados do Mercado Livre.
     </p>
 
 </section>
 
 
-<!-- ========================================================
-     O
-========================================================= -->
+<!-- RESUMO -->
 
-<section class="produtos-o">
+<section class="produtos-resumo">
 
-    <div class="o-card">
+    <div class="resumo-card">
 
-        <span class="o-label">
+        <span class="resumo-label">
             Encontrados
         </span>
 
         <strong
             id="total-produtos"
-            class="o-valor"
+            class="resumo-valor"
         >
             0
         </strong>
 
+        <small>
+            produtos
+        </small>
+
     </div>
 
 
-    <div class="o-card">
+    <div class="resumo-card">
 
-        <span class="o-label">
+        <span class="resumo-label">
             Importados
         </span>
 
         <strong
             id="total-importados"
-            class="o-valor"
+            class="resumo-valor"
         >
             0
         </strong>
 
+        <small>
+            no ZoraVision
+        </small>
+
     </div>
 
 
-    <div class="o-card">
+    <div class="resumo-card">
 
-        <span class="o-label">
+        <span class="resumo-label">
             Ativos
         </span>
 
         <strong
             id="total-ativos"
-            class="o-valor"
+            class="resumo-valor"
         >
             0
         </strong>
 
+        <small>
+            disponíveis
+        </small>
+
     </div>
 
 
-    <div class="o-card">
+    <div class="resumo-card">
 
-        <span class="o-label">
+        <span class="resumo-label">
             Inativos
         </span>
 
         <strong
             id="total-inativos"
-            class="o-valor"
+            class="resumo-valor"
         >
             0
         </strong>
 
-    </div>
-
-
-    <div class="o-card">
-
-        <span class="o-label">
-            Pendentes
-        </span>
-
-        <strong
-            id="total-nao-importados"
-            class="o-valor"
-        >
-            0
-        </strong>
+        <small>
+            ocultos
+        </small>
 
     </div>
 
 </section>
 
 
-<!-- ========================================================
-     FILTROS
-========================================================= -->
+<!-- FILTROS -->
 
 <section class="produtos-filtros">
 
@@ -193,10 +184,6 @@
 
             <option value="todos">
                 Todos
-            </option>
-
-            <option value="importados">
-                Importados
             </option>
 
             <option value="ativos">
@@ -230,8 +217,8 @@
 
     <button
         type="button"
-        class="btn-produtos btn-atualizar"
         id="btn-atualizar-produtos"
+        class="btn-produtos btn-atualizar"
     >
         Atualizar
     </button>
@@ -239,9 +226,7 @@
 </section>
 
 
-<!-- ========================================================
-     MENSAGEM
-========================================================= -->
+<!-- MENSAGEM -->
 
 <div
     id="mensagem-produtos"
@@ -250,9 +235,7 @@
 ></div>
 
 
-<!-- ========================================================
-     AÇÕES
-========================================================= -->
+<!-- AÇÕES -->
 
 <section class="produtos-acoes">
 
@@ -275,7 +258,7 @@
             id="contador-produtos"
             class="contador-produtos"
         >
-            0 produtos encontrados
+            0 produtos selecionados
         </span>
 
     </div>
@@ -285,26 +268,24 @@
 
         <button
             type="button"
-            class="btn-produtos"
             id="btn-selecionar-todos"
+            class="btn-produtos btn-selecionar"
         >
             Selecionar todos
         </button>
 
-
         <button
             type="button"
-            class="btn-produtos"
             id="btn-desmarcar-todos"
+            class="btn-produtos btn-desmarcar"
         >
-            Desmarcar todos
+            Desmarcar
         </button>
 
-
         <button
             type="button"
-            class="btn-produtos btn-sincronizar"
             id="btn-sincronizar-selecionados"
+            class="btn-produtos btn-sincronizar"
             disabled
         >
             Sincronizar selecionados
@@ -315,14 +296,11 @@
 </section>
 
 
-<!-- ========================================================
-     LISTA
-========================================================= -->
+<!-- LISTA -->
 
 <section
     id="lista-produtos"
     class="lista-produtos"
-    aria-live="polite"
 >
 
     <div class="produtos-vazio">
@@ -349,13 +327,13 @@
 <footer class="admin-footer">
 
 
-<span>
+<strong>
     ZoraVision
-</span>
+</strong>
 
-<small>
-    Produtos do Mercado Livre
-</small>
+<span>
+    Produtos Mercado Livre
+</span>
 
 
 </footer>
