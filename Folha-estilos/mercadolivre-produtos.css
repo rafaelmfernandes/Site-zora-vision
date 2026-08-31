@@ -1,8 +1,22 @@
 /* ============================================================
-ZORAVISION - PRODUTOS MERCADO LIVRE
+ZORAVISION - PRODUTOS DO MERCADO LIVRE
 Arquivo:
 Folha-estilos/mercadolivre-produtos.css
-============================================================ */
+
+Compatível com:
+Admin/mercadolivre-produtos.html
+
+Responsabilidades:
+
+* Layout administrativo
+* Resumo dos produtos
+* Busca
+* Filtros
+* Seleção
+* Cards dos produtos
+* Status de importação
+* Responsividade
+  ============================================================ */
 
 /* ============================================================
 
@@ -16,116 +30,222 @@ Folha-estilos/mercadolivre-produtos.css
   }
 
 html {
+width: 100%;
+min-height: 100%;
 scroll-behavior: smooth;
 }
 
 body {
+width: 100%;
 min-height: 100vh;
-font-family: Arial, Helvetica, sans-serif;
-background: #f6f7f9;
-color: #171717;
+
+
+background: #f5f7fa;
+
+color: #172033;
+
+font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+
 line-height: 1.5;
+
+overflow-x: hidden;
+
+
+}
+
+button,
+input,
+select {
+font: inherit;
+}
+
+button {
+cursor: pointer;
+}
+
+a {
+color: inherit;
+text-decoration: none;
 }
 
 /* ============================================================
-2. CABEÇALHO
+2. CABEÇALHO ADMINISTRATIVO
 ============================================================ */
 
 .admin-header {
 width: 100%;
+
+
 background: #ffffff;
-border-bottom: 1px solid #e5e7eb;
+
+border-bottom: 1px solid #e7eaf0;
+
+position: relative;
+
+z-index: 10;
+
+
 }
 
 .admin-header-top {
-width: min(1180px, calc(100% - 32px));
-min-height: 70px;
+width: 100%;
+max-width: 1400px;
+
+
+min-height: 72px;
+
 margin: 0 auto;
 
+padding: 0 28px;
 
-display: flex;
+display: grid;
+
+grid-template-columns: 44px 1fr 100px;
+
 align-items: center;
-justify-content: space-between;
 
-gap: 16px;
+gap: 18px;
 
 
 }
 
-.admin-logo {
-font-size: 21px;
-font-weight: 800;
-letter-spacing: -0.5px;
-}
+/* ============================================================
+BOTÃO VOLTAR
+============================================================ */
 
 .btn-voltar {
-width: 40px;
-height: 40px;
+width: 42px;
+height: 42px;
 
 
 display: flex;
+
 align-items: center;
 justify-content: center;
 
-text-decoration: none;
+border: 1px solid #e2e6ed;
 
-color: #171717;
-
-border: 1px solid #e1e4e8;
 border-radius: 10px;
 
 background: #ffffff;
 
-font-size: 28px;
+color: #253047;
+
+font-size: 29px;
+
 line-height: 1;
 
-transition: 0.2s ease;
+transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 
 
 }
 
 .btn-voltar:hover {
-background: #f3f4f6;
+background: #f5f7fa;
+
+
+border-color: #cfd5df;
+
+transform: translateX(-2px);
+
+
 }
 
-.btn-sair {
-border: 1px solid #e1e4e8;
-background: #ffffff;
-color: #333333;
+/* ============================================================
+LOGO
+============================================================ */
 
+.admin-logo {
+font-size: 22px;
+
+
+font-weight: 800;
+
+letter-spacing: -0.5px;
+
+color: #111827;
+
+
+}
+
+/* ============================================================
+BOTÃO SAIR
+============================================================ */
+
+.btn-sair {
+width: 100px;
+
+
+height: 40px;
+
+border: 1px solid #e1e5eb;
 
 border-radius: 9px;
 
-padding: 9px 16px;
+background: #ffffff;
+
+color: #4b5563;
 
 font-size: 14px;
+
 font-weight: 600;
 
-cursor: pointer;
-
-transition: 0.2s ease;
+transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 
 
 }
 
 .btn-sair:hover {
-background: #f3f4f6;
+background: #f8f9fb;
+
+
+border-color: #cbd1da;
+
+color: #111827;
+
+
 }
 
+/* ============================================================
+INFORMAÇÃO DO CABEÇALHO
+============================================================ */
+
 .admin-header-info {
-width: min(1180px, calc(100% - 32px));
+width: 100%;
+max-width: 1400px;
+
+
 margin: 0 auto;
 
+min-height: 42px;
 
-min-height: 38px;
+padding:
+    0 28px
+    12px;
 
 display: flex;
+
 align-items: center;
 
-gap: 8px;
+gap: 9px;
 
-color: #6b7280;
+color: #687386;
+
 font-size: 13px;
+
+font-weight: 500;
 
 
 }
@@ -135,11 +255,11 @@ width: 8px;
 height: 8px;
 
 
+display: inline-block;
+
 border-radius: 50%;
 
 background: #22c55e;
-
-display: inline-block;
 
 
 }
@@ -149,12 +269,15 @@ display: inline-block;
 ============================================================ */
 
 .produtos-container {
-width: min(1180px, calc(100% - 32px));
+width: 100%;
+max-width: 1400px;
 
 
 margin: 0 auto;
 
-padding: 42px 0 60px;
+padding:
+    42px 28px
+    70px;
 
 
 }
@@ -164,145 +287,440 @@ padding: 42px 0 60px;
 ============================================================ */
 
 .produtos-topo {
-margin-bottom: 28px;
+width: 100%;
+
+
+margin-bottom: 30px;
+
+display: flex;
+
+align-items: flex-start;
+
+justify-content: space-between;
+
+gap: 30px;
+
+
 }
 
 .section-label {
-display: block;
+display: inline-block;
 
 
-margin-bottom: 7px;
+margin-bottom: 8px;
 
-color: #777f89;
+color: #64748b;
 
 font-size: 11px;
+
 font-weight: 800;
 
-letter-spacing: 1.2px;
+letter-spacing: 1.3px;
 
 
 }
 
 .produtos-topo h1 {
+margin-bottom: 9px;
+
+
+color: #111827;
+
 font-size: 34px;
+
 line-height: 1.15;
 
+font-weight: 800;
 
-letter-spacing: -1px;
-
-margin-bottom: 8px;
+letter-spacing: -0.8px;
 
 
 }
 
 .produtos-topo p {
-max-width: 720px;
+max-width: 760px;
 
 
-color: #6b7280;
+color: #697386;
 
 font-size: 15px;
+
+line-height: 1.65;
 
 
 }
 
 /* ============================================================
-5. BARRA DE CONTROLE
+5. RESUMO ADMINISTRATIVO
 ============================================================ */
 
-.produtos-controles {
+.produtos-resumo {
 width: 100%;
 
 
-margin-bottom: 22px;
+margin-bottom: 28px;
 
-padding: 16px 18px;
+display: grid;
+
+grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+gap: 14px;
+
+
+}
+
+.resumo-card {
+min-width: 0;
+
+
+padding: 20px;
 
 background: #ffffff;
 
-border: 1px solid #e3e6ea;
+border: 1px solid #e5e9ef;
 
 border-radius: 14px;
 
 display: flex;
+
 align-items: center;
-justify-content: space-between;
-
-gap: 20px;
-
-flex-wrap: wrap;
-
-
-}
-
-.produtos-controles-esquerda {
-display: flex;
-align-items: center;
-
 
 gap: 14px;
 
-flex-wrap: wrap;
+box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.025);
 
 
 }
 
-.produtos-controles-direita {
+.resumo-card-icone {
+width: 42px;
+height: 42px;
+
+
+flex: 0 0 42px;
+
 display: flex;
+
 align-items: center;
+justify-content: center;
+
+border-radius: 10px;
+
+background: #f1f4f8;
+
+color: #374151;
+
+font-size: 12px;
+
+font-weight: 800;
 
 
-gap: 8px;
+}
 
-flex-wrap: wrap;
+.resumo-card-conteudo {
+min-width: 0;
+
+
+display: flex;
+
+flex-direction: column;
+
+gap: 2px;
+
+
+}
+
+.resumo-card-label {
+color: #737d8e;
+
+
+font-size: 11px;
+
+font-weight: 600;
+
+line-height: 1.3;
+
+
+}
+
+.resumo-card-numero {
+color: #111827;
+
+
+font-size: 24px;
+
+line-height: 1.2;
+
+font-weight: 800;
 
 
 }
 
 /* ============================================================
-6. SELEÇÃO
+CORES DE STATUS
 ============================================================ */
 
-.selecionar-todos {
-display: flex;
-align-items: center;
+.resumo-importados {
+border-color: #dcefe3;
+}
+
+.resumo-importados .resumo-card-icone {
+background: #ecfdf3;
 
 
-gap: 8px;
-
-color: #333333;
-
-font-size: 13px;
-font-weight: 600;
-
-cursor: pointer;
+color: #16834d;
 
 
 }
 
-.selecionar-todos input {
-width: 17px;
-height: 17px;
+.resumo-importados .resumo-card-numero {
+color: #16834d;
+}
+
+.resumo-pendentes {
+border-color: #f0e6c9;
+}
+
+.resumo-pendentes .resumo-card-icone {
+background: #fff9e8;
 
 
-margin: 0;
-
-cursor: pointer;
+color: #9a6b00;
 
 
 }
 
-.contador-produtos {
+.resumo-pendentes .resumo-card-numero {
+color: #9a6b00;
+}
+
+.resumo-ativos {
+border-color: #dcefe3;
+}
+
+.resumo-ativos .resumo-card-icone {
+background: #ecfdf3;
+
+
+color: #15803d;
+
+
+}
+
+.resumo-ativos .resumo-card-numero {
+color: #15803d;
+}
+
+.resumo-inativos {
+border-color: #e5e7eb;
+}
+
+.resumo-inativos .resumo-card-icone {
+background: #f3f4f6;
+
+
 color: #6b7280;
 
 
-font-size: 13px;
+}
+
+.resumo-inativos .resumo-card-numero {
+color: #6b7280;
+}
+
+/* ============================================================
+6. PAINEL DE CONTROLE
+============================================================ */
+
+.produtos-painel-controle {
+width: 100%;
+
+
+margin-bottom: 28px;
+
+background: #ffffff;
+
+border: 1px solid #e5e9ef;
+
+border-radius: 14px;
+
+overflow: hidden;
+
+box-shadow:
+    0 2px 8px rgba(15, 23, 42, 0.025);
 
 
 }
 
-.contador-produtos strong {
-color: #171717;
+/* ============================================================
+CONTROLE SUPERIOR
+============================================================ */
+
+.controle-superior {
+width: 100%;
+
+
+padding: 20px;
+
+display: grid;
+
+grid-template-columns:
+    minmax(280px, 1fr)
+    230px
+    auto;
+
+align-items: end;
+
+gap: 16px;
+
+border-bottom: 1px solid #edf0f4;
+
+
+}
+
+/* ============================================================
+BUSCA
+============================================================ */
+
+.campo-busca {
+min-width: 0;
+}
+
+.campo-busca-label,
+.campo-filtro-label {
+display: block;
+
+
+margin-bottom: 7px;
+
+color: #4b5563;
+
+font-size: 12px;
+
+font-weight: 700;
+
+
+}
+
+.campo-busca-wrapper {
+position: relative;
+
+
+width: 100%;
+
+
+}
+
+.campo-busca-icone {
+position: absolute;
+
+
+left: 13px;
+top: 50%;
+
+transform: translateY(-50%);
+
+color: #8a94a5;
+
+font-size: 20px;
+
+line-height: 1;
+
+pointer-events: none;
+
+
+}
+
+.campo-busca input {
+width: 100%;
+
+
+height: 44px;
+
+padding:
+    0 14px 0 40px;
+
+border: 1px solid #dfe4eb;
+
+border-radius: 9px;
+
+background: #ffffff;
+
+color: #172033;
+
+font-size: 13px;
+
+outline: none;
+
+transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+
+}
+
+.campo-busca input::placeholder {
+color: #9aa3b2;
+}
+
+.campo-busca input:focus {
+border-color: #9aa7b9;
+
+
+box-shadow:
+    0 0 0 3px rgba(100, 116, 139, 0.08);
+
+
+}
+
+/* ============================================================
+FILTRO
+============================================================ */
+
+.campo-filtro {
+min-width: 0;
+}
+
+.campo-filtro select {
+width: 100%;
+
+
+height: 44px;
+
+padding:
+    0 36px 0 13px;
+
+border: 1px solid #dfe4eb;
+
+border-radius: 9px;
+
+background: #ffffff;
+
+color: #374151;
+
+font-size: 13px;
+
+outline: none;
+
+cursor: pointer;
+
+transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+
+}
+
+.campo-filtro select:focus {
+border-color: #9aa7b9;
+
+
+box-shadow:
+    0 0 0 3px rgba(100, 116, 139, 0.08);
+
+
 }
 
 /* ============================================================
@@ -310,54 +728,126 @@ color: #171717;
 ============================================================ */
 
 .btn-produtos {
-min-height: 38px;
+min-height: 42px;
 
 
-padding: 0 14px;
+padding:
+    0 17px;
 
 border-radius: 9px;
 
-font-size: 12px;
+border: 1px solid transparent;
+
+font-size: 13px;
+
 font-weight: 700;
-
-cursor: pointer;
-
-transition: 0.2s ease;
 
 white-space: nowrap;
 
+transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease,
+    opacity 0.2s ease;
 
+
+}
+
+.btn-produtos:active:not(:disabled) {
+transform: translateY(1px);
 }
 
 .btn-produtos:disabled {
-opacity: 0.5;
-
-
 cursor: not-allowed;
+
+
+opacity: 0.5;
 
 
 }
 
-.btn-selecionar {
-border: 1px solid #e1e4e8;
+/* ============================================================
+ATUALIZAR
+============================================================ */
 
-
+.btn-atualizar {
 background: #ffffff;
 
-color: #333333;
+
+border-color: #dce1e8;
+
+color: #374151;
+
+
+}
+
+.btn-atualizar:hover {
+background: #f7f8fa;
+
+
+border-color: #c8ced8;
+
+
+}
+
+/* ============================================================
+SELECIONAR
+============================================================ */
+
+.btn-selecionar {
+background: #f7f8fa;
+
+
+border-color: #dce1e8;
+
+color: #374151;
 
 
 }
 
 .btn-selecionar:hover {
-background: #f3f4f6;
+background: #eef1f5;
+
+
+border-color: #cbd2dc;
+
+
 }
 
+/* ============================================================
+DESMARCAR
+============================================================ */
+
+.btn-desmarcar {
+background: #ffffff;
+
+
+border-color: #dce1e8;
+
+color: #5f6877;
+
+
+}
+
+.btn-desmarcar:hover {
+background: #f7f8fa;
+
+
+border-color: #cbd2dc;
+
+
+}
+
+/* ============================================================
+SINCRONIZAR / IMPORTAR
+============================================================ */
+
 .btn-sincronizar {
-border: 1px solid #171717;
+background: #172033;
 
 
-background: #171717;
+border-color: #172033;
 
 color: #ffffff;
 
@@ -365,88 +855,262 @@ color: #ffffff;
 }
 
 .btn-sincronizar:hover:not(:disabled) {
-background: #333333;
-}
-
-.btn-atualizar {
-border: 1px solid #e1e4e8;
+background: #263247;
 
 
-background: #ffffff;
-
-color: #333333;
+border-color: #263247;
 
 
-}
-
-.btn-atualizar:hover {
-background: #f3f4f6;
 }
 
 /* ============================================================
-8. MENSAGEM
+8. CONTROLE DE SELEÇÃO
+============================================================ */
+
+.controle-selecao {
+width: 100%;
+
+
+min-height: 68px;
+
+padding: 13px 20px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+gap: 18px;
+
+background: #fbfcfd;
+
+
+}
+
+.controle-selecao-esquerda {
+display: flex;
+
+
+align-items: center;
+
+gap: 16px;
+
+min-width: 0;
+
+
+}
+
+.controle-selecao-direita {
+display: flex;
+
+
+align-items: center;
+
+justify-content: flex-end;
+
+gap: 8px;
+
+flex-wrap: wrap;
+
+
+}
+
+/* ============================================================
+CHECKBOX
+============================================================ */
+
+.selecionar-todos {
+display: flex;
+
+
+align-items: center;
+
+gap: 9px;
+
+color: #374151;
+
+font-size: 13px;
+
+font-weight: 700;
+
+white-space: nowrap;
+
+cursor: pointer;
+
+
+}
+
+.selecionar-todos input,
+.produto-checkbox {
+width: 17px;
+height: 17px;
+
+
+margin: 0;
+
+accent-color: #172033;
+
+cursor: pointer;
+
+
+}
+
+.contador-produtos {
+color: #7a8494;
+
+
+font-size: 12px;
+
+white-space: nowrap;
+
+
+}
+
+/* ============================================================
+9. MENSAGENS
 ============================================================ */
 
 .mensagem-produtos {
 width: 100%;
 
 
-margin-bottom: 20px;
+margin-bottom: 22px;
 
-padding: 14px 16px;
+padding:
+    13px 16px;
 
 border-radius: 10px;
 
 font-size: 13px;
 
+font-weight: 600;
+
+line-height: 1.5;
+
 
 }
 
 .mensagem-info {
-background: #ffffff;
+background: #f1f5f9;
 
 
-border: 1px solid #e5e7eb;
+border: 1px solid #dce3eb;
 
-color: #6b7280;
+color: #475569;
+
+
+}
+
+.mensagem-sucesso {
+background: #ecfdf3;
+
+
+border: 1px solid #ccebd9;
+
+color: #167044;
 
 
 }
 
 .mensagem-erro {
-background: #fff1f2;
+background: #fef2f2;
 
 
-border: 1px solid #fecdd3;
+border: 1px solid #f2d0d0;
 
-color: #be123c;
+color: #b42318;
 
 
 }
 
 /* ============================================================
-9. LISTA DE PRODUTOS
+10. CABEÇALHO DA LISTA
 ============================================================ */
 
-#lista-produtos {
+.lista-produtos-cabecalho {
+width: 100%;
+
+
+margin-bottom: 15px;
+
+display: flex;
+
+align-items: flex-end;
+
+justify-content: space-between;
+
+gap: 20px;
+
+
+}
+
+.lista-produtos-cabecalho h2 {
+margin-bottom: 3px;
+
+
+color: #1a2333;
+
+font-size: 19px;
+
+font-weight: 800;
+
+letter-spacing: -0.2px;
+
+
+}
+
+.lista-produtos-cabecalho p {
+color: #7a8494;
+
+
+font-size: 12px;
+
+
+}
+
+.lista-produtos-contador {
+padding:
+6px 10px;
+
+
+border: 1px solid #e1e5eb;
+
+border-radius: 7px;
+
+background: #ffffff;
+
+color: #667085;
+
+font-size: 11px;
+
+font-weight: 700;
+
+white-space: nowrap;
+
+
+}
+
+/* ============================================================
+11. LISTA
+============================================================ */
+
+.lista-produtos {
 width: 100%;
 
 
 display: grid;
 
 grid-template-columns:
-    repeat(
-        3,
-        minmax(0, 1fr)
-    );
+    repeat(3, minmax(0, 1fr));
 
-gap: 18px;
+gap: 16px;
 
 
 }
 
 /* ============================================================
-10. CARD DO PRODUTO
+12. CARD DO PRODUTO
 ============================================================ */
 
 .produto-mercado-livre-card {
@@ -457,11 +1121,22 @@ min-width: 0;
 
 background: #ffffff;
 
-border: 1px solid #e3e6ea;
+border: 1px solid #e4e8ee;
 
-border-radius: 14px;
+border-radius: 13px;
 
 overflow: hidden;
+
+display: grid;
+
+grid-template-columns: 120px minmax(0, 1fr);
+
+gap: 15px;
+
+padding: 14px;
+
+box-shadow:
+    0 2px 7px rgba(15, 23, 42, 0.025);
 
 transition:
     border-color 0.2s ease,
@@ -472,12 +1147,11 @@ transition:
 }
 
 .produto-mercado-livre-card:hover {
-border-color: #d5d9de;
+border-color: #cfd5de;
 
 
 box-shadow:
-    0 8px 24px
-    rgba(0, 0, 0, 0.06);
+    0 6px 18px rgba(15, 23, 42, 0.06);
 
 transform: translateY(-1px);
 
@@ -485,17 +1159,17 @@ transform: translateY(-1px);
 }
 
 .produto-mercado-livre-card.produto-selecionado {
-border-color: #171717;
+border-color: #8c98a9;
 
 
 box-shadow:
-    0 0 0 1px #171717;
+    0 0 0 2px rgba(100, 116, 139, 0.10);
 
 
 }
 
 /* ============================================================
-11. CHECKBOX DO CARD
+SELEÇÃO DO CARD
 ============================================================ */
 
 .produto-selecao {
@@ -505,121 +1179,119 @@ position: absolute;
 top: 12px;
 left: 12px;
 
-z-index: 5;
-
-width: 32px;
-height: 32px;
+width: 27px;
+height: 27px;
 
 display: flex;
+
 align-items: center;
 justify-content: center;
 
+border-radius: 7px;
+
 background: rgba(255, 255, 255, 0.95);
 
-border: 1px solid #e1e4e8;
-
-border-radius: 8px;
-
 box-shadow:
-    0 2px 7px
-    rgba(0, 0, 0, 0.08);
+    0 2px 6px rgba(15, 23, 42, 0.12);
+
+z-index: 2;
 
 
 }
 
 .produto-checkbox {
-width: 17px;
-height: 17px;
-
-
-margin: 0;
-
-cursor: pointer;
-
-
+width: 16px;
+height: 16px;
 }
 
 /* ============================================================
-12. IMAGEM
+13. IMAGEM
 ============================================================ */
 
 .produto-imagem {
-width: 100%;
-height: 235px;
+width: 120px;
+height: 120px;
 
 
-display: flex;
-align-items: center;
-justify-content: center;
-
-background: #f8f9fa;
-
-border-bottom: 1px solid #eef0f2;
+border-radius: 10px;
 
 overflow: hidden;
 
+background: #f3f5f7;
+
+border: 1px solid #edf0f3;
+
+display: flex;
+
+align-items: center;
+justify-content: center;
+
 
 }
 
 .produto-imagem img {
-display: block;
-
-
 width: 100%;
 height: 100%;
 
-object-fit: contain;
 
-padding: 18px;
+display: block;
 
-transition: transform 0.25s ease;
+object-fit: cover;
 
 
-}
-
-.produto-mercado-livre-card:hover
-.produto-imagem img {
-transform: scale(1.03);
 }
 
 .produto-imagem span {
-color: #9aa0a8;
+padding: 10px;
 
 
-font-size: 12px;
+color: #9aa3b2;
+
+font-size: 11px;
+
+text-align: center;
 
 
 }
 
 /* ============================================================
-13. INFORMAÇÕES
+14. INFORMAÇÕES DO PRODUTO
 ============================================================ */
 
 .produto-informacoes {
 min-width: 0;
 
 
-padding: 17px;
+padding:
+    3px 2px;
+
+display: flex;
+
+flex-direction: column;
+
+align-items: flex-start;
 
 
 }
 
 .produto-informacoes h3 {
-min-height: 42px;
+width: 100%;
 
 
-margin-bottom: 10px;
+margin-bottom: 7px;
 
-color: #171717;
+color: #172033;
 
-font-size: 15px;
-line-height: 1.4;
+font-size: 14px;
 
-font-weight: 700;
+font-weight: 750;
+
+line-height: 1.35;
 
 display: -webkit-box;
 
 -webkit-line-clamp: 2;
+
 -webkit-box-orient: vertical;
 
 overflow: hidden;
@@ -627,88 +1299,152 @@ overflow: hidden;
 
 }
 
-.produto-item-id {
-margin-bottom: 5px;
-
-
-color: #8a9098;
-
-font-size: 10px;
-
-overflow: hidden;
-text-overflow: ellipsis;
-white-space: nowrap;
-
-
-}
-
+.produto-item-id,
 .produto-sku {
-margin-bottom: 13px;
+width: 100%;
 
 
-color: #8a9098;
+margin-bottom: 3px;
+
+color: #8992a1;
 
 font-size: 10px;
 
+line-height: 1.4;
+
 overflow: hidden;
+
 text-overflow: ellipsis;
+
 white-space: nowrap;
 
 
 }
 
 .produto-preco {
-display: block;
+margin-top: auto;
 
 
-margin-bottom: 5px;
+padding-top: 8px;
 
-color: #171717;
+color: #172033;
 
-font-size: 18px;
-line-height: 1.2;
+font-size: 17px;
 
 font-weight: 800;
+
+line-height: 1.2;
 
 
 }
 
 .produto-estoque {
-display: inline-flex;
-align-items: center;
+margin-top: 4px;
 
 
-min-height: 25px;
+padding:
+    4px 7px;
 
-padding: 0 8px;
+border-radius: 5px;
 
-border-radius: 6px;
+background: #f1f4f7;
 
-background: #f3f4f6;
-
-color: #5f6670;
+color: #5e6877;
 
 font-size: 10px;
+
 font-weight: 700;
 
 
 }
 
 /* ============================================================
-14. ESTADO VAZIO
+15. ESTADOS DOS PRODUTOS
+============================================================ */
+
+.produto-status {
+display: inline-flex;
+
+
+align-items: center;
+
+gap: 5px;
+
+margin-top: 7px;
+
+padding:
+    4px 7px;
+
+border-radius: 5px;
+
+font-size: 10px;
+
+font-weight: 700;
+
+
+}
+
+.produto-status-ativo {
+background: #ecfdf3;
+
+
+color: #16834d;
+
+
+}
+
+.produto-status-inativo {
+background: #f3f4f6;
+
+
+color: #6b7280;
+
+
+}
+
+.produto-status-importado {
+background: #eef2ff;
+
+
+color: #4f46e5;
+
+
+}
+
+.produto-status-nao-importado {
+background: #fff8e6;
+
+
+color: #9a6b00;
+
+
+}
+
+/* ============================================================
+16. PRODUTO VAZIO
 ============================================================ */
 
 .produtos-vazio {
-grid-column: 1 / -1;
+width: 100%;
 
 
-padding: 60px 20px;
+min-height: 300px;
+
+padding: 50px 25px;
 
 background: #ffffff;
 
-border: 1px solid #e3e6ea;
+border: 1px solid #e5e9ef;
 
-border-radius: 14px;
+border-radius: 13px;
+
+display: flex;
+
+flex-direction: column;
+
+align-items: center;
+
+justify-content: center;
 
 text-align: center;
 
@@ -716,183 +1452,476 @@ text-align: center;
 }
 
 .produtos-vazio-icone {
-margin-bottom: 12px;
+width: 58px;
+height: 58px;
 
 
-font-size: 36px;
+margin-bottom: 17px;
+
+border-radius: 14px;
+
+background: #f1f4f7;
+
+display: flex;
+
+align-items: center;
+justify-content: center;
+
+color: #7d8796;
+
+font-size: 23px;
 
 
 }
 
 .produtos-vazio h2 {
-margin-bottom: 7px;
+margin-bottom: 6px;
 
+
+color: #253047;
 
 font-size: 18px;
+
+font-weight: 800;
 
 
 }
 
 .produtos-vazio p {
-max-width: 480px;
+max-width: 450px;
 
 
-margin: 0 auto;
-
-color: #6b7280;
+color: #818b9b;
 
 font-size: 13px;
+
+line-height: 1.6;
 
 
 }
 
 /* ============================================================
-15. RODAPÉ
+17. RODAPÉ
 ============================================================ */
 
 .admin-footer {
-width: min(1180px, calc(100% - 32px));
+width: 100%;
 
 
-margin: 0 auto;
+min-height: 82px;
 
-padding: 24px 0 35px;
+padding:
+    20px 28px;
+
+border-top: 1px solid #e5e9ef;
+
+background: #ffffff;
 
 display: flex;
+
 align-items: center;
-justify-content: space-between;
 
-gap: 15px;
+justify-content: center;
 
-color: #6b7280;
+flex-direction: column;
 
-font-size: 13px;
+gap: 2px;
+
+text-align: center;
 
 
 }
 
 .admin-footer span {
-color: #333333;
+color: #374151;
 
 
-font-weight: 700;
+font-size: 13px;
+
+font-weight: 800;
 
 
 }
 
 .admin-footer small {
-font-size: 12px;
+color: #8a94a4;
+
+
+font-size: 11px;
+
+
 }
 
 /* ============================================================
-16. RESPONSIVIDADE
+18. RESPONSIVIDADE - TABLET
 ============================================================ */
 
-@media (max-width: 900px) {
+@media (max-width: 1150px) {
 
 
-#lista-produtos {
+.produtos-resumo {
     grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
+        repeat(3, minmax(0, 1fr));
+}
+
+.lista-produtos {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+.controle-superior {
+    grid-template-columns:
+        minmax(220px, 1fr)
+        210px
+        auto;
 }
 
 
 }
 
-@media (max-width: 650px) {
+/* ============================================================
+19. RESPONSIVIDADE - TABLET MENOR
+============================================================ */
+
+@media (max-width: 850px) {
 
 
 .admin-header-top {
-    min-height: 62px;
+    padding: 0 20px;
+
+    grid-template-columns:
+        42px 1fr 90px;
+}
+
+.admin-header-info {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.produtos-container {
+    padding:
+        32px 20px
+        55px;
+}
+
+.produtos-resumo {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+.controle-superior {
+    grid-template-columns:
+        1fr 1fr;
+}
+
+.controle-superior .btn-atualizar {
+    grid-column: 1 / -1;
+
+    width: 100%;
+}
+
+.controle-selecao {
+    align-items: flex-start;
+
+    flex-direction: column;
+}
+
+.controle-selecao-direita {
+    width: 100%;
+
+    justify-content: flex-start;
+}
+
+
+}
+
+/* ============================================================
+20. RESPONSIVIDADE - CELULAR
+============================================================ */
+
+@media (max-width: 600px) {
+
+
+.admin-header-top {
+    min-height: 64px;
+
+    padding:
+        0 15px;
+
+    grid-template-columns:
+        40px 1fr 74px;
+
+    gap: 10px;
+}
+
+.btn-voltar {
+    width: 38px;
+    height: 38px;
 }
 
 .admin-logo {
     font-size: 19px;
 }
 
-.admin-header-info {
-    min-height: 34px;
+.btn-sair {
+    width: 74px;
+    height: 36px;
 
     font-size: 12px;
 }
 
+.admin-header-info {
+    min-height: 38px;
+
+    padding:
+        0 15px
+        10px;
+
+    font-size: 11px;
+}
+
+
 .produtos-container {
-    padding-top: 28px;
+    padding:
+        26px 15px
+        45px;
+}
+
+
+.produtos-topo {
+    margin-bottom: 23px;
 }
 
 .produtos-topo h1 {
-    font-size: 29px;
+    font-size: 28px;
 }
 
-.produtos-controles {
+.produtos-topo p {
+    font-size: 13px;
+}
+
+
+.produtos-resumo {
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 9px;
+
+    margin-bottom: 20px;
+}
+
+.resumo-card {
+    padding: 14px;
+
+    gap: 9px;
+
+    border-radius: 11px;
+}
+
+.resumo-card-icone {
+    width: 34px;
+    height: 34px;
+
+    flex-basis: 34px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+}
+
+.resumo-card-label {
+    font-size: 9px;
+}
+
+.resumo-card-numero {
+    font-size: 19px;
+}
+
+
+.produtos-painel-controle {
+    margin-bottom: 22px;
+
+    border-radius: 11px;
+}
+
+.controle-superior {
+    padding: 15px;
+
+    grid-template-columns: 1fr;
+
+    gap: 13px;
+}
+
+.controle-superior .btn-atualizar {
+    grid-column: auto;
+}
+
+.campo-busca input,
+.campo-filtro select {
+    height: 42px;
+}
+
+
+.controle-selecao {
+    padding: 13px 15px;
+
+    gap: 13px;
+}
+
+.controle-selecao-esquerda {
+    width: 100%;
+
+    justify-content: space-between;
+}
+
+.controle-selecao-direita {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 7px;
+}
+
+.controle-selecao-direita .btn-produtos {
+    width: 100%;
+
+    padding: 0 8px;
+
+    font-size: 11px;
+}
+
+.controle-selecao-direita .btn-sincronizar {
+    grid-column: 1 / -1;
+}
+
+
+.lista-produtos-cabecalho {
     align-items: flex-start;
 
     flex-direction: column;
+
+    gap: 8px;
 }
 
-.produtos-controles-esquerda,
-.produtos-controles-direita {
-    width: 100%;
+.lista-produtos-cabecalho h2 {
+    font-size: 17px;
 }
 
-.produtos-controles-direita {
-    justify-content: flex-start;
+
+.lista-produtos {
+    grid-template-columns: 1fr;
+
+    gap: 11px;
 }
 
-#lista-produtos {
+
+.produto-mercado-livre-card {
+    grid-template-columns:
+        96px minmax(0, 1fr);
+
+    gap: 12px;
+
+    padding: 11px;
+
+    border-radius: 11px;
+}
+
+.produto-imagem {
+    width: 96px;
+    height: 96px;
+}
+
+.produto-informacoes h3 {
+    font-size: 13px;
+}
+
+.produto-preco {
+    font-size: 15px;
+}
+
+
+.admin-footer {
+    min-height: 72px;
+
+    padding:
+        17px 15px;
+}
+
+
+}
+
+/* ============================================================
+21. CELULAR MUITO PEQUENO
+============================================================ */
+
+@media (max-width: 390px) {
+
+
+.produtos-resumo {
     grid-template-columns: 1fr;
 }
 
-.produto-imagem {
-    height: 250px;
+.resumo-card {
+    min-height: 68px;
 }
 
-.admin-footer {
-    flex-direction: column;
-
-    align-items: flex-start;
-}
-
-
-}
-
-@media (max-width: 420px) {
-
-
-.admin-header-top,
-.admin-header-info,
-.produtos-container,
-.admin-footer {
-    width: min(
-        100% - 22px,
-        1180px
-    );
-}
-
-.produtos-topo h1 {
-    font-size: 26px;
-}
-
-.produtos-controles {
-    padding: 14px;
-}
-
-.produtos-controles-esquerda,
-.produtos-controles-direita {
-    flex-direction: column;
-
-    align-items: stretch;
-}
-
-.btn-produtos {
-    width: 100%;
+.produto-mercado-livre-card {
+    grid-template-columns:
+        82px minmax(0, 1fr);
 }
 
 .produto-imagem {
-    height: 220px;
+    width: 82px;
+    height: 82px;
+}
+
+.controle-selecao-direita {
+    grid-template-columns: 1fr;
+}
+
+.controle-selecao-direita .btn-sincronizar {
+    grid-column: auto;
+}
+
+
+}
+
+/* ============================================================
+22. ACESSIBILIDADE
+============================================================ */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+outline: 2px solid #64748b;
+
+
+outline-offset: 2px;
+
+
+}
+
+/* ============================================================
+23. REDUZIR ANIMAÇÕES
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+
+*,
+*::before,
+*::after {
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+
+    animation-duration: 0.01ms !important;
+
+    animation-iteration-count: 1 !important;
 }
 
 

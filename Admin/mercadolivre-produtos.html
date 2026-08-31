@@ -9,10 +9,21 @@
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    content="width=device-width, initial-scale=1.0"
 >
 
-<title>Produtos do Mercado Livre - ZoraVision</title>
+<meta
+    name="theme-color"
+    content="#ffffff"
+>
+
+<title>
+    Produtos Mercado Livre - ZoraVision
+</title>
+
+<!-- ========================================================
+     CSS DA PÁGINA
+========================================================= -->
 
 <link
     rel="stylesheet"
@@ -25,7 +36,7 @@
 <body>
 
 <!-- ============================================================
-     CABEÇALHO
+     CABEÇALHO ADMINISTRATIVO
 ============================================================ -->
 
 <header class="admin-header">
@@ -55,12 +66,13 @@
 
 </div>
 
+
 <div class="admin-header-info">
 
     <span class="admin-status"></span>
 
     <span>
-        Produtos do Mercado Livre
+        Administração de produtos
     </span>
 
 </div>
@@ -76,62 +88,27 @@
 
 
 <!-- ========================================================
-     TOPO
+     CABEÇALHO DA PÁGINA
 ========================================================= -->
 
 <section class="produtos-topo">
 
-    <span class="section-label">
-        MERCADO LIVRE
-    </span>
+    <div>
 
-    <h1>
-        Produtos
-    </h1>
-
-    <p>
-        Consulte os produtos encontrados na sua conta do
-        Mercado Livre e escolha quais deseja importar ou
-        sincronizar com o ZoraVision.
-    </p>
-
-</section>
-
-
-<!-- ========================================================
-     RESUMO
-========================================================= -->
-
-<section class="produtos-resumo">
-
-    <div class="resumo-card">
-
-        <span class="resumo-label">
-            PRODUTOS ENCONTRADOS
+        <span class="section-label">
+            MERCADO LIVRE
         </span>
 
-        <strong
-            id="total-produtos"
-            class="resumo-valor"
-        >
-            0
-        </strong>
+        <h1>
+            Produtos
+        </h1>
 
-    </div>
-
-
-    <div class="resumo-card">
-
-        <span class="resumo-label">
-            SELECIONADOS
-        </span>
-
-        <strong
-            id="total-selecionados"
-            class="resumo-valor"
-        >
-            0
-        </strong>
+        <p>
+            Administre os anúncios do Mercado Livre e
+            acompanhe quais produtos já foram importados,
+            quais estão ativos no ZoraVision e quais ainda
+            precisam ser importados.
+        </p>
 
     </div>
 
@@ -139,58 +116,228 @@
 
 
 <!-- ========================================================
-     CONTROLES
+     RESUMO ADMINISTRATIVO
 ========================================================= -->
 
-<section class="produtos-controles">
+<section
+    class="produtos-resumo"
+    aria-label="Resumo dos produtos"
+>
 
-    <div class="produtos-controles-esquerda">
 
-        <label class="selecionar-todos">
+    <!-- TOTAL MERCADO LIVRE -->
 
-            <input
-                type="checkbox"
-                id="checkbox-selecionar-todos"
-            >
+    <article class="resumo-card">
 
-            <span>
-                Selecionar todos
+        <div class="resumo-card-icone">
+            ML
+        </div>
+
+        <div class="resumo-card-conteudo">
+
+            <span class="resumo-card-label">
+                Anúncios no Mercado Livre
             </span>
 
-        </label>
+            <strong
+                id="total-produtos"
+                class="resumo-card-numero"
+            >
+                0
+            </strong>
 
-    </div>
+        </div>
 
-
-    <div class="produtos-controles-direita">
-
-        <button
-            type="button"
-            class="btn-produtos btn-selecionar"
-            id="btn-selecionar-todos"
-        >
-            Selecionar todos
-        </button>
+    </article>
 
 
-        <button
-            type="button"
-            class="btn-produtos btn-desmarcar"
-            id="btn-desmarcar-todos"
-        >
-            Desmarcar todos
-        </button>
+    <!-- IMPORTADOS -->
+
+    <article class="resumo-card resumo-importados">
+
+        <div class="resumo-card-icone">
+            ✓
+        </div>
+
+        <div class="resumo-card-conteudo">
+
+            <span class="resumo-card-label">
+                Já importados
+            </span>
+
+            <strong
+                id="total-importados"
+                class="resumo-card-numero"
+            >
+                0
+            </strong>
+
+        </div>
+
+    </article>
 
 
-        <button
-            type="button"
-            class="btn-produtos btn-sincronizar"
-            id="btn-sincronizar-selecionados"
-            disabled
-        >
-            Sincronizar selecionados
-        </button>
+    <!-- NÃO IMPORTADOS -->
 
+    <article class="resumo-card resumo-pendentes">
+
+        <div class="resumo-card-icone">
+            !
+        </div>
+
+        <div class="resumo-card-conteudo">
+
+            <span class="resumo-card-label">
+                Ainda não importados
+            </span>
+
+            <strong
+                id="total-nao-importados"
+                class="resumo-card-numero"
+            >
+                0
+            </strong>
+
+        </div>
+
+    </article>
+
+
+    <!-- ATIVOS -->
+
+    <article class="resumo-card resumo-ativos">
+
+        <div class="resumo-card-icone">
+            ●
+        </div>
+
+        <div class="resumo-card-conteudo">
+
+            <span class="resumo-card-label">
+                Ativos no ZoraVision
+            </span>
+
+            <strong
+                id="total-ativos"
+                class="resumo-card-numero"
+            >
+                0
+            </strong>
+
+        </div>
+
+    </article>
+
+
+    <!-- INATIVOS -->
+
+    <article class="resumo-card resumo-inativos">
+
+        <div class="resumo-card-icone">
+            ○
+        </div>
+
+        <div class="resumo-card-conteudo">
+
+            <span class="resumo-card-label">
+                Inativos no ZoraVision
+            </span>
+
+            <strong
+                id="total-inativos"
+                class="resumo-card-numero"
+            >
+                0
+            </strong>
+
+        </div>
+
+    </article>
+
+
+</section>
+
+
+<!-- ========================================================
+     BARRA DE CONTROLE
+========================================================= -->
+
+<section class="produtos-painel-controle">
+
+
+    <div class="controle-superior">
+
+
+        <!-- BUSCA -->
+
+        <div class="campo-busca">
+
+            <label
+                for="campo-busca-produtos"
+                class="campo-busca-label"
+            >
+                Buscar produto
+            </label>
+
+            <div class="campo-busca-wrapper">
+
+                <span class="campo-busca-icone">
+                    ⌕
+                </span>
+
+                <input
+                    type="search"
+                    id="campo-busca-produtos"
+                    placeholder="Nome, SKU ou ID do Mercado Livre"
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- FILTRO -->
+
+        <div class="campo-filtro">
+
+            <label
+                for="filtro-status-produtos"
+                class="campo-filtro-label"
+            >
+                Situação
+            </label>
+
+            <select
+                id="filtro-status-produtos"
+            >
+
+                <option value="todos">
+                    Todos os produtos
+                </option>
+
+                <option value="importados">
+                    Já importados
+                </option>
+
+                <option value="nao-importados">
+                    Ainda não importados
+                </option>
+
+                <option value="ativos">
+                    Ativos no site
+                </option>
+
+                <option value="inativos">
+                    Inativos no site
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ATUALIZAR -->
 
         <button
             type="button"
@@ -200,7 +347,78 @@
             Atualizar
         </button>
 
+
     </div>
+
+
+    <!-- ====================================================
+         CONTROLE DE SELEÇÃO
+    ===================================================== -->
+
+    <div class="controle-selecao">
+
+
+        <div class="controle-selecao-esquerda">
+
+            <label class="selecionar-todos">
+
+                <input
+                    type="checkbox"
+                    id="checkbox-selecionar-todos"
+                >
+
+                <span>
+                    Selecionar todos
+                </span>
+
+            </label>
+
+
+            <span
+                class="contador-produtos"
+                id="contador-produtos"
+            >
+                0 produtos selecionados
+            </span>
+
+        </div>
+
+
+        <div class="controle-selecao-direita">
+
+
+            <button
+                type="button"
+                class="btn-produtos btn-selecionar"
+                id="btn-selecionar-todos"
+            >
+                Selecionar todos
+            </button>
+
+
+            <button
+                type="button"
+                class="btn-produtos btn-desmarcar"
+                id="btn-desmarcar-todos"
+            >
+                Desmarcar todos
+            </button>
+
+
+            <button
+                type="button"
+                class="btn-produtos btn-sincronizar"
+                id="btn-importar-selecionados"
+                disabled
+            >
+                Importar selecionados
+            </button>
+
+        </div>
+
+
+    </div>
+
 
 </section>
 
@@ -213,7 +431,38 @@
     id="mensagem-produtos"
     class="mensagem-produtos mensagem-info"
     style="display: none;"
+    role="status"
+    aria-live="polite"
 ></div>
+
+
+<!-- ========================================================
+     CABEÇALHO DA LISTA
+========================================================= -->
+
+<section class="lista-produtos-cabecalho">
+
+    <div>
+
+        <h2>
+            Anúncios do Mercado Livre
+        </h2>
+
+        <p>
+            Controle de importação e publicação dos produtos.
+        </p>
+
+    </div>
+
+
+    <div
+        class="lista-produtos-contador"
+        id="lista-produtos-contador"
+    >
+        0 produtos
+    </div>
+
+</section>
 
 
 <!-- ========================================================
@@ -225,6 +474,9 @@
     class="lista-produtos"
     aria-live="polite"
 >
+
+
+    <!-- ESTADO DE CARREGAMENTO -->
 
     <div
         id="produtos-carregando"
@@ -240,11 +492,11 @@
         </h2>
 
         <p>
-            Consultando os produtos disponíveis
-            no Mercado Livre...
+            Consultando os anúncios do Mercado Livre...
         </p>
 
     </div>
+
 
 </section>
 
@@ -263,7 +515,7 @@
 </span>
 
 <small>
-    Gerenciamento de produtos do Mercado Livre
+    Administração de produtos do Mercado Livre
 </small>
 
 
@@ -290,7 +542,7 @@
 ></script>
 
 <!-- ============================================================
-     MERCADO LIVRE PRODUTOS
+     PRODUTOS MERCADO LIVRE
 ============================================================ -->
 
 <script
