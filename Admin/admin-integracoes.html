@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Integrações - ZoraVision</title>
+
+<link
+    rel="stylesheet"
+    href="../Folha-estilos/admin-integracoes.css"
+>
+
+
+</head>
+
+<body>
+
+<!-- ========================================================= -->
+
+<!-- CABEÇALHO -->
+
+<!-- ========================================================= -->
+
+<header class="admin-header">
+
+
+<div class="admin-header-top">
+
+    <a
+        href="05-admin.html"
+        class="btn-voltar"
+        aria-label="Voltar"
+    >
+        ‹
+    </a>
+
+    <div class="admin-logo">
+        ZoraVision
+    </div>
+
+    <button
+        type="button"
+        class="btn-sair"
+        id="btn-sair-admin"
+    >
+        Sair
+    </button>
+
+</div>
+
+<div class="admin-header-info">
+
+    <span class="admin-status"></span>
+
+    <span>
+        Gerenciamento de integrações
+    </span>
+
+</div>
+
+
+</header>
+
+<!-- ========================================================= -->
+
+<!-- CONTEÚDO -->
+
+<!-- ========================================================= -->
+
+<main class="integracoes-container">
+
+
+<!-- ===================================================== -->
+<!-- TOPO -->
+<!-- ===================================================== -->
+
+<section class="integracoes-topo">
+
+    <div>
+
+        <span class="section-label">
+            SISTEMA
+        </span>
+
+        <h1>
+            Integrações
+        </h1>
+
+        <p>
+            Conecte o ZoraVision a plataformas externas para
+            sincronizar produtos, estoque, preços e pedidos.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- AVISO -->
+<!-- ===================================================== -->
+
+<section class="integracao-aviso">
+
+    <div class="integracao-aviso-icone">
+        🔗
+    </div>
+
+    <div>
+
+        <strong>
+            Central de integrações
+        </strong>
+
+        <p>
+            Conecte suas contas externas ao ZoraVision
+            de forma segura.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- MERCADO LIVRE -->
+<!-- ===================================================== -->
+
+<section class="integracao-card">
+
+    <div class="integracao-card-topo">
+
+        <div class="integracao-identidade">
+
+            <div class="integracao-logo mercado-livre-logo">
+                ML
+            </div>
+
+            <div>
+
+                <span class="integracao-plataforma">
+                    Marketplace
+                </span>
+
+                <h2>
+                    Mercado Livre
+                </h2>
+
+            </div>
+
+        </div>
+
+        <span
+            class="integracao-status status-desconectado"
+            id="status-mercado-livre"
+        >
+            Desconectado
+        </span>
+
+    </div>
+
+
+    <div class="integracao-card-conteudo">
+
+        <p>
+            Conecte sua conta do Mercado Livre para importar
+            os produtos já cadastrados e futuramente sincronizar
+            estoque, preços e informações das publicações.
+        </p>
+
+        <div class="integracao-recursos">
+
+            <span>
+                ✓ Importar produtos
+            </span>
+
+            <span>
+                ✓ Sincronizar estoque
+            </span>
+
+            <span>
+                ✓ Sincronizar preços
+            </span>
+
+            <span>
+                ✓ Gerenciar publicações
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="integracao-card-acoes">
+
+        <button
+            type="button"
+            class="btn-integracao btn-conectar"
+            id="btn-conectar-mercado-livre"
+        >
+            Conectar Mercado Livre
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- TIKTOK SHOP -->
+<!-- ===================================================== -->
+
+<section class="integracao-card">
+
+    <div class="integracao-card-topo">
+
+        <div class="integracao-identidade">
+
+            <div class="integracao-logo tiktok-logo">
+                TT
+            </div>
+
+            <div>
+
+                <span class="integracao-plataforma">
+                    Marketplace
+                </span>
+
+                <h2>
+                    TikTok Shop
+                </h2>
+
+            </div>
+
+        </div>
+
+        <span
+            class="integracao-status status-desconectado"
+            id="status-tiktok"
+        >
+            Desconectado
+        </span>
+
+    </div>
+
+
+    <div class="integracao-card-conteudo">
+
+        <p>
+            Integração preparada para conectar o TikTok Shop
+            ao ZoraVision futuramente.
+        </p>
+
+        <div class="integracao-recursos">
+
+            <span>
+                ✓ Produtos
+            </span>
+
+            <span>
+                ✓ Estoque
+            </span>
+
+            <span>
+                ✓ Pedidos
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="integracao-card-acoes">
+
+        <button
+            type="button"
+            class="btn-integracao btn-indisponivel"
+            disabled
+        >
+            Em breve
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- FUTURAS INTEGRAÇÕES -->
+<!-- ===================================================== -->
+
+<section class="integracoes-futuras">
+
+    <div class="futuras-icone">
+        ＋
+    </div>
+
+    <div>
+
+        <h2>
+            Novas integrações
+        </h2>
+
+        <p>
+            Outras plataformas poderão ser adicionadas
+            futuramente ao ZoraVision.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- SEGURANÇA -->
+<!-- ===================================================== -->
+
+<section class="seguranca-card">
+
+    <div class="seguranca-icone">
+        🔒
+    </div>
+
+    <div>
+
+        <h2>
+            Segurança das integrações
+        </h2>
+
+        <p>
+            As credenciais das plataformas externas não serão
+            armazenadas diretamente no código do site.
+            As conexões serão realizadas de forma segura
+            através do backend do ZoraVision.
+        </p>
+
+    </div>
+
+</section>
+
+
+</main>
+
+<!-- ========================================================= -->
+
+<!-- RODAPÉ -->
+
+<!-- ========================================================= -->
+
+<footer class="admin-footer">
+
+
+<span>
+    ZoraVision
+</span>
+
+<small>
+    Gerenciamento de integrações
+</small>
+
+
+</footer>
+
+<!-- ========================================================= -->
+
+<!-- SCRIPTS -->
+
+<!-- ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../Supabase/supabase.js"></script>
+
+<script src="integracoes-admin.js"></script>
+
+<script src="Painel-admin.js"></script>
+
+</body>
+
+</html>

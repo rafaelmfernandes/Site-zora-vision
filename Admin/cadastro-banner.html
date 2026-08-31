@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+
+>
+
+<title>Cadastro de Banner - ZoraVision</title>
+
+<link
+    rel="stylesheet"
+    href="../Folha-estilos/Cadastro-banner.css"
+>
+
+</head>
+
+<body>
+
+<!-- ========================================================= -->
+
+<!-- CABEÇALHO -->
+
+<!-- ========================================================= -->
+
+<header class="admin-header">
+
+
+<div class="admin-header-top">
+
+    <a
+        href="admin-banners.html"
+        class="btn-voltar"
+    >
+        ‹
+    </a>
+
+    <div class="admin-logo">
+        ZoraVision
+    </div>
+
+    <button
+        type="button"
+        class="btn-sair"
+        id="btn-sair-admin"
+    >
+        Sair
+    </button>
+
+</div>
+
+<div class="admin-header-info">
+
+    <span class="admin-status"></span>
+
+    <span>
+        Administração
+    </span>
+
+</div>
+
+</header>
+
+<!-- ========================================================= -->
+
+<!-- CONTEÚDO -->
+
+<!-- ========================================================= -->
+
+<main class="cadastro-container">
+
+
+<!-- ===================================================== -->
+<!-- TÍTULO -->
+<!-- ===================================================== -->
+
+<section class="cadastro-topo">
+
+    <span class="section-label">
+        PÁGINA INICIAL
+    </span>
+
+    <h1 id="titulo-pagina">
+        Cadastrar banner
+    </h1>
+
+    <p id="descricao-pagina">
+        Adicione um novo banner à página inicial da ZoraVision.
+    </p>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- FORMULÁRIO -->
+<!-- ===================================================== -->
+
+<form
+    id="form-cadastro-banner"
+    class="banner-form"
+>
+
+
+    <!-- ================================================= -->
+    <!-- INFORMAÇÕES -->
+    <!-- ================================================= -->
+
+    <section class="form-section">
+
+        <div class="form-section-header">
+
+            <span class="section-label">
+                INFORMAÇÕES
+            </span>
+
+            <h2>
+                Conteúdo do banner
+            </h2>
+
+        </div>
+
+
+        <!-- TÍTULO -->
+
+        <div class="campo">
+
+            <label for="banner-titulo">
+
+                Título
+
+                <span>*</span>
+
+            </label>
+
+            <input
+                type="text"
+                id="banner-titulo"
+                name="titulo"
+                placeholder="Ex.: Ofertas especiais"
+                autocomplete="off"
+                maxlength="150"
+                required
+            >
+
+        </div>
+
+
+        <!-- DESCRIÇÃO -->
+
+        <div class="campo">
+
+            <label for="banner-descricao">
+                Descrição
+            </label>
+
+            <textarea
+                id="banner-descricao"
+                name="descricao"
+                placeholder="Digite a descrição que aparecerá no banner..."
+                rows="5"
+                maxlength="500"
+            ></textarea>
+
+        </div>
+
+
+        <!-- SELO -->
+
+        <div class="campo">
+
+            <label for="banner-selo">
+                Selo
+            </label>
+
+            <input
+                type="text"
+                id="banner-selo"
+                name="selo"
+                placeholder="Ex.: OFERTA, NOVIDADE, DESTAQUE"
+                autocomplete="off"
+                maxlength="50"
+            >
+
+            <small>
+                Texto curto que será exibido como destaque no banner.
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- BOTÃO -->
+    <!-- ================================================= -->
+
+    <section class="form-section">
+
+        <div class="form-section-header">
+
+            <span class="section-label">
+                AÇÃO
+            </span>
+
+            <h2>
+                Botão do banner
+            </h2>
+
+        </div>
+
+
+        <!-- TEXTO DO BOTÃO -->
+
+        <div class="campo">
+
+            <label for="banner-texto-botao">
+                Texto do botão
+            </label>
+
+            <input
+                type="text"
+                id="banner-texto-botao"
+                name="texto_botao"
+                placeholder="Ex.: Comprar agora"
+                autocomplete="off"
+                maxlength="50"
+            >
+
+        </div>
+
+
+        <!-- LINK -->
+
+        <div class="campo">
+
+            <label for="banner-link">
+                Link do botão
+            </label>
+
+            <input
+                type="text"
+                id="banner-link"
+                name="link"
+                placeholder="Ex.: 01-produtos.html"
+                autocomplete="off"
+                maxlength="500"
+            >
+
+            <small>
+                Informe a página ou endereço para onde o cliente será direcionado.
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- IMAGEM -->
+    <!-- ================================================= -->
+
+    <section class="form-section">
+
+        <div class="form-section-header">
+
+            <span class="section-label">
+                IMAGEM
+            </span>
+
+            <h2>
+                Imagem do banner
+            </h2>
+
+        </div>
+
+
+        <div
+            class="imagem-upload"
+            id="area-upload-banner"
+        >
+
+            <input
+                type="file"
+                id="input-imagem-banner"
+                accept="image/*"
+                hidden
+            >
+
+
+            <label
+                for="input-imagem-banner"
+                class="upload-label"
+            >
+
+                <div
+                    class="upload-preview"
+                    id="preview-imagem-banner"
+                >
+
+                    <span class="upload-icone">
+                        🖼️
+                    </span>
+
+                    <strong>
+                        Adicionar imagem
+                    </strong>
+
+                    <small>
+                        Selecione a imagem do banner
+                    </small>
+
+                </div>
+
+            </label>
+
+        </div>
+
+
+        <p
+            class="imagem-status"
+            id="status-imagem-banner"
+        >
+            Nenhuma imagem selecionada.
+        </p>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- PUBLICAÇÃO -->
+    <!-- ================================================= -->
+
+    <section class="form-section">
+
+        <div class="form-section-header">
+
+            <span class="section-label">
+                PUBLICAÇÃO
+            </span>
+
+            <h2>
+                Configurações
+            </h2>
+
+        </div>
+
+
+        <!-- ORDEM -->
+
+        <div class="campo">
+
+            <label for="banner-ordem">
+                Ordem de exibição
+            </label>
+
+            <input
+                type="number"
+                id="banner-ordem"
+                name="ordem"
+                placeholder="0"
+                min="0"
+                step="1"
+                inputmode="numeric"
+            >
+
+            <small>
+                Banners com menor número aparecem primeiro.
+            </small>
+
+        </div>
+
+
+        <!-- ATIVO -->
+
+        <label
+            class="switch-row"
+            for="banner-ativo"
+        >
+
+            <div>
+
+                <strong>
+                    Banner ativo
+                </strong>
+
+                <span>
+                    O banner aparecerá na página inicial.
+                </span>
+
+            </div>
+
+            <input
+                type="checkbox"
+                id="banner-ativo"
+                name="ativo"
+                checked
+            >
+
+            <span class="switch"></span>
+
+        </label>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- MENSAGEM -->
+    <!-- ================================================= -->
+
+    <div
+        class="form-mensagem"
+        id="mensagem-formulario"
+    ></div>
+
+
+    <!-- ================================================= -->
+    <!-- AÇÕES -->
+    <!-- ================================================= -->
+
+    <div class="form-acoes">
+
+        <a
+            href="admin-banners.html"
+            class="btn-cancelar"
+        >
+            Cancelar
+        </a>
+
+        <button
+            type="submit"
+            class="btn-salvar"
+            id="btn-salvar-banner"
+        >
+            Salvar banner
+        </button>
+
+    </div>
+
+
+</form>
+
+
+</main>
+
+<!-- ========================================================= -->
+
+<!-- RODAPÉ -->
+
+<!-- ========================================================= -->
+
+<footer class="admin-footer">
+
+
+<span>
+    ZoraVision
+</span>
+
+<small>
+    Cadastro de banner
+</small>
+
+
+</footer>
+
+<!-- ========================================================= -->
+
+<!-- SCRIPTS -->
+
+<!-- ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../Supabase/supabase.js"></script>
+<script src="cadastro-banner.js"></script>
+<script src="Painel-admin.js"></script>
+
+</body>
+
+</html>

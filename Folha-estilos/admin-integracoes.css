@@ -1,0 +1,547 @@
+/* ============================================================
+ZORAVISION - INTEGRAÇÕES ADMINISTRATIVAS
+Arquivo: Folha-estilos/admin-integracoes.css
+============================================================ */
+
+/* ============================================================
+
+1. RESET
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  }
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+min-height: 100vh;
+font-family: Arial, Helvetica, sans-serif;
+background: #f6f7f9;
+color: #171717;
+line-height: 1.5;
+}
+
+/* ============================================================
+2. CABEÇALHO
+============================================================ */
+
+.admin-header {
+background: #ffffff;
+border-bottom: 1px solid #e5e7eb;
+position: sticky;
+top: 0;
+z-index: 100;
+}
+
+.admin-header-top {
+width: min(1180px, calc(100% - 32px));
+min-height: 70px;
+margin: 0 auto;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 16px;
+}
+
+.admin-logo {
+font-size: 21px;
+font-weight: 800;
+letter-spacing: -0.5px;
+}
+
+.btn-voltar {
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+text-decoration: none;
+color: #171717;
+border: 1px solid #e1e4e8;
+border-radius: 10px;
+background: #ffffff;
+font-size: 28px;
+line-height: 1;
+transition: 0.2s ease;
+}
+
+.btn-voltar:hover {
+background: #f3f4f6;
+}
+
+.btn-sair {
+border: 1px solid #e1e4e8;
+background: #ffffff;
+color: #333333;
+border-radius: 9px;
+padding: 9px 16px;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.btn-sair:hover {
+background: #f3f4f6;
+}
+
+.admin-header-info {
+width: min(1180px, calc(100% - 32px));
+margin: 0 auto;
+min-height: 38px;
+display: flex;
+align-items: center;
+gap: 8px;
+color: #6b7280;
+font-size: 13px;
+}
+
+.admin-status {
+width: 8px;
+height: 8px;
+border-radius: 50%;
+background: #22c55e;
+display: inline-block;
+}
+
+/* ============================================================
+3. CONTAINER
+============================================================ */
+
+.integracoes-container {
+width: min(980px, calc(100% - 32px));
+margin: 0 auto;
+padding: 42px 0 60px;
+}
+
+/* ============================================================
+4. TOPO
+============================================================ */
+
+.integracoes-topo {
+margin-bottom: 28px;
+}
+
+.section-label {
+display: block;
+margin-bottom: 7px;
+color: #777f89;
+font-size: 11px;
+font-weight: 800;
+letter-spacing: 1.2px;
+}
+
+.integracoes-topo h1 {
+font-size: 34px;
+line-height: 1.15;
+letter-spacing: -1px;
+margin-bottom: 8px;
+}
+
+.integracoes-topo p {
+max-width: 700px;
+color: #6b7280;
+font-size: 15px;
+}
+
+/* ============================================================
+5. AVISO
+============================================================ */
+
+.integracao-aviso {
+display: flex;
+align-items: center;
+gap: 15px;
+margin-bottom: 18px;
+padding: 17px 19px;
+background: #ffffff;
+border: 1px solid #e5e7eb;
+border-radius: 13px;
+}
+
+.integracao-aviso-icone {
+width: 42px;
+height: 42px;
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 10px;
+background: #f3f4f6;
+font-size: 21px;
+}
+
+.integracao-aviso strong {
+display: block;
+margin-bottom: 2px;
+font-size: 14px;
+}
+
+.integracao-aviso p {
+color: #6b7280;
+font-size: 12px;
+}
+
+/* ============================================================
+6. CARD DE INTEGRAÇÃO
+============================================================ */
+
+.integracao-card {
+margin-bottom: 18px;
+background: #ffffff;
+border: 1px solid #e3e6ea;
+border-radius: 15px;
+overflow: hidden;
+transition: 0.2s ease;
+}
+
+.integracao-card:hover {
+box-shadow: 0 7px 22px rgba(0, 0, 0, 0.05);
+}
+
+.integracao-card-topo {
+padding: 20px 21px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 20px;
+border-bottom: 1px solid #eef0f2;
+}
+
+.integracao-identidade {
+display: flex;
+align-items: center;
+gap: 13px;
+min-width: 0;
+}
+
+.integracao-logo {
+width: 48px;
+height: 48px;
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 12px;
+color: #ffffff;
+font-size: 15px;
+font-weight: 800;
+}
+
+.mercado-livre-logo {
+background: #171717;
+}
+
+.tiktok-logo {
+background: #171717;
+}
+
+.integracao-plataforma {
+display: block;
+margin-bottom: 2px;
+color: #8a9098;
+font-size: 10px;
+font-weight: 800;
+letter-spacing: 0.9px;
+text-transform: uppercase;
+}
+
+.integracao-identidade h2 {
+font-size: 18px;
+line-height: 1.2;
+}
+
+.integracao-status {
+flex-shrink: 0;
+display: inline-flex;
+align-items: center;
+min-height: 27px;
+padding: 0 10px;
+border-radius: 999px;
+font-size: 11px;
+font-weight: 800;
+}
+
+.status-desconectado {
+background: #f3f4f6;
+color: #6b7280;
+}
+
+.status-conectado {
+background: #ecfdf3;
+color: #15803d;
+}
+
+.status-erro {
+background: #fff1f2;
+color: #be123c;
+}
+
+/* ============================================================
+7. CONTEÚDO
+============================================================ */
+
+.integracao-card-conteudo {
+padding: 19px 21px;
+}
+
+.integracao-card-conteudo > p {
+max-width: 760px;
+color: #606872;
+font-size: 13px;
+line-height: 1.6;
+}
+
+.integracao-recursos {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 15px;
+}
+
+.integracao-recursos span {
+display: inline-flex;
+align-items: center;
+min-height: 29px;
+padding: 0 10px;
+background: #f6f7f9;
+border-radius: 7px;
+color: #5f6670;
+font-size: 11px;
+font-weight: 600;
+}
+
+/* ============================================================
+8. AÇÕES
+============================================================ */
+
+.integracao-card-acoes {
+padding: 15px 21px 20px;
+border-top: 1px solid #eef0f2;
+display: flex;
+justify-content: flex-end;
+}
+
+.btn-integracao {
+min-height: 40px;
+padding: 0 17px;
+border-radius: 9px;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+transition: 0.2s ease;
+}
+
+.btn-conectar {
+border: 1px solid #171717;
+background: #171717;
+color: #ffffff;
+}
+
+.btn-conectar:hover {
+background: #333333;
+}
+
+.btn-conectar:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+.btn-indisponivel {
+border: 1px solid #e1e4e8;
+background: #f3f4f6;
+color: #8a9098;
+cursor: not-allowed;
+}
+
+/* ============================================================
+9. FUTURAS INTEGRAÇÕES
+============================================================ */
+
+.integracoes-futuras {
+display: flex;
+align-items: center;
+gap: 15px;
+margin-top: 24px;
+padding: 20px;
+border: 1px dashed #d7dbe0;
+border-radius: 14px;
+background: transparent;
+}
+
+.futuras-icone {
+width: 42px;
+height: 42px;
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+border: 1px solid #dfe3e8;
+border-radius: 10px;
+color: #6b7280;
+font-size: 22px;
+}
+
+.integracoes-futuras h2 {
+margin-bottom: 3px;
+font-size: 15px;
+}
+
+.integracoes-futuras p {
+color: #6b7280;
+font-size: 12px;
+}
+
+/* ============================================================
+10. SEGURANÇA
+============================================================ */
+
+.seguranca-card {
+display: flex;
+align-items: flex-start;
+gap: 14px;
+margin-top: 18px;
+padding: 19px 20px;
+background: #ffffff;
+border: 1px solid #e5e7eb;
+border-radius: 14px;
+}
+
+.seguranca-icone {
+width: 38px;
+height: 38px;
+flex-shrink: 0;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 9px;
+background: #f3f4f6;
+font-size: 18px;
+}
+
+.seguranca-card h2 {
+margin-bottom: 4px;
+font-size: 14px;
+}
+
+.seguranca-card p {
+color: #6b7280;
+font-size: 12px;
+line-height: 1.55;
+}
+
+/* ============================================================
+11. RODAPÉ
+============================================================ */
+
+.admin-footer {
+width: min(980px, calc(100% - 32px));
+margin: 0 auto;
+padding: 24px 0 35px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 15px;
+color: #6b7280;
+font-size: 13px;
+}
+
+.admin-footer span {
+color: #333333;
+font-weight: 700;
+}
+
+.admin-footer small {
+font-size: 12px;
+}
+
+/* ============================================================
+12. RESPONSIVIDADE
+============================================================ */
+
+@media (max-width: 600px) {
+
+
+.admin-header-top {
+    min-height: 62px;
+}
+
+.admin-logo {
+    font-size: 19px;
+}
+
+.admin-header-info {
+    min-height: 34px;
+    font-size: 12px;
+}
+
+.integracoes-container {
+    padding-top: 28px;
+}
+
+.integracoes-topo h1 {
+    font-size: 29px;
+}
+
+.integracao-card-topo {
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.integracao-status {
+    align-self: flex-start;
+}
+
+.integracao-card-acoes {
+    justify-content: stretch;
+}
+
+.btn-integracao {
+    width: 100%;
+}
+
+.integracoes-futuras,
+.seguranca-card {
+    align-items: flex-start;
+}
+
+.admin-footer {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+}
+
+@media (max-width: 420px) {
+
+
+.admin-header-top,
+.admin-header-info,
+.integracoes-container,
+.admin-footer {
+    width: min(100% - 22px, 980px);
+}
+
+.integracoes-topo h1 {
+    font-size: 26px;
+}
+
+.integracao-card-topo,
+.integracao-card-conteudo {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.integracao-card-acoes {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+
+}

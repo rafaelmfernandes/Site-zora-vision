@@ -1,30 +1,15 @@
-// ============================================================
-// ZORAVISION - ADMINISTRAÇÃO DE BANNERS
-// ============================================================
-// Arquivo: Admin/banners-admin.js
-//
-// Responsabilidades:
-// - Buscar banners no Supabase
-// - Exibir banners
-// - Contar banners cadastrados
-// - Contar banners ativos
-// - Buscar/filtrar banners
-// - Editar banner
-// - Excluir banner
-// - Atualizar lista
-// ============================================================
-
-// ============================================================
-// 1. VARIÁVEIS
-// ============================================================
+/* ============================================================
+ZORAVISION - ADMINISTRAÇÃO DE BANNERS
+Arquivo: Admin/banners-admin.js
+============================================================ */
 
 let bannersAdmin = [];
-
 let bannerSelecionadoExclusao = null;
 
-// ============================================================
-// 2. SUPABASE
-// ============================================================
+/* ============================================================
+
+1. SUPABASE
+   ============================================================ */
 
 function obterSupabaseBannersAdmin() {
 
@@ -41,25 +26,20 @@ if (typeof window.obterSupabase === 'function') {
     try {
         return window.obterSupabase();
     } catch (erro) {
-        console.error(
-            'Erro ao obter Supabase:',
-            erro
-        );
+        console.error('Erro ao obter Supabase:', erro);
     }
 }
 
-console.error(
-    'Cliente Supabase não encontrado.'
-);
+console.error('Cliente Supabase não encontrado.');
 
 return null;
 
 
 }
 
-// ============================================================
-// 3. ESCAPAR HTML
-// ============================================================
+/* ============================================================
+2. ESCAPAR HTML
+============================================================ */
 
 function escaparHTMLBanner(valor) {
 
@@ -81,9 +61,9 @@ return String(valor)
 
 }
 
-// ============================================================
-// 4. OBTER IMAGEM
-// ============================================================
+/* ============================================================
+3. OBTER DADOS
+============================================================ */
 
 function obterImagemBanner(banner) {
 
@@ -92,41 +72,22 @@ if (!banner) {
     return '';
 }
 
-return (
-    banner.imagem_url ||
-    banner.imagem ||
-    banner.foto_url ||
-    banner.url_imagem ||
-    banner.banner_url ||
-    ''
-);
+return banner.imagem_url || '';
 
 
 }
 
-// ============================================================
-// 5. OBTER TÍTULO
-// ============================================================
-
 function obterTituloBanner(banner) {
+
 
 if (!banner) {
     return 'Banner sem título';
 }
 
-return (
-    banner.titulo ||
-    banner.nome ||
-    banner.title ||
-    'Banner sem título'
-);
+return banner.titulo || 'Banner sem título';
 
 
 }
-
-// ============================================================
-// 6. OBTER DESCRIÇÃO
-// ============================================================
 
 function obterDescricaoBanner(banner) {
 
@@ -135,19 +96,10 @@ if (!banner) {
     return '';
 }
 
-return (
-    banner.descricao ||
-    banner.description ||
-    banner.subtitulo ||
-    ''
-);
+return banner.descricao || '';
 
 
 }
-
-// ============================================================
-// 7. OBTER STATUS
-// ============================================================
 
 function obterStatusBanner(banner) {
 
@@ -156,32 +108,26 @@ if (!banner) {
     return false;
 }
 
-return banner.ativo !== false;
+return banner.ativo === true;
 
 
 }
 
-// ============================================================
-// 8. ESTADOS DA PÁGINA
-// ============================================================
+/* ============================================================
+4. ESTADOS DA PÁGINA
+============================================================ */
 
 function esconderEstadoBanners() {
 
 
 const carregando =
-    document.getElementById(
-        'banners-carregando'
-    );
+    document.getElementById('banners-carregando');
 
 const vazio =
-    document.getElementById(
-        'banners-vazio'
-    );
+    document.getElementById('banners-vazio');
 
 const erro =
-    document.getElementById(
-        'banners-erro'
-    );
+    document.getElementById('banners-erro');
 
 if (carregando) {
     carregando.hidden = true;
@@ -204,9 +150,7 @@ function mostrarCarregandoBanners() {
 esconderEstadoBanners();
 
 const carregando =
-    document.getElementById(
-        'banners-carregando'
-    );
+    document.getElementById('banners-carregando');
 
 if (carregando) {
     carregando.hidden = false;
@@ -221,9 +165,7 @@ function mostrarBannersVazio() {
 esconderEstadoBanners();
 
 const vazio =
-    document.getElementById(
-        'banners-vazio'
-    );
+    document.getElementById('banners-vazio');
 
 if (vazio) {
     vazio.hidden = false;
@@ -232,22 +174,16 @@ if (vazio) {
 
 }
 
-function mostrarErroBanners(
-mensagem
-) {
+function mostrarErroBanners(mensagem) {
 
 
 esconderEstadoBanners();
 
 const erro =
-    document.getElementById(
-        'banners-erro'
-    );
+    document.getElementById('banners-erro');
 
 const mensagemErro =
-    document.getElementById(
-        'mensagem-erro-banners'
-    );
+    document.getElementById('mensagem-erro-banners');
 
 if (mensagemErro) {
     mensagemErro.textContent =
@@ -262,9 +198,9 @@ if (erro) {
 
 }
 
-// ============================================================
-// 9. ATUALIZAR RESUMO
-// ============================================================
+/* ============================================================
+5. RESUMO
+============================================================ */
 
 function atualizarResumoBanners() {
 
@@ -289,9 +225,7 @@ if (ativos) {
     const quantidadeAtivos =
         bannersAdmin.filter(
             banner =>
-                obterStatusBanner(
-                    banner
-                )
+                obterStatusBanner(banner)
         ).length;
 
     ativos.textContent =
@@ -301,9 +235,9 @@ if (ativos) {
 
 }
 
-// ============================================================
-// 10. CARREGAR BANNERS
-// ============================================================
+/* ============================================================
+6. CARREGAR BANNERS
+============================================================ */
 
 async function carregarBannersAdmin() {
 
@@ -343,10 +277,6 @@ const supabase =
 
 if (!supabase) {
 
-    console.error(
-        'Supabase não disponível.'
-    );
-
     mostrarErroBanners(
         'Supabase não está disponível.'
     );
@@ -365,6 +295,12 @@ try {
             .from('banners')
             .select('*')
             .order(
+                'ordem',
+                {
+                    ascending: true
+                }
+            )
+            .order(
                 'created_at',
                 {
                     ascending: false
@@ -376,17 +312,11 @@ try {
         resultado
     );
 
-    const data =
-        resultado?.data || [];
-
-    const error =
-        resultado?.error || null;
-
-    if (error) {
+    if (resultado.error) {
 
         console.error(
             'Erro Supabase:',
-            error
+            resultado.error
         );
 
         bannersAdmin = [];
@@ -394,7 +324,7 @@ try {
         atualizarResumoBanners();
 
         mostrarErroBanners(
-            error.message ||
+            resultado.error.message ||
             'Erro ao carregar banners.'
         );
 
@@ -402,8 +332,8 @@ try {
     }
 
     bannersAdmin =
-        Array.isArray(data)
-            ? data
+        Array.isArray(resultado.data)
+            ? resultado.data
             : [];
 
     console.log(
@@ -413,8 +343,6 @@ try {
 
     atualizarResumoBanners();
 
-    esconderEstadoBanners();
-
     if (
         bannersAdmin.length === 0
     ) {
@@ -422,10 +350,6 @@ try {
         lista.innerHTML = '';
 
         mostrarBannersVazio();
-
-        console.log(
-            'Nenhum banner cadastrado.'
-        );
 
         return;
     }
@@ -458,9 +382,9 @@ try {
 
 }
 
-// ============================================================
-// 11. RENDERIZAR BANNERS
-// ============================================================
+/* ============================================================
+7. RENDERIZAR
+============================================================ */
 
 function renderizarBannersAdmin() {
 
@@ -471,11 +395,6 @@ const lista =
     );
 
 if (!lista) {
-
-    console.error(
-        'Elemento lista-banners não encontrado.'
-    );
-
     return;
 }
 
@@ -497,18 +416,16 @@ lista.innerHTML =
     bannersAdmin
         .map(
             banner =>
-                criarCardBanner(
-                    banner
-                )
+                criarCardBanner(banner)
         )
         .join('');
 
 
 }
 
-// ============================================================
-// 12. CRIAR CARD
-// ============================================================
+/* ============================================================
+8. CRIAR CARD
+============================================================ */
 
 function criarCardBanner(banner) {
 
@@ -518,27 +435,19 @@ const id =
 
 const titulo =
     escaparHTMLBanner(
-        obterTituloBanner(
-            banner
-        )
+        obterTituloBanner(banner)
     );
 
 const descricao =
     escaparHTMLBanner(
-        obterDescricaoBanner(
-            banner
-        )
+        obterDescricaoBanner(banner)
     );
 
 const imagem =
-    obterImagemBanner(
-        banner
-    );
+    obterImagemBanner(banner);
 
 const ativo =
-    obterStatusBanner(
-        banner
-    );
+    obterStatusBanner(banner);
 
 let imagemHTML;
 
@@ -546,23 +455,21 @@ if (imagem) {
 
     imagemHTML =
         '<img ' +
-            'class="banner-admin-imagem" ' +
-            'src="' +
-                escaparHTMLBanner(
-                    imagem
-                ) +
-            '" ' +
-            'alt="' +
-                titulo +
-            '" ' +
-            'loading="lazy"' +
+        'class="banner-admin-imagem" ' +
+        'src="' +
+        escaparHTMLBanner(imagem) +
+        '" ' +
+        'alt="' +
+        titulo +
+        '" ' +
+        'loading="lazy"' +
         '>';
 
 } else {
 
     imagemHTML =
         '<div class="banner-admin-sem-imagem">' +
-            '🖼️' +
+        '🖼️' +
         '</div>';
 }
 
@@ -574,105 +481,116 @@ const statusHTML =
 let informacoesHTML = '';
 
 if (
-    banner.ordem !== undefined &&
-    banner.ordem !== null
+    banner.ordem !== null &&
+    banner.ordem !== undefined
 ) {
 
     informacoesHTML +=
         '<span class="banner-info-item">' +
-            'Ordem: ' +
-            escaparHTMLBanner(
-                banner.ordem
-            ) +
+        'Ordem: ' +
+        escaparHTMLBanner(banner.ordem) +
         '</span>';
 }
 
-if (
-    banner.link_url
-) {
+if (banner.link_url) {
 
     informacoesHTML +=
         '<span class="banner-info-item">' +
-            'Link configurado' +
+        'Link configurado' +
         '</span>';
 }
+
+const botaoStatus =
+    ativo
+        ? 'Desativar'
+        : 'Ativar';
+
+const classeStatus =
+    ativo
+        ? 'btn-desativar-banner'
+        : 'btn-ativar-banner';
 
 return (
 
     '<article class="banner-admin-card" ' +
-        'data-id="' +
-            escaparHTMLBanner(
-                id
-            ) +
+    'data-id="' +
+    escaparHTMLBanner(id) +
     '">' +
 
-        '<div class="banner-admin-imagem-container">' +
+    '<div class="banner-admin-imagem-container">' +
 
-            imagemHTML +
+    imagemHTML +
 
-        '</div>' +
+    '</div>' +
 
-        '<div class="banner-admin-conteudo">' +
+    '<div class="banner-admin-conteudo">' +
 
-            '<div class="banner-admin-topo">' +
+    '<div class="banner-admin-topo">' +
 
-                '<div>' +
+    '<div>' +
 
-                    '<h3 class="banner-admin-titulo">' +
-                        titulo +
-                    '</h3>' +
+    '<h3 class="banner-admin-titulo">' +
+    titulo +
+    '</h3>' +
 
-                    (
-                        descricao
-                            ? '<p class="banner-admin-descricao">' +
-                                descricao +
-                              '</p>'
-                            : ''
-                    ) +
+    (
+        descricao
+            ? '<p class="banner-admin-descricao">' +
+            descricao +
+            '</p>'
+            : ''
+    ) +
 
-                '</div>' +
+    '</div>' +
 
-                '<div class="banner-admin-status">' +
-                    statusHTML +
-                '</div>' +
+    '<div class="banner-admin-status">' +
+    statusHTML +
+    '</div>' +
 
-            '</div>' +
+    '</div>' +
 
-            (
-                informacoesHTML
-                    ? '<div class="banner-admin-informacoes">' +
-                        informacoesHTML +
-                      '</div>'
-                    : ''
-            ) +
+    (
+        informacoesHTML
+            ? '<div class="banner-admin-informacoes">' +
+            informacoesHTML +
+            '</div>'
+            : ''
+    ) +
 
-        '</div>' +
+    '</div>' +
 
-        '<div class="banner-admin-acoes">' +
+    '<div class="banner-admin-acoes">' +
 
-            '<button ' +
-                'type="button" ' +
-                'class="btn-editar-banner" ' +
-                'data-id="' +
-                    escaparHTMLBanner(
-                        id
-                    ) +
-                '">' +
-                'Editar' +
-            '</button>' +
+    '<button ' +
+    'type="button" ' +
+    'class="btn-editar-banner" ' +
+    'data-id="' +
+    escaparHTMLBanner(id) +
+    '">' +
+    'Editar' +
+    '</button>' +
 
-            '<button ' +
-                'type="button" ' +
-                'class="btn-excluir-banner" ' +
-                'data-id="' +
-                    escaparHTMLBanner(
-                        id
-                    ) +
-                '">' +
-                'Excluir' +
-            '</button>' +
+    '<button ' +
+    'type="button" ' +
+    'class="' +
+    classeStatus +
+    '" ' +
+    'data-id="' +
+    escaparHTMLBanner(id) +
+    '">' +
+    botaoStatus +
+    '</button>' +
 
-        '</div>' +
+    '<button ' +
+    'type="button" ' +
+    'class="btn-excluir-banner" ' +
+    'data-id="' +
+    escaparHTMLBanner(id) +
+    '">' +
+    'Excluir' +
+    '</button>' +
+
+    '</div>' +
 
     '</article>'
 );
@@ -680,9 +598,9 @@ return (
 
 }
 
-// ============================================================
-// 13. EDITAR
-// ============================================================
+/* ============================================================
+9. EDITAR
+============================================================ */
 
 function editarBannerAdmin(id) {
 
@@ -697,16 +615,156 @@ if (
 
 window.location.href =
     'cadastro-banner.html?id=' +
-    encodeURIComponent(
-        id
-    );
+    encodeURIComponent(id);
 
 
 }
 
-// ============================================================
-// 14. MODAL
-// ============================================================
+/* ============================================================
+10. ALTERAR STATUS
+============================================================ */
+
+async function alterarStatusBanner(id, novoStatus) {
+
+
+const supabase =
+    obterSupabaseBannersAdmin();
+
+if (!supabase) {
+
+    alert(
+        'Supabase não está disponível.'
+    );
+
+    return false;
+}
+
+const banner =
+    bannersAdmin.find(
+        item =>
+            String(item.id) ===
+            String(id)
+    );
+
+if (!banner) {
+
+    alert(
+        'Banner não encontrado.'
+    );
+
+    return false;
+}
+
+console.log(
+    'Alterando status do banner:',
+    id,
+    novoStatus
+);
+
+try {
+
+    const dadosAtualizacao = {
+        ativo: novoStatus,
+        updated_at:
+            new Date().toISOString()
+    };
+
+    const resultado =
+        await supabase
+            .from('banners')
+            .update(
+                dadosAtualizacao
+            )
+            .eq(
+                'id',
+                id
+            )
+            .select('*');
+
+    console.log(
+        'Resultado da alteração de status:',
+        resultado
+    );
+
+    if (resultado.error) {
+
+        console.error(
+            'Erro ao alterar status:',
+            resultado.error
+        );
+
+        alert(
+            'Não foi possível alterar o status do banner.\n\n' +
+            resultado.error.message
+        );
+
+        return false;
+    }
+
+    if (
+        !resultado.data ||
+        resultado.data.length === 0
+    ) {
+
+        console.error(
+            'Nenhum banner foi atualizado.'
+        );
+
+        alert(
+            'Nenhum banner foi atualizado. Verifique as permissões da tabela banners.'
+        );
+
+        return false;
+    }
+
+    const bannerAtualizado =
+        resultado.data[0];
+
+    const indice =
+        bannersAdmin.findIndex(
+            item =>
+                String(item.id) ===
+                String(id)
+        );
+
+    if (indice !== -1) {
+
+        bannersAdmin[indice] =
+            bannerAtualizado;
+    }
+
+    atualizarResumoBanners();
+
+    renderizarBannersAdmin();
+
+    console.log(
+        novoStatus
+            ? 'Banner ativado com sucesso.'
+            : 'Banner desativado com sucesso.'
+    );
+
+    return true;
+
+} catch (erro) {
+
+    console.error(
+        'Erro inesperado ao alterar status:',
+        erro
+    );
+
+    alert(
+        'Ocorreu um erro ao alterar o status do banner.'
+    );
+
+    return false;
+}
+
+
+}
+
+/* ============================================================
+11. MODAL DE EXCLUSÃO
+============================================================ */
 
 function abrirModalExcluirBanner(id) {
 
@@ -718,9 +776,7 @@ const modal =
 
 if (!modal) {
 
-    excluirBannerAdmin(
-        id
-    );
+    excluirBannerAdmin(id);
 
     return;
 }
@@ -748,11 +804,12 @@ if (modal) {
 bannerSelecionadoExclusao =
     null;
 
+
 }
 
-// ============================================================
-// 15. EXCLUIR
-// ============================================================
+/* ============================================================
+12. EXCLUIR
+============================================================ */
 
 async function excluirBannerAdmin(id) {
 
@@ -766,7 +823,7 @@ if (!supabase) {
         'Supabase não está disponível.'
     );
 
-    return;
+    return false;
 }
 
 const banner =
@@ -782,13 +839,11 @@ if (!banner) {
         'Banner não encontrado.'
     );
 
-    return;
+    return false;
 }
 
 const titulo =
-    obterTituloBanner(
-        banner
-    );
+    obterTituloBanner(banner);
 
 try {
 
@@ -804,7 +859,13 @@ try {
             .eq(
                 'id',
                 id
-            );
+            )
+            .select('id');
+
+    console.log(
+        'Resultado da exclusão:',
+        resultado
+    );
 
     if (resultado.error) {
 
@@ -818,12 +879,20 @@ try {
             resultado.error.message
         );
 
-        return;
+        return false;
     }
 
-    console.log(
-        'Banner excluído com sucesso.'
-    );
+    if (
+        !resultado.data ||
+        resultado.data.length === 0
+    ) {
+
+        alert(
+            'Nenhum banner foi excluído. Verifique as permissões da tabela banners.'
+        );
+
+        return false;
+    }
 
     alert(
         'Banner "' +
@@ -835,6 +904,8 @@ try {
 
     await carregarBannersAdmin();
 
+    return true;
+
 } catch (erro) {
 
     console.error(
@@ -845,14 +916,16 @@ try {
     alert(
         'Ocorreu um erro ao excluir o banner.'
     );
+
+    return false;
 }
 
 
 }
 
-// ============================================================
-// 16. EVENTOS DA LISTA
-// ============================================================
+/* ============================================================
+13. EVENTOS DA LISTA
+============================================================ */
 
 function configurarEventosBanners() {
 
@@ -868,7 +941,7 @@ if (!lista) {
 
 lista.addEventListener(
     'click',
-    function(event) {
+    async function(event) {
 
         const editar =
             event.target.closest(
@@ -879,6 +952,46 @@ lista.addEventListener(
 
             editarBannerAdmin(
                 editar.dataset.id
+            );
+
+            return;
+        }
+
+        const alterarStatus =
+            event.target.closest(
+                '.btn-ativar-banner, .btn-desativar-banner'
+            );
+
+        if (alterarStatus) {
+
+            const id =
+                alterarStatus.dataset.id;
+
+            const banner =
+                bannersAdmin.find(
+                    item =>
+                        String(item.id) ===
+                        String(id)
+                );
+
+            if (!banner) {
+                return;
+            }
+
+            const novoStatus =
+                !obterStatusBanner(banner);
+
+            alterarStatus.disabled =
+                true;
+
+            alterarStatus.textContent =
+                novoStatus
+                    ? 'Ativando...'
+                    : 'Desativando...';
+
+            await alterarStatusBanner(
+                id,
+                novoStatus
             );
 
             return;
@@ -901,9 +1014,9 @@ lista.addEventListener(
 
 }
 
-// ============================================================
-// 17. EVENTOS DO MODAL
-// ============================================================
+/* ============================================================
+14. EVENTOS DO MODAL
+============================================================ */
 
 function configurarModalBanners() {
 
@@ -983,7 +1096,6 @@ if (modal) {
             ) {
 
                 fecharModalExcluirBanner();
-
             }
         }
     );
@@ -999,7 +1111,6 @@ document.addEventListener(
         ) {
 
             fecharModalExcluirBanner();
-
         }
     }
 );
@@ -1007,9 +1118,9 @@ document.addEventListener(
 
 }
 
-// ============================================================
-// 18. BOTÃO ATUALIZAR
-// ============================================================
+/* ============================================================
+15. BOTÃO ATUALIZAR
+============================================================ */
 
 function configurarBotaoAtualizarBanners() {
 
@@ -1027,9 +1138,7 @@ botao.addEventListener(
     'click',
     async function() {
 
-        if (
-            botao.disabled
-        ) {
+        if (botao.disabled) {
             return;
         }
 
@@ -1061,9 +1170,9 @@ botao.addEventListener(
 
 }
 
-// ============================================================
-// 19. BOTÃO TENTAR NOVAMENTE
-// ============================================================
+/* ============================================================
+16. BOTÃO TENTAR NOVAMENTE
+============================================================ */
 
 function configurarBotaoTentarBanners() {
 
@@ -1081,9 +1190,7 @@ botao.addEventListener(
     'click',
     async function() {
 
-        if (
-            botao.disabled
-        ) {
+        if (botao.disabled) {
             return;
         }
 
@@ -1111,9 +1218,9 @@ botao.addEventListener(
 
 }
 
-// ============================================================
-// 20. INICIALIZAÇÃO
-// ============================================================
+/* ============================================================
+17. INICIALIZAÇÃO
+============================================================ */
 
 document.addEventListener(
 'DOMContentLoaded',
@@ -1162,9 +1269,9 @@ async function() {
 
 );
 
-// ============================================================
-// 21. FUNÇÕES GLOBAIS
-// ============================================================
+/* ============================================================
+18. FUNÇÕES GLOBAIS
+============================================================ */
 
 window.carregarBannersAdmin =
 carregarBannersAdmin;
@@ -1174,6 +1281,9 @@ renderizarBannersAdmin;
 
 window.editarBannerAdmin =
 editarBannerAdmin;
+
+window.alterarStatusBanner =
+alterarStatusBanner;
 
 window.excluirBannerAdmin =
 excluirBannerAdmin;
