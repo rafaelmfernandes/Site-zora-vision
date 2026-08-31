@@ -41,11 +41,9 @@
         ‹
     </a>
 
-
     <div class="admin-logo">
         ZoraVision
     </div>
-
 
     <button
         type="button"
@@ -56,7 +54,6 @@
     </button>
 
 </div>
-
 
 <div class="admin-header-info">
 
@@ -88,11 +85,9 @@
         MERCADO LIVRE
     </span>
 
-
     <h1>
         Produtos
     </h1>
-
 
     <p>
         Consulte os produtos encontrados na sua conta do
@@ -103,6 +98,45 @@
 </section>
 
 
+<!-- ========================================================
+     RESUMO
+========================================================= -->
+
+<section class="produtos-resumo">
+
+    <div class="resumo-card">
+
+        <span class="resumo-label">
+            PRODUTOS ENCONTRADOS
+        </span>
+
+        <strong
+            id="total-produtos"
+            class="resumo-valor"
+        >
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="resumo-card">
+
+        <span class="resumo-label">
+            SELECIONADOS
+        </span>
+
+        <strong
+            id="total-selecionados"
+            class="resumo-valor"
+        >
+            0
+        </strong>
+
+    </div>
+
+</section>
+
 
 <!-- ========================================================
      CONTROLES
@@ -110,9 +144,7 @@
 
 <section class="produtos-controles">
 
-
     <div class="produtos-controles-esquerda">
-
 
         <label class="selecionar-todos">
 
@@ -127,21 +159,10 @@
 
         </label>
 
-
-        <span
-            class="contador-produtos"
-            id="contador-produtos"
-        >
-            Nenhum produto selecionado
-        </span>
-
-
     </div>
 
 
-
     <div class="produtos-controles-direita">
-
 
         <button
             type="button"
@@ -154,11 +175,20 @@
 
         <button
             type="button"
+            class="btn-produtos btn-desmarcar"
+            id="btn-desmarcar-todos"
+        >
+            Desmarcar todos
+        </button>
+
+
+        <button
+            type="button"
             class="btn-produtos btn-sincronizar"
-            id="btn-importar-selecionados"
+            id="btn-sincronizar-selecionados"
             disabled
         >
-            Importar selecionados
+            Sincronizar selecionados
         </button>
 
 
@@ -170,12 +200,9 @@
             Atualizar
         </button>
 
-
     </div>
 
-
 </section>
-
 
 
 <!-- ========================================================
@@ -189,22 +216,15 @@
 ></div>
 
 
-
 <!-- ========================================================
      LISTA DE PRODUTOS
 ========================================================= -->
 
 <section
     id="lista-produtos"
+    class="lista-produtos"
     aria-live="polite"
 >
-
-
-    <!--
-    Os produtos serão inseridos
-    automaticamente pelo JavaScript.
-    -->
-
 
     <div
         id="produtos-carregando"
@@ -215,11 +235,9 @@
             ⏳
         </div>
 
-
         <h2>
             Carregando produtos
         </h2>
-
 
         <p>
             Consultando os produtos disponíveis
@@ -227,7 +245,6 @@
         </p>
 
     </div>
-
 
 </section>
 
@@ -244,7 +261,6 @@
 <span>
     ZoraVision
 </span>
-
 
 <small>
     Gerenciamento de produtos do Mercado Livre
