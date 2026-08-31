@@ -22,7 +22,7 @@ const MERCADO_LIVRE_CLIENT_ID =
 '8816875791365432';
 
 const MERCADO_LIVRE_REDIRECT_URI =
-'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-oauth';
+'https://rafaelmfernandes.github.io/Site-zora-vision/Admin/mercadolivre-callback.html';
 
 const MERCADO_LIVRE_AUTH_URL =
 'https://auth.mercadolivre.com.br/authorization';

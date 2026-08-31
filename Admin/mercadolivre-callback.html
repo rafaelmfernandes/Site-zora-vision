@@ -23,177 +23,90 @@
     }
 
     body {
-
         min-height: 100vh;
-
         display: flex;
-
         align-items: center;
-
         justify-content: center;
-
         padding: 20px;
-
-        font-family:
-            Arial,
-            Helvetica,
-            sans-serif;
-
         background: #f6f7f9;
-
         color: #171717;
-
+        font-family: Arial, Helvetica, sans-serif;
     }
 
     .callback-card {
-
-        width: min(
-            440px,
-            100%
-        );
-
+        width: min(460px, 100%);
         padding: 35px 28px;
-
         background: #ffffff;
-
         border: 1px solid #e5e7eb;
-
         border-radius: 16px;
-
         text-align: center;
-
-        box-shadow:
-            0 10px 35px
-            rgba(0, 0, 0, 0.06);
-
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
     }
 
-    .callback-logo {
-
+    .callback-icone {
         width: 58px;
-
         height: 58px;
-
         margin: 0 auto 20px;
-
         display: flex;
-
         align-items: center;
-
         justify-content: center;
+        border-radius: 50%;
+        background: #f3f4f6;
+        font-size: 27px;
+    }
 
-        border-radius: 14px;
+    .callback-card h1 {
+        margin-bottom: 10px;
+        font-size: 22px;
+    }
 
-        background: #171717;
-
-        color: #ffffff;
-
-        font-size: 17px;
-
-        font-weight: 800;
-
+    .callback-card p {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.55;
     }
 
     .spinner {
-
-        width: 36px;
-
-        height: 36px;
-
-        margin: 22px auto;
-
+        width: 32px;
+        height: 32px;
+        margin: 22px auto 0;
         border: 3px solid #e5e7eb;
-
         border-top-color: #171717;
-
         border-radius: 50%;
+        animation: girar 0.8s linear infinite;
+    }
 
-        animation:
-            girar
-            0.8s
-            linear
-            infinite;
+    .erro {
+        display: none;
+        margin-top: 20px;
+        padding: 13px;
+        border: 1px solid #f0d4d4;
+        border-radius: 9px;
+        background: #fff5f5;
+        color: #b42318;
+        font-size: 13px;
+        line-height: 1.5;
+    }
 
+    .btn-voltar {
+        display: none;
+        margin-top: 20px;
+        min-height: 42px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 9px;
+        background: #171717;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
     }
 
     @keyframes girar {
 
         to {
-
-            transform:
-                rotate(360deg);
-
+            transform: rotate(360deg);
         }
-
-    }
-
-    h1 {
-
-        margin-bottom: 10px;
-
-        font-size: 22px;
-
-        line-height: 1.3;
-
-    }
-
-    p {
-
-        color: #6b7280;
-
-        font-size: 14px;
-
-        line-height: 1.55;
-
-    }
-
-    .sucesso {
-
-        display: none;
-
-    }
-
-    .erro {
-
-        display: none;
-
-    }
-
-    .erro h1 {
-
-        color: #c62828;
-
-    }
-
-    .btn-voltar {
-
-        display: none;
-
-        margin-top: 22px;
-
-        min-height: 42px;
-
-        padding: 0 18px;
-
-        border: 0;
-
-        border-radius: 9px;
-
-        background: #171717;
-
-        color: #ffffff;
-
-        font-size: 13px;
-
-        font-weight: 700;
-
-        cursor: pointer;
-
-    }
-
-    .btn-voltar:hover {
-
-        background: #333333;
 
     }
 
@@ -207,73 +120,30 @@
 
 <main class="callback-card">
 
-
-    <div class="callback-logo">
-        ZV
+    <div
+        class="callback-icone"
+        id="callback-icone"
+    >
+        🔗
     </div>
 
+    <h1 id="callback-titulo">
+        Conectando Mercado Livre
+    </h1>
 
-    <!-- ================================================= -->
-    <!-- CARREGANDO -->
-    <!-- ================================================= -->
+    <p id="callback-mensagem">
+        Estamos finalizando a conexão com sua conta do Mercado Livre.
+    </p>
 
-    <section id="estado-carregando">
+    <div
+        class="spinner"
+        id="callback-spinner"
+    ></div>
 
-        <h1>
-            Conectando ao Mercado Livre
-        </h1>
-
-        <p>
-            Estamos concluindo a autorização
-            da sua conta. Aguarde alguns instantes.
-        </p>
-
-        <div class="spinner"></div>
-
-    </section>
-
-
-    <!-- ================================================= -->
-    <!-- SUCESSO -->
-    <!-- ================================================= -->
-
-    <section
-        id="estado-sucesso"
-        class="sucesso"
-    >
-
-        <h1>
-            Conexão autorizada!
-        </h1>
-
-        <p>
-            A autorização do Mercado Livre
-            foi recebida pelo ZoraVision.
-        </p>
-
-    </section>
-
-
-    <!-- ================================================= -->
-    <!-- ERRO -->
-    <!-- ================================================= -->
-
-    <section
-        id="estado-erro"
+    <div
         class="erro"
-    >
-
-        <h1>
-            Não foi possível conectar
-        </h1>
-
-        <p id="mensagem-erro">
-            Ocorreu um erro ao concluir
-            a conexão com o Mercado Livre.
-        </p>
-
-    </section>
-
+        id="callback-erro"
+    ></div>
 
     <button
         type="button"
@@ -283,15 +153,495 @@
         Voltar para integrações
     </button>
 
-
 </main>
 
 
-<!-- ===================================================== -->
-<!-- SCRIPT -->
-<!-- ===================================================== -->
+<script>
 
-<script src="mercadolivre-callback.js"></script>
+    // ============================================================
+    // ZORAVISION - CALLBACK MERCADO LIVRE
+    // OAuth 2.0 + PKCE
+    // ============================================================
+
+
+    // ============================================================
+    // CONFIGURAÇÕES
+    // ============================================================
+
+    const EDGE_FUNCTION_URL =
+        'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-oauth';
+
+    const CHAVE_PKCE_MERCADO_LIVRE =
+        'zoravision_ml_code_verifier';
+
+    const CHAVE_STATE_MERCADO_LIVRE =
+        'zoravision_ml_oauth_state';
+
+    const PAGINA_INTEGRACOES =
+        'integracoes-admin.html';
+
+
+    // ============================================================
+    // ELEMENTOS
+    // ============================================================
+
+    const titulo =
+        document.getElementById(
+            'callback-titulo'
+        );
+
+    const mensagem =
+        document.getElementById(
+            'callback-mensagem'
+        );
+
+    const icone =
+        document.getElementById(
+            'callback-icone'
+        );
+
+    const spinner =
+        document.getElementById(
+            'callback-spinner'
+        );
+
+    const erroElemento =
+        document.getElementById(
+            'callback-erro'
+        );
+
+    const botaoVoltar =
+        document.getElementById(
+            'btn-voltar'
+        );
+
+
+    // ============================================================
+    // MOSTRAR ERRO
+    // ============================================================
+
+    function mostrarErro(
+        mensagemErro
+    ) {
+
+        spinner.style.display =
+            'none';
+
+        icone.textContent =
+            '⚠️';
+
+        titulo.textContent =
+            'Não foi possível conectar';
+
+        mensagem.textContent =
+            'A conexão com o Mercado Livre não foi concluída.';
+
+        erroElemento.textContent =
+            mensagemErro;
+
+        erroElemento.style.display =
+            'block';
+
+        botaoVoltar.style.display =
+            'inline-flex';
+
+    }
+
+
+    // ============================================================
+    // VOLTAR
+    // ============================================================
+
+    botaoVoltar.addEventListener(
+        'click',
+        function() {
+
+            window.location.href =
+                PAGINA_INTEGRACOES;
+
+        }
+    );
+
+
+    // ============================================================
+    // LIMPAR DADOS OAUTH
+    // ============================================================
+
+    function limparDadosOAuth() {
+
+        try {
+
+            sessionStorage.removeItem(
+                CHAVE_PKCE_MERCADO_LIVRE
+            );
+
+            sessionStorage.removeItem(
+                CHAVE_STATE_MERCADO_LIVRE
+            );
+
+        } catch (erro) {
+
+            console.warn(
+                'Não foi possível limpar dados OAuth:',
+                erro
+            );
+
+        }
+
+    }
+
+
+    // ============================================================
+    // PROCESSAR CALLBACK
+    // ============================================================
+
+    async function processarCallback() {
+
+        try {
+
+            console.log(
+                '============================================================'
+            );
+
+            console.log(
+                'ZoraVision - Callback Mercado Livre'
+            );
+
+            console.log(
+                'Processando retorno OAuth + PKCE...'
+            );
+
+            console.log(
+                '============================================================'
+            );
+
+
+            // ----------------------------------------------------
+            // LER URL
+            // ----------------------------------------------------
+
+            const url =
+                new URL(
+                    window.location.href
+                );
+
+            const code =
+                url.searchParams.get(
+                    'code'
+                );
+
+            const state =
+                url.searchParams.get(
+                    'state'
+                );
+
+            const error =
+                url.searchParams.get(
+                    'error'
+                );
+
+            const errorDescription =
+                url.searchParams.get(
+                    'error_description'
+                );
+
+
+            console.log(
+                'Code recebido:',
+                code ? 'SIM' : 'NÃO'
+            );
+
+            console.log(
+                'State recebido:',
+                state ? 'SIM' : 'NÃO'
+            );
+
+
+            // ----------------------------------------------------
+            // VERIFICAR ERRO DO MERCADO LIVRE
+            // ----------------------------------------------------
+
+            if (error) {
+
+                console.error(
+                    'Mercado Livre retornou erro:',
+                    error,
+                    errorDescription
+                );
+
+                mostrarErro(
+                    errorDescription ||
+                    error ||
+                    'Erro retornado pelo Mercado Livre.'
+                );
+
+                limparDadosOAuth();
+
+                return;
+
+            }
+
+
+            // ----------------------------------------------------
+            // VERIFICAR CODE
+            // ----------------------------------------------------
+
+            if (!code) {
+
+                mostrarErro(
+                    'O Mercado Livre não retornou o código de autorização.'
+                );
+
+                return;
+
+            }
+
+
+            // ----------------------------------------------------
+            // RECUPERAR STATE
+            // ----------------------------------------------------
+
+            let stateSalvo = null;
+
+            try {
+
+                stateSalvo =
+                    sessionStorage.getItem(
+                        CHAVE_STATE_MERCADO_LIVRE
+                    );
+
+            } catch (erro) {
+
+                console.error(
+                    'Erro ao recuperar state:',
+                    erro
+                );
+
+            }
+
+
+            if (
+                !stateSalvo ||
+                !state
+            ) {
+
+                mostrarErro(
+                    'Não foi possível validar a segurança da autorização. Tente conectar novamente.'
+                );
+
+                limparDadosOAuth();
+
+                return;
+
+            }
+
+
+            if (
+                stateSalvo !== state
+            ) {
+
+                console.error(
+                    'State inválido.'
+                );
+
+                mostrarErro(
+                    'A validação de segurança da conexão falhou. Tente novamente.'
+                );
+
+                limparDadosOAuth();
+
+                return;
+
+            }
+
+
+            console.log(
+                'State validado com sucesso.'
+            );
+
+
+            // ----------------------------------------------------
+            // RECUPERAR CODE VERIFIER
+            // ----------------------------------------------------
+
+            let codeVerifier = null;
+
+            try {
+
+                codeVerifier =
+                    sessionStorage.getItem(
+                        CHAVE_PKCE_MERCADO_LIVRE
+                    );
+
+            } catch (erro) {
+
+                console.error(
+                    'Erro ao recuperar code_verifier:',
+                    erro
+                );
+
+            }
+
+
+            if (!codeVerifier) {
+
+                mostrarErro(
+                    'O código de segurança PKCE não foi encontrado. Volte ao painel e tente conectar novamente.'
+                );
+
+                limparDadosOAuth();
+
+                return;
+
+            }
+
+
+            console.log(
+                'Code verifier recuperado com sucesso.'
+            );
+
+
+            // ----------------------------------------------------
+            // ENVIAR CODE + VERIFIER PARA EDGE FUNCTION
+            // ----------------------------------------------------
+
+            mensagem.textContent =
+                'Validando autorização com o Mercado Livre...';
+
+
+            const resposta =
+                await fetch(
+                    EDGE_FUNCTION_URL,
+                    {
+
+                        method: 'POST',
+
+                        headers: {
+                            'Content-Type':
+                                'application/json'
+                        },
+
+                        body: JSON.stringify({
+
+                            code:
+                                code,
+
+                            code_verifier:
+                                codeVerifier,
+
+                            state:
+                                state
+
+                        })
+
+                    }
+                );
+
+
+            let resultado = null;
+
+            try {
+
+                resultado =
+                    await resposta.json();
+
+            } catch (erro) {
+
+                resultado = null;
+
+            }
+
+
+            console.log(
+                'Status da Edge Function:',
+                resposta.status
+            );
+
+
+            // ----------------------------------------------------
+            // VERIFICAR RESPOSTA
+            // ----------------------------------------------------
+
+            if (!resposta.ok) {
+
+                console.error(
+                    'Erro da Edge Function:',
+                    resultado
+                );
+
+                throw new Error(
+                    resultado?.erro ||
+                    resultado?.error ||
+                    'A Edge Function recusou a autorização.'
+                );
+
+            }
+
+
+            // ----------------------------------------------------
+            // SUCESSO
+            // ----------------------------------------------------
+
+            console.log(
+                'Mercado Livre conectado com sucesso.'
+            );
+
+            spinner.style.display =
+                'none';
+
+            icone.textContent =
+                '✓';
+
+            titulo.textContent =
+                'Mercado Livre conectado!';
+
+            mensagem.textContent =
+                'A conta do Mercado Livre foi conectada ao ZoraVision com sucesso.';
+
+
+            limparDadosOAuth();
+
+
+            // ----------------------------------------------------
+            // REDIRECIONAR
+            // ----------------------------------------------------
+
+            setTimeout(
+                function() {
+
+                    window.location.href =
+                        PAGINA_INTEGRACOES +
+                        '?mercadolivre=conectado';
+
+                },
+                1500
+            );
+
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao processar callback:',
+                erro
+            );
+
+            mostrarErro(
+                erro?.message ||
+                'Ocorreu um erro ao finalizar a conexão.'
+            );
+
+        }
+
+    }
+
+
+    // ============================================================
+    // INICIAR
+    // ============================================================
+
+    processarCallback();
+
+</script>
 
 
 </body>
