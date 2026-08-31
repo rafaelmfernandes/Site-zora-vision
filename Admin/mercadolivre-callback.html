@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Conectando Mercado Livre - ZoraVision</title>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+
+        min-height: 100vh;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding: 20px;
+
+        font-family:
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        background: #f6f7f9;
+
+        color: #171717;
+
+    }
+
+    .callback-card {
+
+        width: min(
+            440px,
+            100%
+        );
+
+        padding: 35px 28px;
+
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 16px;
+
+        text-align: center;
+
+        box-shadow:
+            0 10px 35px
+            rgba(0, 0, 0, 0.06);
+
+    }
+
+    .callback-logo {
+
+        width: 58px;
+
+        height: 58px;
+
+        margin: 0 auto 20px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 14px;
+
+        background: #171717;
+
+        color: #ffffff;
+
+        font-size: 17px;
+
+        font-weight: 800;
+
+    }
+
+    .spinner {
+
+        width: 36px;
+
+        height: 36px;
+
+        margin: 22px auto;
+
+        border: 3px solid #e5e7eb;
+
+        border-top-color: #171717;
+
+        border-radius: 50%;
+
+        animation:
+            girar
+            0.8s
+            linear
+            infinite;
+
+    }
+
+    @keyframes girar {
+
+        to {
+
+            transform:
+                rotate(360deg);
+
+        }
+
+    }
+
+    h1 {
+
+        margin-bottom: 10px;
+
+        font-size: 22px;
+
+        line-height: 1.3;
+
+    }
+
+    p {
+
+        color: #6b7280;
+
+        font-size: 14px;
+
+        line-height: 1.55;
+
+    }
+
+    .sucesso {
+
+        display: none;
+
+    }
+
+    .erro {
+
+        display: none;
+
+    }
+
+    .erro h1 {
+
+        color: #c62828;
+
+    }
+
+    .btn-voltar {
+
+        display: none;
+
+        margin-top: 22px;
+
+        min-height: 42px;
+
+        padding: 0 18px;
+
+        border: 0;
+
+        border-radius: 9px;
+
+        background: #171717;
+
+        color: #ffffff;
+
+        font-size: 13px;
+
+        font-weight: 700;
+
+        cursor: pointer;
+
+    }
+
+    .btn-voltar:hover {
+
+        background: #333333;
+
+    }
+
+</style>
+
+
+</head>
+
+<body>
+
+
+<main class="callback-card">
+
+
+    <div class="callback-logo">
+        ZV
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CARREGANDO -->
+    <!-- ================================================= -->
+
+    <section id="estado-carregando">
+
+        <h1>
+            Conectando ao Mercado Livre
+        </h1>
+
+        <p>
+            Estamos concluindo a autorização
+            da sua conta. Aguarde alguns instantes.
+        </p>
+
+        <div class="spinner"></div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- SUCESSO -->
+    <!-- ================================================= -->
+
+    <section
+        id="estado-sucesso"
+        class="sucesso"
+    >
+
+        <h1>
+            Conexão autorizada!
+        </h1>
+
+        <p>
+            A autorização do Mercado Livre
+            foi recebida pelo ZoraVision.
+        </p>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- ERRO -->
+    <!-- ================================================= -->
+
+    <section
+        id="estado-erro"
+        class="erro"
+    >
+
+        <h1>
+            Não foi possível conectar
+        </h1>
+
+        <p id="mensagem-erro">
+            Ocorreu um erro ao concluir
+            a conexão com o Mercado Livre.
+        </p>
+
+    </section>
+
+
+    <button
+        type="button"
+        class="btn-voltar"
+        id="btn-voltar"
+    >
+        Voltar para integrações
+    </button>
+
+
+</main>
+
+
+<!-- ===================================================== -->
+<!-- SCRIPT -->
+<!-- ===================================================== -->
+
+<script src="mercadolivre-callback.js"></script>
+
+
+</body>
+
+</html>
