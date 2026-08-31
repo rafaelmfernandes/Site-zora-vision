@@ -1,604 +1,310 @@
-// ============================================================
-// ZORAVISION - ADMINISTRAÇÃO DE INTEGRAÇÕES
-// ============================================================
-// Arquivo: Admin/integracoes-admin.js
-//
-// Responsabilidades desta primeira versão:
-// - Obter cliente Supabase
-// - Verificar sessão do administrador
-// - Exibir status da integração
-// - Controlar interface do Mercado Livre
-// - Preparar conexão OAuth
-// - Controlar botão de conectar
-// - Controlar botão de desconectar
-// - Preparar área de sincronização
-//
-// IMPORTANTE:
-// Nesta etapa ainda NÃO existe conexão real com o Mercado Livre.
-// A integração OAuth será adicionada posteriormente.
-// ============================================================
+/* ============================================================
+ZORAVISION - INTEGRAÇÕES ADMINISTRATIVAS
+Arquivo: Admin/integracoes-admin.js
 
-// ============================================================
-// 1. CONFIGURAÇÃO
-// ============================================================
+Responsabilidades:
 
-const INTEGRACAO_MERCADO_LIVRE = {
-nome: 'Mercado Livre',
-status: 'nao_conectado'
-};
+* Gerenciar integrações do painel administrativo
+* Iniciar OAuth do Mercado Livre
+* Utilizar PKCE
+* Gerar code_verifier
+* Gerar code_challenge
+* Redirecionar para autorização do Mercado Livre
+  ============================================================ */
 
-// ============================================================
-// 2. OBTER CLIENTE SUPABASE
-// ============================================================
+/* ============================================================
 
-function obterSupabaseIntegracoesAdmin() {
+1. CONFIGURAÇÃO DO MERCADO LIVRE
+   ============================================================ */
+
+const MERCADO_LIVRE_CLIENT_ID =
+'8816875791365432';
+
+const MERCADO_LIVRE_REDIRECT_URI =
+'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-oauth';
+
+const MERCADO_LIVRE_AUTH_URL =
+'https://auth.mercadolivre.com.br/authorization';
+
+/* ============================================================
+2. GERAR STRING ALEATÓRIA SEGURA
+============================================================ */
+
+function gerarStringAleatoriaMercadoLivre(tamanho = 64) {
 
 
-if (window.supabaseClient) {
-    return window.supabaseClient;
+const caracteres =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+
+const valores =
+    new Uint8Array(tamanho);
+
+crypto.getRandomValues(valores);
+
+let resultado = '';
+
+for (let i = 0; i < valores.length; i++) {
+
+    resultado +=
+        caracteres[
+            valores[i] % caracteres.length
+        ];
+
 }
 
-if (window._supabase) {
-    return window._supabase;
+return resultado;
+
+
 }
 
-if (typeof window.obterSupabase === 'function') {
+/* ============================================================
+3. BASE64 URL SAFE
+============================================================ */
 
-    try {
+function base64UrlEncodeMercadoLivre(buffer) {
 
-        return window.obterSupabase();
 
-    } catch (erro) {
+const bytes =
+    new Uint8Array(buffer);
 
-        console.error(
-            'Erro ao obter Supabase:',
-            erro
-        );
+let stringBinaria = '';
+
+bytes.forEach(
+    byte => {
+
+        stringBinaria +=
+            String.fromCharCode(byte);
 
     }
-
-}
-
-console.error(
-    'Cliente Supabase não encontrado.'
 );
 
-return null;
+return btoa(stringBinaria)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
 
 
 }
 
-// ============================================================
-// 3. ELEMENTOS
-// ============================================================
+/* ============================================================
+4. GERAR CODE CHALLENGE
+============================================================ */
 
-function obterElementoIntegracaoAdmin(
-...ids
+async function gerarCodeChallengeMercadoLivre(
+codeVerifier
 ) {
 
 
-for (const id of ids) {
+const encoder =
+    new TextEncoder();
 
-    const elemento =
-        document.getElementById(id);
-
-    if (elemento) {
-        return elemento;
-    }
-
-}
-
-return null;
-
-
-}
-
-// ============================================================
-// 4. ATUALIZAR STATUS VISUAL
-// ============================================================
-
-function atualizarStatusMercadoLivre(
-conectado
-) {
-
-
-const status =
-    obterElementoIntegracaoAdmin(
-        'status-mercado-livre',
-        'mercado-livre-status',
-        'status-integracao-mercado-livre'
+const dados =
+    encoder.encode(
+        codeVerifier
     );
 
-const texto =
-    obterElementoIntegracaoAdmin(
-        'texto-status-mercado-livre',
-        'mercado-livre-status-texto',
-        'status-texto-mercado-livre'
+const hash =
+    await crypto.subtle.digest(
+        'SHA-256',
+        dados
     );
 
-const botaoConectar =
-    obterElementoIntegracaoAdmin(
-        'btn-conectar-mercado-livre',
-        'conectar-mercado-livre'
-    );
-
-const botaoDesconectar =
-    obterElementoIntegracaoAdmin(
-        'btn-desconectar-mercado-livre',
-        'desconectar-mercado-livre'
-    );
-
-if (conectado) {
-
-    INTEGRACAO_MERCADO_LIVRE.status =
-        'conectado';
-
-
-    if (status) {
-
-        status.textContent =
-            'Conectado';
-
-        status.classList.remove(
-            'status-inativo',
-            'integracao-inativa',
-            'desconectado'
-        );
-
-        status.classList.add(
-            'status-ativo',
-            'integracao-ativa',
-            'conectado'
-        );
-
-    }
-
-
-    if (texto) {
-
-        texto.textContent =
-            'Sua conta do Mercado Livre está conectada à ZoraVision.';
-
-    }
-
-
-    if (botaoConectar) {
-
-        botaoConectar.hidden =
-            true;
-
-    }
-
-
-    if (botaoDesconectar) {
-
-        botaoDesconectar.hidden =
-            false;
-
-    }
-
-    return;
-}
-
-
-INTEGRACAO_MERCADO_LIVRE.status =
-    'nao_conectado';
-
-
-if (status) {
-
-    status.textContent =
-        'Não conectado';
-
-    status.classList.remove(
-        'status-ativo',
-        'integracao-ativa',
-        'conectado'
-    );
-
-    status.classList.add(
-        'status-inativo',
-        'integracao-inativa',
-        'desconectado'
-    );
-
-}
-
-
-if (texto) {
-
-    texto.textContent =
-        'Conecte sua conta do Mercado Livre para importar seus produtos para a ZoraVision.';
-
-}
-
-
-if (botaoConectar) {
-
-    botaoConectar.hidden =
-        false;
-
-    botaoConectar.disabled =
-        false;
-
-    botaoConectar.textContent =
-        'Conectar Mercado Livre';
-
-}
-
-
-if (botaoDesconectar) {
-
-    botaoDesconectar.hidden =
-        true;
-
-}
-
-
-}
-
-// ============================================================
-// 5. MOSTRAR MENSAGEM
-// ============================================================
-
-function mostrarMensagemIntegracao(
-mensagem,
-tipo = 'info'
-) {
-
-
-const elemento =
-    obterElementoIntegracaoAdmin(
-        'mensagem-integracao',
-        'integracao-mensagem',
-        'mensagem-mercado-livre'
-    );
-
-if (!elemento) {
-
-    console.log(
-        mensagem
-    );
-
-    return;
-}
-
-
-elemento.textContent =
-    mensagem;
-
-
-elemento.classList.remove(
-    'mensagem-sucesso',
-    'mensagem-erro',
-    'mensagem-info'
+return base64UrlEncodeMercadoLivre(
+    hash
 );
 
 
-elemento.classList.add(
-    'mensagem-' + tipo
-);
-
-
-elemento.hidden =
-    false;
-
-
 }
 
-// ============================================================
-// 6. ESCONDER MENSAGEM
-// ============================================================
-
-function esconderMensagemIntegracao() {
-
-
-const elemento =
-    obterElementoIntegracaoAdmin(
-        'mensagem-integracao',
-        'integracao-mensagem',
-        'mensagem-mercado-livre'
-    );
-
-if (elemento) {
-
-    elemento.hidden =
-        true;
-
-}
-
-
-}
-
-// ============================================================
-// 7. CONECTAR MERCADO LIVRE
-// ============================================================
+/* ============================================================
+5. INICIAR OAUTH MERCADO LIVRE
+============================================================ */
 
 async function conectarMercadoLivre() {
 
 
 console.log(
-    'Iniciando processo de conexão com o Mercado Livre...'
+    '============================================================'
 );
-
-
-const botao =
-    obterElementoIntegracaoAdmin(
-        'btn-conectar-mercado-livre',
-        'conectar-mercado-livre'
-    );
-
-
-if (botao) {
-
-    botao.disabled =
-        true;
-
-    botao.textContent =
-        'Preparando conexão...';
-
-}
-
-
-mostrarMensagemIntegracao(
-    'A conexão com o Mercado Livre será configurada na próxima etapa.',
-    'info'
-);
-
-
-/*
-============================================================
-IMPORTANTE
-============================================================
-
-O OAuth real do Mercado Livre será implementado aqui
-posteriormente.
-
-O fluxo será:
-
-1. ZoraVision solicita autorização.
-2. Usuário é direcionado para o Mercado Livre.
-3. Usuário autoriza a aplicação.
-4. Mercado Livre retorna um código.
-5. Uma Edge Function do Supabase troca o código por tokens.
-6. Os tokens são armazenados de forma segura.
-7. O painel passa a mostrar "Conectado".
-8. A ZoraVision poderá consultar os produtos.
-
-NÃO colocar Client Secret ou Access Token diretamente
-neste arquivo JavaScript.
-============================================================
-*/
-
-
-if (botao) {
-
-    botao.disabled =
-        false;
-
-    botao.textContent =
-        'Conectar Mercado Livre';
-
-}
-
-
-}
-
-// ============================================================
-// 8. DESCONECTAR MERCADO LIVRE
-// ============================================================
-
-async function desconectarMercadoLivre() {
-
-
-const confirmar =
-    window.confirm(
-        'Deseja realmente desconectar o Mercado Livre da ZoraVision?'
-    );
-
-
-if (!confirmar) {
-    return;
-}
-
 
 console.log(
-    'Solicitação para desconectar Mercado Livre.'
+    'ZoraVision - Iniciando conexão com Mercado Livre'
 );
-
-
-/*
-============================================================
-IMPORTANTE
-============================================================
-
-O processo real de desconexão será implementado quando
-criarmos a tabela de integrações no Supabase.
-
-Nesta etapa não existe nenhum token sendo removido.
-============================================================
-*/
-
-
-atualizarStatusMercadoLivre(
-    false
-);
-
-
-mostrarMensagemIntegracao(
-    'A integração foi desconectada da interface.',
-    'sucesso'
-);
-
-
-}
-
-// ============================================================
-// 9. SINCRONIZAR PRODUTOS
-// ============================================================
-
-async function sincronizarProdutosMercadoLivre() {
-
 
 console.log(
-    'Solicitação de sincronização de produtos.'
+    '============================================================'
 );
 
 
-if (
-    INTEGRACAO_MERCADO_LIVRE.status !==
-    'conectado'
-) {
+try {
 
-    mostrarMensagemIntegracao(
-        'Conecte sua conta do Mercado Livre antes de sincronizar os produtos.',
-        'erro'
-    );
+    if (
+        !window.crypto ||
+        !window.crypto.subtle
+    ) {
 
-    return;
+        throw new Error(
+            'Seu navegador não suporta os recursos de segurança necessários para o OAuth PKCE.'
+        );
 
-}
-
-
-/*
-============================================================
-FUTURA SINCRONIZAÇÃO
-============================================================
-
-Aqui será feita a chamada para nossa Edge Function.
-
-A Edge Function irá:
-
-- consultar a API do Mercado Livre;
-- buscar os anúncios;
-- obter título;
-- obter descrição;
-- obter preço;
-- obter estoque;
-- obter imagens;
-- obter categoria;
-- obter ID do anúncio;
-- gravar/atualizar os produtos no Supabase.
-
-============================================================
-*/
+    }
 
 
-mostrarMensagemIntegracao(
-    'A sincronização de produtos será ativada após a conexão real com o Mercado Livre.',
-    'info'
-);
+    /* ====================================================
+    GERAR CODE VERIFIER
+    ==================================================== */
 
+    const codeVerifier =
+        gerarStringAleatoriaMercadoLivre(
+            64
+        );
 
-}
-
-// ============================================================
-// 10. CONFIGURAR BOTÃO CONECTAR
-// ============================================================
-
-function configurarBotaoConectarMercadoLivre() {
-
-
-const botao =
-    obterElementoIntegracaoAdmin(
-        'btn-conectar-mercado-livre',
-        'conectar-mercado-livre'
-    );
-
-
-if (!botao) {
 
     console.log(
-        'Botão de conexão do Mercado Livre não encontrado.'
+        'Code verifier gerado.'
     );
 
-    return;
+
+    /* ====================================================
+    GERAR CODE CHALLENGE
+    ==================================================== */
+
+    const codeChallenge =
+        await gerarCodeChallengeMercadoLivre(
+            codeVerifier
+        );
+
+
+    console.log(
+        'Code challenge gerado.'
+    );
+
+
+    /* ====================================================
+    SALVAR CODE VERIFIER TEMPORARIAMENTE
+    ==================================================== */
+
+    sessionStorage.setItem(
+        'mercado_livre_code_verifier',
+        codeVerifier
+    );
+
+
+    /* ====================================================
+    SALVAR MOMENTO DA AUTORIZAÇÃO
+    ==================================================== */
+
+    sessionStorage.setItem(
+        'mercado_livre_oauth_inicio',
+        String(
+            Date.now()
+        )
+    );
+
+
+    /* ====================================================
+    MONTAR URL DE AUTORIZAÇÃO
+    ==================================================== */
+
+    const parametros =
+        new URLSearchParams();
+
+
+    parametros.set(
+        'response_type',
+        'code'
+    );
+
+
+    parametros.set(
+        'client_id',
+        MERCADO_LIVRE_CLIENT_ID
+    );
+
+
+    parametros.set(
+        'redirect_uri',
+        MERCADO_LIVRE_REDIRECT_URI
+    );
+
+
+    parametros.set(
+        'code_challenge',
+        codeChallenge
+    );
+
+
+    parametros.set(
+        'code_challenge_method',
+        'S256'
+    );
+
+
+    const urlAutorizacao =
+        MERCADO_LIVRE_AUTH_URL +
+        '?' +
+        parametros.toString();
+
+
+    console.log(
+        'Redirecionando para autorização do Mercado Livre...'
+    );
+
+
+    console.log(
+        'Redirect URI:',
+        MERCADO_LIVRE_REDIRECT_URI
+    );
+
+
+    /* ====================================================
+    REDIRECIONAR
+    ==================================================== */
+
+    window.location.href =
+        urlAutorizacao;
+
+
+} catch (erro) {
+
+    console.error(
+        'Erro ao iniciar OAuth do Mercado Livre:',
+        erro
+    );
+
+
+    alert(
+        'Não foi possível iniciar a conexão com o Mercado Livre.\n\n' +
+        (
+            erro?.message ||
+            'Erro desconhecido.'
+        )
+    );
 
 }
 
 
-if (
-    botao.dataset.configurado ===
-    'true'
-) {
-
-    return;
-
 }
 
+/* ============================================================
+6. CONFIGURAR BOTÃO MERCADO LIVRE
+============================================================ */
 
-botao.dataset.configurado =
-    'true';
-
-
-botao.addEventListener(
-    'click',
-    conectarMercadoLivre
-);
-
-
-}
-
-// ============================================================
-// 11. CONFIGURAR BOTÃO DESCONECTAR
-// ============================================================
-
-function configurarBotaoDesconectarMercadoLivre() {
+function configurarBotaoMercadoLivre() {
 
 
 const botao =
-    obterElementoIntegracaoAdmin(
-        'btn-desconectar-mercado-livre',
-        'desconectar-mercado-livre'
+    document.getElementById(
+        'btn-conectar-mercado-livre'
     );
 
 
 if (!botao) {
 
-    return;
-
-}
-
-
-if (
-    botao.dataset.configurado ===
-    'true'
-) {
-
-    return;
-
-}
-
-
-botao.dataset.configurado =
-    'true';
-
-
-botao.addEventListener(
-    'click',
-    desconectarMercadoLivre
-);
-
-
-}
-
-// ============================================================
-// 12. CONFIGURAR BOTÃO SINCRONIZAR
-// ============================================================
-
-function configurarBotaoSincronizarMercadoLivre() {
-
-
-const botao =
-    obterElementoIntegracaoAdmin(
-        'btn-sincronizar-mercado-livre',
-        'sincronizar-mercado-livre',
-        'btn-sincronizar-produtos'
+    console.warn(
+        'Botão btn-conectar-mercado-livre não encontrado.'
     );
 
-
-if (!botao) {
-
     return;
 
 }
@@ -620,10 +326,17 @@ botao.dataset.configurado =
 
 botao.addEventListener(
     'click',
-    async function() {
+    async function(event) {
 
-        if (botao.disabled) {
+        event.preventDefault();
+
+
+        if (
+            botao.disabled
+        ) {
+
             return;
+
         }
 
 
@@ -636,21 +349,26 @@ botao.addEventListener(
 
 
         botao.textContent =
-            'Sincronizando...';
+            'Conectando...';
 
 
         try {
 
-            await sincronizarProdutosMercadoLivre();
+            await conectarMercadoLivre();
 
-        } finally {
+        } catch (erro) {
+
+            console.error(
+                'Erro ao conectar Mercado Livre:',
+                erro
+            );
 
             botao.disabled =
                 false;
 
             botao.textContent =
                 textoOriginal ||
-                'Sincronizar produtos';
+                'Conectar Mercado Livre';
 
         }
 
@@ -660,126 +378,13 @@ botao.addEventListener(
 
 }
 
-// ============================================================
-// 13. PREPARAR INTERFACE
-// ============================================================
-
-function prepararInterfaceIntegracoes() {
-
-
-console.log(
-    'Preparando interface das integrações...'
-);
-
-
-atualizarStatusMercadoLivre(
-    false
-);
-
-
-configurarBotaoConectarMercadoLivre();
-
-configurarBotaoDesconectarMercadoLivre();
-
-configurarBotaoSincronizarMercadoLivre();
-
-
-console.log(
-    'Interface das integrações preparada.'
-);
-
-
-}
-
-// ============================================================
-// 14. VERIFICAR SESSÃO
-// ============================================================
-
-async function verificarSessaoIntegracoesAdmin() {
-
-
-const supabase =
-    obterSupabaseIntegracoesAdmin();
-
-
-if (!supabase) {
-
-    console.error(
-        'Supabase não está disponível na página de integrações.'
-    );
-
-    return false;
-
-}
-
-
-try {
-
-    const resultado =
-        await supabase.auth.getUser();
-
-
-    const usuario =
-        resultado?.data?.user;
-
-
-    const erro =
-        resultado?.error;
-
-
-    if (erro) {
-
-        console.error(
-            'Erro ao verificar sessão:',
-            erro
-        );
-
-        return false;
-
-    }
-
-
-    if (!usuario) {
-
-        console.warn(
-            'Nenhum usuário autenticado.'
-        );
-
-        return false;
-
-    }
-
-
-    console.log(
-        'Usuário autenticado nas integrações:',
-        usuario.email
-    );
-
-
-    return true;
-
-
-} catch (erro) {
-
-    console.error(
-        'Erro inesperado ao verificar sessão:',
-        erro
-    );
-
-    return false;
-
-}
-
-
-}
-
-// ============================================================
-// 15. INICIALIZAÇÃO
-// ============================================================
+/* ============================================================
+7. INICIALIZAÇÃO
+============================================================ */
 
 document.addEventListener(
 'DOMContentLoaded',
-async function() {
+function() {
 
 
     console.log(
@@ -787,11 +392,11 @@ async function() {
     );
 
     console.log(
-        'ZoraVision - Administração de Integrações'
+        'ZoraVision - Integrações'
     );
 
     console.log(
-        'Inicializando página de integrações...'
+        'Inicializando integrações administrativas...'
     );
 
     console.log(
@@ -799,29 +404,11 @@ async function() {
     );
 
 
-    const sessaoValida =
-        await verificarSessaoIntegracoesAdmin();
-
-
-    if (!sessaoValida) {
-
-        console.warn(
-            'Sessão não confirmada. O Painel-admin.js continuará responsável pela proteção da página.'
-        );
-
-    }
-
-
-    prepararInterfaceIntegracoes();
+    configurarBotaoMercadoLivre();
 
 
     console.log(
-        'Página de integrações carregada.'
-    );
-
-
-    console.log(
-        '============================================================'
+        'Integrações administrativas inicializadas.'
     );
 
 }
@@ -829,24 +416,12 @@ async function() {
 
 );
 
-// ============================================================
-// 16. FUNÇÕES GLOBAIS
-// ============================================================
-
-window.obterSupabaseIntegracoesAdmin =
-obterSupabaseIntegracoesAdmin;
-
-window.atualizarStatusMercadoLivre =
-atualizarStatusMercadoLivre;
+/* ============================================================
+8. FUNÇÕES GLOBAIS
+============================================================ */
 
 window.conectarMercadoLivre =
 conectarMercadoLivre;
 
-window.desconectarMercadoLivre =
-desconectarMercadoLivre;
-
-window.sincronizarProdutosMercadoLivre =
-sincronizarProdutosMercadoLivre;
-
-window.prepararInterfaceIntegracoes =
-prepararInterfaceIntegracoes;
+window.gerarCodeChallengeMercadoLivre =
+gerarCodeChallengeMercadoLivre;
