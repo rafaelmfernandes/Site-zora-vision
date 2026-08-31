@@ -1195,6 +1195,45 @@ async function() {
 
 
 );
+// ============================================================
+// BOTÃO - GERENCIAR PRODUTOS MERCADO LIVRE
+// ============================================================
+
+function configurarBotaoGerenciarProdutosMercadoLivre() {
+
+    const botao =
+        document.getElementById(
+            'btn-gerenciar-produtos-mercado-livre'
+        );
+
+    if (!botao) {
+
+        console.warn(
+            'Botão Gerenciar produtos do Mercado Livre não encontrado.'
+        );
+
+        return;
+
+    }
+
+    // Evita adicionar o evento mais de uma vez
+    if (botao.dataset.configurado === 'true') {
+        return;
+    }
+
+    botao.dataset.configurado = 'true';
+
+    botao.addEventListener(
+        'click',
+        function() {
+
+            window.location.href =
+                'mercadolivre-produtos.html';
+
+        }
+    );
+
+}
 
 // ============================================================
 // 20. FUNÇÕES GLOBAIS
