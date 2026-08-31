@@ -4,12 +4,12 @@
 
 <head>
 
+
 <meta charset="UTF-8">
 
 <meta
-name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
 >
 
 <title>Integrações - ZoraVision</title>
@@ -18,6 +18,7 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
     rel="stylesheet"
     href="../Folha-estilos/admin-integracoes.css"
 >
+
 
 </head>
 
@@ -66,6 +67,10 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 <main class="integracoes-container">
 
 
+<!-- =====================================================
+     TOPO
+     ===================================================== -->
+
 <section class="integracoes-topo">
 
     <div>
@@ -87,6 +92,10 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 
 </section>
 
+
+<!-- =====================================================
+     AVISO
+     ===================================================== -->
 
 <section class="integracao-aviso">
 
@@ -110,9 +119,9 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 </section>
 
 
-<!-- ===================================================== -->
-<!-- MERCADO LIVRE -->
-<!-- ===================================================== -->
+<!-- =====================================================
+     MERCADO LIVRE
+     ===================================================== -->
 
 <section class="integracao-card">
 
@@ -187,14 +196,11 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- AÇÕES MERCADO LIVRE -->
-    <!-- ================================================= -->
+    <!-- =================================================
+         BOTÕES
+         ================================================= -->
 
     <div class="integracao-card-acoes">
-
-
-        <!-- CONECTAR -->
 
         <button
             type="button"
@@ -205,38 +211,32 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
         </button>
 
 
-        <!-- IMPORTAR PRODUTOS -->
-
         <button
             type="button"
             class="btn-integracao btn-importar"
-            id="btn-importar-produtos-mercado-livre"
+            id="btn-importar-mercado-livre"
             style="display:none;"
         >
             📥 Importar produtos
         </button>
 
 
-        <!-- GERENCIAR PRODUTOS -->
-
         <button
             type="button"
-            class="btn-integracao btn-gerenciar-produtos"
+            class="btn-integracao btn-gerenciar"
             id="btn-gerenciar-produtos-mercado-livre"
-            style="display:none;"
         >
-            📦 Gerenciar produtos
+            Gerenciar produtos do Mercado Livre
         </button>
-
 
     </div>
 
 </section>
 
 
-<!-- ===================================================== -->
-<!-- TIKTOK SHOP -->
-<!-- ===================================================== -->
+<!-- =====================================================
+     TIKTOK SHOP
+     ===================================================== -->
 
 <section class="integracao-card">
 
@@ -313,9 +313,9 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 </section>
 
 
-<!-- ===================================================== -->
-<!-- NOVAS INTEGRAÇÕES -->
-<!-- ===================================================== -->
+<!-- =====================================================
+     FUTURAS INTEGRAÇÕES
+     ===================================================== -->
 
 <section class="integracoes-futuras">
 
@@ -339,9 +339,9 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 </section>
 
 
-<!-- ===================================================== -->
-<!-- SEGURANÇA -->
-<!-- ===================================================== -->
+<!-- =====================================================
+     SEGURANÇA
+     ===================================================== -->
 
 <section class="seguranca-card">
 
@@ -383,29 +383,23 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 
 </footer>
 
-<!-- ========================================================= -->
-
-<!-- SUPABASE -->
-
-<!-- ========================================================= -->
+<!-- =========================================================
+     SUPABASE
+     ========================================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../Supabase/supabase.js"></script>
 
-<!-- ========================================================= -->
-
-<!-- INTEGRAÇÕES -->
-
-<!-- ========================================================= -->
+<!-- =========================================================
+     ADMINISTRAÇÃO DE INTEGRAÇÕES
+     ========================================================= -->
 
 <script src="integracoes-admin.js"></script>
 
-<!-- ========================================================= -->
-
-<!-- PROTEÇÃO DO ADMIN -->
-
-<!-- ========================================================= -->
+<!-- =========================================================
+     PROTEÇÃO DO PAINEL
+     ========================================================= -->
 
 <script src="Painel-admin.js"></script>
 
