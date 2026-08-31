@@ -1,331 +1,286 @@
 <!DOCTYPE html>
 
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-<title>Produtos Mercado Livre - ZoraVision</title>
+<meta charset="UTF-8">
 
-<link rel="stylesheet" href="../Folha-estilos/mercadolivre-produtos.css">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../Supabase/supabase.js"></script>
+<title>Produtos do Mercado Livre - ZoraVision</title>
+
+<link
+    rel="stylesheet"
+    href="../Folha-estilos/mercadolivre-produtos.css"
+>
 
 
 </head>
 
 <body>
 
+<!-- ============================================================
+     CABEÇALHO
+============================================================ -->
 
-<header class="topo">
-    <div class="topo-conteudo">
+<header class="admin-header">
 
-        <div>
-            <span class="topo-legenda">INTEGRAÇÃO</span>
-            <h1>Mercado Livre</h1>
-        </div>
 
-        <a
-            href="admin-integracoes.html"
-            class="btn-voltar"
-        >
-            ← Voltar
-        </a>
+<div class="admin-header-top">
 
+    <a
+        href="admin-integracoes.html"
+        class="btn-voltar"
+        aria-label="Voltar para integrações"
+    >
+        ‹
+    </a>
+
+
+    <div class="admin-logo">
+        ZoraVision
     </div>
-</header>
 
 
-<main class="container">
-
-    <!-- =====================================================
-         STATUS DA CONEXÃO
-    ====================================================== -->
-
-    <section class="conexao-card">
-
-        <div class="conexao-info">
-
-            <div class="icone-conexao">
-                🛒
-            </div>
-
-            <div>
-                <span class="label">CONTA</span>
-
-                <h2 id="status-conta">
-                    Verificando conexão...
-                </h2>
-
-                <p id="usuario-mercado-livre">
-                    Aguarde...
-                </p>
-            </div>
-
-        </div>
-
-        <div
-            id="indicador-conexao"
-            class="indicador carregando"
-        >
-            Verificando
-        </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         RESUMO
-    ====================================================== -->
-
-    <section class="resumo">
-
-        <div class="resumo-card">
-            <span class="resumo-numero" id="total-encontrados">
-                0
-            </span>
-
-            <span class="resumo-label">
-                Encontrados
-            </span>
-        </div>
-
-
-        <div class="resumo-card">
-            <span
-                class="resumo-numero sucesso"
-                id="total-importados"
-            >
-                0
-            </span>
-
-            <span class="resumo-label">
-                Importados
-            </span>
-        </div>
-
-
-        <div class="resumo-card">
-            <span
-                class="resumo-numero pendente"
-                id="total-nao-importados"
-            >
-                0
-            </span>
-
-            <span class="resumo-label">
-                Não importados
-            </span>
-        </div>
-
-
-        <div class="resumo-card">
-            <span
-                class="resumo-numero erro"
-                id="total-erros"
-            >
-                0
-            </span>
-
-            <span class="resumo-label">
-                Erros
-            </span>
-        </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         CONTROLES
-    ====================================================== -->
-
-    <section class="controles">
-
-        <div class="filtros">
-
-            <button
-                type="button"
-                class="filtro ativo"
-                data-filtro="todos"
-            >
-                Todos
-            </button>
-
-            <button
-                type="button"
-                class="filtro"
-                data-filtro="importados"
-            >
-                Importados
-            </button>
-
-            <button
-                type="button"
-                class="filtro"
-                data-filtro="nao-importados"
-            >
-                Não importados
-            </button>
-
-            <button
-                type="button"
-                class="filtro"
-                data-filtro="erros"
-            >
-                Com erro
-            </button>
-
-        </div>
-
-
-        <div class="acoes">
-
-            <button
-                type="button"
-                id="btn-selecionar-todos"
-                class="btn-secundario"
-            >
-                Selecionar todos
-            </button>
-
-            <button
-                type="button"
-                id="btn-desmarcar-todos"
-                class="btn-secundario"
-            >
-                Desmarcar todos
-            </button>
-
-            <button
-                type="button"
-                id="btn-importar"
-                class="btn-principal"
-                disabled
-            >
-                Importar selecionados
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         BUSCA
-    ====================================================== -->
-
-    <section class="busca">
-
-        <input
-            type="search"
-            id="campo-busca"
-            placeholder="Buscar produto..."
-            autocomplete="off"
-        >
-
-    </section>
-
-
-    <!-- =====================================================
-         LISTA DE PRODUTOS
-    ====================================================== -->
-
-    <section class="produtos-area">
-
-        <div
-            id="carregando"
-            class="estado"
-        >
-            <div class="spinner"></div>
-
-            <p>
-                Carregando produtos do Mercado Livre...
-            </p>
-        </div>
-
-
-        <div
-            id="mensagem-vazia"
-            class="estado"
-            style="display:none;"
-        >
-            <div class="estado-icone">
-                📦
-            </div>
-
-            <h3>
-                Nenhum produto encontrado
-            </h3>
-
-            <p>
-                Não encontramos anúncios para esta conta.
-            </p>
-        </div>
-
-
-        <div
-            id="lista-produtos"
-            class="lista-produtos"
-        ></div>
-
-    </section>
-
-
-</main>
-
-
-<!-- =========================================================
-     MODAL DE RESULTADO
-========================================================== -->
-
-<div
-    id="modal-resultado"
-    class="modal"
-    style="display:none;"
->
-
-    <div class="modal-conteudo">
-
-        <button
-            type="button"
-            id="btn-fechar-modal"
-            class="modal-fechar"
-        >
-            ×
-        </button>
-
-        <div
-            id="modal-icone"
-            class="modal-icone"
-        >
-            ✓
-        </div>
-
-        <h2 id="modal-titulo">
-            Importação concluída
-        </h2>
-
-        <p id="modal-mensagem">
-            Produtos processados com sucesso.
-        </p>
-
-        <button
-            type="button"
-            id="btn-modal-ok"
-            class="btn-principal"
-        >
-            Continuar
-        </button>
-
-    </div>
+    <button
+        type="button"
+        class="btn-sair"
+        id="btn-sair-admin"
+    >
+        Sair
+    </button>
 
 </div>
 
 
-<script src="mercadolivre-produtos.js"></script>
+<div class="admin-header-info">
 
+    <span class="admin-status"></span>
+
+    <span>
+        Produtos do Mercado Livre
+    </span>
+
+</div>
+
+
+</header>
+
+<!-- ============================================================
+     CONTEÚDO PRINCIPAL
+============================================================ -->
+
+<main class="produtos-container">
+
+
+<!-- ========================================================
+     TOPO
+========================================================= -->
+
+<section class="produtos-topo">
+
+    <span class="section-label">
+        MERCADO LIVRE
+    </span>
+
+
+    <h1>
+        Produtos
+    </h1>
+
+
+    <p>
+        Consulte os produtos encontrados na sua conta do
+        Mercado Livre e escolha quais deseja importar ou
+        sincronizar com o ZoraVision.
+    </p>
+
+</section>
+
+
+
+<!-- ========================================================
+     CONTROLES
+========================================================= -->
+
+<section class="produtos-controles">
+
+
+    <div class="produtos-controles-esquerda">
+
+
+        <label class="selecionar-todos">
+
+            <input
+                type="checkbox"
+                id="checkbox-selecionar-todos"
+            >
+
+            <span>
+                Selecionar todos
+            </span>
+
+        </label>
+
+
+        <span
+            class="contador-produtos"
+            id="contador-produtos"
+        >
+            Nenhum produto selecionado
+        </span>
+
+
+    </div>
+
+
+
+    <div class="produtos-controles-direita">
+
+
+        <button
+            type="button"
+            class="btn-produtos btn-selecionar"
+            id="btn-selecionar-todos"
+        >
+            Selecionar todos
+        </button>
+
+
+        <button
+            type="button"
+            class="btn-produtos btn-sincronizar"
+            id="btn-importar-selecionados"
+            disabled
+        >
+            Importar selecionados
+        </button>
+
+
+        <button
+            type="button"
+            class="btn-produtos btn-atualizar"
+            id="btn-atualizar-produtos"
+        >
+            Atualizar
+        </button>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ========================================================
+     MENSAGEM
+========================================================= -->
+
+<div
+    id="mensagem-produtos"
+    class="mensagem-produtos mensagem-info"
+    style="display: none;"
+></div>
+
+
+
+<!-- ========================================================
+     LISTA DE PRODUTOS
+========================================================= -->
+
+<section
+    id="lista-produtos"
+    aria-live="polite"
+>
+
+
+    <!--
+    Os produtos serão inseridos
+    automaticamente pelo JavaScript.
+    -->
+
+
+    <div
+        id="produtos-carregando"
+        class="produtos-vazio"
+    >
+
+        <div class="produtos-vazio-icone">
+            ⏳
+        </div>
+
+
+        <h2>
+            Carregando produtos
+        </h2>
+
+
+        <p>
+            Consultando os produtos disponíveis
+            no Mercado Livre...
+        </p>
+
+    </div>
+
+
+</section>
+
+
+</main>
+
+<!-- ============================================================
+     RODAPÉ
+============================================================ -->
+
+<footer class="admin-footer">
+
+
+<span>
+    ZoraVision
+</span>
+
+
+<small>
+    Gerenciamento de produtos do Mercado Livre
+</small>
+
+
+</footer>
+
+<!-- ============================================================
+     SUPABASE
+============================================================ -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+<script
+    src="../Supabase/supabase.js"
+></script>
+
+<!-- ============================================================
+     PAINEL ADMINISTRATIVO
+============================================================ -->
+
+<script
+    src="Painel-admin.js"
+></script>
+
+<!-- ============================================================
+     MERCADO LIVRE PRODUTOS
+============================================================ -->
+
+<script
+    src="mercadolivre-produtos.js"
+></script>
 
 </body>
+
 </html>
