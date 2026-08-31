@@ -545,3 +545,70 @@ font-size: 12px;
 
 
 }
+
+/* ============================================================
+   BOTÃO - GERENCIAR PRODUTOS MERCADO LIVRE
+   ============================================================ */
+
+#btn-gerenciar-produtos-mercado-livre {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: 100%;
+    min-height: 44px;
+
+    margin-top: 12px;
+    padding: 0 18px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #111827;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+#btn-gerenciar-produtos-mercado-livre:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+#btn-gerenciar-produtos-mercado-livre:active {
+    transform: translateY(1px);
+}
+
+#btn-gerenciar-produtos-mercado-livre:focus-visible {
+    outline: 2px solid #111827;
+    outline-offset: 2px;
+}
+
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    #btn-gerenciar-produtos-mercado-livre {
+        width: 100%;
+        min-height: 46px;
+        font-size: 13px;
+    }
+
+}
