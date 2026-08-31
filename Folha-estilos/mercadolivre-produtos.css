@@ -2,606 +2,6 @@
   box-sizing: border-box;
   }
 
-body {
-margin: 0;
-font-family: Arial, Helvetica, sans-serif;
-background: #f5f7fa;
-color: #202124;
-}
-
-button,
-input,
-select {
-font: inherit;
-}
-
-/* ============================================================
-CABEÇALHO
-============================================================ */
-
-.admin-header {
-background: #ffffff;
-border-bottom: 1px solid #e5e7eb;
-}
-
-.admin-header-top {
-height: 64px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 0 24px;
-}
-
-.admin-logo {
-font-size: 21px;
-font-weight: 700;
-}
-
-.btn-voltar {
-width: 36px;
-height: 36px;
-display: flex;
-align-items: center;
-justify-content: center;
-text-decoration: none;
-color: #333;
-border: 1px solid #e1e4e8;
-border-radius: 8px;
-font-size: 25px;
-}
-
-.btn-voltar:hover {
-background: #f5f5f5;
-}
-
-.btn-sair {
-border: 1px solid #e1e4e8;
-background: #fff;
-padding: 8px 15px;
-border-radius: 7px;
-cursor: pointer;
-}
-
-.btn-sair:hover {
-background: #f5f5f5;
-}
-
-.admin-header-info {
-height: 38px;
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 8px;
-border-top: 1px solid #f0f0f0;
-font-size: 13px;
-color: #666;
-}
-
-.admin-status {
-width: 7px;
-height: 7px;
-border-radius: 50%;
-background: #22c55e;
-}
-
-/* ============================================================
-CONTAINER
-============================================================ */
-
-.produtos-container {
-width: min(1180px, calc(100% - 32px));
-margin: 0 auto;
-padding: 32px 0 50px;
-}
-
-/* ============================================================
-TOPO
-============================================================ */
-
-.produtos-topo {
-margin-bottom: 24px;
-}
-
-.section-label {
-font-size: 11px;
-font-weight: 700;
-letter-spacing: 1px;
-color: #777;
-}
-
-.produtos-topo h1 {
-margin: 7px 0 5px;
-font-size: 27px;
-}
-
-.produtos-topo p {
-margin: 0;
-color: #70757a;
-font-size: 14px;
-}
-
-/* ============================================================
-RESUMO
-============================================================ */
-
-.produtos-resumo {
-display: grid;
-grid-template-columns: repeat(4, 1fr);
-gap: 12px;
-margin-bottom: 20px;
-}
-
-.resumo-card {
-background: #ffffff;
-border: 1px solid #e5e7eb;
-border-radius: 10px;
-padding: 15px 17px;
-min-height: 105px;
-}
-
-.resumo-label {
-display: block;
-font-size: 12px;
-color: #777;
-margin-bottom: 6px;
-}
-
-.resumo-valor {
-display: block;
-font-size: 25px;
-line-height: 1;
-margin-bottom: 6px;
-}
-
-.resumo-card small {
-color: #888;
-font-size: 11px;
-}
-
-/* ============================================================
-FILTROS
-============================================================ */
-
-.produtos-filtros {
-display: flex;
-align-items: end;
-gap: 12px;
-background: #ffffff;
-border: 1px solid #e5e7eb;
-border-radius: 10px;
-padding: 15px;
-margin-bottom: 15px;
-}
-
-.filtro-grupo {
-display: flex;
-flex-direction: column;
-gap: 6px;
-}
-
-.filtro-grupo label {
-font-size: 12px;
-font-weight: 600;
-color: #555;
-}
-
-.filtro-grupo select,
-.filtro-grupo input {
-height: 38px;
-border: 1px solid #dfe3e8;
-border-radius: 7px;
-padding: 0 11px;
-outline: none;
-background: #fff;
-}
-
-.filtro-grupo select {
-min-width: 145px;
-}
-
-.filtro-pesquisa {
-flex: 1;
-}
-
-.filtro-pesquisa input {
-width: 100%;
-}
-
-.filtro-grupo input:focus,
-.filtro-grupo select:focus {
-border-color: #999;
-}
-
-.btn-produtos {
-height: 38px;
-border: 0;
-border-radius: 7px;
-padding: 0 15px;
-cursor: pointer;
-font-weight: 600;
-font-size: 13px;
-}
-
-.btn-atualizar {
-background: #202124;
-color: #fff;
-}
-
-.btn-atualizar:hover {
-background: #000;
-}
-
-/* ============================================================
-MENSAGEM
-============================================================ */
-
-.mensagem-produtos {
-padding: 12px 14px;
-border-radius: 8px;
-margin-bottom: 15px;
-font-size: 13px;
-}
-
-.mensagem-erro {
-background: #fff1f2;
-color: #b42318;
-border: 1px solid #fecdd3;
-}
-
-.mensagem-sucesso {
-background: #f0fdf4;
-color: #166534;
-border: 1px solid #bbf7d0;
-}
-
-.mensagem-info {
-background: #eff6ff;
-color: #1d4ed8;
-border: 1px solid #bfdbfe;
-}
-
-/* ============================================================
-AÇÕES
-============================================================ */
-
-.produtos-acoes {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 15px;
-background: #fff;
-border: 1px solid #e5e7eb;
-border-radius: 10px;
-padding: 12px 15px;
-margin-bottom: 15px;
-}
-
-.produtos-acoes-esquerda,
-.produtos-acoes-direita {
-display: flex;
-align-items: center;
-gap: 10px;
-}
-
-.selecionar-todos {
-display: flex;
-align-items: center;
-gap: 7px;
-font-size: 13px;
-cursor: pointer;
-}
-
-.contador-produtos {
-font-size: 12px;
-color: #777;
-}
-
-.btn-selecionar,
-.btn-desmarcar {
-background: #f3f4f6;
-color: #333;
-}
-
-.btn-sincronizar {
-background: #202124;
-color: #fff;
-}
-
-.btn-sincronizar:disabled {
-opacity: .45;
-cursor: not-allowed;
-}
-
-/* ============================================================
-LISTA
-============================================================ */
-
-.lista-produtos {
-display: flex;
-flex-direction: column;
-gap: 10px;
-}
-
-/* ============================================================
-CARD
-============================================================ */
-
-.produto-mercado-livre-card {
-display: grid;
-grid-template-columns: 34px 82px minmax(0, 1fr) 150px 100px;
-align-items: center;
-gap: 15px;
-background: #fff;
-border: 1px solid #e5e7eb;
-border-radius: 10px;
-padding: 12px 15px;
-}
-
-.produto-mercado-livre-card:hover {
-border-color: #d0d4d9;
-}
-
-.produto-selecao {
-display: flex;
-justify-content: center;
-}
-
-.produto-checkbox {
-width: 17px;
-height: 17px;
-cursor: pointer;
-}
-
-.produto-imagem {
-width: 82px;
-height: 82px;
-border-radius: 8px;
-background: #f5f5f5;
-overflow: hidden;
-display: flex;
-align-items: center;
-justify-content: center;
-color: #999;
-font-size: 11px;
-}
-
-.produto-imagem img {
-width: 100%;
-height: 100%;
-object-fit: cover;
-}
-
-.produto-informacoes {
-min-width: 0;
-}
-
-.produto-informacoes h3 {
-margin: 0 0 6px;
-font-size: 15px;
-line-height: 1.3;
-}
-
-.produto-item-id,
-.produto-sku {
-margin: 3px 0;
-color: #777;
-font-size: 11px;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-}
-
-.produto-preco {
-display: block;
-margin-top: 7px;
-font-size: 15px;
-}
-
-.produto-estoque {
-display: block;
-margin-top: 3px;
-color: #777;
-font-size: 11px;
-}
-
-.produto-status-area {
-display: flex;
-flex-direction: column;
-gap: 6px;
-}
-
-.produto-status-badge {
-display: inline-flex;
-width: fit-content;
-padding: 5px 8px;
-border-radius: 20px;
-font-size: 10px;
-font-weight: 600;
-}
-
-.status-ativo {
-background: #ecfdf3;
-color: #15803d;
-}
-
-.status-inativo {
-background: #f3f4f6;
-color: #666;
-}
-
-.status-mercado-livre {
-background: #fff8df;
-color: #8a6500;
-}
-
-.produto-acoes {
-display: flex;
-justify-content: flex-end;
-}
-
-.btn-produto-acao {
-border: 0;
-border-radius: 7px;
-padding: 8px 12px;
-cursor: pointer;
-font-size: 12px;
-font-weight: 600;
-}
-
-.btn-ativar {
-background: #ecfdf3;
-color: #15803d;
-}
-
-.btn-inativar {
-background: #fff1f2;
-color: #be123c;
-}
-
-.produto-selecionado {
-border-color: #999;
-background: #fafafa;
-}
-
-/* ============================================================
-VAZIO
-============================================================ */
-
-.produtos-vazio {
-background: #fff;
-border: 1px solid #e5e7eb;
-border-radius: 10px;
-padding: 50px 20px;
-text-align: center;
-}
-
-.produtos-vazio-icone {
-font-size: 30px;
-margin-bottom: 10px;
-}
-
-.produtos-vazio h2 {
-margin: 0 0 7px;
-font-size: 17px;
-}
-
-.produtos-vazio p {
-margin: 0;
-color: #777;
-font-size: 13px;
-}
-
-/* ============================================================
-RODAPÉ
-============================================================ */
-
-.admin-footer {
-border-top: 1px solid #e5e7eb;
-background: #fff;
-padding: 20px;
-display: flex;
-justify-content: center;
-align-items: center;
-gap: 10px;
-color: #777;
-font-size: 12px;
-}
-
-.admin-footer strong {
-color: #333;
-}
-
-/* ============================================================
-RESPONSIVO
-============================================================ */
-
-@media (max-width: 900px) {
-
-
-.produtos-resumo {
-    grid-template-columns: repeat(2, 1fr);
-}
-
-.produto-mercado-livre-card {
-    grid-template-columns: 30px 70px minmax(0, 1fr);
-}
-
-.produto-status-area,
-.produto-acoes {
-    grid-column: 3;
-    justify-content: flex-start;
-}
-
-
-}
-
-@media (max-width: 650px) {
-
-
-.produtos-container {
-    width: min(100% - 20px, 1180px);
-    padding-top: 20px;
-}
-
-.produtos-resumo {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-}
-
-.resumo-card {
-    min-height: 90px;
-    padding: 12px;
-}
-
-.resumo-valor {
-    font-size: 22px;
-}
-
-.produtos-filtros {
-    flex-direction: column;
-    align-items: stretch;
-}
-
-.filtro-grupo select {
-    width: 100%;
-}
-
-.produtos-acoes {
-    flex-direction: column;
-    align-items: stretch;
-}
-
-.produtos-acoes-esquerda,
-.produtos-acoes-direita {
-    flex-wrap: wrap;
-}
-
-.produto-mercado-livre-card {
-    grid-template-columns: 28px 65px minmax(0, 1fr);
-    gap: 10px;
-    padding: 10px;
-}
-
-.produto-imagem {
-    width: 65px;
-    height: 65px;
-}
-
-.produto-status-area,
-.produto-acoes {
-    grid-column: 2 / -1;
-}
-
-.admin-header-top {
-    padding: 0 12px;
-}
-
-
-}
-* {
-  box-sizing: border-box;
-  }
-
 html {
 margin: 0;
 padding: 0;
@@ -615,6 +15,12 @@ background: #f5f7fa;
 color: #172033;
 }
 
+button,
+input,
+select {
+font: inherit;
+}
+
 /* ============================================================
 CABEÇALHO
 ============================================================ */
@@ -626,7 +32,7 @@ border-bottom: 1px solid #e5e7eb;
 }
 
 .admin-header-top {
-min-height: 64px;
+height: 64px;
 display: flex;
 align-items: center;
 justify-content: space-between;
@@ -675,8 +81,9 @@ background: #f5f7fa;
 min-height: 38px;
 display: flex;
 align-items: center;
+justify-content: center;
 gap: 8px;
-padding: 0 28px 14px;
+padding-bottom: 10px;
 font-size: 13px;
 color: #667085;
 }
@@ -695,7 +102,7 @@ CONTAINER
 .produtos-container {
 width: min(1180px, calc(100% - 32px));
 margin: 0 auto;
-padding: 34px 0 50px;
+padding: 32px 0 45px;
 }
 
 /* ============================================================
@@ -703,30 +110,30 @@ TOPO
 ============================================================ */
 
 .produtos-topo {
-margin-bottom: 24px;
+margin-bottom: 20px;
 }
 
 .section-label {
-display: inline-block;
+display: block;
+margin-bottom: 6px;
 font-size: 11px;
 font-weight: 700;
 letter-spacing: 1px;
 color: #667085;
-margin-bottom: 7px;
 }
 
 .produtos-topo h1 {
 margin: 0;
-font-size: 28px;
+font-size: 27px;
 line-height: 1.2;
 color: #172033;
 }
 
 .produtos-topo p {
-max-width: 720px;
-margin: 8px 0 0;
+max-width: 700px;
+margin: 7px 0 0;
 font-size: 14px;
-line-height: 1.6;
+line-height: 1.5;
 color: #667085;
 }
 
@@ -737,40 +144,38 @@ DASHBOARD
 .dashboard-produtos {
 display: grid;
 grid-template-columns: repeat(5, 1fr);
-gap: 12px;
-margin-bottom: 22px;
+gap: 10px;
+margin-bottom: 18px;
 }
 
 .dashboard-card {
-min-height: 108px;
-padding: 15px 16px;
-background: #ffffff;
-border: 1px solid #e5e7eb;
-border-radius: 11px;
+min-height: 86px;
+padding: 12px 14px;
 display: flex;
 flex-direction: column;
 justify-content: center;
+background: #ffffff;
+border: 1px solid #e5e7eb;
+border-radius: 9px;
 }
 
 .dashboard-label {
-display: block;
-font-size: 12px;
+font-size: 11px;
 font-weight: 600;
 color: #667085;
-margin-bottom: 5px;
+margin-bottom: 4px;
 }
 
 .dashboard-valor {
-display: block;
-font-size: 25px;
-line-height: 1.1;
+font-size: 23px;
+line-height: 1;
 font-weight: 700;
 color: #172033;
 }
 
 .dashboard-card small {
 margin-top: 4px;
-font-size: 11px;
+font-size: 10px;
 color: #98a2b3;
 }
 
@@ -781,41 +186,40 @@ FILTROS
 .produtos-filtros {
 display: flex;
 align-items: flex-end;
-gap: 12px;
-padding: 16px;
+gap: 10px;
+padding: 13px;
+margin-bottom: 13px;
 background: #ffffff;
 border: 1px solid #e5e7eb;
-border-radius: 11px;
-margin-bottom: 14px;
+border-radius: 9px;
 }
 
 .filtro-grupo {
 display: flex;
 flex-direction: column;
-gap: 6px;
+gap: 5px;
 }
 
 .filtro-grupo label {
-font-size: 12px;
+font-size: 11px;
 font-weight: 600;
 color: #475467;
 }
 
 .filtro-grupo select,
 .filtro-grupo input {
-height: 40px;
+height: 37px;
+padding: 0 10px;
 border: 1px solid #d0d5dd;
-border-radius: 8px;
+border-radius: 7px;
 background: #ffffff;
 color: #172033;
-padding: 0 12px;
 outline: none;
-font-size: 13px;
+font-size: 12px;
 }
 
-.filtro-grupo select:focus,
-.filtro-grupo input:focus {
-border-color: #98a2b3;
+.filtro-grupo select {
+min-width: 140px;
 }
 
 .filtro-pesquisa {
@@ -826,12 +230,17 @@ flex: 1;
 width: 100%;
 }
 
+.filtro-grupo select:focus,
+.filtro-grupo input:focus {
+border-color: #98a2b3;
+}
+
 .btn-produtos {
-height: 40px;
+height: 37px;
+padding: 0 14px;
 border: 0;
-border-radius: 8px;
-padding: 0 15px;
-font-size: 13px;
+border-radius: 7px;
+font-size: 12px;
 font-weight: 600;
 cursor: pointer;
 white-space: nowrap;
@@ -851,10 +260,10 @@ MENSAGEM
 ============================================================ */
 
 .mensagem-produtos {
-padding: 11px 14px;
-margin-bottom: 14px;
-border-radius: 8px;
-font-size: 13px;
+padding: 10px 13px;
+margin-bottom: 13px;
+border-radius: 7px;
+font-size: 12px;
 }
 
 .mensagem-info {
@@ -877,52 +286,47 @@ AÇÕES
 ============================================================ */
 
 .produtos-acoes {
-min-height: 56px;
+min-height: 48px;
 display: flex;
 align-items: center;
 justify-content: space-between;
-gap: 15px;
-margin-bottom: 12px;
+gap: 12px;
+margin-bottom: 8px;
 }
 
 .produtos-acoes-esquerda {
 display: flex;
 align-items: center;
-gap: 15px;
+gap: 14px;
 }
 
 .selecionar-todos {
 display: flex;
 align-items: center;
-gap: 7px;
-font-size: 13px;
+gap: 6px;
+font-size: 12px;
 color: #344054;
 cursor: pointer;
 }
 
 .selecionar-todos input,
 .produto-checkbox {
-width: 16px;
-height: 16px;
+width: 15px;
+height: 15px;
 cursor: pointer;
 }
 
 .contador-produtos {
-font-size: 12px;
+font-size: 11px;
 color: #667085;
 }
 
 .produtos-acoes-direita {
 display: flex;
-gap: 8px;
+gap: 7px;
 }
 
-.btn-selecionar {
-background: #ffffff;
-color: #344054;
-border: 1px solid #d0d5dd;
-}
-
+.btn-selecionar,
 .btn-desmarcar {
 background: #ffffff;
 color: #344054;
@@ -946,21 +350,21 @@ LEGENDA
 .produtos-legenda {
 display: flex;
 align-items: center;
-gap: 20px;
-padding: 10px 0 16px;
+gap: 18px;
+padding: 5px 0 13px;
 }
 
 .legenda-item {
 display: flex;
 align-items: center;
-gap: 6px;
-font-size: 11px;
+gap: 5px;
+font-size: 10px;
 color: #667085;
 }
 
 .legenda-indicador {
-width: 7px;
-height: 7px;
+width: 6px;
+height: 6px;
 border-radius: 50%;
 }
 
@@ -981,9 +385,9 @@ LISTA
 ============================================================ */
 
 .lista-produtos {
-display: grid;
-grid-template-columns: 1fr;
-gap: 10px;
+display: flex;
+flex-direction: column;
+gap: 8px;
 }
 
 /* ============================================================
@@ -992,14 +396,14 @@ CARD PRODUTO
 
 .produto-mercado-livre-card {
 display: grid;
-grid-template-columns: 36px 82px minmax(220px, 1fr) 190px 110px;
+grid-template-columns: 30px 70px minmax(0, 1fr) 160px 90px;
 align-items: center;
-gap: 14px;
-min-height: 116px;
-padding: 13px 15px;
+gap: 12px;
+min-height: 98px;
+padding: 10px 13px;
 background: #ffffff;
 border: 1px solid #e5e7eb;
-border-radius: 11px;
+border-radius: 9px;
 }
 
 .produto-mercado-livre-card:hover {
@@ -1017,16 +421,16 @@ justify-content: center;
 }
 
 .produto-imagem {
-width: 82px;
-height: 82px;
-border-radius: 9px;
-background: #f2f4f7;
-overflow: hidden;
+width: 70px;
+height: 70px;
 display: flex;
 align-items: center;
 justify-content: center;
+overflow: hidden;
+border-radius: 8px;
+background: #f2f4f7;
 color: #98a2b3;
-font-size: 11px;
+font-size: 10px;
 }
 
 .produto-imagem img {
@@ -1040,50 +444,51 @@ min-width: 0;
 }
 
 .produto-informacoes h3 {
-margin: 0 0 6px;
-font-size: 15px;
-line-height: 1.3;
+margin: 0 0 5px;
 color: #172033;
+font-size: 14px;
+line-height: 1.3;
 font-weight: 600;
 }
 
 .produto-item-id,
 .produto-sku {
-margin: 3px 0;
-font-size: 11px;
-color: #667085;
+margin: 2px 0;
 overflow: hidden;
+color: #667085;
+font-size: 10px;
 text-overflow: ellipsis;
 white-space: nowrap;
 }
 
 .produto-preco {
 display: inline-block;
-margin-top: 6px;
-font-size: 14px;
+margin-top: 5px;
 color: #172033;
+font-size: 13px;
+font-weight: 600;
 }
 
 .produto-estoque {
-margin-left: 10px;
-font-size: 11px;
+margin-left: 8px;
 color: #667085;
+font-size: 10px;
 }
 
 .produto-status-area {
 display: flex;
 flex-direction: column;
 align-items: flex-start;
-gap: 7px;
+gap: 5px;
 }
 
 .produto-status-badge {
 display: inline-flex;
 align-items: center;
-min-height: 25px;
-padding: 0 9px;
+min-height: 23px;
+padding: 0 8px;
 border-radius: 999px;
-font-size: 10px;
+font-size: 9px;
 font-weight: 600;
 }
 
@@ -1108,10 +513,11 @@ justify-content: flex-end;
 }
 
 .btn-produto-acao {
-min-width: 82px;
-height: 34px;
+min-width: 76px;
+height: 31px;
+padding: 0 9px;
 border-radius: 7px;
-font-size: 12px;
+font-size: 11px;
 font-weight: 600;
 cursor: pointer;
 }
@@ -1138,35 +544,35 @@ ESTADO VAZIO
 ============================================================ */
 
 .produtos-vazio {
-min-height: 220px;
+min-height: 190px;
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
+padding: 25px;
 text-align: center;
-padding: 30px;
 background: #ffffff;
 border: 1px solid #e5e7eb;
-border-radius: 11px;
+border-radius: 9px;
 }
 
 .produtos-vazio-icone {
-font-size: 28px;
-margin-bottom: 8px;
+margin-bottom: 7px;
+font-size: 25px;
 }
 
 .produtos-vazio h2 {
 margin: 0;
-font-size: 17px;
 color: #172033;
+font-size: 16px;
 }
 
 .produtos-vazio p {
 max-width: 500px;
-margin: 7px 0 0;
-font-size: 13px;
-line-height: 1.5;
+margin: 6px 0 0;
 color: #667085;
+font-size: 12px;
+line-height: 1.5;
 }
 
 /* ============================================================
@@ -1174,28 +580,28 @@ RODAPÉ
 ============================================================ */
 
 .admin-footer {
-min-height: 70px;
+min-height: 65px;
 display: flex;
+flex-direction: column;
 align-items: center;
 justify-content: center;
-gap: 8px;
-flex-direction: column;
+gap: 5px;
 border-top: 1px solid #e5e7eb;
 background: #ffffff;
 color: #667085;
-font-size: 11px;
+font-size: 10px;
 }
 
 .admin-footer strong {
 color: #172033;
-font-size: 13px;
+font-size: 12px;
 }
 
 /* ============================================================
 RESPONSIVO
 ============================================================ */
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
 
 
 .dashboard-produtos {
@@ -1203,12 +609,7 @@ RESPONSIVO
 }
 
 .produto-mercado-livre-card {
-    grid-template-columns: 32px 72px 1fr;
-}
-
-.produto-imagem {
-    width: 72px;
-    height: 72px;
+    grid-template-columns: 28px 70px 1fr;
 }
 
 .produto-status-area,
@@ -1227,7 +628,7 @@ RESPONSIVO
 
 
 .produtos-container {
-    width: min(100% - 20px, 1180px);
+    width: calc(100% - 20px);
     padding-top: 22px;
 }
 
@@ -1246,10 +647,16 @@ RESPONSIVO
 
 .dashboard-produtos {
     grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
 }
 
 .dashboard-card {
-    min-height: 95px;
+    min-height: 82px;
+    padding: 11px;
+}
+
+.dashboard-valor {
+    font-size: 21px;
 }
 
 .produtos-filtros {
@@ -1259,6 +666,10 @@ RESPONSIVO
 
 .filtro-grupo,
 .filtro-pesquisa {
+    width: 100%;
+}
+
+.filtro-grupo select {
     width: 100%;
 }
 
@@ -1282,8 +693,14 @@ RESPONSIVO
 }
 
 .produto-mercado-livre-card {
-    grid-template-columns: 30px 70px 1fr;
-    gap: 10px;
+    grid-template-columns: 28px 65px 1fr;
+    gap: 9px;
+    padding: 9px;
+}
+
+.produto-imagem {
+    width: 65px;
+    height: 65px;
 }
 
 .produto-status-area,
@@ -1298,24 +715,23 @@ RESPONSIVO
 
 
 .dashboard-produtos {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 7px;
 }
 
 .dashboard-card {
-    padding: 12px;
-}
-
-.dashboard-valor {
-    font-size: 22px;
+    padding: 10px;
 }
 
 .dashboard-label {
-    font-size: 11px;
+    font-size: 10px;
+}
+
+.dashboard-valor {
+    font-size: 20px;
 }
 
 .dashboard-card small {
-    font-size: 10px;
+    font-size: 9px;
 }
 
 .produtos-acoes-direita .btn-produtos {
