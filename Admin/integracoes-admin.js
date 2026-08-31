@@ -1,3 +1,4 @@
+javascript
 // ============================================================
 // ZORAVISION - ADMINISTRAÇÃO DE INTEGRAÇÕES
 // ============================================================
@@ -15,35 +16,38 @@
 // - Importar produtos do Mercado Livre
 // - Evitar produtos duplicados
 // - Mostrar resultado da importação
+// - Abrir gerenciamento de produtos
 // ============================================================
+
 
 // ============================================================
 // 1. CONFIGURAÇÕES
 // ============================================================
 
 const MERCADO_LIVRE_CLIENT_ID =
-'8816875791365432';
+    '8816875791365432';
 
 const MERCADO_LIVRE_REDIRECT_URI =
-'https://rafaelmfernandes.github.io/Site-zora-vision/Admin/mercadolivre-callback.html';
+    'https://rafaelmfernandes.github.io/Site-zora-vision/Admin/mercadolivre-callback.html';
 
 const MERCADO_LIVRE_AUTH_URL =
-'https://auth.mercadolivre.com.br/authorization';
+    'https://auth.mercadolivre.com.br/authorization';
 
 const EDGE_FUNCTION_OAUTH =
-'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-oauth';
+    'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-oauth';
 
 const EDGE_FUNCTION_IMPORTAR =
-'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-importar-produtos';
+    'https://ratajxnxkjoiuknamacn.supabase.co/functions/v1/mercadolivre-importar-produtos';
 
 const CHAVE_PKCE_MERCADO_LIVRE =
-'zoravision_ml_code_verifier';
+    'zoravision_ml_code_verifier';
 
 const CHAVE_STATE_MERCADO_LIVRE =
-'zoravision_ml_oauth_state';
+    'zoravision_ml_oauth_state';
 
-const PAGINA_INTEGRACOES =
-'https://rafaelmfernandes.github.io/Site-zora-vision/Admin/admin-integracoes.html';
+const PAGINA_PRODUTOS_MERCADO_LIVRE =
+    'mercadolivre-produtos.html';
+
 
 // ============================================================
 // 2. SUPABASE
@@ -51,46 +55,40 @@ const PAGINA_INTEGRACOES =
 
 function obterSupabaseIntegracoes() {
 
+    if (window.supabaseClient) {
+        return window.supabaseClient;
+    }
 
-if (window.supabaseClient) {
+    if (window._supabase) {
+        return window._supabase;
+    }
 
-    return window.supabaseClient;
+    if (
+        typeof window.obterSupabase === 'function'
+    ) {
 
-}
+        try {
 
-if (window._supabase) {
+            return window.obterSupabase();
 
-    return window._supabase;
+        } catch (erro) {
 
-}
+            console.error(
+                'Erro ao obter Supabase:',
+                erro
+            );
 
-if (
-    typeof window.obterSupabase === 'function'
-) {
-
-    try {
-
-        return window.obterSupabase();
-
-    } catch (erro) {
-
-        console.error(
-            'Erro ao obter Supabase:',
-            erro
-        );
+        }
 
     }
 
+    console.error(
+        'Cliente Supabase não encontrado.'
+    );
+
+    return null;
 }
 
-console.error(
-    'Cliente Supabase não encontrado.'
-);
-
-return null;
-
-
-}
 
 // ============================================================
 // 3. BASE64 URL
@@ -98,31 +96,29 @@ return null;
 
 function base64UrlEncode(buffer) {
 
+    let binary = '';
 
-let binary = '';
+    const bytes =
+        new Uint8Array(buffer);
 
-const bytes =
-    new Uint8Array(buffer);
+    for (
+        let i = 0;
+        i < bytes.byteLength;
+        i++
+    ) {
 
-for (
-    let i = 0;
-    i < bytes.byteLength;
-    i++
-) {
+        binary += String.fromCharCode(
+            bytes[i]
+        );
 
-    binary += String.fromCharCode(
-        bytes[i]
-    );
+    }
 
+    return btoa(binary)
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
 }
 
-return btoa(binary)
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=+$/, '');
-
-
-}
 
 // ============================================================
 // 4. GERAR CODE VERIFIER
@@ -130,107 +126,100 @@ return btoa(binary)
 
 function gerarCodeVerifier() {
 
+    const caracteres =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+        'abcdefghijklmnopqrstuvwxyz' +
+        '0123456789-._~';
 
-const caracteres =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-    'abcdefghijklmnopqrstuvwxyz' +
-    '0123456789-._~';
+    const tamanho = 64;
 
-const tamanho = 64;
+    const valores =
+        new Uint32Array(tamanho);
 
-const valores =
-    new Uint32Array(tamanho);
+    crypto.getRandomValues(
+        valores
+    );
 
-crypto.getRandomValues(
-    valores
-);
+    let verifier = '';
 
-let verifier = '';
+    for (
+        let i = 0;
+        i < tamanho;
+        i++
+    ) {
 
-for (
-    let i = 0;
-    i < tamanho;
-    i++
-) {
+        verifier +=
+            caracteres[
+                valores[i] %
+                caracteres.length
+            ];
 
-    verifier +=
-        caracteres[
-            valores[i] %
-            caracteres.length
-        ];
+    }
 
+    return verifier;
 }
 
-return verifier;
-
-
-}
 
 // ============================================================
 // 5. GERAR CODE CHALLENGE
 // ============================================================
 
 async function gerarCodeChallenge(
-codeVerifier
+    codeVerifier
 ) {
 
+    const encoder =
+        new TextEncoder();
 
-const encoder =
-    new TextEncoder();
+    const dados =
+        encoder.encode(
+            codeVerifier
+        );
 
-const dados =
-    encoder.encode(
-        codeVerifier
+    const hash =
+        await crypto.subtle.digest(
+            'SHA-256',
+            dados
+        );
+
+    return base64UrlEncode(
+        hash
     );
-
-const hash =
-    await crypto.subtle.digest(
-        'SHA-256',
-        dados
-    );
-
-return base64UrlEncode(
-    hash
-);
-
-
 }
+
 
 // ============================================================
 // 6. SALVAR CODE VERIFIER
 // ============================================================
 
 function salvarCodeVerifier(
-codeVerifier
+    codeVerifier
 ) {
 
+    try {
 
-try {
+        sessionStorage.setItem(
+            CHAVE_PKCE_MERCADO_LIVRE,
+            codeVerifier
+        );
 
-    sessionStorage.setItem(
-        CHAVE_PKCE_MERCADO_LIVRE,
-        codeVerifier
-    );
+        console.log(
+            'Code verifier salvo.'
+        );
 
-    console.log(
-        'Code verifier salvo.'
-    );
+        return true;
 
-    return true;
+    } catch (erro) {
 
-} catch (erro) {
+        console.error(
+            'Erro ao salvar code verifier:',
+            erro
+        );
 
-    console.error(
-        'Erro ao salvar code verifier:',
-        erro
-    );
-
-    return false;
-
+        return false;
+    }
 }
 
-
-}
 
 // ============================================================
 // 7. RECUPERAR CODE VERIFIER
@@ -238,26 +227,23 @@ try {
 
 function obterCodeVerifier() {
 
+    try {
 
-try {
+        return sessionStorage.getItem(
+            CHAVE_PKCE_MERCADO_LIVRE
+        );
 
-    return sessionStorage.getItem(
-        CHAVE_PKCE_MERCADO_LIVRE
-    );
+    } catch (erro) {
 
-} catch (erro) {
+        console.error(
+            'Erro ao recuperar code verifier:',
+            erro
+        );
 
-    console.error(
-        'Erro ao recuperar code verifier:',
-        erro
-    );
-
-    return null;
-
+        return null;
+    }
 }
 
-
-}
 
 // ============================================================
 // 8. REMOVER CODE VERIFIER
@@ -265,24 +251,22 @@ try {
 
 function removerCodeVerifier() {
 
+    try {
 
-try {
+        sessionStorage.removeItem(
+            CHAVE_PKCE_MERCADO_LIVRE
+        );
 
-    sessionStorage.removeItem(
-        CHAVE_PKCE_MERCADO_LIVRE
-    );
+    } catch (erro) {
 
-} catch (erro) {
+        console.error(
+            'Erro ao remover code verifier:',
+            erro
+        );
 
-    console.error(
-        'Erro ao remover code verifier:',
-        erro
-    );
-
+    }
 }
 
-
-}
 
 // ============================================================
 // 9. GERAR STATE
@@ -290,130 +274,130 @@ try {
 
 function gerarStateOAuth() {
 
+    const stateArray =
+        new Uint8Array(32);
 
-const stateArray =
-    new Uint8Array(32);
+    crypto.getRandomValues(
+        stateArray
+    );
 
-crypto.getRandomValues(
-    stateArray
-);
-
-return base64UrlEncode(
-    stateArray
-);
-
-
+    return base64UrlEncode(
+        stateArray
+    );
 }
+
 
 // ============================================================
 // 10. ATUALIZAR STATUS MERCADO LIVRE
 // ============================================================
 
 function atualizarStatusMercadoLivre(
-conectado
+    conectado
 ) {
 
-
-const status =
-    document.getElementById(
-        'status-mercado-livre'
-    );
-
-const botao =
-    document.getElementById(
-        'btn-conectar-mercado-livre'
-    );
-
-const botaoImportar =
-    document.getElementById(
-        'btn-importar-produtos'
-    );
-
-if (status) {
-
-    if (conectado) {
-
-        status.textContent =
-            'Conectado';
-
-        status.classList.remove(
-            'status-desconectado'
+    const status =
+        document.getElementById(
+            'status-mercado-livre'
         );
 
-        status.classList.add(
-            'status-conectado'
+    const botao =
+        document.getElementById(
+            'btn-conectar-mercado-livre'
         );
 
-    } else {
-
-        status.textContent =
-            'Desconectado';
-
-        status.classList.remove(
-            'status-conectado'
+    // Aceita os dois IDs para compatibilidade
+    const botaoImportar =
+        document.getElementById(
+            'btn-importar-mercado-livre'
+        ) ||
+        document.getElementById(
+            'btn-importar-produtos'
         );
 
-        status.classList.add(
-            'status-desconectado'
-        );
+    if (status) {
+
+        if (conectado) {
+
+            status.textContent =
+                'Conectado';
+
+            status.classList.remove(
+                'status-desconectado'
+            );
+
+            status.classList.add(
+                'status-conectado'
+            );
+
+        } else {
+
+            status.textContent =
+                'Desconectado';
+
+            status.classList.remove(
+                'status-conectado'
+            );
+
+            status.classList.add(
+                'status-desconectado'
+            );
+
+        }
 
     }
 
-}
+    if (botao) {
 
-if (botao) {
+        if (conectado) {
 
-    if (conectado) {
+            botao.textContent =
+                'Mercado Livre conectado';
 
-        botao.textContent =
-            'Mercado Livre conectado';
+            botao.classList.remove(
+                'btn-conectar'
+            );
 
-        botao.classList.remove(
-            'btn-conectar'
-        );
+            botao.classList.add(
+                'btn-conectado'
+            );
 
-        botao.classList.add(
-            'btn-conectado'
-        );
+        } else {
 
-    } else {
+            botao.textContent =
+                'Conectar Mercado Livre';
 
-        botao.textContent =
-            'Conectar Mercado Livre';
+            botao.classList.remove(
+                'btn-conectado'
+            );
 
-        botao.classList.remove(
-            'btn-conectado'
-        );
+            botao.classList.add(
+                'btn-conectar'
+            );
 
-        botao.classList.add(
-            'btn-conectar'
-        );
-
-    }
-
-}
-
-if (botaoImportar) {
-
-    if (conectado) {
-
-        botaoImportar.style.display =
-            '';
-
-        botaoImportar.disabled =
-            false;
-
-    } else {
-
-        botaoImportar.style.display =
-            'none';
+        }
 
     }
 
+    if (botaoImportar) {
+
+        if (conectado) {
+
+            botaoImportar.style.display =
+                'inline-flex';
+
+            botaoImportar.disabled =
+                false;
+
+        } else {
+
+            botaoImportar.style.display =
+                'none';
+
+        }
+
+    }
 }
 
-
-}
 
 // ============================================================
 // 11. VERIFICAR RETORNO OAUTH
@@ -421,43 +405,40 @@ if (botaoImportar) {
 
 function verificarRetornoMercadoLivre() {
 
+    const url =
+        new URL(
+            window.location.href
+        );
 
-const url =
-    new URL(
-        window.location.href
-    );
+    const conectado =
+        url.searchParams.get(
+            'mercadolivre'
+        );
 
-const conectado =
-    url.searchParams.get(
-        'mercadolivre'
-    );
+    if (
+        conectado ===
+        'conectado'
+    ) {
 
-if (
-    conectado ===
-    'conectado'
-) {
+        console.log(
+            'Retorno OAuth: Mercado Livre conectado.'
+        );
 
-    console.log(
-        'Retorno OAuth: Mercado Livre conectado.'
-    );
+        atualizarStatusMercadoLivre(
+            true
+        );
 
-    atualizarStatusMercadoLivre(
-        true
-    );
+        setTimeout(
+            limparParametrosOAuth,
+            500
+        );
 
-    setTimeout(
-        limparParametrosOAuth,
-        500
-    );
+        return true;
+    }
 
-    return true;
-
+    return false;
 }
 
-return false;
-
-
-}
 
 // ============================================================
 // 12. LIMPAR PARÂMETROS OAUTH
@@ -465,53 +446,51 @@ return false;
 
 function limparParametrosOAuth() {
 
+    try {
 
-try {
+        const url =
+            new URL(
+                window.location.href
+            );
 
-    const url =
-        new URL(
-            window.location.href
+        url.searchParams.delete(
+            'mercadolivre'
         );
 
-    url.searchParams.delete(
-        'mercadolivre'
-    );
+        url.searchParams.delete(
+            'code'
+        );
 
-    url.searchParams.delete(
-        'code'
-    );
+        url.searchParams.delete(
+            'state'
+        );
 
-    url.searchParams.delete(
-        'state'
-    );
+        url.searchParams.delete(
+            'error'
+        );
 
-    url.searchParams.delete(
-        'error'
-    );
+        url.searchParams.delete(
+            'error_description'
+        );
 
-    url.searchParams.delete(
-        'error_description'
-    );
+        window.history.replaceState(
+            {},
+            document.title,
+            url.pathname +
+            url.search +
+            url.hash
+        );
 
-    window.history.replaceState(
-        {},
-        document.title,
-        url.pathname +
-        url.search +
-        url.hash
-    );
+    } catch (erro) {
 
-} catch (erro) {
+        console.error(
+            'Erro ao limpar parâmetros OAuth:',
+            erro
+        );
 
-    console.error(
-        'Erro ao limpar parâmetros OAuth:',
-        erro
-    );
-
+    }
 }
 
-
-}
 
 // ============================================================
 // 13. CONECTAR MERCADO LIVRE
@@ -519,142 +498,138 @@ try {
 
 async function conectarMercadoLivre() {
 
-
-const botao =
-    document.getElementById(
-        'btn-conectar-mercado-livre'
-    );
-
-if (
-    botao &&
-    botao.disabled
-) {
-
-    return;
-
-}
-
-try {
-
-    console.log(
-        '============================================================'
-    );
-
-    console.log(
-        'Iniciando conexão Mercado Livre...'
-    );
-
-    console.log(
-        'OAuth 2.0 + PKCE'
-    );
-
-    console.log(
-        '============================================================'
-    );
-
-    if (botao) {
-
-        botao.disabled =
-            true;
-
-        botao.textContent =
-            'Preparando conexão...';
-
-    }
-
-    const codeVerifier =
-        gerarCodeVerifier();
-
-    const codeChallenge =
-        await gerarCodeChallenge(
-            codeVerifier
+    const botao =
+        document.getElementById(
+            'btn-conectar-mercado-livre'
         );
 
-    const verifierSalvo =
-        salvarCodeVerifier(
-            codeVerifier
+    if (
+        botao &&
+        botao.disabled
+    ) {
+        return;
+    }
+
+    try {
+
+        console.log(
+            '============================================================'
         );
 
-    if (!verifierSalvo) {
+        console.log(
+            'Iniciando conexão Mercado Livre...'
+        );
 
-        throw new Error(
-            'Não foi possível salvar o código PKCE.'
+        console.log(
+            'OAuth 2.0 + PKCE'
+        );
+
+        console.log(
+            '============================================================'
+        );
+
+        if (botao) {
+
+            botao.disabled =
+                true;
+
+            botao.textContent =
+                'Preparando conexão...';
+
+        }
+
+        const codeVerifier =
+            gerarCodeVerifier();
+
+        const codeChallenge =
+            await gerarCodeChallenge(
+                codeVerifier
+            );
+
+        const verifierSalvo =
+            salvarCodeVerifier(
+                codeVerifier
+            );
+
+        if (!verifierSalvo) {
+
+            throw new Error(
+                'Não foi possível salvar o código PKCE.'
+            );
+
+        }
+
+        const state =
+            gerarStateOAuth();
+
+        sessionStorage.setItem(
+            CHAVE_STATE_MERCADO_LIVRE,
+            state
+        );
+
+        const parametros =
+            new URLSearchParams({
+
+                response_type:
+                    'code',
+
+                client_id:
+                    MERCADO_LIVRE_CLIENT_ID,
+
+                redirect_uri:
+                    MERCADO_LIVRE_REDIRECT_URI,
+
+                code_challenge:
+                    codeChallenge,
+
+                code_challenge_method:
+                    'S256',
+
+                state:
+                    state
+
+            });
+
+        const urlAutorizacao =
+            MERCADO_LIVRE_AUTH_URL +
+            '?' +
+            parametros.toString();
+
+        console.log(
+            'Redirecionando para Mercado Livre...'
+        );
+
+        window.location.href =
+            urlAutorizacao;
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao iniciar OAuth:',
+            erro
+        );
+
+        if (botao) {
+
+            botao.disabled =
+                false;
+
+            botao.textContent =
+                'Conectar Mercado Livre';
+
+        }
+
+        alert(
+            'Não foi possível iniciar a conexão com o Mercado Livre.\n\n' +
+            (
+                erro?.message ||
+                'Erro desconhecido.'
+            )
         );
 
     }
-
-    const state =
-        gerarStateOAuth();
-
-    sessionStorage.setItem(
-        CHAVE_STATE_MERCADO_LIVRE,
-        state
-    );
-
-    const parametros =
-        new URLSearchParams({
-
-            response_type:
-                'code',
-
-            client_id:
-                MERCADO_LIVRE_CLIENT_ID,
-
-            redirect_uri:
-                MERCADO_LIVRE_REDIRECT_URI,
-
-            code_challenge:
-                codeChallenge,
-
-            code_challenge_method:
-                'S256',
-
-            state:
-                state
-
-        });
-
-    const urlAutorizacao =
-        MERCADO_LIVRE_AUTH_URL +
-        '?' +
-        parametros.toString();
-
-    console.log(
-        'Redirecionando para Mercado Livre...'
-    );
-
-    window.location.href =
-        urlAutorizacao;
-
-} catch (erro) {
-
-    console.error(
-        'Erro ao iniciar OAuth:',
-        erro
-    );
-
-    if (botao) {
-
-        botao.disabled =
-            false;
-
-        botao.textContent =
-            'Conectar Mercado Livre';
-
-    }
-
-    alert(
-        'Não foi possível iniciar a conexão com o Mercado Livre.\n\n' +
-        (
-            erro?.message ||
-            'Erro desconhecido.'
-        )
-    );
-
 }
 
-
-}
 
 // ============================================================
 // 14. CONSULTAR CONEXÃO NO SUPABASE
@@ -662,47 +637,77 @@ try {
 
 async function verificarConexaoMercadoLivre() {
 
-
-console.log(
-    'Verificando conexão do Mercado Livre no Supabase...'
-);
-
-const supabase =
-    obterSupabaseIntegracoes();
-
-if (!supabase) {
-
-    console.error(
-        'Supabase não disponível.'
+    console.log(
+        'Verificando conexão do Mercado Livre no Supabase...'
     );
 
-    atualizarStatusMercadoLivre(
-        false
-    );
+    const supabase =
+        obterSupabaseIntegracoes();
 
-    return false;
-
-}
-
-try {
-
-    const resultado =
-        await supabase
-            .from('integracoes')
-            .select(
-                'id,plataforma,usuario_id,expires_at,criado_em,atualizado_em'
-            )
-            .eq(
-                'plataforma',
-                'mercado_livre'
-            )
-            .limit(1);
-
-    if (resultado.error) {
+    if (!supabase) {
 
         console.error(
-            'Erro ao consultar integracoes:',
-            resultado.error
+            'Supabase não disponível.'
+        );
+
+        atualizarStatusMercadoLivre(
+            false
+        );
+
+        return false;
+    }
+
+    try {
+
+        const resultado =
+            await supabase
+                .from('integracoes')
+                .select(
+                    'id,plataforma,usuario_id,expires_at,criado_em,atualizado_em'
+                )
+                .eq(
+                    'plataforma',
+                    'mercado_livre'
+                )
+                .limit(1);
+
+        if (resultado.error) {
+
+            console.error(
+                'Erro ao consultar integracoes:',
+                resultado.error
+            );
+
+            atualizarStatusMercadoLivre(
+                false
+            );
+
+            return false;
+        }
+
+        console.log(
+            'Resultado da consulta integracoes:',
+            resultado.data
+        );
+
+        if (
+            resultado.data &&
+            resultado.data.length > 0
+        ) {
+
+            console.log(
+                'Conexão Mercado Livre encontrada.'
+            );
+
+            atualizarStatusMercadoLivre(
+                true
+            );
+
+            return true;
+        }
+
+        console.log(
+            'Nenhuma conexão Mercado Livre encontrada.'
         );
 
         atualizarStatusMercadoLivre(
@@ -711,57 +716,21 @@ try {
 
         return false;
 
-    }
+    } catch (erro) {
 
-    console.log(
-        'Resultado da consulta integracoes:',
-        resultado.data
-    );
-
-    if (
-        resultado.data &&
-        resultado.data.length > 0
-    ) {
-
-        console.log(
-            'Conexão Mercado Livre encontrada.'
+        console.error(
+            'Erro inesperado ao verificar conexão:',
+            erro
         );
 
         atualizarStatusMercadoLivre(
-            true
+            false
         );
 
-        return true;
-
+        return false;
     }
-
-    console.log(
-        'Nenhuma conexão Mercado Livre encontrada.'
-    );
-
-    atualizarStatusMercadoLivre(
-        false
-    );
-
-    return false;
-
-} catch (erro) {
-
-    console.error(
-        'Erro inesperado ao verificar conexão:',
-        erro
-    );
-
-    atualizarStatusMercadoLivre(
-        false
-    );
-
-    return false;
-
 }
 
-
-}
 
 // ============================================================
 // 15. IMPORTAR PRODUTOS
@@ -769,259 +738,242 @@ try {
 
 async function importarProdutosMercadoLivre() {
 
-
-const botao =
-    document.getElementById(
-        'btn-importar-produtos'
-    );
-
-if (
-    botao &&
-    botao.disabled
-) {
-
-    return;
-
-}
-
-try {
-
-    console.log(
-        '============================================================'
-    );
-
-    console.log(
-        'Iniciando importação de produtos Mercado Livre...'
-    );
-
-    console.log(
-        '============================================================'
-    );
-
-    if (botao) {
-
-        botao.disabled =
-            true;
-
-        botao.textContent =
-            'Importando produtos...';
-
-    }
-
-    const resposta =
-        await fetch(
-            EDGE_FUNCTION_IMPORTAR,
-            {
-
-                method:
-                    'POST',
-
-                headers: {
-
-                    'Content-Type':
-                        'application/json'
-
-                },
-
-                body:
-                    JSON.stringify({})
-
-            }
+    const botao =
+        document.getElementById(
+            'btn-importar-mercado-livre'
+        ) ||
+        document.getElementById(
+            'btn-importar-produtos'
         );
 
-    let resultado =
-        null;
-
-    const textoResposta =
-        await resposta.text();
+    if (
+        botao &&
+        botao.disabled
+    ) {
+        return;
+    }
 
     try {
 
-        resultado =
-            textoResposta
-                ? JSON.parse(
-                    textoResposta
-                )
-                : null;
+        console.log(
+            '============================================================'
+        );
+
+        console.log(
+            'Iniciando importação de produtos Mercado Livre...'
+        );
+
+        console.log(
+            '============================================================'
+        );
+
+        if (botao) {
+
+            botao.disabled =
+                true;
+
+            botao.textContent =
+                'Importando produtos...';
+
+        }
+
+        const resposta =
+            await fetch(
+                EDGE_FUNCTION_IMPORTAR,
+                {
+
+                    method:
+                        'POST',
+
+                    headers: {
+
+                        'Content-Type':
+                            'application/json'
+
+                    },
+
+                    body:
+                        JSON.stringify({})
+
+                }
+            );
+
+        let resultado =
+            null;
+
+        const textoResposta =
+            await resposta.text();
+
+        try {
+
+            resultado =
+                textoResposta
+                    ? JSON.parse(
+                        textoResposta
+                    )
+                    : null;
+
+        } catch (erro) {
+
+            console.error(
+                'Resposta não é JSON válido:',
+                textoResposta
+            );
+
+        }
+
+        console.log(
+            'Status da importação:',
+            resposta.status
+        );
+
+        console.log(
+            'Resultado da importação:',
+            resultado
+        );
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                resultado?.erro ||
+                resultado?.error ||
+                'A importação dos produtos falhou.'
+            );
+        }
+
+        if (
+            !resultado ||
+            resultado.sucesso !== true
+        ) {
+
+            throw new Error(
+                resultado?.erro ||
+                resultado?.mensagem ||
+                'A Edge Function não confirmou a importação.'
+            );
+        }
+
+        const totalEncontrados =
+            Number(
+                resultado.total_encontrados ||
+                0
+            );
+
+        const criados =
+            Number(
+                resultado.criados ||
+                0
+            );
+
+        const atualizados =
+            Number(
+                resultado.atualizados ||
+                0
+            );
+
+        const erros =
+            Number(
+                resultado.erros ||
+                0
+            );
+
+        console.log(
+            'Total encontrados:',
+            totalEncontrados
+        );
+
+        console.log(
+            'Criados:',
+            criados
+        );
+
+        console.log(
+            'Atualizados:',
+            atualizados
+        );
+
+        console.log(
+            'Erros:',
+            erros
+        );
+
+        let mensagem =
+            'Importação concluída com sucesso!\n\n';
+
+        mensagem +=
+            'Produtos encontrados: ' +
+            totalEncontrados +
+            '\n';
+
+        mensagem +=
+            'Produtos criados: ' +
+            criados +
+            '\n';
+
+        mensagem +=
+            'Produtos atualizados: ' +
+            atualizados +
+            '\n';
+
+        mensagem +=
+            'Erros: ' +
+            erros;
+
+        if (
+            Array.isArray(
+                resultado.detalhes_erros
+            ) &&
+            resultado.detalhes_erros.length > 0
+        ) {
+
+            mensagem +=
+                '\n\nAlguns produtos apresentaram erros.';
+
+            console.warn(
+                'Detalhes dos erros:',
+                resultado.detalhes_erros
+            );
+
+        }
+
+        alert(
+            mensagem
+        );
+
+        atualizarStatusMercadoLivre(
+            true
+        );
 
     } catch (erro) {
 
         console.error(
-            'Resposta não é JSON válido:',
-            textoResposta
+            'Erro ao importar produtos:',
+            erro
         );
 
-        resultado =
-            null;
+        alert(
+            'Não foi possível importar os produtos do Mercado Livre.\n\n' +
+            (
+                erro?.message ||
+                'Erro desconhecido.'
+            )
+        );
+
+    } finally {
+
+        if (botao) {
+
+            botao.disabled =
+                false;
+
+            botao.textContent =
+                '📥 Importar produtos';
+
+        }
 
     }
-
-    console.log(
-        'Status da importação:',
-        resposta.status
-    );
-
-    console.log(
-        'Resultado da importação:',
-        resultado
-    );
-
-    if (!resposta.ok) {
-
-        throw new Error(
-            resultado?.erro ||
-            resultado?.error ||
-            'A importação dos produtos falhou.'
-        );
-
-    }
-
-    if (
-        !resultado ||
-        resultado.sucesso !== true
-    ) {
-
-        throw new Error(
-            resultado?.erro ||
-            resultado?.mensagem ||
-            'A Edge Function não confirmou a importação.'
-        );
-
-    }
-
-    const totalEncontrados =
-        Number(
-            resultado.total_encontrados ||
-            0
-        );
-
-    const criados =
-        Number(
-            resultado.criados ||
-            0
-        );
-
-    const atualizados =
-        Number(
-            resultado.atualizados ||
-            0
-        );
-
-    const erros =
-        Number(
-            resultado.erros ||
-            0
-        );
-
-    console.log(
-        'Total encontrados:',
-        totalEncontrados
-    );
-
-    console.log(
-        'Criados:',
-        criados
-    );
-
-    console.log(
-        'Atualizados:',
-        atualizados
-    );
-
-    console.log(
-        'Erros:',
-        erros
-    );
-
-
-    // --------------------------------------------------------
-    // MOSTRAR RESULTADO
-    // --------------------------------------------------------
-
-    let mensagem =
-        'Importação concluída com sucesso!\n\n';
-
-    mensagem +=
-        'Produtos encontrados: ' +
-        totalEncontrados +
-        '\n';
-
-    mensagem +=
-        'Produtos criados: ' +
-        criados +
-        '\n';
-
-    mensagem +=
-        'Produtos atualizados: ' +
-        atualizados +
-        '\n';
-
-    mensagem +=
-        'Erros: ' +
-        erros;
-
-    if (
-        Array.isArray(
-            resultado.detalhes_erros
-        ) &&
-        resultado.detalhes_erros.length > 0
-    ) {
-
-        mensagem +=
-            '\n\nAlguns produtos apresentaram erros.';
-
-        console.warn(
-            'Detalhes dos erros:',
-            resultado.detalhes_erros
-        );
-
-    }
-
-    alert(
-        mensagem
-    );
-
-
-    // --------------------------------------------------------
-    // ATUALIZAR STATUS
-    // --------------------------------------------------------
-
-    atualizarStatusMercadoLivre(
-        true
-    );
-
-
-} catch (erro) {
-
-    console.error(
-        'Erro ao importar produtos:',
-        erro
-    );
-
-    alert(
-        'Não foi possível importar os produtos do Mercado Livre.\n\n' +
-        (
-            erro?.message ||
-            'Erro desconhecido.'
-        )
-    );
-
-} finally {
-
-    if (botao) {
-
-        botao.disabled =
-            false;
-
-        botao.textContent =
-            'Importar produtos';
-
-    }
-
 }
 
-
-}
 
 // ============================================================
 // 16. CONFIGURAR BOTÃO CONECTAR
@@ -1029,29 +981,37 @@ try {
 
 function configurarBotaoMercadoLivre() {
 
+    const botao =
+        document.getElementById(
+            'btn-conectar-mercado-livre'
+        );
 
-const botao =
-    document.getElementById(
-        'btn-conectar-mercado-livre'
+    if (!botao) {
+
+        console.warn(
+            'Botão conectar Mercado Livre não encontrado.'
+        );
+
+        return;
+    }
+
+    if (
+        botao.dataset.configurado ===
+        'true'
+    ) {
+
+        return;
+    }
+
+    botao.dataset.configurado =
+        'true';
+
+    botao.addEventListener(
+        'click',
+        conectarMercadoLivre
     );
-
-if (!botao) {
-
-    console.warn(
-        'Botão conectar Mercado Livre não encontrado.'
-    );
-
-    return;
-
 }
 
-botao.addEventListener(
-    'click',
-    conectarMercadoLivre
-);
-
-
-}
 
 // ============================================================
 // 17. CONFIGURAR BOTÃO IMPORTAR
@@ -1059,144 +1019,43 @@ botao.addEventListener(
 
 function configurarBotaoImportarProdutos() {
 
+    const botao =
+        document.getElementById(
+            'btn-importar-mercado-livre'
+        ) ||
+        document.getElementById(
+            'btn-importar-produtos'
+        );
 
-const botao =
-    document.getElementById(
-        'btn-importar-produtos'
+    if (!botao) {
+
+        console.warn(
+            'Botão importar produtos não encontrado no HTML.'
+        );
+
+        return;
+    }
+
+    if (
+        botao.dataset.configurado ===
+        'true'
+    ) {
+
+        return;
+    }
+
+    botao.dataset.configurado =
+        'true';
+
+    botao.addEventListener(
+        'click',
+        importarProdutosMercadoLivre
     );
-
-if (!botao) {
-
-    console.warn(
-        'Botão importar produtos não encontrado no HTML.'
-    );
-
-    return;
-
-}
-
-botao.addEventListener(
-    'click',
-    importarProdutosMercadoLivre
-);
-
-
-}
-
-// ============================================================
-// 18. PROCESSAR RETORNO DA PÁGINA
-// ============================================================
-
-function processarRetornoPagina() {
-
-
-const url =
-    new URL(
-        window.location.href
-    );
-
-const mercadoLivre =
-    url.searchParams.get(
-        'mercadolivre'
-    );
-
-if (
-    mercadoLivre ===
-    'conectado'
-) {
-
-    console.log(
-        'Mercado Livre retornou como conectado.'
-    );
-
-    atualizarStatusMercadoLivre(
-        true
-    );
-
-    setTimeout(
-        async function() {
-
-            await verificarConexaoMercadoLivre();
-
-        },
-        300
-    );
-
 }
 
 
-}
-
 // ============================================================
-// 19. INICIALIZAÇÃO
-// ============================================================
-
-document.addEventListener(
-'DOMContentLoaded',
-async function() {
-
-
-    console.log(
-        '============================================================'
-    );
-
-    console.log(
-        'ZoraVision - Integrações'
-    );
-
-    console.log(
-        'Inicializando painel...'
-    );
-
-    console.log(
-        '============================================================'
-    );
-
-
-    // --------------------------------------------------------
-    // ESTADO INICIAL
-    // --------------------------------------------------------
-
-    atualizarStatusMercadoLivre(
-        false
-    );
-
-
-    // --------------------------------------------------------
-    // CONFIGURAR BOTÕES
-    // --------------------------------------------------------
-
-    configurarBotaoMercadoLivre();
-
-    configurarBotaoImportarProdutos();
-
-
-    // --------------------------------------------------------
-    // VERIFICAR RETORNO OAUTH
-    // --------------------------------------------------------
-
-    verificarRetornoMercadoLivre();
-
-    processarRetornoPagina();
-
-
-    // --------------------------------------------------------
-    // CONSULTAR BANCO
-    // --------------------------------------------------------
-
-    await verificarConexaoMercadoLivre();
-
-
-    console.log(
-        'Inicialização concluída.'
-    );
-
-}
-
-
-);
-// ============================================================
-// BOTÃO - GERENCIAR PRODUTOS MERCADO LIVRE
+// 18. CONFIGURAR BOTÃO GERENCIAR PRODUTOS
 // ============================================================
 
 function configurarBotaoGerenciarProdutosMercadoLivre() {
@@ -1213,30 +1072,44 @@ function configurarBotaoGerenciarProdutosMercadoLivre() {
         );
 
         return;
-
     }
 
-    // Evita adicionar o evento mais de uma vez
-    if (botao.dataset.configurado === 'true') {
+    if (
+        botao.dataset.configurado ===
+        'true'
+    ) {
+
         return;
     }
 
-    botao.dataset.configurado = 'true';
+    botao.dataset.configurado =
+        'true';
 
     botao.addEventListener(
         'click',
         function() {
 
+            console.log(
+                'Abrindo gerenciamento de produtos do Mercado Livre...'
+            );
+
+            botao.disabled =
+                true;
+
             window.location.href =
-                'mercadolivre-produtos.html';
+                PAGINA_PRODUTOS_MERCADO_LIVRE;
 
         }
     );
 
+    console.log(
+        'Botão Gerenciar produtos do Mercado Livre configurado.'
+    );
 }
 
+
 // ============================================================
-// ABRIR GERENCIAMENTO DE PRODUTOS DO MERCADO LIVRE
+// 19. ABRIR GERENCIAMENTO DE PRODUTOS
 // ============================================================
 
 function abrirProdutosMercadoLivre() {
@@ -1246,25 +1119,137 @@ function abrirProdutosMercadoLivre() {
     );
 
     window.location.href =
-        'https://rafaelmfernandes.github.io/Site-zora-vision/Admin/mercadolivre-produtos.html';
-
+        PAGINA_PRODUTOS_MERCADO_LIVRE;
 }
 
+
 // ============================================================
-// 20. FUNÇÕES GLOBAIS
+// 20. PROCESSAR RETORNO DA PÁGINA
+// ============================================================
+
+function processarRetornoPagina() {
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+    const mercadoLivre =
+        url.searchParams.get(
+            'mercadolivre'
+        );
+
+    if (
+        mercadoLivre ===
+        'conectado'
+    ) {
+
+        console.log(
+            'Mercado Livre retornou como conectado.'
+        );
+
+        atualizarStatusMercadoLivre(
+            true
+        );
+
+        setTimeout(
+            async function() {
+
+                await verificarConexaoMercadoLivre();
+
+            },
+            300
+        );
+    }
+}
+
+
+// ============================================================
+// 21. INICIALIZAÇÃO
+// ============================================================
+
+document.addEventListener(
+    'DOMContentLoaded',
+    async function() {
+
+        console.log(
+            '============================================================'
+        );
+
+        console.log(
+            'ZoraVision - Integrações'
+        );
+
+        console.log(
+            'Inicializando painel...'
+        );
+
+        console.log(
+            '============================================================'
+        );
+
+        // ----------------------------------------------------
+        // ESTADO INICIAL
+        // ----------------------------------------------------
+
+        atualizarStatusMercadoLivre(
+            false
+        );
+
+        // ----------------------------------------------------
+        // CONFIGURAR BOTÕES
+        // ----------------------------------------------------
+
+        configurarBotaoMercadoLivre();
+
+        configurarBotaoImportarProdutos();
+
+        configurarBotaoGerenciarProdutosMercadoLivre();
+
+        // ----------------------------------------------------
+        // VERIFICAR RETORNO OAUTH
+        // ----------------------------------------------------
+
+        verificarRetornoMercadoLivre();
+
+        processarRetornoPagina();
+
+        // ----------------------------------------------------
+        // CONSULTAR BANCO
+        // ----------------------------------------------------
+
+        await verificarConexaoMercadoLivre();
+
+        console.log(
+            'Inicialização concluída.'
+        );
+
+    }
+);
+
+
+// ============================================================
+// 22. FUNÇÕES GLOBAIS
 // ============================================================
 
 window.conectarMercadoLivre =
-conectarMercadoLivre;
+    conectarMercadoLivre;
 
 window.gerarCodeVerifier =
-gerarCodeVerifier;
+    gerarCodeVerifier;
 
 window.gerarCodeChallenge =
-gerarCodeChallenge;
+    gerarCodeChallenge;
 
 window.verificarConexaoMercadoLivre =
-verificarConexaoMercadoLivre;
+    verificarConexaoMercadoLivre;
 
 window.importarProdutosMercadoLivre =
-importarProdutosMercadoLivre;
+    importarProdutosMercadoLivre;
+
+window.abrirProdutosMercadoLivre =
+    abrirProdutosMercadoLivre;
+
+window.configurarBotaoGerenciarProdutosMercadoLivre =
+    configurarBotaoGerenciarProdutosMercadoLivre;
+
