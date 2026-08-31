@@ -324,18 +324,45 @@ font-weight: 600;
 padding: 15px 21px 20px;
 border-top: 1px solid #eef0f2;
 display: flex;
+align-items: center;
 justify-content: flex-end;
+gap: 10px;
+flex-wrap: wrap;
 }
+
+/* ============================================================
+9. BOTÕES DE INTEGRAÇÃO
+============================================================ */
 
 .btn-integracao {
 min-height: 40px;
 padding: 0 17px;
 border-radius: 9px;
+font-family: Arial, Helvetica, sans-serif;
 font-size: 13px;
 font-weight: 700;
+line-height: 1;
 cursor: pointer;
-transition: 0.2s ease;
+transition:
+background 0.2s ease,
+border-color 0.2s ease,
+color 0.2s ease,
+box-shadow 0.2s ease,
+transform 0.15s ease;
+text-decoration: none;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+white-space: nowrap;
 }
+
+.btn-integracao:hover {
+transform: translateY(-1px);
+}
+
+/* ============================================================
+10. BOTÃO CONECTAR
+============================================================ */
 
 .btn-conectar {
 border: 1px solid #171717;
@@ -345,22 +372,117 @@ color: #ffffff;
 
 .btn-conectar:hover {
 background: #333333;
+border-color: #333333;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .btn-conectar:disabled {
 opacity: 0.6;
 cursor: not-allowed;
+transform: none;
+box-shadow: none;
 }
+
+/* ============================================================
+11. BOTÃO CONECTADO
+============================================================ */
+
+.btn-conectado {
+border: 1px solid #d1d5db;
+background: #f9fafb;
+color: #374151;
+}
+
+.btn-conectado:hover {
+background: #f3f4f6;
+border-color: #cfd3d8;
+}
+
+/* ============================================================
+12. BOTÃO IMPORTAR PRODUTOS
+============================================================ */
+
+.btn-importar-produtos {
+border: 1px solid #171717;
+background: #171717;
+color: #ffffff;
+}
+
+.btn-importar-produtos:hover {
+background: #333333;
+border-color: #333333;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.btn-importar-produtos:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+transform: none;
+box-shadow: none;
+}
+
+/* ============================================================
+13. BOTÃO GERENCIAR PRODUTOS
+============================================================ */
+
+.btn-gerenciar-produtos {
+border: 1px solid #d9dde2;
+background: #ffffff;
+color: #252a31;
+}
+
+.btn-gerenciar-produtos:hover {
+background: #f6f7f9;
+border-color: #c8cdd3;
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* ============================================================
+14. BOTÃO SECUNDÁRIO
+============================================================ */
+
+.btn-secundario {
+border: 1px solid #d9dde2;
+background: #ffffff;
+color: #333333;
+}
+
+.btn-secundario:hover {
+background: #f6f7f9;
+border-color: #c8cdd3;
+}
+
+/* ============================================================
+15. BOTÃO INDISPONÍVEL
+============================================================ */
 
 .btn-indisponivel {
 border: 1px solid #e1e4e8;
 background: #f3f4f6;
 color: #8a9098;
 cursor: not-allowed;
+transform: none;
+}
+
+.btn-indisponivel:hover {
+transform: none;
+box-shadow: none;
 }
 
 /* ============================================================
-9. FUTURAS INTEGRAÇÕES
+16. ÁREA DE AÇÕES DO MERCADO LIVRE
+============================================================ */
+
+.mercado-livre-acoes {
+display: flex;
+align-items: center;
+justify-content: flex-end;
+gap: 10px;
+flex-wrap: wrap;
+}
+
+/* ============================================================
+17. FUTURAS INTEGRAÇÕES
 ============================================================ */
 
 .integracoes-futuras {
@@ -398,7 +520,7 @@ font-size: 12px;
 }
 
 /* ============================================================
-10. SEGURANÇA
+18. SEGURANÇA
 ============================================================ */
 
 .seguranca-card {
@@ -436,7 +558,7 @@ line-height: 1.55;
 }
 
 /* ============================================================
-11. RODAPÉ
+19. RODAPÉ
 ============================================================ */
 
 .admin-footer {
@@ -461,7 +583,30 @@ font-size: 12px;
 }
 
 /* ============================================================
-12. RESPONSIVIDADE
+20. RESPONSIVIDADE
+============================================================ */
+
+@media (max-width: 700px) {
+
+
+.integracao-card-acoes {
+    justify-content: stretch;
+}
+
+.mercado-livre-acoes {
+    width: 100%;
+    justify-content: stretch;
+}
+
+.btn-integracao {
+    flex: 1 1 auto;
+}
+
+
+}
+
+/* ============================================================
+21. RESPONSIVIDADE PRINCIPAL
 ============================================================ */
 
 @media (max-width: 600px) {
@@ -498,11 +643,20 @@ font-size: 12px;
 }
 
 .integracao-card-acoes {
+    flex-direction: column;
+    align-items: stretch;
     justify-content: stretch;
+}
+
+.mercado-livre-acoes {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .btn-integracao {
     width: 100%;
+    flex: none;
 }
 
 .integracoes-futuras,
@@ -517,6 +671,10 @@ font-size: 12px;
 
 
 }
+
+/* ============================================================
+22. CELULARES PEQUENOS
+============================================================ */
 
 @media (max-width: 420px) {
 
@@ -543,72 +701,51 @@ font-size: 12px;
     padding-right: 16px;
 }
 
+.btn-integracao {
+    min-height: 42px;
+}
+
 
 }
 
 /* ============================================================
-   BOTÃO - GERENCIAR PRODUTOS MERCADO LIVRE
-   ============================================================ */
+23. ESTADO DE CARREGAMENTO
+============================================================ */
 
-#btn-gerenciar-produtos-mercado-livre {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    width: 100%;
-    min-height: 44px;
-
-    margin-top: 12px;
-    padding: 0 18px;
-
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-
-    background: #ffffff;
-    color: #111827;
-
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-
-    line-height: 1;
-
-    cursor: pointer;
-
-    transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.15s ease;
+.btn-integracao.carregando {
+position: relative;
+pointer-events: none;
+opacity: 0.7;
 }
 
-#btn-gerenciar-produtos-mercado-livre:hover {
-    background: #f9fafb;
-    border-color: #9ca3af;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+.btn-integracao.carregando::after {
+content: "";
+width: 13px;
+height: 13px;
+margin-left: 8px;
+border: 2px solid currentColor;
+border-right-color: transparent;
+border-radius: 50%;
+animation: integracao-spinner 0.7s linear infinite;
 }
 
-#btn-gerenciar-produtos-mercado-livre:active {
-    transform: translateY(1px);
+@keyframes integracao-spinner {
+
+
+to {
+    transform: rotate(360deg);
 }
 
-#btn-gerenciar-produtos-mercado-livre:focus-visible {
-    outline: 2px solid #111827;
-    outline-offset: 2px;
+
 }
 
 /* ============================================================
-   RESPONSIVO
-   ============================================================ */
+24. ACESSIBILIDADE
+============================================================ */
 
-@media (max-width: 600px) {
-
-    #btn-gerenciar-produtos-mercado-livre {
-        width: 100%;
-        min-height: 46px;
-        font-size: 13px;
-    }
-
+.btn-integracao:focus-visible,
+.btn-voltar:focus-visible,
+.btn-sair:focus-visible {
+outline: 2px solid #171717;
+outline-offset: 2px;
 }
