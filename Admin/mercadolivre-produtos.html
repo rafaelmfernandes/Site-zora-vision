@@ -9,10 +9,10 @@
 
 <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    content="width=device-width, initial-scale=1.0"
 >
 
-<title>Produtos do Mercado Livre - ZoraVision</title>
+<title>Produtos Mercado Livre - ZoraVision</title>
 
 <link
     rel="stylesheet"
@@ -24,41 +24,32 @@
 
 <body>
 
-<!-- ============================================================
-     CABEÇALHO
-============================================================ -->
-
 <header class="admin-header">
 
 
 <div class="admin-header-top">
 
-
     <a
         href="admin-integracoes.html"
         class="btn-voltar"
-        aria-label="Voltar para integrações"
+        aria-label="Voltar"
     >
         ‹
     </a>
-
 
     <div class="admin-logo">
         ZoraVision
     </div>
 
-
     <button
         type="button"
-        class="btn-sair"
         id="btn-sair-admin"
+        class="btn-sair"
     >
         Sair
     </button>
 
-
 </div>
-
 
 <div class="admin-header-info">
 
@@ -73,58 +64,36 @@
 
 </header>
 
-<!-- ============================================================
-     CONTEÚDO PRINCIPAL
-============================================================ -->
-
 <main class="produtos-container">
 
 
-<!-- ========================================================
-     CABEÇALHO DA PÁGINA
-========================================================= -->
-
 <section class="produtos-topo">
-
 
     <span class="section-label">
         MERCADO LIVRE
     </span>
 
-
     <h1>
         Gerenciar produtos
     </h1>
 
-
     <p>
-        Gerencie os produtos do Mercado Livre,
-        acompanhe quais anúncios já foram importados,
-        controle os produtos ativos e inativos no
-        ZoraVision e importe novos produtos quando desejar.
+        Visualize os produtos importados do Mercado Livre,
+        controle quais estão ativos no ZoraVision e
+        sincronize os produtos quando necessário.
     </p>
-
 
 </section>
 
 
-
-<!-- ========================================================
-     RESUMO
-========================================================= -->
-
 <section class="produtos-resumo">
 
 
-    <!-- ENCONTRADOS -->
-
     <div class="resumo-card">
 
-
         <span class="resumo-label">
-            Encontrados
+            Produtos
         </span>
-
 
         <strong
             id="total-produtos"
@@ -133,25 +102,18 @@
             0
         </strong>
 
-
         <small>
-            anúncios no Mercado Livre
+            encontrados
         </small>
-
 
     </div>
 
 
-
-    <!-- IMPORTADOS -->
-
     <div class="resumo-card">
-
 
         <span class="resumo-label">
             Importados
         </span>
-
 
         <strong
             id="total-importados"
@@ -160,25 +122,18 @@
             0
         </strong>
 
-
         <small>
-            produtos no ZoraVision
+            do Mercado Livre
         </small>
-
 
     </div>
 
 
-
-    <!-- ATIVOS -->
-
     <div class="resumo-card">
-
 
         <span class="resumo-label">
             Ativos
         </span>
-
 
         <strong
             id="total-ativos"
@@ -187,25 +142,18 @@
             0
         </strong>
 
-
         <small>
-            visíveis no site
+            disponíveis no site
         </small>
-
 
     </div>
 
 
-
-    <!-- INATIVOS -->
-
     <div class="resumo-card">
-
 
         <span class="resumo-label">
             Inativos
         </span>
-
 
         <strong
             id="total-inativos"
@@ -214,300 +162,182 @@
             0
         </strong>
 
-
         <small>
-            ocultos do site
+            ocultos no site
         </small>
-
 
     </div>
 
 
-
-    <!-- NÃO IMPORTADOS -->
-
     <div class="resumo-card">
 
-
         <span class="resumo-label">
-            Pendentes
+            Selecionados
         </span>
 
-
         <strong
-            id="total-nao-importados"
+            id="total-selecionados"
             class="resumo-valor"
         >
             0
         </strong>
 
-
         <small>
-            ainda não importados
+            para sincronização
         </small>
 
-
     </div>
-
 
 </section>
 
 
-
-<!-- ========================================================
-     FILTROS
-========================================================= -->
-
 <section class="produtos-filtros">
 
 
-    <!-- FILTRO STATUS -->
-
     <div class="filtro-grupo">
-
 
         <label for="filtro-status">
             Status
         </label>
 
-
-        <select
-            id="filtro-status"
-            name="filtro-status"
-        >
-
+        <select id="filtro-status">
 
             <option value="todos">
                 Todos os produtos
             </option>
 
-
-            <option value="importados">
-                Importados
-            </option>
-
-
             <option value="ativos">
                 Ativos no site
             </option>
-
 
             <option value="inativos">
                 Inativos no site
             </option>
 
-
-            <option value="nao-importados">
-                Ainda não importados
-            </option>
-
-
         </select>
-
 
     </div>
 
 
-
-    <!-- PESQUISA -->
-
     <div class="filtro-grupo filtro-pesquisa">
-
 
         <label for="campo-pesquisa">
             Pesquisar
         </label>
 
-
         <input
             type="search"
             id="campo-pesquisa"
-            name="campo-pesquisa"
             placeholder="Nome, SKU ou ID do Mercado Livre..."
             autocomplete="off"
         >
 
-
     </div>
 
 
-
-    <!-- ATUALIZAR -->
-
     <button
         type="button"
-        class="btn-produtos btn-atualizar"
         id="btn-atualizar-produtos"
+        class="btn-produtos btn-atualizar"
     >
         Atualizar
     </button>
 
-
 </section>
 
 
-
-<!-- ========================================================
-     MENSAGEM
-========================================================= -->
-
 <div
     id="mensagem-produtos"
-    class="mensagem-produtos mensagem-info"
-    style="display: none;"
-    role="status"
-    aria-live="polite"
+    class="mensagem-produtos"
+    style="display:none;"
 ></div>
 
-
-
-<!-- ========================================================
-     BARRA DE AÇÕES
-========================================================= -->
 
 <section class="produtos-acoes">
 
 
     <div class="produtos-acoes-esquerda">
 
-
         <label class="selecionar-todos">
-
 
             <input
                 type="checkbox"
                 id="checkbox-selecionar-todos"
             >
 
-
             <span>
                 Selecionar todos
             </span>
 
-
         </label>
-
-
 
         <span
             id="contador-produtos"
             class="contador-produtos"
         >
-            0 produtos encontrados
+            0 produtos
         </span>
-
 
     </div>
 
 
-
     <div class="produtos-acoes-direita">
-
 
         <button
             type="button"
-            class="btn-produtos btn-selecionar"
             id="btn-selecionar-todos"
+            class="btn-produtos btn-selecionar"
         >
             Selecionar todos
         </button>
 
-
-
         <button
             type="button"
-            class="btn-produtos btn-desmarcar"
             id="btn-desmarcar-todos"
+            class="btn-produtos btn-desmarcar"
         >
             Desmarcar todos
         </button>
 
-
-
         <button
             type="button"
-            class="btn-produtos btn-sincronizar"
             id="btn-sincronizar-selecionados"
+            class="btn-produtos btn-sincronizar"
             disabled
         >
             Sincronizar selecionados
         </button>
 
-
     </div>
-
 
 </section>
 
 
-
-<!-- ========================================================
-     LEGENDA
-========================================================= -->
-
 <section class="produtos-legenda">
-
 
     <div class="legenda-item">
 
-
-        <span
-            class="legenda-indicador legenda-ativo"
-            aria-hidden="true"
-        ></span>
-
+        <span class="legenda-indicador legenda-ativo"></span>
 
         <span>
             Ativo no site
         </span>
 
-
     </div>
-
 
 
     <div class="legenda-item">
 
-
-        <span
-            class="legenda-indicador legenda-inativo"
-            aria-hidden="true"
-        ></span>
-
+        <span class="legenda-indicador legenda-inativo"></span>
 
         <span>
             Inativo no site
         </span>
 
-
     </div>
-
-
-
-    <div class="legenda-item">
-
-
-        <span
-            class="legenda-indicador legenda-pendente"
-            aria-hidden="true"
-        ></span>
-
-
-        <span>
-            Ainda não importado
-        </span>
-
-
-    </div>
-
 
 </section>
 
-
-
-<!-- ========================================================
-     LISTA DE PRODUTOS
-========================================================= -->
 
 <section
     id="lista-produtos"
@@ -515,44 +345,26 @@
     aria-live="polite"
 >
 
-
-    <!-- ====================================================
-         CARREGANDO
-    ===================================================== -->
-
-    <div
-        id="produtos-carregando"
-        class="produtos-vazio"
-    >
-
+    <div class="produtos-vazio">
 
         <div class="produtos-vazio-icone">
             ⏳
         </div>
 
-
         <h2>
             Carregando produtos
         </h2>
 
-
         <p>
-            Consultando os produtos do Mercado Livre
-            e verificando quais já foram importados...
+            Consultando os produtos do Mercado Livre...
         </p>
 
-
     </div>
-
 
 </section>
 
 
 </main>
-
-<!-- ============================================================
-     RODAPÉ
-============================================================ -->
 
 <footer class="admin-footer">
 
@@ -561,17 +373,12 @@
     ZoraVision
 </span>
 
-
 <small>
     Gerenciamento de produtos do Mercado Livre
 </small>
 
 
 </footer>
-
-<!-- ============================================================
-     SUPABASE
-============================================================ -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
@@ -581,17 +388,9 @@
     src="../Supabase/supabase.js"
 ></script>
 
-<!-- ============================================================
-     PAINEL ADMINISTRATIVO
-============================================================ -->
-
 <script
     src="Painel-admin.js"
 ></script>
-
-<!-- ============================================================
-     MERCADO LIVRE - PRODUTOS
-============================================================ -->
 
 <script
     src="mercadolivre-produtos.js"
