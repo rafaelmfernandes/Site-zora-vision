@@ -43,8 +43,8 @@
 
     <button
         type="button"
-        id="btn-sair-admin"
         class="btn-sair"
+        id="btn-sair-admin"
     >
         Sair
     </button>
@@ -67,6 +67,10 @@
 <main class="produtos-container">
 
 
+<!-- ========================================================
+     TOPO
+========================================================= -->
+
 <section class="produtos-topo">
 
     <span class="section-label">
@@ -74,111 +78,110 @@
     </span>
 
     <h1>
-        Gerenciar produtos
+        Produtos
     </h1>
 
     <p>
-        Visualize os produtos importados do Mercado Livre,
-        controle quais estão ativos no ZoraVision e
-        sincronize os produtos quando necessário.
+        Gerencie os produtos importados do Mercado Livre
+        no ZoraVision.
     </p>
 
 </section>
 
 
 <!-- ========================================================
-     RESUMO COMPACTO
+     O
 ========================================================= -->
 
-<section class="produtos-resumo">
+<section class="produtos-o">
 
-```
-<div class="resumo-card">
+    <div class="o-card">
 
-    <span class="resumo-label">
-        Encontrados
-    </span>
+        <span class="o-label">
+            Encontrados
+        </span>
 
-    <strong
-        id="total-produtos"
-        class="resumo-valor"
-    >
-        0
-    </strong>
+        <strong
+            id="total-produtos"
+            class="o-valor"
+        >
+            0
+        </strong>
 
-</div>
-
-
-<div class="resumo-card">
-
-    <span class="resumo-label">
-        Importados
-    </span>
-
-    <strong
-        id="total-importados"
-        class="resumo-valor"
-    >
-        0
-    </strong>
-
-</div>
+    </div>
 
 
-<div class="resumo-card">
+    <div class="o-card">
 
-    <span class="resumo-label">
-        Ativos
-    </span>
+        <span class="o-label">
+            Importados
+        </span>
 
-    <strong
-        id="total-ativos"
-        class="resumo-valor"
-    >
-        0
-    </strong>
+        <strong
+            id="total-importados"
+            class="o-valor"
+        >
+            0
+        </strong>
 
-</div>
-
-
-<div class="resumo-card">
-
-    <span class="resumo-label">
-        Inativos
-    </span>
-
-    <strong
-        id="total-inativos"
-        class="resumo-valor"
-    >
-        0
-    </strong>
-
-</div>
+    </div>
 
 
-<div class="resumo-card">
+    <div class="o-card">
 
-    <span class="resumo-label">
-        Pendentes
-    </span>
+        <span class="o-label">
+            Ativos
+        </span>
 
-    <strong
-        id="total-nao-importados"
-        class="resumo-valor"
-    >
-        0
-    </strong>
+        <strong
+            id="total-ativos"
+            class="o-valor"
+        >
+            0
+        </strong>
 
-</div>
-```
+    </div>
+
+
+    <div class="o-card">
+
+        <span class="o-label">
+            Inativos
+        </span>
+
+        <strong
+            id="total-inativos"
+            class="o-valor"
+        >
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="o-card">
+
+        <span class="o-label">
+            Pendentes
+        </span>
+
+        <strong
+            id="total-nao-importados"
+            class="o-valor"
+        >
+            0
+        </strong>
+
+    </div>
 
 </section>
 
 
+<!-- ========================================================
+     FILTROS
+========================================================= -->
 
 <section class="produtos-filtros">
-
 
     <div class="filtro-grupo">
 
@@ -189,15 +192,19 @@
         <select id="filtro-status">
 
             <option value="todos">
-                Todos os produtos
+                Todos
+            </option>
+
+            <option value="importados">
+                Importados
             </option>
 
             <option value="ativos">
-                Ativos no site
+                Ativos
             </option>
 
             <option value="inativos">
-                Inativos no site
+                Inativos
             </option>
 
         </select>
@@ -223,14 +230,18 @@
 
     <button
         type="button"
-        id="btn-atualizar-produtos"
         class="btn-produtos btn-atualizar"
+        id="btn-atualizar-produtos"
     >
         Atualizar
     </button>
 
 </section>
 
+
+<!-- ========================================================
+     MENSAGEM
+========================================================= -->
 
 <div
     id="mensagem-produtos"
@@ -239,8 +250,11 @@
 ></div>
 
 
-<section class="produtos-acoes">
+<!-- ========================================================
+     AÇÕES
+========================================================= -->
 
+<section class="produtos-acoes">
 
     <div class="produtos-acoes-esquerda">
 
@@ -261,7 +275,7 @@
             id="contador-produtos"
             class="contador-produtos"
         >
-            0 produtos
+            0 produtos encontrados
         </span>
 
     </div>
@@ -271,24 +285,26 @@
 
         <button
             type="button"
+            class="btn-produtos"
             id="btn-selecionar-todos"
-            class="btn-produtos btn-selecionar"
         >
             Selecionar todos
         </button>
 
+
         <button
             type="button"
+            class="btn-produtos"
             id="btn-desmarcar-todos"
-            class="btn-produtos btn-desmarcar"
         >
             Desmarcar todos
         </button>
 
+
         <button
             type="button"
-            id="btn-sincronizar-selecionados"
             class="btn-produtos btn-sincronizar"
+            id="btn-sincronizar-selecionados"
             disabled
         >
             Sincronizar selecionados
@@ -299,31 +315,9 @@
 </section>
 
 
-<section class="produtos-legenda">
-
-    <div class="legenda-item">
-
-        <span class="legenda-indicador legenda-ativo"></span>
-
-        <span>
-            Ativo no site
-        </span>
-
-    </div>
-
-
-    <div class="legenda-item">
-
-        <span class="legenda-indicador legenda-inativo"></span>
-
-        <span>
-            Inativo no site
-        </span>
-
-    </div>
-
-</section>
-
+<!-- ========================================================
+     LISTA
+========================================================= -->
 
 <section
     id="lista-produtos"
@@ -360,7 +354,7 @@
 </span>
 
 <small>
-    Gerenciamento de produtos do Mercado Livre
+    Produtos do Mercado Livre
 </small>
 
 
