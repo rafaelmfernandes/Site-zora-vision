@@ -1236,6 +1236,21 @@ function configurarBotaoGerenciarProdutosMercadoLivre() {
 }
 
 // ============================================================
+// ABRIR GERENCIAMENTO DE PRODUTOS DO MERCADO LIVRE
+// ============================================================
+
+function abrirProdutosMercadoLivre() {
+
+    console.log(
+        'Abrindo gerenciamento de produtos do Mercado Livre...'
+    );
+
+    window.location.href =
+        'https://rafaelmfernandes.github.io/Site-zora-vision/Admin/mercadolivre-produtos.html';
+
+}
+
+// ============================================================
 // 20. FUNÇÕES GLOBAIS
 // ============================================================
 
